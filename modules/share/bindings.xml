@@ -1,0 +1,12 @@
+<Bindings>
+	<Layer name="SI_KEYBINDINGS_LAYER_GENERAL">
+		<Category name="|cFFFF00Hodor Reflexes|r">
+			<Action name="HR_SEND_EXIT_INSTANCE">
+				<Down>HodorReflexes.modules.share.SendExitInstance()</Down>
+			</Action>
+            <Action name="HR_SHARE_TOGGLE_DPS">
+                <Down>HodorReflexes.modules.share.ToggleDamageShare()</Down>
+            </Action>
+		</Category>
+	</Layer>
+</Bindings>

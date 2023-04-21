@@ -1,0 +1,98 @@
+<GuiXml>
+    <Controls>
+        <!-- Keyboard templates-->
+        <Label name="HodorReflexes_Updated_Title_Keyboard_Template" inherits="ZO_WindowTitle" text="HR_UPDATED_TITLE" color="FFFF00" virtual="true" />
+        <Button name="HodorReflexes_Updated_Dismiss_Keyboard_Template" inherits="ZO_DefaultButton" text="HR_UPDATED_DISMISS" virtual="true">
+            <Dimensions x="200" y="28" />
+            <Anchor point="BOTTOM" offsetY="-3" />
+            <OnClicked>
+                HodorReflexes_Updated:SetHidden(true)
+            </OnClicked>
+            <Controls>
+                <Texture name="$(parent)GamepadIcon" hidden="true" />
+            </Controls>
+        </Button>
+
+        <!-- Gamepad Templates-->
+        <Label name="HodorReflexes_Updated_Title_Gamepad_Template" font="ZoFontGamepadBold34" text="HR_UPDATED_TITLE" color="FFFF00" wrapMode="ELLIPSIS" virtual="true">
+            <Dimensions y="28" />
+            <Anchor point="TOP" offsetY="-7" />
+        </Label>
+        <Button name="HodorReflexes_Updated_Dismiss_Gamepad_Template" inherits="ZO_DefaultButton ZO_ButtonBehaviorClickSound" font="ZoFontGamepadBold22" text="HR_UPDATED_DISMISS" endCapWidth="9" verticalAlignment="CENTER" mouseOverBlendMode="ADD" virtual="true">
+            <Dimensions x="200" y="28" />
+            <Anchor point="BOTTOM" offsetY="-3" />
+            <OnClicked>
+                HodorReflexes_Updated:SetHidden(true)
+            </OnClicked>
+            <Controls>
+                <Texture name="$(parent)GamepadIcon" keyboardEnabled="true" hidden="true">
+                    <Dimensions x="40" y="40" />
+                    <Anchor point="RIGHT" relativePoint="LEFT" />
+                    <OnKeyDown>
+                        if key == KEY_GAMEPAD_BUTTON_1 then
+                            HodorReflexes_Updated:SetHidden(true)
+                        end
+                    </OnKeyDown>
+                </Texture>
+            </Controls>
+        </Button>
+
+        <TopLevelControl name="HodorReflexes_Updated" clampedToScreen="true" hidden="true" tier="HIGH">
+            <Dimensions x="900" y="230" />
+            <Anchor point="CENTER" />
+            <Controls>
+                <Label name="$(parent)_Title" inherits="ZO_WindowTitle" text="Hodor Reflexes"/>
+
+                <Backdrop name="$(parent)_BG" inherits="ZO_DefaultBackdrop" />
+
+                <Button name="$(parent)_Close" inherits="ZO_CloseButton">
+                    <Anchor point="TOPRIGHT" offsetY="3" />
+                    <OnClicked>
+                        HodorReflexes_Updated:SetHidden(true)
+                    </OnClicked>
+                </Button>
+
+				<Label name="$(parent)_Text" horizontalAlignment="LEFT" font="ZoFontWinH3" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_NORMAL" text="HR_UPDATED_TEXT">
+                    <Anchor point="TOPLEFT" offsetX="5" offsetY="30"/>
+					<Anchor point="TOPRIGHT" offsetX="-5" offsetY="30"/>
+				</Label>
+
+				<Texture name="$(parent)_Icon1" textureFile="HodorReflexes/users/misc/randomuserid1_static.dds" textureFileReleaseOption="RELEASE_TEXTURE_AT_ZERO_REFERENCES">
+					<Dimensions x="32" y="32" />
+					<Anchor point="TOP" relativeTo="$(parent)_Text" relativePoint="BOTTOM" offsetY="10" />
+				</Texture>
+
+				<Texture name="$(parent)_Icon2" textureFile="HodorReflexes/users/misc2/sqrtl.dds" textureFileReleaseOption="RELEASE_TEXTURE_AT_ZERO_REFERENCES">
+					<Dimensions x="32" y="32" />
+					<Anchor point="TOP" relativeTo="$(parent)_Text" relativePoint="BOTTOM" offsetX="50" offsetY="10" />
+				</Texture>
+
+				<Texture name="$(parent)_Icon3" textureFile="HodorReflexes/users/misc3/obsessedachievement.dds" textureFileReleaseOption="RELEASE_TEXTURE_AT_ZERO_REFERENCES">
+					<Dimensions x="32" y="32" />
+					<Anchor point="TOP" relativeTo="$(parent)_Text" relativePoint="BOTTOM" offsetX="-50" offsetY="10" />
+				</Texture>
+
+				<Texture name="$(parent)_Icon4" textureFile="HodorReflexes/users/misc3/oceanbluee.dds" textureFileReleaseOption="RELEASE_TEXTURE_AT_ZERO_REFERENCES">
+					<Dimensions x="32" y="32" />
+					<Anchor point="TOP" relativeTo="$(parent)_Text" relativePoint="BOTTOM" offsetX="100" offsetY="10" />
+				</Texture>
+
+				<Texture name="$(parent)_Icon5" textureFile="HodorReflexes/users/misc/amaraxe.dds" textureFileReleaseOption="RELEASE_TEXTURE_AT_ZERO_REFERENCES">
+					<Dimensions x="32" y="32" />
+					<Anchor point="TOP" relativeTo="$(parent)_Text" relativePoint="BOTTOM" offsetX="-100" offsetY="10" />
+				</Texture>
+
+				<Button name="$(parent)_Dismiss">
+					<Controls>
+						<Texture name="$(parent)GamepadIcon" inherits="ZO_KeyTexture" hidden="true">
+							<OnInitialized name="HodorReflexes_UpdatedFrame">
+								self:SetKeyCode(KEY_GAMEPAD_BUTTON_1)
+							</OnInitialized>
+						</Texture>
+					</Controls>
+				</Button>
+				
+            </Controls>
+        </TopLevelControl>
+    </Controls>
+</GuiXml>

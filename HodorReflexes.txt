@@ -1,0 +1,59 @@
+## Title: HodorReflexes
+## Version: 1.9.9
+## Author: |cFFFF00andy.s|r, |c76c3f4@m00nyONE|r
+## APIVersion: 101036 101037
+## AddOnVersion: 010909
+## SavedVariables: HodorReflexesSV
+## DependsOn: LibAddonMenu-2.0>=32 LibCombat>=54 LibDataShare>=1
+## OptionalDependsOn: RuESO
+
+lang/en.lua
+lang/$(language).lua
+
+HodorReflexes.lua
+HodorReflexes.xml
+bindings.xml
+
+extensions/util.lua
+extensions/units.lua
+extensions/player.lua
+extensions/combat.lua
+extensions/anim.lua
+extensions/hud.lua
+
+HodorReflexesMenu.lua
+users/misc/misc.lua
+users/misc2/misc2.lua
+users/misc3/misc3.lua
+users/misc4/misc4.lua
+users/misc5/misc5.lua
+users/hodor/hodor.lua
+users/frenchkiss/frenchkiss.lua
+users/chainreaction/chainreaction.lua
+users/ua/ua.lua
+users/mc/mc.lua
+users/luck/luck.lua
+users/vok/vok.lua
+users/equinoxe/equinoxe.lua
+users/pushdeeps/pushdeeps.lua
+users/cfm/cfm.lua
+users/mot/mot.lua
+users/moo/moo.lua
+
+modules/share/main.lua
+modules/share/menu.lua
+modules/share/menu_icons.lua
+modules/share/menu_style.lua
+modules/share/ui.xml
+modules/share/bindings.xml
+
+modules/vote/main.lua
+modules/vote/menu.lua
+modules/vote/ui.xml
+modules/vote/bindings.xml
+
+modules/events/main.lua
+modules/events/menu.lua
+modules/events/christmas.lua
+modules/events/aprilfools.lua
+modules/events/valentine.lua
