@@ -1,5 +1,5 @@
 1.9.9 - @m00nyONE
-- Because of the upcoming release of HodorReflexes 1.10.0 on 07. Mai 2023, this version ( 1.9.9 ) will include a timer that auto enables V2 sharing on 07. Mai 2023 for everyone. This ensures 1.9.9 & 1.10.0 use the same sharing mechanism and will work together. This should give everyone enough wiggle room to make the update to 1.10.0 without losing compatibility.
+- Because of the upcoming release of HodorReflexes 1.10.0 on 07. Mai 2023, this version ( 1.9.9 ) will include a timer that auto enables V2 sharing on 07. May 2023 for everyone. This ensures 1.9.9 & 1.10.0 use the same sharing mechanism and will work together. This should give everyone enough wiggle room to make the update to 1.10.0 without losing compatibility.
 - icon update as always
 - enable dependency warning for everyone that warns the user when outdated embedded versions of LibAddonMenu are detected ( just remove this dumb shit pls. Hodor is not the only addon that has issues with these kinds of outdated addons )
 
