@@ -98,6 +98,11 @@ local function UpdatePlatformStyles(styleTable)
 
 end
 
+-- TODO: Add menu option to toggle this on and off.
+-- Some people complain about this message...
+-- Do what you want, but then don't tell me that you have a problem. You have been warned
+-- TODO: add simple command to check if this warning has been turned off - smt like /hodor.isWarningDisabled
+-- TODO: add simple command to check if a warning has been triggered - smt like /hodor.isWarningTriggered
 local function CheckForOutdatedLibAddonMenu()
 	if LibStub == nil then return end
 
@@ -109,9 +114,12 @@ local function CheckForOutdatedLibAddonMenu()
 			d("!!!WARNING!!!")
 			d("!!!WARNING!!!")
 			d("you have an old outdated addon installed that is interfering with HodorReflexes!")
-			d("The addon uses a built in version of LibAddonMenu-2.0 which renders the current Library version useless!")
-			d("Hodor will not work properly until you fix this problem!")
-			d("Sadly you have to manually look for it in your files. Keep an eye out for Addons that have a \"Lib\" folder inside of them which contain LibAddonMenu-2.0")
+			d("its your choice if you want to act or not")
+			d("The addon uses a build in embedded version of LibAddonMenu-2.0 with LibStub which overwrites the latest version from ESOUI!")
+			d("Hodor will maybe not work properly until you fix this problem!")
+			d("It is something that i can not fix. It can only be fixed by you or the original addon authors.")
+			d("Sadly you have to manually look for it in your files, as there is no way to detect which addon did this.")
+			d("Keep an eye out for Addons that have a \"Lib\" folder inside of them which contain LibAddonMenu-2.0")
 			d("!!!WARNING!!!")
 			d("!!!WARNING!!!")
 		end, 5000)
