@@ -265,6 +265,7 @@ local function CheckSlottedUlts()
 	if isNecro and (ult1 == 122395 or ult2 == 122395 or ult1 == 122388 or ult2 == 122388 or ult1 == 122174 or ult2 == 122174) then
 		colosSlotted = true
 	end
+	-- TODO: check for barrier & attro
 
 	PRIMARY_ULT_COST = GetAbilityCost(ult1)
 	BACKUP_ULT_COST = GetAbilityCost(ult2)
