@@ -451,7 +451,7 @@ a["@ACEINTHEHOLE"] = {"HodorReflexes/users/misc2/ACEINTHEHOLE_anim2.dds", 27, 1,
 --a["@PowerBottomBob"] = {"HodorReflexes/users/misc2/powerbottombob_anim.dds", 8, 6, 25}
 
 -- Gonzzzor's guild.
-players = {'Gonzzzor', 'Fr0gHD', 'HerzAusGold', 'TheSqueamishSquonk', 'VSK0', 'ancalagon42', 'Buzzr', 'GGreninja', 'Goddess-Hel', 'Concise.Complexity', 'zontar92'}
+players = {'Gonzzzor', 'Fr0gHD', 'TheSqueamishSquonk', 'VSK0', 'ancalagon42', 'Buzzr', 'GGreninja', 'Goddess-Hel', 'Concise.Complexity', 'zontar92'}
 for _, name in ipairs(players) do
 	u['@' .. name] = {name, string.format("|cffc800%s|r", name), "HodorReflexes/users/misc2/gonzzzor.dds"}
 end
