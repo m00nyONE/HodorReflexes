@@ -5,17 +5,25 @@ $HodorPath = $PSScriptRoot
 $HodorVersionFileData = Get-Content $HodorPath\HodorReflexes.txt | Where-Object { $_.Contains("## Version: ") }
 $HodorVersion =  $HodorVersionFileData.Split(" ")[2]
 
-# create filename & destination
-$AddonPath = (get-item $PSScriptRoot).parent.FullName
-$fileName = "HodorReflexes-$HodorVersion-public.zip"
-$destination = "$AddonPath\$fileName"
+# create zip filename & destination
+$parentPath = (Get-Item $PSScriptRoot).parent.FullName
+$zipFileName = "HodorReflexes-$HodorVersion-public.zip"
+$zipFilePath = "$parentPath\$zipFileName"
 
-# exclusion rules. Can use wild cards (*)
-$exclude = @("build.ps1",".git",".idea")
-# get files to compress using exclusion filer
-$files = Get-ChildItem -Path $HodorPath -Exclude $exclude
+$buildFilesPath="$parentPath\build\HodorReflexes"
+$arguments = @("/E", "/R:5", "/W:5", "/TBD", "/NP", "/V")
+$excludedFolders = @("/XD", "$HodorPath\.git", "$HodorPath\.idea")
+$excludedFiles = @("/XF", "$HodorPath\.gitignore", "$HodorPath\build.ps1")
+
+$cmdArgs = @("$HodorPath","$buildFilesPath",$arguments,$excludedFolders,$excludedFiles)
+robocopy @cmdArgs
+echo "created buildfiles at $buildFilesPath"
 
 # create archive
-echo "creating $fileName"
-Compress-Archive -Path $files -DestinationPath $destination -CompressionLevel Fastest -Force
+echo "creating $zipFilePath"
+
+Compress-Archive -Path $buildFilesPath -DestinationPath $zipFilePath -CompressionLevel Fastest -Force
 echo "finished building"
+
+Remove-Item -Recurse $parentPath\build
+echo "deleted buildfiles from $buildFilesPath"
