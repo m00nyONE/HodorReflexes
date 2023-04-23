@@ -242,7 +242,7 @@ local function enableDatashareV2()
 end
 
 local currTime = os.time(os.date("!*t"))
-local v2enableTime = os.time({year = 2023, month = 5, day = 7, hour = 0, min = 0, sec = 0})
+local v2enableTime = os.time({year = 2023, month = 4, day = 30, hour = 0, min = 0, sec = 0})
 
 -- TODO: swap to V2 on 07.05.2023 00:00:00 UTC
 if currTime >= v2enableTime then

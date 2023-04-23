@@ -56,13 +56,13 @@ u["@Reisser696"] = {"Reisser", "|cdd1703R|r|ce22e02e|r|ce74502i|r|cec5b01s|r|cf1
 a["@Reisser696"] = {"HodorReflexes/users/moo/Reisser696_anim.dds", 11, 1, 10}
 
 u["@FrecherZwerg"] = {"FrecherZwerg", "|c4c9beaFrecherZwerg|r", "HodorReflexes/users/moo/FrecherZwerg.dds"}
-a["@FrecherZwerg"] = {'HodorReflexes/users/moo/FrecherZwerg_anim.dds', 13, 2, 13}
+a["@FrecherZwerg"] = {"HodorReflexes/users/moo/FrecherZwerg_anim.dds", 13, 2, 13}
 
 u["@LotusBlut"] = {"LotusBlut",  "|c69ec64L|r|c71ef64o|r|c78f163t|r|c80f362u|r|c87f662s|r|c8ff861B|r|c96fa60l|r|c9efd60u|r|ca5ff5ft|r", "HodorReflexes/users/moo/LotusBlut.dds"}
-a["@LotusBlut"] = {'HodorReflexes/users/moo/LotusBlut_anim.dds', 3, 2, 3}
+a["@LotusBlut"] = {"HodorReflexes/users/moo/LotusBlut_anim.dds", 3, 2, 3}
 
 u["@KloppDichSchlau"] = {"Boo", "|c8b4412Boo|r", "HodorReflexes/users/moo/KloppDichSchlau.dds"}
-a["@KloppDichSchlau"] = {'HodorReflexes/users/moo/KloppDichSchlau_anim.dds', 8, 6, 28}
+a["@KloppDichSchlau"] = {"HodorReflexes/users/moo/KloppDichSchlau_anim.dds", 8, 6, 28}
 
 u["@Kyra527"] = {"Kyra", "|c88cb28Kyra|r", "HodorReflexes/users/moo/kyra527.dds"}
 a["@Kyra527"] = {"HodorReflexes/users/moo/Kyra527_anim.dds", 13, 2, 20}
@@ -71,3 +71,8 @@ u["@Artaphernes"] = {"Fairness", "|c289e05F|r|c23950aa|r|c1d8b0ei|r|c178113r|r|c
 a["@Artaphernes"] = {"HodorReflexes/users/moo/Artaphernes_anim.dds", 6, 5, 12.5}
 
 u["@sushiman573"] = {"Sushus", "|c8de63cS|r|ca4cc36u|r|cbbb331s|r|cd1992bh|r|ce88025u|r|cff661fs|r", "HodorReflexes/users/moo/sushiman573.dds"}
+
+u["@skinnycheeks"] = {"skinny", "|c084b90skinny|r", "HodorReflexes/users/moo/skinnycheeks.dds"}
+
+u["@Kirikina"] = {"Kirikina", "|c036d77K|r|c077b85i|r|c0a8a93r|r|c0d99a2i|r|c10a7b0k|r|c14b6bei|r|c17c4ccn|r|c1ad3daa|r", "HodorReflexes/users/moo/Kirikina.dds"}
+a["@Kirikina"] = {"HodorReflexes/users/moo/Kirikina_anim.dds", 5, 5, 13}
