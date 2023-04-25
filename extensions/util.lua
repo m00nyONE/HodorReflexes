@@ -27,6 +27,11 @@ function util.RGB2Hex(r, g, b)
 
 end
 
+-- color code string
+function util.ColorCode(hex, str)
+	return "|c" .. hex .. str .. "|r"
+end
+
 -- Remove duplicate values from a table.
 -- Only works for simple tables like: 1=>'a', 2=>'b', 3=>'b'
 function util.TableUnique(t)
