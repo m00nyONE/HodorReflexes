@@ -173,10 +173,6 @@ local sendExitInstanceButton = {
 	alignment = KEYBIND_STRIP_ALIGN_CENTER,
 }
 
-local function colorCode(hex, number)
-	return "|c" .. hex .. number .. "|r"
-end
-
 local function encodeDataV1(dmgType, ultType, ult, dmg, dps)
 	local rawData = DATA_PREFIX + zo_min(dps, 999) + zo_min(dmg, 9999) * 1000 + ((6 * dmgType + ultType) * 210 + ult) * 10000000
 	return rawData
@@ -244,7 +240,7 @@ end
 local currTime = os.time(os.date("!*t"))
 local v2enableTime = os.time({year = 2023, month = 4, day = 30, hour = 0, min = 0, sec = 0})
 
--- TODO: swap to V2 on 07.05.2023 00:00:00 UTC
+-- TODO: swap to V2 on 30.04.2023 00:00:00 UTC
 if currTime >= v2enableTime then
 	enableDatashareV2()
 end
@@ -974,6 +970,7 @@ function M.ProcessData(tag, data, ms)
 		if data == 22 and IsUnitGroupLeader(tag) then
 			-- Group leader wants everybody to exit the instance
 			HR.ExitInstance()
+		-- TODO: remove
 		elseif (data == 11 or data == 12) and IsUnitGroupLeader(tag) then
 			M.UseDatashareVersion(data - 10)
 		else
