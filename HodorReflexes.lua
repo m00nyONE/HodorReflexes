@@ -6,6 +6,7 @@ HodorReflexes = {
 	default = {
 		confirmExitInstance = true,
 		toxicMode = true,
+		disableIncompatibleDependencyWarning = false,
 	},
 
 	-- Saved variables
@@ -47,6 +48,8 @@ local GAMEPAD_STYLES =  {
 	dismissTemplate = "HodorReflexes_Updated_Dismiss_Gamepad_Template",
 }
 
+local incompatibleDependencyWarningTriggered = false
+
 -- Add some toxicity
 local mockText = {}
 local mockZones = {
@@ -61,6 +64,7 @@ local mockZones = {
 	[1196] = true, -- ka
 	[1263] = true, -- rg
 	[1344] = true, -- dsr
+	-- TODO: add Sanity's Edge
 }
 
 -- Death recap is shown/hidden
@@ -98,11 +102,8 @@ local function UpdatePlatformStyles(styleTable)
 
 end
 
--- TODO: Add menu option to toggle this on and off.
--- Some people complain about this message...
+-- Some people complain about this message... there is now an option to disable it.
 -- Do what you want, but then don't tell me that you have a problem. You have been warned
--- TODO: add simple command to check if this warning has been turned off - smt like /hodor.isWarningDisabled
--- TODO: add simple command to check if a warning has been triggered - smt like /hodor.isWarningTriggered
 local function CheckForOutdatedLibAddonMenu()
 	if LibStub == nil then return end
 
@@ -110,6 +111,7 @@ local function CheckForOutdatedLibAddonMenu()
 	if minor == nil then return end
 
 	if minor <= 32 then
+		incompatibleDependencyWarningTriggered = true
 		zo_callLater(function()
 			d("!!!WARNING!!!")
 			d("!!!WARNING!!!")
@@ -127,14 +129,16 @@ local function CheckForOutdatedLibAddonMenu()
 end
 
 local function Initialize()
-
-	CheckForOutdatedLibAddonMenu()
-
 	-- Create callback manager
 	HR.cm = HR.cm or ZO_CallbackObject:New()
 
 	-- Retrieve saved variables
 	HR.sv = ZO_SavedVars:NewAccountWide(HR.svName, HR.svVersion, nil, HR.default)
+
+	-- check for incompatibilities
+	if HR.sv.disableIncompatibleDependencyWarning == false then
+		CheckForOutdatedLibAddonMenu()
+	end
 
 	-- Bindings
 	ZO_CreateStringId('SI_BINDING_NAME_HR_EXIT_INSTANCE', GetString(HR_BINDING_EXIT_INSTANCE))
@@ -330,6 +334,12 @@ end
 SLASH_COMMANDS["/hodor"] = function(str)
 	if str == "lock" then
 		HR.LockUI()
+	end
+	if str == "isIncompatibleDependencyWarningDisabled" then
+		d(HR.sv.disableIncompatibleDependencyWarning)
+	end
+	if str == "isIncompatibleDependencyWarningTriggered" then
+		d(incompatibleDependencyWarningTriggered)
 	end
 end
 

@@ -306,6 +306,16 @@ function M.BuildMenu()
 			end
 		},
 		{
+			type = "checkbox",
+			name = "Disable dependency warning",
+			tooltip = "enable/disable incompatible dependency warning",
+			default = false,
+			getFunc = function() return HodorReflexes.sv.disableIncompatibleDependencyWarning end,
+			setFunc = function(value)
+				HodorReflexes.sv.disableIncompatibleDependencyWarning = value and true
+			end
+		},
+		{
 			type = "description",
 			text = GetString(HR_MENU_MISC_DESC),
 		},

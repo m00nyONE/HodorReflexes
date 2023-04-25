@@ -1,6 +1,8 @@
 1.10.0 - @m00nyONE
 - enable V2 sharing for everyone & delete old V1 sharing. Adding new ultimates to share will begin in the next release
-- added disableWarning & isWarningDisabled
+- as requested, allow players to disable the outdated LibAddonMenu2.0 dependency warning in the settings menu. There will be no support if this setting is turned on.
+- added /hodor isIncompatibleDependencyWarningDisabled
+- added /hodor isIncompatibleDependencyWarningTriggered
 - necrom API bump
 
 1.9.9 - @m00nyONE
