@@ -112,6 +112,8 @@ local function CheckForOutdatedLibAddonMenu()
 
 	if minor <= 32 then
 		incompatibleDependencyWarningTriggered = true
+		if HR.sv.disableIncompatibleDependencyWarning == true then return end
+
 		zo_callLater(function()
 			d("!!!WARNING!!!")
 			d("!!!WARNING!!!")
@@ -136,9 +138,8 @@ local function Initialize()
 	HR.sv = ZO_SavedVars:NewAccountWide(HR.svName, HR.svVersion, nil, HR.default)
 
 	-- check for incompatibilities
-	if HR.sv.disableIncompatibleDependencyWarning == false then
-		CheckForOutdatedLibAddonMenu()
-	end
+	CheckForOutdatedLibAddonMenu()
+
 
 	-- Bindings
 	ZO_CreateStringId('SI_BINDING_NAME_HR_EXIT_INSTANCE', GetString(HR_BINDING_EXIT_INSTANCE))
