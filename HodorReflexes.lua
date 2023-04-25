@@ -64,7 +64,7 @@ local mockZones = {
 	[1196] = true, -- ka
 	[1263] = true, -- rg
 	[1344] = true, -- dsr
-	-- TODO: add Sanity's Edge
+	[1427] = true, -- se
 }
 
 -- Death recap is shown/hidden
