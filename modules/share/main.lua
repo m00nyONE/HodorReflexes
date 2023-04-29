@@ -3,8 +3,6 @@ HodorReflexes.modules.share = {
 	version = "1.0.0",
 
 	uiLocked = true,
-	-- beta sharing
-	V2 = false,
 
 	default = {
 		damageRowColor = {0, 1, 0, 0.36},
@@ -173,11 +171,7 @@ local sendExitInstanceButton = {
 	alignment = KEYBIND_STRIP_ALIGN_CENTER,
 }
 
-local function encodeDataV1(dmgType, ultType, ult, dmg, dps)
-	local rawData = DATA_PREFIX + zo_min(dps, 999) + zo_min(dmg, 9999) * 1000 + ((6 * dmgType + ultType) * 210 + ult) * 10000000
-	return rawData
-end
-local function encodeDataV2(dmgType, ultType, ult, dmg, dps)
+local function encodeData(dmgType, ultType, ult, dmg, dps)
 	local dmgTypeZone = 27*110+110 -- 3080
 	local ultReduced = zo_ceil(ult / 2)
 	local rawData = DATA_PREFIX
@@ -190,22 +184,7 @@ local function encodeDataV2(dmgType, ultType, ult, dmg, dps)
 	return rawData
 end
 
-local function decodeDataV1(rawData)
-	local head = zo_floor(rawData / 10000000 % 10000) -- ping type, ult type and ult number
-	local type = zo_floor(head / 210) -- ping type (0..6) and ult type (1..5)
-	local dmgType = zo_floor(type / 6)
-	local ultType = type % 6
-	if dmgType >= 0 and dmgType <= 6 and ultType > 0 and ultType < 6 then -- extra check to avoid conflicts
-		local ult = head % 210
-		local dmg = zo_floor(rawData % 10000000 / 1000)
-		local dps = zo_floor(rawData % 1000)
-
-		return true, dmgType, ultType, ult, dmg, dps
-	end
-
-	return false, nil, nil, nil, nil, nil
-end
-local function decodeDataV2(rawData)
+local function decodeData(rawData)
 	local dmgTypeZone = 27*110+110 -- 3080
 	local head = zo_floor(rawData / 10000000 % 10000)
 	local dmgType = zo_floor(head / dmgTypeZone)
@@ -220,30 +199,7 @@ local function decodeDataV2(rawData)
 	return false, nil, nil, nil, nil, nil
 end
 
--- TODO: beta test for V2 sharing
-local encodeData = encodeDataV1
-local decodeData = decodeDataV1
 
-local function enableDatashareV1()
-	encodeData = encodeDataV1
-	decodeData = decodeDataV1
-	M.V2 = false
-	d("BETA: datashare V1 activated")
-end
-local function enableDatashareV2()
-	encodeData = encodeDataV2
-	decodeData = decodeDataV2
-	M.V2 = true
-	d("BETA: datashare V2 activated")
-end
-
-local currTime = os.time(os.date("!*t"))
-local v2enableTime = os.time({year = 2023, month = 4, day = 30, hour = 0, min = 0, sec = 0})
-
--- TODO: swap to V2 on 30.04.2023 00:00:00 UTC
-if currTime >= v2enableTime then
-	enableDatashareV2()
-end
 
 -- Check player ultimates for horn/colossus to share them only when they are slotted
 local function CheckSlottedUlts()
@@ -330,39 +286,6 @@ function M.SendCustomData(data, force, callback)
 		end
 	else
 		return false
-	end
-end
-
-function M.UseDatashareVersion(version)
-	if version == 1 then
-		enableDatashareV1()
-		return
-	end
-	if version == 2 then
-		enableDatashareV2()
-	end
-end
-
-local function SendForceUseDatasharingVersion(version)
-	local shareCode = 11
-
-	if version == 1 then
-		shareCode = 11
-	end
-	if version == 2 then
-		shareCode = 12
-	end
-
-	M.SendCustomData(shareCode, false, function()
-		M.UseDatashareVersion(version)
-	end)
-end
-
-function M.SendForceUseDatasharingVersion(version)
-	if IsUnitGroupLeader('player') then
-		LibAddonMenu2.util.ShowConfirmationDialog("Force sharing version?", "Do you want to force your group using the sharing version you defined and be part of the ongoing Beta? this can only be reverted by doing a /reloadui", function()
-			SendForceUseDatasharingVersion(version)
-		end)
 	end
 end
 
@@ -970,9 +893,6 @@ function M.ProcessData(tag, data, ms)
 		if data == 22 and IsUnitGroupLeader(tag) then
 			-- Group leader wants everybody to exit the instance
 			HR.ExitInstance()
-		-- TODO: remove
-		elseif (data == 11 or data == 12) and IsUnitGroupLeader(tag) then
-			M.UseDatashareVersion(data - 10)
 		else
 			M.cm:FireCallbacks('CustomData', tag, data)
 		end

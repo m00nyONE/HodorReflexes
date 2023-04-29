@@ -319,33 +319,6 @@ function M.BuildMenu()
 			type = "description",
 			text = GetString(HR_MENU_MISC_DESC),
 		},
-		-- TODO: remove when BETA is finished
-		{
-			type = "header",
-			name = string.format("|cFFFACD%s|r", "BETA"),
-		},
-		{
-			type = "checkbox",
-			name = "Sharing V2",
-			tooltip = "enable/disable sharing V2",
-			default = false,
-			getFunc = function() return M.V2 end,
-			setFunc = function(value)
-				if value then
-					M.UseDatashareVersion(2)
-				else
-					M.UseDatashareVersion(1)
-				end
-			end
-		},
-		{
-			type = "button",
-			name = "enforce v2 for everyone",
-			tooltip = "enforce sharing v2 for everyone in the group (only works as group lead)",
-			func = function() M.SendForceUseDatasharingVersion(2) end,
-			width = "full",
-		}
-		-- TODO: until here
 	}
 	HodorReflexes.RegisterOptionControls(options)
 
