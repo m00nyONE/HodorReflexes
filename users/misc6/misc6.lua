@@ -24,3 +24,6 @@ u["@zingerbox69"] = {"zingerbox", "|ce30a1cz|r|cc60d39i|r|caa1055n|r|c8e1371g|r|
 a["@zingerbox69"] = {"HodorReflexes/users/misc6/zingerbox69_anim.dds", 6, 5, 50}
 u["@KiaraCastello"] = {"KiaraCastello", "|c00eaf6K|r|c00ececi|r|c00ede3a|r|c00efd9r|r|c00f1d0a|r|c00f3c7C|r|c00f4bda|r|c00f6b4s|r|c00f8abt|r|c00faa1e|r|c00fb98l|r|c00fd8el|r|c00ff85o|r"}
 a["@KiaraCastello"] = {"HodorReflexes/users/misc6/KiaraCastello_anim.dds", 12, 1, 9}
+u["@Chiefie"] = {"Chiefie", "|c00b603Chiefie|r", "HodorReflexes/users/misc6/Chiefie.dds"}
+u["@Harleenka"] = {"Harleenka", "|ce30443H|r|cc8065ba|r|cac0972r|r|c900b8al|r|c750da1e|r|c590fb9e|r|c3d12d0n|r|c2214e8k|r|c0616ffa|r", "HodorReflexes/users/misc6/Harleenka.dds"}
+
