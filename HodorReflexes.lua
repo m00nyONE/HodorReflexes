@@ -107,7 +107,7 @@ end
 local function CheckForOutdatedLibAddonMenu()
 	if LibStub == nil then return end
 
-	local major, minor = LibStub:GetLibrary("LibAddonMenu-2.0", true)
+	local _, minor = LibStub:GetLibrary("LibAddonMenu-2.0", true)
 	if minor == nil then return end
 
 	if minor <= 32 then
@@ -193,7 +193,7 @@ end
 
 -- EVENT_PLAYER_COMBAT_STATE handler
 local inCombat = false -- previous combat state
-function HR.PlayerCombatState(e, c)
+function HR.PlayerCombatState(_, c)
 	if inCombat ~= c then
 		if c then
 			inCombat = true
@@ -218,17 +218,20 @@ function HR.ReticleTargetChanged()
 end
 
 -- EVENT_COMBAT_EVENT: ACTION_RESULT_DIED / ACTION_RESULT_DIED_XP
-function HR.UnitDied(eventCode, result, isError, abilityName, abilityGraphic, abilityActionSlotType, sourceName, sourceType, targetName, targetType, hitValue, powerType, damageType, log, sourceUnitId, targetUnitId, abilityId)
+--function HR.UnitDied(eventCode, result, isError, abilityName, abilityGraphic, abilityActionSlotType, sourceName, sourceType, targetName, targetType, hitValue, powerType, damageType, log, sourceUnitId, targetUnitId, abilityId)
+function HR.UnitDied(_, result, _, _, _, _, _, _, targetName, targetType, _, _, _, _, _, targetUnitId, _)
 	HR.cm:FireCallbacks(HR_EVENT_UNIT_DIED, result, targetName, targetType, targetUnitId)
 end
 
 -- EVENT_COMBAT_EVENT: ACTION_RESULT_INTERRUPT
-function HR.Interrupt(eventCode, result, isError, abilityName, abilityGraphic, abilityActionSlotType, sourceName, sourceType, targetName, targetType, hitValue, powerType, damageType, log, sourceUnitId, targetUnitId, abilityId)
+--function HR.Interrupt(eventCode, result, isError, abilityName, abilityGraphic, abilityActionSlotType, sourceName, sourceType, targetName, targetType, hitValue, powerType, damageType, log, sourceUnitId, targetUnitId, abilityId)
+function HR.Interrupt(_, result, _, _, _, _, _, _, targetName, targetType, _, _, _, _, _, targetUnitId, _)
 	HR.cm:FireCallbacks(HR_EVENT_INTERRUPT, result, targetName, targetType, targetUnitId)
 end
 
 -- EVENT_COMBAT_EVENT: ACTION_RESULT_STUNNED
-function HR.Stunned(eventCode, result, isError, abilityName, abilityGraphic, abilityActionSlotType, sourceName, sourceType, targetName, targetType, hitValue, powerType, damageType, log, sourceUnitId, targetUnitId, abilityId)
+--function HR.Stunned(eventCode, result, isError, abilityName, abilityGraphic, abilityActionSlotType, sourceName, sourceType, targetName, targetType, hitValue, powerType, damageType, log, sourceUnitId, targetUnitId, abilityId)
+function HR.Stunned(_, result, _, _, _, _, _, _, targetName, targetType, _, _, _, _, _, targetUnitId, _)
 	HR.cm:FireCallbacks(HR_EVENT_STUNNED, result, targetName, targetType, targetUnitId)
 end
 
