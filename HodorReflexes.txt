@@ -27,6 +27,7 @@ users/misc2/misc2.lua
 users/misc3/misc3.lua
 users/misc4/misc4.lua
 users/misc5/misc5.lua
+users/misc6/misc6.lua
 users/hodor/hodor.lua
 users/frenchkiss/frenchkiss.lua
 users/chainreaction/chainreaction.lua

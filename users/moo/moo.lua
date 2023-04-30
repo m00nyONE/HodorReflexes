@@ -76,3 +76,5 @@ u["@skinnycheeks"] = {"skinny", "|c084b90skinny|r", "HodorReflexes/users/moo/ski
 
 u["@Kirikina"] = {"Kirikina", "|c036d77K|r|c077b85i|r|c0a8a93r|r|c0d99a2i|r|c10a7b0k|r|c14b6bei|r|c17c4ccn|r|c1ad3daa|r", "HodorReflexes/users/moo/Kirikina.dds"}
 a["@Kirikina"] = {"HodorReflexes/users/moo/Kirikina_anim.dds", 5, 5, 13}
+
+u["@namos1337"] = {"namos", "|cd40044n|r|ca90073a|r|c7d00a1m|r|c5200d0o|r|c2700ffs|r", "HodorReflexes/users/moo/namos1337.dds"}
