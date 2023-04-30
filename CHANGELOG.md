@@ -6,6 +6,7 @@
 - necrom API bump
 - add Sanity's Edge to mock zones
 - add arcanist Christmas class icon
+- icon update as always
 
 1.9.9 - @m00nyONE
 - Because of the upcoming release of HodorReflexes 1.10.0 on 07. May 2023, this version ( 1.9.9 ) will include a timer that auto enables V2 sharing on 30. April 2023 for everyone. This ensures 1.9.9 & 1.10.0 use the same sharing mechanism and will work together. This should give everyone enough wiggle room to make the update to 1.10.0 without losing compatibility.
