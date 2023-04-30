@@ -342,6 +342,9 @@ SLASH_COMMANDS["/hodor"] = function(str)
 	if str == "isIncompatibleDependencyWarningTriggered" then
 		d(incompatibleDependencyWarningTriggered)
 	end
+	if str == "version" then
+		d(HR.version)
+	end
 end
 
 EM:RegisterForEvent(HR.name, EVENT_ADD_ON_LOADED, function(_, name)
