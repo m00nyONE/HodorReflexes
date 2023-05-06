@@ -78,3 +78,8 @@ u["@Kirikina"] = {"Kirikina", "|c036d77K|r|c077b85i|r|c0a8a93r|r|c0d99a2i|r|c10a
 a["@Kirikina"] = {"HodorReflexes/users/moo/Kirikina_anim.dds", 5, 5, 13}
 
 u["@namos1337"] = {"namos", "|cd40044n|r|ca90073a|r|c7d00a1m|r|c5200d0o|r|c2700ffs|r", "HodorReflexes/users/moo/namos1337.dds"}
+
+u["@Connor180"] = {"Connor", "|c83779fC|r|c978c99o|r|caca193n|r|cc0b68dn|r|cd5cb87o|r|ce9e081r|r", "HodorReflexes/users/moo/Connor180.dds"}
+a["@Connor180"] = {"HodorReflexes/users/moo/Connor180_anim2.dds", 10, 1, 10}
+
+u["@BloodStainChild666"] = {"Childofbodom", "|c900C3FBSC's-DMG|r", "HodorReflexes/users/moo/BloodStainChild666.dds"}
