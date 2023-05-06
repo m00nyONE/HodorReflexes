@@ -4,6 +4,7 @@
 - added /hodor version
 - added /hodor isIncompatibleDependencyWarningDisabled
 - added /hodor isIncompatibleDependencyWarningTriggered
+- add README.md for the git repository
 - necrom API bump
 - add Sanity's Edge to mock zones
 - add arcanist Christmas class icon
