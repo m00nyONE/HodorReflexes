@@ -1,5 +1,6 @@
 1.10.0 - @m00nyONE
 - enable V2 sharing for everyone & delete old V1 sharing. Adding new ultimates to share will begin in the next release
+- raise required LibDataShare version to 3 to ensure to fix incompatibility issues introduced with the with new sharing system
 - as requested, allow players to disable the outdated LibAddonMenu2.0 dependency warning in the settings menu. There will be no support if this setting is turned on.
 - added /hodor version
 - added /hodor isIncompatibleDependencyWarningDisabled
