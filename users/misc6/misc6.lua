@@ -43,7 +43,7 @@ a["@worries"] = {"HodorReflexes/users/misc6/worries_anim.dds", 10, 5, 10}
 u["@Dashiel20"] = {"Dashiel20", "|cff0010D|r|cff001fa|r|cff002fs|r|cff003fh|r|cff004ei|r|cff005ee|r|cff006el|r|cff007d2|r|cff008d0|r", "HodorReflexes/users/misc6/Dashiel20.dds"}
 u["@Spudlehhh"] = {"Spudlehhh", "|c6ed9e3S|r|c60bec6p|r|c53a3aau|r|c45888ed|r|c376c71l|r|c295155e|r|c1c3639h|r|c0e1b1ch|r|c000000h|r", "HodorReflexes/users/misc6/Spudlehhh.dds"}
 u["@SoulEater111"] = {"SoulEater", "|cfff937SoulEater|r"}
-a["@SoulEater111"] = {"HodorReflexes/users/misc6/SoulEater111_anim.dds", 10, 1, 10}
+a["@SoulEater111"] = {"HodorReflexes/users/misc6/SoulEater111_anim2.dds", 7, 1, 7}
 u["@GattsLord"] = {"GattsLord", "|cff0117GattsLord|r", "HodorReflexes/users/misc6/GattsLord.dds"}
 u["@keevelish"] = {"keevelish", "|c32e316k|r|c38c627e|r|c3eaa37e|r|c448e47v|r|c4a7158e|r|c505568l|r|c563978i|r|c5c1c89s|r|c620099h|r", "HodorReflexes/users/misc6/keevelish.dds"}
 u["@De4D3Ye1"] = {"FatHippo", "|c67e53eF|r|c7bcc59a|r|c8fb275t|r|ca49991H|r|cb87faci|r|ccc65c8p|r|ce04ce3p|r|cf432ffo|r"}
@@ -51,4 +51,7 @@ a["@De4D3Ye1"] = {"HodorReflexes/users/misc6/De4D3Ye1_anim.dds", 12, 1, 1.5}
 u["@Kage997"] = {"Kage997", "|c28c4c2K|r|c26c4c2a|r|c25c3c3g|r|c23c2c3e|r|c22c1c49|r|c20c1c49|r|c1fc0c57|r"}
 a["@Kage997"] = {"HodorReflexes/users/misc6/Kage997_anim.dds", 10, 1, 9}
 u["@powfu"] = {"powfu", "|cf8cacfp|r|cfa979fo|r|cfb656fw|r|cfd323ff|r|cff000fu|r", "HodorReflexes/users/flags/pl.dds"}
-
+u["@Mendrak"] = {"Mendrak", "|cffd051M|r|cffbb47e|r|cffa63dn|r|cff9233d|r|cff7d29r|r|cff681fa|r|cff5315k|r", "HodorReflexes/users/misc6/Mendrak.dds"}
+u["@Damzses"] = {"Damzses", "|cf3bb14D|r|ce89c29a|r|cdc7d3dm|r|cd15d52z|r|cc53e66s|r|cba1f7be|r|cae008fs|r"}
+a["@Damzses"] = {"HodorReflexes/users/misc6/Damzses_anim.dds", 23, 1, 12}
+u["@SGzuidiao"] = {"SGzuidiao", "|c4ec5f7S|r|c64b7eeG|r|c7aaae6z|r|c909dddu|r|ca78fd5i|r|cbd82ccd|r|cd375c4i|r|ce967bba|r|cff5ab3o|r", "HodorReflexes/users/misc6/SGzuidiao.dds"}
