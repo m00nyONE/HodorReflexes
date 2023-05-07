@@ -50,4 +50,5 @@ u["@De4D3Ye1"] = {"FatHippo", "|c67e53eF|r|c7bcc59a|r|c8fb275t|r|ca49991H|r|cb87
 a["@De4D3Ye1"] = {"HodorReflexes/users/misc6/De4D3Ye1_anim.dds", 12, 1, 1.5}
 u["@Kage997"] = {"Kage997", "|c28c4c2K|r|c26c4c2a|r|c25c3c3g|r|c23c2c3e|r|c22c1c49|r|c20c1c49|r|c1fc0c57|r"}
 a["@Kage997"] = {"HodorReflexes/users/misc6/Kage997_anim.dds", 10, 1, 9}
+u["@powfu"] = {"powfu", "|cf8cacfp|r|cfa979fo|r|cfb656fw|r|cfd323ff|r|cff000fu|r", "HodorReflexes/users/flags/pl.dds"}
 
