@@ -218,23 +218,26 @@ function M.BuildMenu()
 			end,
 			width = 'half',
 		},
-		{
-			type = "dropdown",
-			name = GetString(HR_MENU_COLOS_PRIORITY),
-			tooltip = GetString(HR_MENU_COLOS_PRIORITY_TT),
-			default = M.sv.colosPriority,
-			getFunc = function() return M.sv.colosPriority end,
-			setFunc = function(value)
-				M.sv.colosPriority = value or 'tank'
-			end,
-			choices = {
-				GetString(HR_MENU_COLOS_PRIORITY_DEFAULT), GetString(HR_MENU_COLOS_PRIORITY_TANK), GetString(HR_MENU_COLOS_PRIORITY_ALWAYS), GetString(HR_MENU_COLOS_PRIORITY_NEVER),
-			},
-			choicesValues = {
-				'default', 'tank', 'always', 'never',
-			},
-			width = 'half',
-		},
+		--{
+		--	type = "dropdown",
+		--	name = GetString(HR_MENU_COLOS_PRIORITY),
+		--	tooltip = GetString(HR_MENU_COLOS_PRIORITY_TT),
+		--	default = M.sv.colosPriority,
+		--	getFunc = function()
+		--		local priority = M.sv.colosPriority
+		--		if priority == 'tank' then priority = 'default' end
+		--		return priority end,
+		--	setFunc = function(value)
+		--		M.sv.colosPriority = value or 'default'
+		--	end,
+		--	choices = {
+		--		GetString(HR_MENU_COLOS_PRIORITY_DEFAULT), GetString(HR_MENU_COLOS_PRIORITY_ALWAYS), GetString(HR_MENU_COLOS_PRIORITY_NEVER),
+		--	},
+		--	choicesValues = {
+		--		'default', 'always', 'never',
+		--	},
+		--	width = 'half',
+		--},
 		{
 			type = "checkbox",
 			name = GetString(HR_MENU_COLOS_SUPPORT_RANGE),
@@ -244,7 +247,7 @@ function M.BuildMenu()
 			setFunc = function(value)
 				M.sv.colosSupportRange = value or false
 			end,
-			width = 'half',
+			--width = 'half',
 		},
 		{
 			type = "checkbox",

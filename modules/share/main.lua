@@ -76,12 +76,12 @@ local controlsVisible = false -- current state of UI controls
 local countdownVisible = false
 
 -- Ultimate types.
+local ULT_MISC = 0
 local ULT_HORN = 1
 local ULT_COLOS = 2
 local ULT_HORN_COLOS = 3
 
 -- V2
---local ULT_MISC = 0
 --local ULT_HORN = 1
 --local ULT_COLOS = 2
 --local ULT_BARRIER = 4
@@ -173,7 +173,7 @@ local sendExitInstanceButton = {
 
 local function encodeData(dmgType, ultType, ult, dmg, dps)
 	local dmgTypeZone = 27*110+110 -- 3080
-	local ultReduced = zo_ceil(ult / 2)
+	local ultReduced = zo_ceil(ult / 5)
 	local rawData = DATA_PREFIX
 	local head = dmgType * dmgTypeZone -- 0-3080, 3080 - 6160, 6160-9240
 	local head2 = ultType * 110 + ultReduced
@@ -190,7 +190,7 @@ local function decodeData(rawData)
 	local dmgType = zo_floor(head / dmgTypeZone)
 	local ultType = zo_floor((head % dmgTypeZone) / 110)
 	if dmgType >= 0 and dmgType <= 2 and ultType >= 0 and ultType <= 27 then -- extra check to avoid conflicts
-		local ult = zo_ceil(((head % dmgTypeZone) - ultType * 110) * 2)
+		local ult = zo_ceil(((head % dmgTypeZone) - ultType * 110) * 5)
 		local dmg = zo_floor(rawData % 10000000 / 1000)
 		local dps = zo_floor(rawData % 1000)
 		return true, dmgType, ultType, ult, dmg, dps
@@ -198,8 +198,6 @@ local function decodeData(rawData)
 
 	return false, nil, nil, nil, nil, nil
 end
-
-
 
 -- Check player ultimates for horn/colossus to share them only when they are slotted
 local function CheckSlottedUlts()
@@ -239,6 +237,15 @@ local function IsValidColor(c)
 	return type(c) == 'table' and #c >= 3
 end
 
+local function roundDownToFive(number)
+	local rounded = zo_floor(number / 5) * 5
+	if rounded > number then
+		return rounded - 5
+	else
+		return rounded
+	end
+end
+
 -- Send player's ultimate and damage via map ping.
 -- This function must always be called from SendAttempt(), which checks whether it's safe to send data.
 local function SendData()
@@ -246,12 +253,13 @@ local function SendData()
 	local shareHorn = SV.enableUltimateShare ~= 0 and (hornSlotted and SV.enableUltimateShare or hasSaxhleel and type(SV.enableUltimateShare) == 'number' and SV.enableUltimateShare > 0)
 	local shareColos = SV.enableColosShare and colosSlotted
 	if M.IsEnabled() then
+		ultType = ULT_MISC
+		-- TODO: check if 1 is okay or if this needs to be 5
+		ult = roundDownToFive(zo_min(500, GetUnitPower("player", POWERTYPE_ULTIMATE)))
 		if shareColos then
 			ultType = shareHorn and ULT_HORN_COLOS or ULT_COLOS
-			ult = zo_max(1, M.GetColosPercent())
 		elseif shareHorn then
 			ultType = ULT_HORN
-			ult = zo_max(1, M.GetHornPercent())
 		end
 		if SV.enableDamageShare then
 			pingType, dmg, dps = M.GetPlayerDamage()
@@ -344,7 +352,7 @@ local function CleanGroupData(force)
 			if newData and data.name == newData[2] then
 				-- Update group tag, because it can change when group changes
 				data.tag = newData[1]
-			-- Player is not in the group anymore or on another character, clear his data
+				-- Player is not in the group anymore or on another character, clear his data
 			else
 				-- Stop animations
 				HR.anim.UnregisterUser(userId)
@@ -409,7 +417,7 @@ local function CreateSceneFragments()
 		elseif not M.uiLocked then -- unlocked UI, show default notification
 			HodorReflexes_Share_ColosCountdown_Label:SetText(strformat("%s: |cFFFF002.5|r", SV.colosCountdownText))
 			result = true
-		elseif colosOrder == 0 and IsUnitInCombat('player') and M.GetColosPercent(true) >= 100 and (DoesUnitExist('boss1') or DoesUnitExist('boss2') or player.GetCurrentHouseId() > 0) then
+		elseif colosOrder == 0 and IsUnitInCombat('player') and M.GetUltPercentage(GetUnitPower("player", POWERTYPE_ULTIMATE), ABILITY_COST_COLOS) >= 100 and (DoesUnitExist('boss1') or DoesUnitExist('boss2') or player.GetCurrentHouseId() > 0) then
 			local t = time()
 			local count = mvEnd - t - 1000
 			if colosEnd - t < 0 and count <= 5000 then -- show if colos is not being casted by anyone and major vuln remaining time is below 5000
@@ -896,9 +904,10 @@ function M.ProcessData(tag, data, ms)
 		else
 			M.cm:FireCallbacks('CustomData', tag, data)
 		end
-	-- Data is encoded between DATA_PREFIX and DATA_PREFIX * 2
+		-- Data is encoded between DATA_PREFIX and DATA_PREFIX * 2
 	elseif data > DATA_PREFIX and data < DATA_PREFIX * 2 then
 		local success, pingType, ultType, ult, dmg, dps = decodeData(data)
+		--d(ult)
 		if success == false then return end
 
 		M.UpdatePlayerData(tag, pingType, ultType, ult, dmg, dps, ms or time())
@@ -962,47 +971,18 @@ function M.IsDamageListVisible()
 	end
 end
 
-function M.GetHornPercent(raw)
-	local ult = GetUnitPower("player", POWERTYPE_ULTIMATE)
-	local cost = ABILITY_COST_HORN
+function M.GetUltPercentage(raw, abilityCost)
+	local ultPercentage = 0
 
-	if not raw then
-		if SV.enableUltimateShare == 1 and hasSaxhleel then
-			cost = zo_max(PRIMARY_ULT_COST, BACKUP_ULT_COST)
-			if cost < 1 then cost = ABILITY_COST_HORN end
-		elseif SV.enableUltimateShare == 250 then
-			cost = 250
-		end
-	end
-
-	if ult <= cost then
+	if raw <= abilityCost then
 		-- When ult is not ready, we show real %
-		return zo_floor(100 * ult / cost)
+		return zo_floor(raw/abilityCost*100)
 	else
 		-- If ult is ready, then adjust % to show 200% only at 500 points
-		return zo_min(200, 100 + zo_floor(100 * (ult - cost) / (500 - cost)))
+		return zo_min(200, 100 + zo_floor(100 * (raw - abilityCost) / (500 - abilityCost)))
 	end
-end
 
-function M.GetColosPercent(raw)
-	local ult = GetUnitPower("player", POWERTYPE_ULTIMATE)
-	if raw or ult < ABILITY_COST_COLOS then
-		-- When ult is not ready, we show real %
-		return zo_floor(100 * ult / ABILITY_COST_COLOS)
-	else
-		if SV.colosPriority == 'always' or SV.colosPriority == 'tank' and GetSelectedLFGRole() == LFG_ROLE_TANK then
-			return 201
-		elseif SV.colosPriority == 'never' then
-			return 99
-		elseif ult * 0.85 < ABILITY_COST_HORN then
-			-- Use the normal formula until horn is ready, because its % is calculated relative to colossus when both ultimates are shared.
-			-- We use 0.85 instead of 0.9 multipler, because the formula below is "slower" than this one (it's just a rough number, nothing precisely calculated).
-			return zo_floor(100 * ult / ABILITY_COST_COLOS)
-		else
-			-- If ult is ready, then adjust % to show 200% only at 500 points
-			return zo_min(200, 100 + zo_floor(100 * (ult - ABILITY_COST_COLOS) / (500 - ABILITY_COST_COLOS)))
-		end
-	end
+	return zo_min(200, ultPercentage)
 end
 
 function M.GetUltType()
@@ -1157,7 +1137,7 @@ function M.UpdatePlayerData(tag, pingType, ultType, ult, dmg, dps, dataTime)
 			playerData.dmgTime = dataTime
 		end
 
-	-- Create controls for a new player
+		-- Create controls for a new player
 	elseif IsValidString(userId) then
 		playerData = {
 			tag = tag,
@@ -1266,20 +1246,24 @@ do
 			if data.ult > 0 and (isTestRunning or units.IsOnline(tag)) then
 				-- Get horn and colos values based on ultType
 				local horn, colos = 0, 0 -- ult %
+				local misc = 0 -- ult raw for no special ultType
 				local colorHorn, colorColos = 'FFFFFF', 'FFFFFF'
-				if data.ultType == ULT_HORN then
-					horn = data.ult
+				if data.ultType == ULT_MISC then
+					misc = data.ult
+				elseif data.ultType == ULT_HORN then
+					horn = M.GetUltPercentage(data.ult, ABILITY_COST_HORN)
 				elseif data.ultType == ULT_COLOS then
-					colos = data.ult
+					colos = M.GetUltPercentage(data.ult, ABILITY_COST_COLOS)
 				elseif data.ultType == ULT_HORN_COLOS then
-					horn = zo_ceil(data.ult * 0.9)
-					colos = data.ult
+					horn = M.GetUltPercentage(data.ult, ABILITY_COST_HORN)
+					colos = M.GetUltPercentage(data.ult, ABILITY_COST_COLOS)
 				end
 				-- War Horn
 				if ultRow then
 					if horn > 0 then
 						if horn >= 100 then colorHorn = '00FF00' elseif horn >= 80 then colorHorn = 'FFFF00' end
 						ultRow:GetNamedChild('_Value'):SetText(strformat('|c%s%d%%|r', colorHorn, zo_min(200, horn)))
+						ultRow:GetNamedChild('_RawValue'):SetText(strformat('|c%s%d|r', "FFFFFF", zo_min(500, data.ult)))
 						ultRow:SetHidden(false)
 						rowsHorn[#rowsHorn + 1] = {tag, horn, data}
 					else
@@ -1289,8 +1273,9 @@ do
 				-- Colossus
 				if clsRow then
 					if colos > 0 and not IsUnitDead(tag) and (not SV.colosSupportRange or isTestRunning or M.IsUnitNearby(tag)) then
-						if colos >= 100 then colorColos = '00FF00' elseif horn >= 80 then colorColos = 'FFFF00' end
-						clsRow:GetNamedChild('_Value'):SetText(strformat('|c%s%d%%|r', colorColos, zo_min(250, colos)))
+						if colos >= 100 then colorColos = '00FF00' elseif colos >= 80 then colorColos = 'FFFF00' end
+						clsRow:GetNamedChild('_Value'):SetText(strformat('|c%s%d%%|r', colorColos, zo_min(200, colos)))
+						clsRow:GetNamedChild('_RawValue'):SetText(strformat('|c%s%d|r', "FFFFFF", zo_min(500, data.ult)))
 						clsRow:SetHidden(false)
 						rowsColos[#rowsColos + 1] = {tag, colos, data}
 					else
@@ -1319,7 +1304,7 @@ do
 			playerData.ultRow:ClearAnchors()
 			playerData.ultRow:SetAnchor(TOPLEFT, HodorReflexes_Share_Ultimates, TOPLEFT, 0, i*24)
 			-- We call M.GetHornPercent() instead of using row[2] value for better precision
-			if playerData.isPlayer and M.GetHornPercent() >= 100 then
+			if playerData.isPlayer and M.GetUltPercentage(GetUnitPower("player", POWERTYPE_ULTIMATE), ABILITY_COST_HORN) >= 100 then
 				myHornNew = true
 				hornOrder = i
 			end
@@ -1399,7 +1384,7 @@ function M.UpdateDamage()
 			local r, g, b, o = unpack(SW.damageRowColor)
 			if o ~= 0 then
 				customColor = true
-				playerData.dpsRow:GetNamedChild('_BG'):SetColor(r, g, b, o or 0.5)				
+				playerData.dpsRow:GetNamedChild('_BG'):SetColor(r, g, b, o or 0.5)
 			end
 		end
 		if not customColor then
@@ -1485,7 +1470,7 @@ function M.RestorePosition()
 		HodorReflexes_Share_Colos:ClearAnchors()
 		HodorReflexes_Share_Colos:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, colosLeft, colosTop)
 	end
-	
+
 	if hornCountdownCenterX or hornCountdownCenterY then
 		HodorReflexes_Share_HornCountdown:ClearAnchors()
 		HodorReflexes_Share_HornCountdown:SetAnchor(CENTER, GuiRoot, TOPLEFT, hornCountdownCenterX, hornCountdownCenterY)
@@ -1512,7 +1497,7 @@ function M.RestoreColors()
 	HodorReflexes_Share_Ultimates_HornDuration:SetColor(unpack(SW.styleHornColor))
 	HodorReflexes_Share_Ultimates_ForceDuration:SetColor(unpack(SW.styleForceColor))
 	HodorReflexes_Share_Colos_Duration:SetColor(unpack(SW.styleColosColor))
-	
+
 	HodorReflexes_Share_Ultimates_HornDuration:SetAlpha(SW.styleZeroTimerOpacity)
 	HodorReflexes_Share_Ultimates_ForceDuration:SetAlpha(SW.styleZeroTimerOpacity)
 	HodorReflexes_Share_Colos_Duration:SetAlpha(SW.styleZeroTimerOpacity)
@@ -1556,7 +1541,7 @@ function M.ToggleAnimations(enabled, updateSW)
 	if updateSW then
 		SW.enableAnimations = enabled
 	end
-	
+
 end
 
 function M.UltimatesOnMoveStop()
@@ -1635,7 +1620,7 @@ local function ToggleTest(players)
 			name = name,
 			classId = zo_random() < 0.5 and zo_random(1, 6) or 5, -- 50% chance for necro
 			isPlayer = name == GetUnitDisplayName('player'),
-			ult = zo_random(1, 200),
+			ult = zo_random(1, 500),
 			ultType = ULT_HORN_COLOS,
 			ultTime = time(),
 			dmg = dmg,
