@@ -141,6 +141,24 @@ function M.BuildMenu()
 		},
 		{
 			type = "checkbox",
+			name = "Show Horn Percent",
+			tooltip = "Show Horn Percent",
+			default = function() if M.default.showHornPercentValue == 1 then return true end return false end,
+			getFunc = function() if M.sv.showHornPercentValue == 1 then return true end return false end,
+			setFunc = function(value) if value then M.sv.showHornPercentValue = 1 return end M.sv.showHornPercentValue = 0 end,
+			width = 'half',
+		},
+		{
+			type = "checkbox",
+			name = "Show Raw Ult Value",
+			tooltip = "Show Raw Ult Value",
+			default = function() if M.default.showHornRawValue == 1 then return true end return false end,
+			getFunc = function() if M.sv.showHornRawValue == 1 then return true end return false end,
+			setFunc = function(value) if value then M.sv.showHornRawValue = 1 return end M.sv.showHornRawValue = 0 end,
+			width = 'half',
+		},
+		{
+			type = "checkbox",
 			name = GetString(HR_MENU_HORN_SELFISH),
 			tooltip = GetString(HR_MENU_HORN_SELFISH_TT),
 			default = M.default.selfishMode,
@@ -216,6 +234,24 @@ function M.BuildMenu()
 				M.sv.enableColosShare = value or false
 				M.ToggleShare()
 			end,
+			width = 'half',
+		},
+		{
+			type = "checkbox",
+			name = "Show Colos Percent",
+			tooltip = "Show Colos Percent",
+			default = function() if M.default.showColosPercentValue == 1 then return true end return false end,
+			getFunc = function() if M.sv.showColosPercentValue == 1 then return true end return false end,
+			setFunc = function(value) if value then M.sv.showColosPercentValue = 1 return end M.sv.showColosPercentValue = 0 end,
+			width = 'half',
+		},
+		{
+			type = "checkbox",
+			name = "Show Raw Ult Value",
+			tooltip = "Show Raw Ult Value",
+			default = function() if M.default.showColosRawValue == 1 then return true end return false end,
+			getFunc = function() if M.sv.showColosRawValue == 1 then return true end return false end,
+			setFunc = function(value) if value then M.sv.showColosRawValue = 1 return end M.sv.showColosRawValue = 0 end,
 			width = 'half',
 		},
 		--{
