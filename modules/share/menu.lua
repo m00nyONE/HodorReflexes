@@ -296,6 +296,32 @@ function M.BuildMenu()
 		},
 		{
 			type = "header",
+			name = string.format("|cFFFACD%s|r", "Other Ultimates")
+		},
+		{
+			type = "checkbox",
+			name = "Show other Ultimates",
+			tooltip = "Show other unsupported Ultimates",
+			default = M.default.enableMiscUltimateList,
+			getFunc = function() return M.sv.enableMiscUltimateList end,
+			setFunc = function(value)
+				M.sv.enableMiscUltimateList = value or false
+			end,
+			width = 'half',
+		},
+		{
+			type = "checkbox",
+			name = "Share other Ultimates",
+			tooltip = "Share other unsupported Ultimates",
+			default = M.default.enableMiscUltimateShare,
+			getFunc = function() return M.sv.enableMiscUltimateShare end,
+			setFunc = function(value)
+				M.sv.enableMiscUltimateShare = value or false
+			end,
+			width = 'half',
+		},
+		{
+			type = "header",
 			name = string.format("|cFFFACD%s|r", GetString(HR_MENU_MISC)),
 		},
 		{

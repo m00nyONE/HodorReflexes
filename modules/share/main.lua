@@ -11,9 +11,11 @@ HodorReflexes.modules.share = {
 		enabled = true,
 		disablePvP = true,
 		enableUltimateShare = 0,
+		enableMiscUltimateShare = false,
 		enableDamageShare = false,
 		enableColosShare = false,
 		enableUltimateList = false,
+		enableMiscUltimateList = false,
 		enableDamageList = 0,
 		enableColosList = false,
 		enableHornIcon = true,
@@ -21,6 +23,7 @@ HodorReflexes.modules.share = {
 		hornCountdownColor = {1, 0.5, 0, 1},
 		hornIconScale = 1,
 		enableUltimateIcons = true,
+		enableMiscUltimateIcons = true,
 		enableDamageIcons = true,
 		enableColosIcons = true,
 		enableAnimIcons = true,
@@ -33,6 +36,11 @@ HodorReflexes.modules.share = {
 		colosCountdownColor = {1, 0, 1, 1},
 		colosCountdownText = GetString(HR_COLOS_COUNTDOWN_DEFAULT_TEXT),
 		selfishMode = false,
+		-- raw and percent visibility
+		showHornPercentValue = 1,
+		showHornRawValue = 1,
+		showColosPercentValue = 1,
+		showColosRawValue = 1,
 		-- my icon and name
 		myIconPathFull = '',
 		myIconNameRaw = '',
@@ -111,7 +119,7 @@ local BACKUP_ULT_COST = 0
 
 local playerTag = '' -- real group tag instead of "player"
 --local playersData = M.playersData
-local ultPool, dpsPool, clsPool -- control pools (https://www.esoui.com/forums/showthread.php?t=143)
+local ultPool, dpsPool, clsPool, miscUltPool -- control pools (https://www.esoui.com/forums/showthread.php?t=143)
 
 local isUltControlRefresh = true
 
@@ -160,7 +168,7 @@ local player = HR.player
 local combat = HR.combat
 local hud = HR.hud
 
-local ULT_FRAGMENT, DPS_FRAGMENT, CLS_FRAGMENT, CNT_FRAGMENT, HRN_FRAGMENT -- HUD fragments
+local ULT_FRAGMENT, DPS_FRAGMENT, CLS_FRAGMENT, CNT_FRAGMENT, HRN_FRAGMENT, HNT_FRAGMENT, MISCULT_FRAGMENT -- HUD fragments
 
 local exitInstancePending = false
 
@@ -179,7 +187,7 @@ local function encodeData(dmgType, ultType, ult, dmg, dps)
 	local head2 = ultType * 110 + ultReduced
 	local compressedUlt = (head + head2) * 10000000
 	rawData = rawData + zo_min(dps, 999) -- add DPS
-	rawData = rawData + zo_min(dmg, 9999) * 1000 -- add DMG
+	rawData = rawData + zo_min(dmg, 9999) * 1000-- add DMG
 	rawData = rawData + compressedUlt -- add compressed ulti & ultiType & dmgType
 	return rawData
 end
@@ -252,14 +260,17 @@ local function SendData()
 	local pingType, ultType, ult, dmg, dps = DAMAGE_UNKNOWN, ULT_HORN, 0, 0, 0
 	local shareHorn = SV.enableUltimateShare ~= 0 and (hornSlotted and SV.enableUltimateShare or hasSaxhleel and type(SV.enableUltimateShare) == 'number' and SV.enableUltimateShare > 0)
 	local shareColos = SV.enableColosShare and colosSlotted
+	local shareMiscUltimates = SV.enableMiscUltimateShare
 	if M.IsEnabled() then
 		ultType = ULT_MISC
-		-- TODO: check if 1 is okay or if this needs to be 5
 		ult = roundDownToFive(zo_min(500, GetUnitPower("player", POWERTYPE_ULTIMATE)))
 		if shareColos then
 			ultType = shareHorn and ULT_HORN_COLOS or ULT_COLOS
 		elseif shareHorn then
 			ultType = ULT_HORN
+		-- TODO: test if it works
+		elseif not shareMiscUltimates then
+			ult = 0
 		end
 		if SV.enableDamageShare then
 			pingType, dmg, dps = M.GetPlayerDamage()
@@ -360,6 +371,7 @@ local function CleanGroupData(force)
 				if data.ultRow then ultPool:ReleaseObject(data.ultRow.poolKey) end
 				if data.dpsRow then dpsPool:ReleaseObject(data.dpsRow.poolKey) end
 				if data.clsRow then clsPool:ReleaseObject(data.clsRow.poolKey) end
+				if data.miscUltRow then miscUltPool:ReleaseObject(data.miscUltRow.poolKey) end
 				-- Clear player data
 				M.playersData[userId] = nil
 			end
@@ -374,6 +386,7 @@ local function CleanGroupData(force)
 		M.playersData = {}
 		-- Release all controls
 		ultPool:ReleaseAllObjects()
+		miscUltPool:ReleaseAllObjects()
 		dpsPool:ReleaseAllObjects()
 		clsPool:ReleaseAllObjects()
 	end
@@ -399,6 +412,10 @@ local function CreateSceneFragments()
 
 	local function UltFragmentCondition()
 		return SV.enableUltimateList and controlsVisible
+	end
+
+	local function MiscUltFragmentCondition()
+		return SV.enableMiscUltimateList and controlsVisible
 	end
 
 	local function DpsFragmentCondition()
@@ -465,6 +482,7 @@ local function CreateSceneFragments()
 	end
 
 	ULT_FRAGMENT = hud.AddSimpleFragment(HodorReflexes_Share_Ultimates, UltFragmentCondition)
+	MISCULT_FRAGMENT = hud.AddSimpleFragment(HodorReflexes_Share_MiscUltimates, MiscUltFragmentCondition)
 	DPS_FRAGMENT = hud.AddSimpleFragment(HodorReflexes_Share_Damage, DpsFragmentCondition)
 	CLS_FRAGMENT = hud.AddSimpleFragment(HodorReflexes_Share_Colos, ClsFragmentCondition)
 	CNT_FRAGMENT = hud.AddSimpleFragment(HodorReflexes_Share_ColosCountdown, CntFragmentCondition)
@@ -479,6 +497,10 @@ local function CreateControlPools()
 		return ZO_ObjectPool_CreateControl('HodorReflexes_Share_UltimateRow', pool, HodorReflexes_Share_Ultimates)
 	end
 
+	local function CreateMiscUltRow(pool)
+		return ZO_ObjectPool_CreateControl('HodorReflexes_Share_MiscUltimatesRow', pool, HodorReflexes_Share_MiscUltimates)
+	end
+
 	local function CreateDpsRow(pool)
 		local control = ZO_ObjectPool_CreateControl('HodorReflexes_Share_DamageRow', pool, HodorReflexes_Share_Damage)
 		control:GetNamedChild('_Value'):SetFont(M.GetDamageNumFont())
@@ -490,6 +512,7 @@ local function CreateControlPools()
 	end
 
 	ultPool = ZO_ObjectPool:New(CreateUltRow, ZO_ObjectPool_DefaultResetControl)
+	miscUltPool = ZO_ObjectPool:New(CreateMiscUltRow, ZO_ObjectPool_DefaultResetControl)
 	dpsPool = ZO_ObjectPool:New(CreateDpsRow, ZO_ObjectPool_DefaultResetControl)
 	clsPool = ZO_ObjectPool:New(CreateClsRow, ZO_ObjectPool_DefaultResetControl)
 
@@ -905,7 +928,7 @@ function M.ProcessData(tag, data, ms)
 			M.cm:FireCallbacks('CustomData', tag, data)
 		end
 		-- Data is encoded between DATA_PREFIX and DATA_PREFIX * 2
-	elseif data > DATA_PREFIX and data < DATA_PREFIX * 2 then
+	elseif (data >= DATA_PREFIX and data < DATA_PREFIX * 2) then
 		local success, pingType, ultType, ult, dmg, dps = decodeData(data)
 		--d(ult)
 		if success == false then return end
@@ -917,7 +940,7 @@ end
 
 function M.RefreshControls()
 	if isUltControlRefresh then
-		if SV.enableUltimateList or SV.enableColosList then
+		if SV.enableUltimateList or SV.enableColosList or SV.enableMiscUltimateList then
 			M.UpdateUltimates()
 		else
 			-- if both lists are disabled, then make sure horn and colos notifications are hidden
@@ -937,7 +960,7 @@ end
 function M.ToggleShare()
 	EM:UnregisterForUpdate(M.name .. "SendData")
 	if units.IsGrouped('player') then
-		if M.IsEnabled() and (SV.enableUltimateShare and SV.enableUltimateShare ~= 0 or SV.enableDamageShare or SV.enableColosShare) then
+		if M.IsEnabled() and (SV.enableUltimateShare and SV.enableUltimateShare ~= 0 or SV.enableDamageShare or SV.enableColosShare or SV.enableMiscUltimateShare) then
 			-- Enable data sharing
 			EM:RegisterForUpdate(M.name .. "SendData", 100, SendAttempt)
 		else
@@ -951,6 +974,7 @@ function M.RefreshVisibility()
 	controlsVisible = not M.uiLocked or M.IsEnabled() and units.IsGrouped('player')
 	-- Refresh fragments
 	ULT_FRAGMENT:Refresh()
+	MISCULT_FRAGMENT:Refresh()
 	DPS_FRAGMENT:Refresh()
 	CLS_FRAGMENT:Refresh()
 	CNT_FRAGMENT:Refresh()
@@ -1077,6 +1101,12 @@ local function CreateControlsForUser(userId, playerData)
 	SetControlText(ultRow:GetNamedChild('_Name'), userName)
 	SetControlIcon(ultRow:GetNamedChild('_Icon'), SW.enableUltimateIcons and userIcon or defaultIcon)
 
+	-- miscUltimates row
+	local miscUltRow, miscUltKey = miscUltPool:AcquireObject()
+	miscUltRow.poolKey = miscUltKey
+	SetControlText(miscUltRow:GetNamedChild('_Name'), userName)
+	SetControlIcon(miscUltRow:GetNamedChild('_Icon'), SW.enableMiscUltimateIcons and userIcon or defaultIcon)
+
 	-- Damage row
 	local dpsRow, dpsKey = dpsPool:AcquireObject()
 	dpsRow.poolKey = dpsKey
@@ -1092,9 +1122,13 @@ local function CreateControlsForUser(userId, playerData)
 		SetControlIcon(clsRow:GetNamedChild('_Icon'), SW.enableColosIcons and userIcon or defaultIcon)
 	end
 
+
+
+
 	-- Register icon animation if user has one
 	if SW.enableAnimIcons and HR.anim.RegisterUser(userId) then
 		if SW.enableUltimateIcons then HR.anim.RegisterUserControl(userId, ultRow:GetNamedChild('_Icon')) end
+		if SW.enableMiscUltimateIcons then HR.anim.RegisterUserControl(userId, miscUltRow:GetNamedChild('_Icon')) end
 		if SW.enableDamageIcons then HR.anim.RegisterUserControl(userId, dpsRow:GetNamedChild('_Icon')) end
 		if clsRow and SW.enableColosIcons then HR.anim.RegisterUserControl(userId, clsRow:GetNamedChild('_Icon')) end
 		HR.anim.RunUserAnimations(userId)
@@ -1103,6 +1137,7 @@ local function CreateControlsForUser(userId, playerData)
 	playerData.ultRow = ultRow
 	playerData.dpsRow = dpsRow
 	playerData.clsRow = clsRow
+	playerData.miscUltRow = miscUltRow
 	M.playersData[userId] = playerData
 end
 
@@ -1236,11 +1271,13 @@ do
 
 		local rowsHorn = {}
 		local rowsColos = {}
+		local rowsMiscUlt = {}
 
 		-- Update rows
 		for name, data in pairs(M.playersData) do
 			local tag = data.tag
 			local ultRow = data.ultRow
+			local miscUltRow = data.miscUltRow
 			local clsRow = data.clsRow
 			-- Only shows rows for online players with non empty ult %
 			if data.ult > 0 and (isTestRunning or units.IsOnline(tag)) then
@@ -1263,7 +1300,9 @@ do
 					if horn > 0 then
 						if horn >= 100 then colorHorn = '00FF00' elseif horn >= 80 then colorHorn = 'FFFF00' end
 						ultRow:GetNamedChild('_Value'):SetText(strformat('|c%s%d%%|r', colorHorn, zo_min(200, horn)))
+						ultRow:GetNamedChild('_Value'):SetScale(SV.showHornPercentValue)
 						ultRow:GetNamedChild('_RawValue'):SetText(strformat('|c%s%d|r', "FFFFFF", zo_min(500, data.ult)))
+						ultRow:GetNamedChild('_RawValue'):SetScale(SV.showHornRawValue)
 						ultRow:SetHidden(false)
 						rowsHorn[#rowsHorn + 1] = {tag, horn, data}
 					else
@@ -1275,16 +1314,30 @@ do
 					if colos > 0 and not IsUnitDead(tag) and (not SV.colosSupportRange or isTestRunning or M.IsUnitNearby(tag)) then
 						if colos >= 100 then colorColos = '00FF00' elseif colos >= 80 then colorColos = 'FFFF00' end
 						clsRow:GetNamedChild('_Value'):SetText(strformat('|c%s%d%%|r', colorColos, zo_min(200, colos)))
+						clsRow:GetNamedChild('_Value'):SetScale(SV.showColosPercentValue)
 						clsRow:GetNamedChild('_RawValue'):SetText(strformat('|c%s%d|r', "FFFFFF", zo_min(500, data.ult)))
+						clsRow:GetNamedChild('_RawValue'):SetScale(SV.showColosRawValue)
 						clsRow:SetHidden(false)
 						rowsColos[#rowsColos + 1] = {tag, colos, data}
 					else
 						clsRow:SetHidden(true)
 					end
 				end
+				-- misc ultimates
+				if miscUltRow then
+					--if misc > 0 then
+					if misc > 0 then
+						miscUltRow:GetNamedChild('_RawValue'):SetText(strformat('|c%s%d|r', "FFFFFF", zo_min(500, data.ult)))
+						miscUltRow:SetHidden(false)
+						rowsMiscUlt[#rowsMiscUlt + 1] = {tag, misc, data}
+					else
+						miscUltRow:SetHidden(true)
+					end
+				end
 			else
 				if ultRow then ultRow:SetHidden(true) end
 				if clsRow then clsRow:SetHidden(true) end
+				if miscUltRow then miscUltRow:SetHidden(true) end
 			end
 		end
 
@@ -1293,6 +1346,9 @@ do
 			if a[2] == b[2] then return a[1] < b[1] else return a[2] > b[2] end
 		end)
 		tsort(rowsColos, function(a, b)
+			if a[2] == b[2] then return a[1] < b[1] else return a[2] > b[2] end
+		end)
+		tsort(rowsMiscUlt, function(a, b)
 			if a[2] == b[2] then return a[1] < b[1] else return a[2] > b[2] end
 		end)
 
@@ -1315,6 +1371,12 @@ do
 		end
 		if myHornNew ~= myHorn then ToggleMyHorn(myHornNew) end
 		anyHorn = anyHornNew
+
+		for i, row in ipairs(rowsMiscUlt) do
+			local playerData = row[3]
+			playerData.miscUltRow:ClearAnchors()
+			playerData.miscUltRow:SetAnchor(TOPLEFT, HodorReflexes_Share_MiscUltimates, TOPLEFT, 0, i*24)
+		end
 
 		-- Order colos rows
 		local ultOrderFound = false -- found player in a list of ults
@@ -1422,13 +1484,13 @@ end
 function M.UnlockUI()
 	M.uiLocked = false
 	M.RefreshVisibility()
-	hud.UnlockControls(HodorReflexes_Share_Ultimates, HodorReflexes_Share_Damage, HodorReflexes_Share_Colos, HodorReflexes_Share_ColosCountdown, HodorReflexes_Share_HornCountdown, HodorReflexes_Share_HornIcon)
+	hud.UnlockControls(HodorReflexes_Share_Ultimates, HodorReflexes_Share_MiscUltimates, HodorReflexes_Share_Damage, HodorReflexes_Share_Colos, HodorReflexes_Share_ColosCountdown, HodorReflexes_Share_HornCountdown, HodorReflexes_Share_HornIcon)
 end
 
 function M.LockUI()
 	M.uiLocked = true
 	M.RefreshVisibility()
-	hud.LockControls(HodorReflexes_Share_Ultimates, HodorReflexes_Share_Damage, HodorReflexes_Share_Colos, HodorReflexes_Share_ColosCountdown, HodorReflexes_Share_HornCountdown, HodorReflexes_Share_HornIcon)
+	hud.LockControls(HodorReflexes_Share_Ultimates, HodorReflexes_Share_MiscUltimates, HodorReflexes_Share_Damage, HodorReflexes_Share_Colos, HodorReflexes_Share_ColosCountdown, HodorReflexes_Share_HornCountdown, HodorReflexes_Share_HornIcon)
 end
 
 function M.ToggleDamageShare()
@@ -1440,6 +1502,9 @@ function M.RestorePosition()
 
 	local ultimateLeft = SV.ultimateLeft
 	local ultimateTop = SV.ultimateTop
+
+	local miscUltimateLeft = SV.miscUltimateLeft
+	local miscUltimateTop = SV.miscUltimateTop
 
 	local damageLeft = SV.damageLeft
 	local damageTop = SV.damageTop
@@ -1459,6 +1524,11 @@ function M.RestorePosition()
 	if ultimateLeft or ultimateTop then
 		HodorReflexes_Share_Ultimates:ClearAnchors()
 		HodorReflexes_Share_Ultimates:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, ultimateLeft, ultimateTop)
+	end
+
+	if miscUltimateLeft or miscUltimateTop then
+		HodorReflexes_Share_MiscUltimates:ClearAnchors()
+		HodorReflexes_Share_MiscUltimates:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, miscUltimateLeft, miscUltimateTop)
 	end
 
 	if damageLeft or damageTop then
@@ -1551,6 +1621,13 @@ function M.UltimatesOnMoveStop()
 
 end
 
+function M.MiscUltimatesOnMoveStop()
+
+	SV.miscUltimateLeft = HodorReflexes_Share_MiscUltimates:GetLeft()
+	SV.miscUltimateTop = HodorReflexes_Share_MiscUltimates:GetTop()
+
+end
+
 function M.DamageOnMoveStop()
 
 	SV.damageLeft = HodorReflexes_Share_Damage:GetLeft()
@@ -1615,19 +1692,24 @@ local function ToggleTest(players)
 
 	local function GetRandomPlayerData(name)
 		local dmg = zo_random(500, 1200)
-		return {
+		local playerData = {
 			tag = name,
 			name = name,
 			classId = zo_random() < 0.5 and zo_random(1, 6) or 5, -- 50% chance for necro
 			isPlayer = name == GetUnitDisplayName('player'),
 			ult = zo_random(1, 500),
-			ultType = ULT_HORN_COLOS,
+			ultType = 0,
 			ultTime = time(),
 			dmg = dmg,
 			dps = dmg * 0.15,
 			dmgType = DAMAGE_BOSS,
 			dmgTime = time(),
 		}
+		if playerData.classId == 5 then
+			playerData.ultType = ULT_HORN_COLOS
+		end
+
+		return playerData
 	end
 
 	for _, name in ipairs(players) do
