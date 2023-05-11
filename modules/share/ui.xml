@@ -182,9 +182,9 @@
 					<Dimensions x="28" y="28"/>
 					<Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)" offsetX="4" offsetY="-8" />
 				</Texture>
-				<Label name="$(parent)_Text" horizontalAlignment="left" font="$(MEDIUM_FONT)|$(KB_22)|soft-shadow-thick" text="  Ultimates" wrapMode="TRUNCATE">
-					<Dimensions x="105" y="24"/>
-					<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$(parent)_Icon" offsetX="0" offsetY="0" />
+				<Label name="$(parent)_Text" horizontalAlignment="left" font="$(MEDIUM_FONT)|$(KB_22)|soft-shadow-thick" text="Ultimates" wrapMode="TRUNCATE">
+					<Dimensions x="140" y="24"/>
+					<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$(parent)_Icon" offsetX="10" offsetY="0" />
 				</Label>
 			</Controls>
 		</TopLevelControl>
