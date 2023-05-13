@@ -7,6 +7,9 @@
             <Action name="HR_SHARE_TOGGLE_DPS">
                 <Down>HodorReflexes.modules.share.ToggleDamageShare()</Down>
             </Action>
+			<Action name="HR_BINDING_MISCULTIMATES_SHARE">
+				<Down>HodorReflexes.modules.share.ToggleMiscUltimatesShare()</Down>
+			</Action>
 		</Category>
 	</Layer>
 </Bindings>

@@ -169,6 +169,7 @@ local strings = {
 	HR_BINDING_HORN_SHARE = "Toggle War Horn Share",
 	HR_BINDING_COLOS_SHARE = "Toggle Colossus Share",
 	HR_BINDING_DPS_SHARE = "Toggle Damage Share",
+	HR_BINDING_MISCULTIMATES_SHARE = "Toggle Other Ultimates Share",
 	HR_BINDING_COUNTDOWN = "Countdown",
 	HR_BINDING_EXIT_INSTANCE = "Exit Instance Immediately",
 	HR_BINDING_SEND_EXIT_INSTANCE = "Eject Group",

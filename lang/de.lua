@@ -139,6 +139,7 @@ local strings = {
 	HR_BINDING_HORN_SHARE = "De-/aktiviere Kriegshorn teilen",
 	HR_BINDING_COLOS_SHARE = "De-/aktiviere Koloss teilen",
 	HR_BINDING_DPS_SHARE = "De-/aktiviere Schadens teilen",
+	HR_BINDING_MISCULTIMATES_SHARE = "De-/aktiviere andere Ultimates teilen",
 	HR_BINDING_COUNTDOWN = "Countdown",
 
 	-------------------------
