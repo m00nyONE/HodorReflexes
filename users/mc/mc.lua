@@ -30,8 +30,11 @@ u["@MrSockMonkey"] = {"MrSockMonkey", "MrSockMonkey", "HodorReflexes/users/mc/so
 u["@Peraseli"] = {"Pera", "Pera", "HodorReflexes/users/mc/pera.dds"}
 u["@kaevix"] = {"kaevix", "kaevix", "HodorReflexes/users/mc/kaevix.dds"}
 
-u["@kabs12"] = {"KABS", "|cFF009BK|r|cFF00DCA|r|cE100FFB|r|c8000FFS|r", "HodorReflexes/users/mc/kabs.dds"}
+u["@kabs12"] = {"KABS", "|cde009dK|r|cbe00beA|r|c9d00deB|r|c7c00ffS|r", "HodorReflexes/users/mc/kabs2.dds"}
 u["@Jokerjokerjoker"] = {"Joker", "|cFF5100Joker|r", "HodorReflexes/users/mc/jokerjokerjoker.dds"}
 u["@An0malyd"] = {"Anomaly", "|c468dffAnomaly|r", "HodorReflexes/users/mc/an0malyd.dds"}
 
 a["@stileanima"] = {"HodorReflexes/users/mc/stileanima_anim.dds", 12, 1, 10}
+
+u["@Kim_Mi-yeon"] = {"Kim Mi-yeon", "|cce27ffK|r|cc82fffi|r|cc137ffm|r |cbb3fffM|r|cb547ffi|r|caf4eff-|r|ca956ffy|r|ca25effe|r|c9c66ffo|r|c966effn|r", "HodorReflexes/users/mc/kimmiyeon.dds"}
+a["@Kim_Mi-yeon"] = {"HodorReflexes/users/mc/kimmiyeon_anim.dds", 10, 8, 32}

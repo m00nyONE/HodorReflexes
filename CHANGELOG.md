@@ -10,7 +10,8 @@ Up until this point, all Ultimate sharing was done by sending actual percentages
 From now on, Hodor will differenciate between "special ults" and "other ults".
 - "Special ults" are ultimates that are explicitly coded in Hodor like Horn and Colossus ( Barrier & Atro too in the future ).
 - "Other ults" are all ultimates that are not directly tracked and don't have a special ult type that is sent to others. Examples are Incap, Shooting Star, Destro, Ballista and so on.
-  The sharing space is very limited and the Sharing V2 only allows for 8 unique "special ults" to be shared. everything else will just be "Other ults".
+
+The sharing space is very limited and the Sharing V2 only allows for 8 unique "special ults" to be shared. everything else will just be "Other ults".
 
 In 1.11.0 in addition to the Percentage display, that you are all used to, there now will be the raw ult points (0-500) next to it. This allows your raidlead to call your pillager/barrier/MA/SAX/whatever ult when a specific number of points is reached to increase their effectiveness. Of course you can disable showing the raw ult number in the settings.
 
