@@ -141,8 +141,8 @@ function M.BuildMenu()
 		},
 		{
 			type = "checkbox",
-			name = "Show Horn Percent",
-			tooltip = "Show Horn Percent",
+			name = GetString(HR_MENU_HORN_SHOW_PERCENT),
+			tooltip = GetString(HR_MENU_HORN_SHOW_PERCENT_TT),
 			default = function() if M.default.showHornPercentValue == 1 then return true end return false end,
 			getFunc = function() if M.sv.showHornPercentValue == 1 then return true end return false end,
 			setFunc = function(value) if value then M.sv.showHornPercentValue = 1 return end M.sv.showHornPercentValue = 0 end,
@@ -150,8 +150,8 @@ function M.BuildMenu()
 		},
 		{
 			type = "checkbox",
-			name = "Show Raw Ult Value",
-			tooltip = "Show Raw Ult Value",
+			name = GetString(HR_MENU_HORN_SHOW_RAW),
+			tooltip = GetString(HR_MENU_HORN_SHOW_RAW_TT),
 			default = function() if M.default.showHornRawValue == 1 then return true end return false end,
 			getFunc = function() if M.sv.showHornRawValue == 1 then return true end return false end,
 			setFunc = function(value) if value then M.sv.showHornRawValue = 1 return end M.sv.showHornRawValue = 0 end,
@@ -238,8 +238,8 @@ function M.BuildMenu()
 		},
 		{
 			type = "checkbox",
-			name = "Show Colos Percent",
-			tooltip = "Show Colos Percent",
+			name = GetString(HR_MENU_COLOS_SHOW_PERCENT),
+			tooltip = GetString(HR_MENU_COLOS_SHOW_PERCENT_TT),
 			default = function() if M.default.showColosPercentValue == 1 then return true end return false end,
 			getFunc = function() if M.sv.showColosPercentValue == 1 then return true end return false end,
 			setFunc = function(value) if value then M.sv.showColosPercentValue = 1 return end M.sv.showColosPercentValue = 0 end,
@@ -247,8 +247,8 @@ function M.BuildMenu()
 		},
 		{
 			type = "checkbox",
-			name = "Show Raw Ult Value",
-			tooltip = "Show Raw Ult Value",
+			name = GetString(HR_MENU_COLOS_SHOW_RAW),
+			tooltip = GetString(HR_MENU_COLOS_SHOW_RAW_TT),
 			default = function() if M.default.showColosRawValue == 1 then return true end return false end,
 			getFunc = function() if M.sv.showColosRawValue == 1 then return true end return false end,
 			setFunc = function(value) if value then M.sv.showColosRawValue = 1 return end M.sv.showColosRawValue = 0 end,
@@ -332,12 +332,12 @@ function M.BuildMenu()
 		},
 		{
 			type = "header",
-			name = string.format("|cFFFACD%s|r", "Other Ultimates")
+			name = string.format("|cFFFACD%s|r", GetString(HR_MENU_MISCULTIMATES))
 		},
 		{
 			type = "checkbox",
-			name = "Show other Ultimates",
-			tooltip = "Show other unsupported Ultimates",
+			name = GetString(HR_MENU_MISCULTIMATES_SHOW),
+			tooltip = GetString(HR_MENU_MISCULTIMATES_SHOW_TT),
 			default = M.default.enableMiscUltimateList,
 			getFunc = function() return M.sv.enableMiscUltimateList end,
 			setFunc = function(value)
@@ -347,8 +347,8 @@ function M.BuildMenu()
 		},
 		{
 			type = "checkbox",
-			name = "Share other Ultimates",
-			tooltip = "Share other unsupported Ultimates",
+			name = GetString(HR_MENU_MISCULTIMATES_SHARE),
+			tooltip = GetString(HR_MENU_MISCULTIMATES_SHARE_TT),
 			default = M.default.enableMiscUltimateShare,
 			getFunc = function() return M.sv.enableMiscUltimateShare end,
 			setFunc = function(value)
@@ -372,8 +372,8 @@ function M.BuildMenu()
 		},
 		{
 			type = "checkbox",
-			name = "Disable dependency warning",
-			tooltip = "enable/disable incompatible dependency warning",
+			name = GetString(HR_MENU_MISC_DISABLEDEPENDENCYWARNING),
+			tooltip = GetString(HR_MENU_MISC_DISABLEDEPENDENCYWARNING_TT),
 			default = false,
 			getFunc = function() return HodorReflexes.sv.disableIncompatibleDependencyWarning end,
 			setFunc = function(value)

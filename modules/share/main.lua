@@ -1498,6 +1498,10 @@ function M.ToggleDamageShare()
 	M.ToggleShare()
 end
 
+function M.ToggleMiscUltimatesShare()
+	SV.enableMiscUltimateShare = not SV.enableMiscUltimateShare
+end
+
 function M.RestorePosition()
 
 	local ultimateLeft = SV.ultimateLeft

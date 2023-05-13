@@ -24,6 +24,10 @@ local strings = {
 	HR_MENU_HORN_SHOW = "Zeige Kriegshorn:",
 	HR_MENU_HORN_SHOW_TT = "Zeige eine Liste mit dem aktuellem Füllstand der ultimativen Fähigkeit der Gruppenmitglieder.",
 	HR_MENU_HORN_SHARE = "Teile ultimative Fähigkeit:",
+	HR_MENU_HORN_SHOW_PERCENT = "Zeige Prozent",
+	HR_MENU_HORN_SHOW_PERCENT_TT = "Zeige die errechnete Prozentzahl der ultimativen Fähigkeit",
+	HR_MENU_HORN_SHOW_RAW = "Zeige Ulti Punkte",
+	HR_MENU_HORN_SHOW_RAW_TT = "Zeige die Ulti Punkte die der Spieler hat",
 	HR_MENU_HORN_SELFISH = "Egoistischer Modus:",
 	HR_MENU_HORN_SELFISH_TT = "Wenn aktiviert, zeigt die aktuell verbleibende Zeit vom Kriegshorn nur an wenn du selbst von dem Bonus aktuell betroffen bist.",
 	HR_MENU_HORN_ICON = "Zeige Symbol:",
@@ -40,6 +44,10 @@ local strings = {
 	HR_MENU_COLOS = "Koloss",
 	HR_MENU_COLOS_SHOW = "Zeige Koloss:",
 	HR_MENU_COLOS_SHOW_TT = "Zeige eine Liste mit dem aktuellem Füllstand der ultimativen Fähigkeit der Gruppenmitglieder.",
+	HR_MENU_COLOS_SHOW_PERCENT = "Zeige Prozent",
+	HR_MENU_COLOS_SHOW_PERCENT_TT = "Zeige die errechnete Prozentzahl der ultimativen Fähigkeit",
+	HR_MENU_COLOS_SHOW_RAW = "Zeige Ulti Punkte",
+	HR_MENU_COLOS_SHOW_RAW_TT = "Zeige die Ulti Punkte die der Spieler hat",
 	HR_MENU_COLOS_SHARE = "Teile ultimative Fähigkeit",
 	HR_MENU_COLOS_SHARE_TT = "Sendet deinen Füllstand der ultimativen Fähigkeit in % an Gruppenmitglieder (nur wenn Koloss ausgerüstet ist).",
 	HR_MENU_COLOS_PRIORITY = "Priorität:",
@@ -54,6 +62,12 @@ local strings = {
 	HR_MENU_COLOS_COUNTDOWN_TT = "Zeigt eine Benachrichtigung mit dem Countdown wann du deine ultimative Fähigkeit benutzen sollst an.",
 	HR_MENU_COLOS_COUNTDOWN_TEXT = "Countdown Text:",
 	HR_MENU_COLOS_COUNTDOWN_COLOR = "Textfarbe des Countdown:",
+
+	HR_MENU_MISCULTIMATES = "Andere Ultimates",
+	HR_MENU_MISCULTIMATES_SHOW = "Zeige alle Ultis",
+	HR_MENU_MISCULTIMATES_SHOW_TT = "Zeige alle nicht unterstützten Ultis",
+	HR_MENU_MISCULTIMATES_SHARE = "Teile alle Ultis",
+	HR_MENU_MISCULTIMATES_SHARE_TT = "Teile alle auch nicht unterstützten Ultis",
 
 	HR_MENU_MISC = "Sonstiges",
 	HR_MENU_MISC_DESC = "Um eine Beispielliste mit Spielern anzuzeigen/auszublenden gib |c999999/hodor.share test|r in den Chat ein.\nDu kannst ebenfalls auswählen welche Spieler angezeigt werden sollen, indem du ihre Namen angibst:\n|c999999/hodor.share test @andy.s @Alcast|r",
@@ -114,6 +128,9 @@ local strings = {
 	HR_MENU_EVENTS = "Events",
 	HR_MENU_EVENTS_DESC = "Dieses Modul aktiviert verschiedene Funktionen über das Jahr hinweg.",
 	HR_MENU_EVENTS_DISABLED = "Für dieses Modul muss Hodor Reflexes aktiviert sein!",
+
+	HR_MENU_MISC_DISABLEDEPENDENCYWARNING = "Deaktiviere Inkompatibilitätswarnung",
+	HR_MENU_MISC_DISABLEDEPENDENCYWARNING_TT = "De-/Aktiviere die Warnung für inkompatibilität mit alten versionen von LibAddonMenu2.0",
 
 	-------------------------
 	-- BINDINGS

@@ -29,6 +29,10 @@ local strings = {
 	HR_MENU_HORN = "War Horn",
 	HR_MENU_HORN_SHOW = "Show War Horns:",
 	HR_MENU_HORN_SHOW_TT = "Show the list with group ultimates.",
+	HR_MENU_HORN_SHOW_PERCENT = "Show Percentage",
+	HR_MENU_HORN_SHOW_PERCENT_TT = "Show the calculated percentage of Horn ultimates",
+	HR_MENU_HORN_SHOW_RAW = "Show Ulti points",
+	HR_MENU_HORN_SHOW_RAW_TT = "Show the raw ulti points the player has",
 	HR_MENU_HORN_SHARE = "Share Ultimate:",
 	HR_MENU_HORN_SHARE_TT = "Send your ultimate % to group members. When using Saxhleel options with Saxhleel Champion set equipped, you don't need War Horn slotted. The addon will share either your highest cost ultimate or just 250 ultimate points.",
 	HR_MENU_HORN_SHARE_NONE = "Disabled",
@@ -51,6 +55,10 @@ local strings = {
 	HR_MENU_COLOS = "Colossus",
 	HR_MENU_COLOS_SHOW = "Show Colossuses:",
 	HR_MENU_COLOS_SHOW_TT = "Show the list with group ultimates.",
+	HR_MENU_COLOS_SHOW_PERCENT = "Show Percentage",
+	HR_MENU_COLOS_SHOW_PERCENT_TT = "Show the calculated percentage of Colossus ultimates",
+	HR_MENU_COLOS_SHOW_RAW = "Show Ulti points",
+	HR_MENU_COLOS_SHOW_RAW_TT = "Show the raw ulti points the player has",
 	HR_MENU_COLOS_SHARE = "Share Ultimate:",
 	HR_MENU_COLOS_SHARE_TT = "Send your ultimate % to group members (only when Colossus is slotted).",
 	HR_MENU_COLOS_PRIORITY = "Priority:",
@@ -65,6 +73,12 @@ local strings = {
 	HR_MENU_COLOS_COUNTDOWN_TT = "Show a notification with a countdown to use your ultimate.",
 	HR_MENU_COLOS_COUNTDOWN_TEXT = "Countdown Text:",
 	HR_MENU_COLOS_COUNTDOWN_COLOR = "Countdown Text Color:",
+
+	HR_MENU_MISCULTIMATES = "Other Ultimates",
+	HR_MENU_MISCULTIMATES_SHOW = "Show other Ultimates",
+	HR_MENU_MISCULTIMATES_SHOW_TT = "Show other unsupported Ultimates",
+	HR_MENU_MISCULTIMATES_SHARE = "Share other Ultimates",
+	HR_MENU_MISCULTIMATES_SHARE_TT = "Share other unsupported Ultimates",
 
 	HR_MENU_MISC = "Misc",
 	HR_MENU_MISC_DESC = "To show/hide a sample list of players type |c999999/hodor.share test|r in chat.\nYou can also choose which players to show by typing their names:\n|c999999/hodor.share test @andy.s @Alcast|r",
@@ -146,6 +160,8 @@ local strings = {
 	HR_MENU_MISC_TOXIC = "Toxic mode",
 	HR_MENU_MISC_TOXIC_TT = "Mocking hints and stuff.",
 
+	HR_MENU_MISC_DISABLEDEPENDENCYWARNING = "Disable dependency warning",
+	HR_MENU_MISC_DISABLEDEPENDENCYWARNING_TT = "enable/disable incompatible dependency warning",
 	-------------------------
 	-- BINDINGS
 	-------------------------
