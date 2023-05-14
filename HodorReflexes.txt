@@ -45,7 +45,10 @@ modules/share/main.lua
 modules/share/menu.lua
 modules/share/menu_icons.lua
 modules/share/menu_style.lua
-modules/share/ui.xml
+modules/share/ui/horn.xml
+modules/share/ui/colos.xml
+modules/share/ui/miscUltimates.xml
+modules/share/ui/damage.xml
 modules/share/bindings.xml
 
 modules/vote/main.lua
