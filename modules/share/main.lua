@@ -87,20 +87,32 @@ local countdownVisible = false
 local ULT_MISC = 0
 local ULT_HORN = 1
 local ULT_COLOS = 2
-local ULT_HORN_COLOS = 3
-
--- V2
---local ULT_HORN = 1
---local ULT_COLOS = 2
---local ULT_BARRIER = 4
---local ULT_DESTRO = 5
---local ULT_HORN_COLOS = 27
---local ULT_HORN_BARRIER = 26
---local ULT_HORN_DESTRO = 25
---local ULT_COLOS_BARRIER = 24
---local ULT_COLOS_DESTRO = 23
---local ULT_BARRIER_DESTRO = 22
-
+--local ULT_UL3 = 3
+--local ULT_ULT4 = 4
+--local ULT_ULT5 = 5
+--local ULT_ULT6 = 6
+--local ULT_ULT7 = 7
+local ULT_HORN_COLOS = 8
+--local ULT_HORN_ULT3 = 9
+--local ULT_HORN_ULT4 = 10
+--local ULT_HORN_ULT5 = 11
+--local ULT_HORN_ULT6 = 12
+--local ULT_HORN_ULT7 = 13
+--local ULT_COLOS_ULT3 = 14
+--local ULT_COLOS_ULT4 = 15
+--local ULT_COLOS_ULT5 = 16
+--local ULT_COLOS_ULT6 = 17
+--local ULT_COLOS_ULT7 = 18
+--local ULT_ULT3_ULT4 = 19
+--local ULT_ULT3_ULT5 = 20
+--local ULT_ULT3_ULT6 = 21
+--local ULT_ULT3_ULT7 = 22
+--local ULT_ULT4_ULT5 = 23
+--local ULT_ULT4_ULT6 = 24
+--local ULT_ULT4_ULT7 = 25
+--local ULT_ULT5_ULT6 = 26
+--local ULT_ULT5_ULT7 = 27
+--local ULT_ULT6_ULT7 = 28
 
 --local ULT_NEW = 7 ultis in total (max) - 0-28 possible combinations
 
