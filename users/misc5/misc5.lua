@@ -846,6 +846,7 @@ u["@B.lim"] = {"B.lim", "|cf600dbB|r|ced00e4.|r|ce300edl|r|cda00f6i|r|cd100ffm|r
 u["@NocturnalJoey"] = {"N o c", "|c06fbffN o c|r", "HodorReflexes/users/misc5/NocturnalJoey.dds"}
 u["@mastodonrules76"] = {"mastodonrules76", "|c2b62eem|r|c2b6ddda|r|c2a79ccs|r|c2984bbt|r|c288faao|r|c289a99d|r|c27a588o|r|c26b177n|r|c25bc66r|r|c25c755u|r|c24d244l|r|c23dd33e|r|c22e922s|r|c22f4117|r|c21ff006|r", "HodorReflexes/users/misc5/mastodonrules76.dds"}
 u["@Al_duin"] = {"Alduin", "|cff1530A|r|cff2b26l|r|cff401dd|r|cff5513u|r|cff6b0ai|r|cff8000n|r", "HodorReflexes/users/misc5/Al_duin.dds"}
+a["@Al_duin"] = {"HodorReflexes/users/misc5/Al_duin_anim.dds", 10, 5, 10}
 u["@BigBossFest"] = {"BigBossFest", "|cba16ffB|r|ca82affi|r|c953fffg|r|c8253ffB|r|c7068ffo|r|c5d7cffs|r|c4b91ffs|r|c38a5ffF|r|c25baffe|r|c13ceffs|r|c00e3fft|r", "HodorReflexes/users/misc5/BigBossFest.dds"}
 u["@Woez"] = {"Woez", "|c8a2202W|r|c5c4205o|r|c2e6207e|r|c008209z|r", "HodorReflexes/users/misc5/Woez.dds"}
 u["@LadyAzura"] = {"Azura", "|c82dfcbA|r|c88c0cfz|r|c8ea0d2u|r|c9481d6r|r|c9a61daa|r", "HodorReflexes/users/misc5/LadyAzura.dds"}
