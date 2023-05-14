@@ -114,8 +114,6 @@ local DAMAGE_BOSS = 2
 -- to avoid calling an expensive function GetAbilityCost() too often.
 local ABILITY_COST_HORN  = 250
 local ABILITY_COST_COLOS = 225
-local PRIMARY_ULT_COST = 0
-local BACKUP_ULT_COST = 0
 
 local playerTag = '' -- real group tag instead of "player"
 --local playersData = M.playersData
@@ -224,9 +222,6 @@ local function CheckSlottedUlts()
 		colosSlotted = true
 	end
 	-- TODO: check for barrier & attro
-
-	PRIMARY_ULT_COST = GetAbilityCost(ult1)
-	BACKUP_ULT_COST = GetAbilityCost(ult2)
 end
 
 local function CheckEquippedSets()
