@@ -4,7 +4,7 @@
             <Anchor point="LEFT" relativeTo="GuiRoot" relativePoint="LEFT" offsetX="500" offsetY="0" />
             <OnMoveStop>HodorReflexes.modules.share.ColosOnMoveStop()</OnMoveStop>
             <Controls>
-                <Texture name="$(parent)_Icon" textureFile="HodorReflexes/assets/colos.dds">
+                <Texture name="$(parent)_Icon" textureFile="HodorReflexes/assets/share/colos.dds">
                     <Dimensions x="28" y="28"/>
                     <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)" offsetX="4" offsetY="-8" />
                 </Texture>

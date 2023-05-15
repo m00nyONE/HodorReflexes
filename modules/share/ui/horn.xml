@@ -4,7 +4,7 @@
             <Anchor point="LEFT" relativeTo="GuiRoot" relativePoint="LEFT" offsetX="50" offsetY="0" />
             <OnMoveStop>HodorReflexes.modules.share.UltimatesOnMoveStop()</OnMoveStop>
             <Controls>
-                <Texture name="$(parent)_HornIcon" textureFile="HodorReflexes/assets/war_horn.dds">
+                <Texture name="$(parent)_HornIcon" textureFile="HodorReflexes/assets/share/war_horn.dds">
                     <Dimensions x="28" y="28"/>
                     <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)" offsetX="4" offsetY="-8" />
                 </Texture>
@@ -12,7 +12,7 @@
                     <Dimensions x="50" y="24"/>
                     <Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$(parent)_HornIcon" offsetX="2" offsetY="0" />
                 </Label>
-                <Texture name="$(parent)_ForceIcon" textureFile="HodorReflexes/assets/major_force.dds">
+                <Texture name="$(parent)_ForceIcon" textureFile="HodorReflexes/assets/share/major_force.dds">
                     <Dimensions x="28" y="28"/>
                     <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)" offsetX="90" offsetY="-8" />
                 </Texture>
