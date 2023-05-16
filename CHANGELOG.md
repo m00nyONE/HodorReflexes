@@ -1,3 +1,7 @@
+## 1.12.0 - @m00nyONE
+- adding atronach list
+- allow atronach sharing
+
 ## 1.11.0 - @m00nyONE
 
 This Version will be incompatible with ALL versions prior to 1.11.0 ! So please tell your friends to update :-)
@@ -16,7 +20,7 @@ The sharing space is very limited and the Sharing V2 only allows for 8 unique "s
 In 1.11.0 in addition to the Percentage display, that you are all used to, there now will be the raw ult points (0-500) next to it. This allows your raidlead to call your pillager/barrier/MA/SAX/whatever ult when a specific number of points is reached to increase their effectiveness. Of course you can disable showing the raw ult number in the settings.
 
 You now also finally have the option to share every ultimate you want by enabling the "Share other Ultimates" option in the menu. It will show everyone how much ulti points you currently have and does only do so if you have no "special ults" slotted.
-These "other ults" will only be displayed with the raw ulti points you have because there is now way to calculate the percentage of an ultimate when you don't which one it is.
+These "other ults" will only be displayed with the raw ulti points you have because there is no way to calculate the percentage of an ultimate when you don't which one it is.
 
 New lists for new "special ults" like Barrier and Atro will follow soon in a future update. After i implemented an ult type for them, there will be support for percentages too. For now you can just share them as a raw value. But i mean, your RL should know what sets you are wearing anyway right? 😄
 
