@@ -16,6 +16,7 @@ HodorReflexes.modules.share = {
 		enableColosShare = false,
 		enableUltimateList = false,
 		enableMiscUltimateList = false,
+		enableAtronachList = false,
 		enableDamageList = 0,
 		enableColosList = false,
 		enableHornIcon = true,
@@ -24,6 +25,7 @@ HodorReflexes.modules.share = {
 		hornIconScale = 1,
 		enableUltimateIcons = true,
 		enableMiscUltimateIcons = true,
+		enableAtronachIcons = true,
 		enableDamageIcons = true,
 		enableColosIcons = true,
 		enableAnimIcons = true,
@@ -41,6 +43,8 @@ HodorReflexes.modules.share = {
 		showHornRawValue = 1,
 		showColosPercentValue = 1,
 		showColosRawValue = 1,
+		showAtronachPercentValue = 1,
+		showAtronachRawValue = 1,
 		-- my icon and name
 		myIconPathFull = '',
 		myIconNameRaw = '',
@@ -87,26 +91,26 @@ local countdownVisible = false
 local ULT_MISC = 0
 local ULT_HORN = 1
 local ULT_COLOS = 2
---local ULT_UL3 = 3
+local ULT_ATRO = 3
 --local ULT_ULT4 = 4
 --local ULT_ULT5 = 5
 --local ULT_ULT6 = 6
 --local ULT_ULT7 = 7
 local ULT_HORN_COLOS = 8
---local ULT_HORN_ULT3 = 9
+local ULT_HORN_ATRO = 9
 --local ULT_HORN_ULT4 = 10
 --local ULT_HORN_ULT5 = 11
 --local ULT_HORN_ULT6 = 12
 --local ULT_HORN_ULT7 = 13
---local ULT_COLOS_ULT3 = 14
+local ULT_COLOS_ATRO = 14
 --local ULT_COLOS_ULT4 = 15
 --local ULT_COLOS_ULT5 = 16
 --local ULT_COLOS_ULT6 = 17
 --local ULT_COLOS_ULT7 = 18
---local ULT_ULT3_ULT4 = 19
---local ULT_ULT3_ULT5 = 20
---local ULT_ULT3_ULT6 = 21
---local ULT_ULT3_ULT7 = 22
+--local ULT_ATRO_ULT4 = 19
+--local ULT_ATRO_ULT5 = 20
+--local ULT_ATRO_ULT6 = 21
+--local ULT_ATRO_ULT7 = 22
 --local ULT_ULT4_ULT5 = 23
 --local ULT_ULT4_ULT6 = 24
 --local ULT_ULT4_ULT7 = 25
@@ -126,15 +130,17 @@ local DAMAGE_BOSS = 2
 -- to avoid calling an expensive function GetAbilityCost() too often.
 local ABILITY_COST_HORN  = 250
 local ABILITY_COST_COLOS = 225
+local ABILITY_COST_ATRONACH = 170
 
 local playerTag = '' -- real group tag instead of "player"
 --local playersData = M.playersData
-local ultPool, dpsPool, clsPool, miscUltPool -- control pools (https://www.esoui.com/forums/showthread.php?t=143)
+local ultPool, dpsPool, clsPool, miscUltPool, atronachPool -- control pools (https://www.esoui.com/forums/showthread.php?t=143)
 
 local isUltControlRefresh = true
 
 local hornSlotted = false -- player has war horn slotted
 local colosSlotted = false -- player has colossus slotted
+local atronachSlotted = false
 
 local myHorn = false -- it's player's turn to horn
 local anyHorn = false -- any horn is ready
@@ -151,6 +157,7 @@ local countdownTimeline = nil -- Horn and Colossus animation timeline
 local DATA_PREFIX = 100000000000
 
 local isNecro = GetUnitClassId('player') == 5
+local isSorc = GetUnitClassId('player') == 2
 local classIcons = {}
 for i = 1, GetNumClasses() do
 	local id, _, _, _, _, _, icon, _, _, _ = GetClassInfo(i)
@@ -178,7 +185,7 @@ local player = HR.player
 local combat = HR.combat
 local hud = HR.hud
 
-local ULT_FRAGMENT, DPS_FRAGMENT, CLS_FRAGMENT, CNT_FRAGMENT, HRN_FRAGMENT, HNT_FRAGMENT, MISCULT_FRAGMENT -- HUD fragments
+local ULT_FRAGMENT, DPS_FRAGMENT, CLS_FRAGMENT, CNT_FRAGMENT, HRN_FRAGMENT, HNT_FRAGMENT, MISCULT_FRAGMENT, ATRO_FRAGMENT -- HUD fragments
 
 local exitInstancePending = false
 
@@ -221,6 +228,7 @@ end
 local function CheckSlottedUlts()
 	colosSlotted = false
 	hornSlotted = false
+	atronachSlotted = false
 
 	-- Check backbar ult first, cuz we are smart coderz
 	local ult1 = GetSlotBoundId(ACTION_BAR_ULTIMATE_SLOT_INDEX + 1, HOTBAR_CATEGORY_BACKUP)
@@ -233,7 +241,10 @@ local function CheckSlottedUlts()
 	if isNecro and (ult1 == 122395 or ult2 == 122395 or ult1 == 122388 or ult2 == 122388 or ult1 == 122174 or ult2 == 122174) then
 		colosSlotted = true
 	end
-	-- TODO: check for barrier & attro
+	-- check for sorc attro -- check greater storm attro first
+	if isSorc and(ult1 == 23492 or ult2 == 23492 or ult1 == 23634 or ult2 == 23634 or ult1 == 23495 or ult2 == 23495) then
+		atronachSlotted = true
+	end
 end
 
 local function CheckEquippedSets()
@@ -267,6 +278,7 @@ local function SendData()
 	local pingType, ultType, ult, dmg, dps = DAMAGE_UNKNOWN, ULT_HORN, 0, 0, 0
 	local shareHorn = SV.enableUltimateShare ~= 0 and (hornSlotted and SV.enableUltimateShare or hasSaxhleel and type(SV.enableUltimateShare) == 'number' and SV.enableUltimateShare > 0)
 	local shareColos = SV.enableColosShare and colosSlotted
+	local shareAtronach = SV.enableShareAtronach and atronachSlotted
 	local shareMiscUltimates = SV.enableMiscUltimateShare
 	if M.IsEnabled() then
 		ultType = ULT_MISC
@@ -275,6 +287,8 @@ local function SendData()
 			ultType = shareHorn and ULT_HORN_COLOS or ULT_COLOS
 		elseif shareHorn then
 			ultType = ULT_HORN
+		elseif shareAtronach then
+			ultType = ULT_ATRO
 		-- TODO: test if it works
 		elseif not shareMiscUltimates then
 			ult = 0
@@ -379,6 +393,7 @@ local function CleanGroupData(force)
 				if data.dpsRow then dpsPool:ReleaseObject(data.dpsRow.poolKey) end
 				if data.clsRow then clsPool:ReleaseObject(data.clsRow.poolKey) end
 				if data.miscUltRow then miscUltPool:ReleaseObject(data.miscUltRow.poolKey) end
+				if data.atronachRow then atronachPool:ReleaseObject(data.atronachRow.poolKey) end
 				-- Clear player data
 				M.playersData[userId] = nil
 			end
@@ -396,6 +411,7 @@ local function CleanGroupData(force)
 		miscUltPool:ReleaseAllObjects()
 		dpsPool:ReleaseAllObjects()
 		clsPool:ReleaseAllObjects()
+		atronachPool:ReleaseAllObjects()
 	end
 
 end
@@ -412,6 +428,7 @@ function M.UpdateAbilityCosts()
 
 	ABILITY_COST_HORN  = GetAbilityCost(40223)
 	ABILITY_COST_COLOS = GetAbilityCost(122395)
+	ABILITY_COST_ATRONACH = GetAbilityCost(23492)
 
 end
 
@@ -431,6 +448,10 @@ local function CreateSceneFragments()
 
 	local function ClsFragmentCondition()
 		return SV.enableColosList and controlsVisible
+	end
+
+	local function AtronachFragmentCondition()
+		return SV.enableAtronachList and controlsVisible
 	end
 
 	local function CntFragmentCondition()
@@ -490,6 +511,7 @@ local function CreateSceneFragments()
 
 	ULT_FRAGMENT = hud.AddSimpleFragment(HodorReflexes_Share_Ultimates, UltFragmentCondition)
 	MISCULT_FRAGMENT = hud.AddSimpleFragment(HodorReflexes_Share_MiscUltimates, MiscUltFragmentCondition)
+	ATRO_FRAGMENT = hud.AddSimpleFragment(HodorReflexes_Share_Atronach, AtronachFragmentCondition)
 	DPS_FRAGMENT = hud.AddSimpleFragment(HodorReflexes_Share_Damage, DpsFragmentCondition)
 	CLS_FRAGMENT = hud.AddSimpleFragment(HodorReflexes_Share_Colos, ClsFragmentCondition)
 	CNT_FRAGMENT = hud.AddSimpleFragment(HodorReflexes_Share_ColosCountdown, CntFragmentCondition)
@@ -518,10 +540,15 @@ local function CreateControlPools()
 		return ZO_ObjectPool_CreateControl('HodorReflexes_Share_ColosRow', pool, HodorReflexes_Share_Colos)
 	end
 
+	local function CreateAtronachRow(pool)
+		return ZO_ObjectPool_CreateControl('HodorReflexes_Share_AtronachRow', pool, HodorReflexes_Share_Atronach)
+	end
+
 	ultPool = ZO_ObjectPool:New(CreateUltRow, ZO_ObjectPool_DefaultResetControl)
 	miscUltPool = ZO_ObjectPool:New(CreateMiscUltRow, ZO_ObjectPool_DefaultResetControl)
 	dpsPool = ZO_ObjectPool:New(CreateDpsRow, ZO_ObjectPool_DefaultResetControl)
 	clsPool = ZO_ObjectPool:New(CreateClsRow, ZO_ObjectPool_DefaultResetControl)
+	atronachPool = ZO_ObjectPool:New(CreateAtronachRow, ZO_ObjectPool_DefaultResetControl)
 
 end
 
@@ -967,7 +994,7 @@ end
 function M.ToggleShare()
 	EM:UnregisterForUpdate(M.name .. "SendData")
 	if units.IsGrouped('player') then
-		if M.IsEnabled() and (SV.enableUltimateShare and SV.enableUltimateShare ~= 0 or SV.enableDamageShare or SV.enableColosShare or SV.enableMiscUltimateShare) then
+		if M.IsEnabled() and (SV.enableUltimateShare and SV.enableUltimateShare ~= 0 or SV.enableDamageShare or SV.enableColosShare or SV.enableMiscUltimateShare or SV.enableAtronachShare) then
 			-- Enable data sharing
 			EM:RegisterForUpdate(M.name .. "SendData", 100, SendAttempt)
 		else
@@ -982,6 +1009,7 @@ function M.RefreshVisibility()
 	-- Refresh fragments
 	ULT_FRAGMENT:Refresh()
 	MISCULT_FRAGMENT:Refresh()
+	ATRO_FRAGMENT:Refresh()
 	DPS_FRAGMENT:Refresh()
 	CLS_FRAGMENT:Refresh()
 	CNT_FRAGMENT:Refresh()
@@ -1114,6 +1142,12 @@ local function CreateControlsForUser(userId, playerData)
 	SetControlText(miscUltRow:GetNamedChild('_Name'), userName)
 	SetControlIcon(miscUltRow:GetNamedChild('_Icon'), SW.enableMiscUltimateIcons and userIcon or defaultIcon)
 
+	-- atronach Row
+	local atronachRow, atronachKey = atronachPool:AcquireObject()
+	atronachRow.poolKey = atronachKey
+	SetControlText(atronachRow:GetNamedChild('_Name'), userName)
+	SetControlIcon(atronachRow:GetNamedChild('_Icon'), SW.enableAtronachIcons and userIcon or defaultIcon)
+
 	-- Damage row
 	local dpsRow, dpsKey = dpsPool:AcquireObject()
 	dpsRow.poolKey = dpsKey
@@ -1137,6 +1171,7 @@ local function CreateControlsForUser(userId, playerData)
 		if SW.enableUltimateIcons then HR.anim.RegisterUserControl(userId, ultRow:GetNamedChild('_Icon')) end
 		if SW.enableMiscUltimateIcons then HR.anim.RegisterUserControl(userId, miscUltRow:GetNamedChild('_Icon')) end
 		if SW.enableDamageIcons then HR.anim.RegisterUserControl(userId, dpsRow:GetNamedChild('_Icon')) end
+		if SW.enableAtronachIcons then HR.anim.RegisterUserControl(userId, atronachRow:GetNamedChild('_Icon')) end
 		if clsRow and SW.enableColosIcons then HR.anim.RegisterUserControl(userId, clsRow:GetNamedChild('_Icon')) end
 		HR.anim.RunUserAnimations(userId)
 	end
@@ -1145,6 +1180,7 @@ local function CreateControlsForUser(userId, playerData)
 	playerData.dpsRow = dpsRow
 	playerData.clsRow = clsRow
 	playerData.miscUltRow = miscUltRow
+	playerData.atronachRow = atronachRow
 	M.playersData[userId] = playerData
 end
 
@@ -1279,6 +1315,7 @@ do
 		local rowsHorn = {}
 		local rowsColos = {}
 		local rowsMiscUlt = {}
+		local rowsAtronach = {}
 
 		-- Update rows
 		for name, data in pairs(M.playersData) do
@@ -1286,12 +1323,13 @@ do
 			local ultRow = data.ultRow
 			local miscUltRow = data.miscUltRow
 			local clsRow = data.clsRow
+			local atronachRow = data.atronachRow
 			-- Only shows rows for online players with non empty ult %
 			if data.ult > 0 and (isTestRunning or units.IsOnline(tag)) then
 				-- Get horn and colos values based on ultType
-				local horn, colos = 0, 0 -- ult %
+				local horn, colos, atro = 0, 0, 0 -- ult %
 				local misc = 0 -- ult raw for no special ultType
-				local colorHorn, colorColos = 'FFFFFF', 'FFFFFF'
+				local colorHorn, colorColos, colorAtronach = 'FFFFFF', 'FFFFFF', 'FFFFFF'
 				if data.ultType == ULT_MISC then
 					misc = data.ult
 				elseif data.ultType == ULT_HORN then
@@ -1301,6 +1339,8 @@ do
 				elseif data.ultType == ULT_HORN_COLOS then
 					horn = M.GetUltPercentage(data.ult, ABILITY_COST_HORN)
 					colos = M.GetUltPercentage(data.ult, ABILITY_COST_COLOS)
+				elseif data.ultType == ULT_ATRO then
+					atro = M.GetUltPercentage(data.ult, ABILITY_COST_ATRONACH)
 				end
 				-- War Horn
 				if ultRow then
@@ -1341,10 +1381,25 @@ do
 						miscUltRow:SetHidden(true)
 					end
 				end
+				-- atro
+				if atronachRow then
+					if atro > 0 and not IsUnitDead(tag) then
+						if colos >= 100 then colorAtronach = '00FF00' elseif colos >= 80 then colorAtronach = 'FFFF00' end
+						atronachRow:GetNamedChild('_Value'):SetText(strformat('|c%s%d%%|r', colorAtronach, zo_min(200, atro)))
+						atronachRow:GetNamedChild('_Value'):SetScale(SV.showAtronachPercentValue)
+						atronachRow:GetNamedChild('_RawValue'):SetText(strformat('|c%s%d|r', "FFFFFF", zo_min(500, data.ult)))
+						atronachRow:GetNamedChild('_RawValue'):SetScale(SV.showAtronachRawValue)
+						atronachRow:SetHidden(false)
+						rowsAtronach[#rowsAtronach + 1] = {tag, atro, data}
+					else
+						atronachRow:SetHidden(true)
+					end
+				end
 			else
 				if ultRow then ultRow:SetHidden(true) end
 				if clsRow then clsRow:SetHidden(true) end
 				if miscUltRow then miscUltRow:SetHidden(true) end
+				if atronachRow then atronachRow:SetHidden(true) end
 			end
 		end
 
@@ -1356,6 +1411,9 @@ do
 			if a[2] == b[2] then return a[1] < b[1] else return a[2] > b[2] end
 		end)
 		tsort(rowsMiscUlt, function(a, b)
+			if a[2] == b[2] then return a[1] < b[1] else return a[2] > b[2] end
+		end)
+		tsort(rowsAtronach, function(a, b)
 			if a[2] == b[2] then return a[1] < b[1] else return a[2] > b[2] end
 		end)
 
@@ -1383,6 +1441,12 @@ do
 			local playerData = row[3]
 			playerData.miscUltRow:ClearAnchors()
 			playerData.miscUltRow:SetAnchor(TOPLEFT, HodorReflexes_Share_MiscUltimates, TOPLEFT, 0, i*24)
+		end
+
+		for i, row in ipairs(rowsAtronach) do
+			local playerData = row[3]
+			playerData.atronachRow:ClearAnchors()
+			playerData.atronachRow:SetAnchor(TOPLEFT, HodorReflexes_Share_Atronach, TOPLEFT, 0, i*24)
 		end
 
 		-- Order colos rows
@@ -1491,13 +1555,13 @@ end
 function M.UnlockUI()
 	M.uiLocked = false
 	M.RefreshVisibility()
-	hud.UnlockControls(HodorReflexes_Share_Ultimates, HodorReflexes_Share_MiscUltimates, HodorReflexes_Share_Damage, HodorReflexes_Share_Colos, HodorReflexes_Share_ColosCountdown, HodorReflexes_Share_HornCountdown, HodorReflexes_Share_HornIcon)
+	hud.UnlockControls(HodorReflexes_Share_Ultimates, HodorReflexes_Share_MiscUltimates, HodorReflexes_Share_Damage, HodorReflexes_Share_Colos, HodorReflexes_Share_ColosCountdown, HodorReflexes_Share_HornCountdown, HodorReflexes_Share_HornIcon, HodorReflexes_Share_Atronach)
 end
 
 function M.LockUI()
 	M.uiLocked = true
 	M.RefreshVisibility()
-	hud.LockControls(HodorReflexes_Share_Ultimates, HodorReflexes_Share_MiscUltimates, HodorReflexes_Share_Damage, HodorReflexes_Share_Colos, HodorReflexes_Share_ColosCountdown, HodorReflexes_Share_HornCountdown, HodorReflexes_Share_HornIcon)
+	hud.LockControls(HodorReflexes_Share_Ultimates, HodorReflexes_Share_MiscUltimates, HodorReflexes_Share_Damage, HodorReflexes_Share_Colos, HodorReflexes_Share_ColosCountdown, HodorReflexes_Share_HornCountdown, HodorReflexes_Share_HornIcon, HodorReflexes_Share_Atronach)
 end
 
 function M.ToggleDamageShare()
@@ -1507,6 +1571,10 @@ end
 
 function M.ToggleMiscUltimatesShare()
 	SV.enableMiscUltimateShare = not SV.enableMiscUltimateShare
+end
+
+function M.ToggleAtronachShare()
+	SV.enableAtronachShare = not SV.enableAtronachShare
 end
 
 function M.RestorePosition()
@@ -1522,6 +1590,9 @@ function M.RestorePosition()
 
 	local colosLeft = SV.colosLeft
 	local colosTop = SV.colosTop
+
+	local atronachLeft = SV.atronachLeft
+	local atronachTop = SV.atronachTop
 
 	local hornCountdownCenterX = SV.hornCountdownCenterX
 	local hornCountdownCenterY = SV.hornCountdownCenterY
@@ -1550,6 +1621,11 @@ function M.RestorePosition()
 	if colosLeft or colosTop then
 		HodorReflexes_Share_Colos:ClearAnchors()
 		HodorReflexes_Share_Colos:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, colosLeft, colosTop)
+	end
+
+	if atronachLeft or atronachTop then
+		HodorReflexes_Share_Atronach:ClearAnchors()
+		HodorReflexes_Share_Atronach:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, atronachLeft, atronachTop)
 	end
 
 	if hornCountdownCenterX or hornCountdownCenterY then
@@ -1650,6 +1726,13 @@ function M.ColosOnMoveStop()
 
 	SV.colosLeft = HodorReflexes_Share_Colos:GetLeft()
 	SV.colosTop = HodorReflexes_Share_Colos:GetTop()
+
+end
+
+function M.AtronachOnMoveStop()
+
+	SV.atronachLeft = HodorReflexes_Share_Atronach:GetLeft()
+	SV.atronachTop = HodorReflexes_Share_Atronach:GetTop()
 
 end
 
