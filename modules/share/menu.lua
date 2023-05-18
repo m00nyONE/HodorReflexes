@@ -332,6 +332,51 @@ function M.BuildMenu()
 		},
 		{
 			type = "header",
+			name = string.format("|cFFFACD%s|r", GetString(HR_MENU_ATRONACH)),
+		},
+		{
+			type = "checkbox",
+			name = GetString(HR_MENU_ATRONACH_SHOW),
+			tooltip = GetString(HR_MENU_ATRONACH_SHOW_TT),
+			default = M.default.enableAtronachList,
+			getFunc = function() return M.sv.enableAtronachList end,
+			setFunc = function(value)
+				M.sv.enableAtronachList = value or false
+			end,
+			width = 'half',
+		},
+		{
+			type = "checkbox",
+			name = GetString(HR_MENU_ATRONACH_SHARE),
+			tooltip = GetString(HR_MENU_ATRONACH_SHARE_TT),
+			default = M.default.enableAtronachShare,
+			getFunc = function() return M.sv.enableAtronachShare end,
+			setFunc = function(value)
+				M.sv.enableAtronachShare = value or false
+				M.ToggleShare()
+			end,
+			width = 'half',
+		},
+		{
+			type = "checkbox",
+			name = GetString(HR_MENU_ATRONACH_SHOW_PERCENT),
+			tooltip = GetString(HR_MENU_ATRONACH_SHOW_PERCENT_TT),
+			default = function() if M.default.showAtronachPercentValue == 1 then return true end return false end,
+			getFunc = function() if M.sv.showAtronachPercentValue == 1 then return true end return false end,
+			setFunc = function(value) if value then M.sv.showAtronachPercentValue = 1 return end M.sv.showAtronachPercentValue = 0 end,
+			width = 'half',
+		},
+		{
+			type = "checkbox",
+			name = GetString(HR_MENU_ATRONACH_SHOW_RAW),
+			tooltip = GetString(HR_MENU_ATRONACH_SHOW_RAW_TT),
+			default = function() if M.default.showAtronachRawValue == 1 then return true end return false end,
+			getFunc = function() if M.sv.showAtronachRawValue == 1 then return true end return false end,
+			setFunc = function(value) if value then M.sv.showAtronachRawValue = 1 return end M.sv.showAtronachRawValue = 0 end,
+			width = 'half',
+		},
+		{
+			type = "header",
 			name = string.format("|cFFFACD%s|r", GetString(HR_MENU_MISCULTIMATES))
 		},
 		{

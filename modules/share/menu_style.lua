@@ -170,6 +170,30 @@ function M.BuildStyleMenu()
 		},
 		{
 			type = "header",
+			name = string.format("|cFFFACD%s|r", GetString(HR_MENU_ATRONACH))
+		},
+		{
+			type = "colorpicker",
+			name = GetString(HR_MENU_STYLE_ATRONACH_COLOR),
+			tooltip = "",
+			getFunc = function() return unpack(M.sw.styleAtronachColor) end,
+			setFunc = function(r, g, b)
+				M.sw.styleAtronachColor = {r, g, b}
+				M.RestoreColors()
+			end,
+		},
+		{
+			type = "colorpicker",
+			name = GetString(HR_MENU_STYLE_BERSERK_COLOR),
+			tooltip = "",
+			getFunc = function() return unpack(M.sw.styleBerserkColor) end,
+			setFunc = function(r, g, b)
+				M.sw.styleBerserkColor = {r, g, b}
+				M.RestoreColors()
+			end,
+		},
+		{
+			type = "header",
 			name = string.format("|cFFFACD%s|r", GetString(HR_MENU_COLOS)),
 		},
 		{

@@ -222,6 +222,28 @@ function M.BuildIconsMenu()
 		},
 		{
 			type = "checkbox",
+			name = GetString(HR_MENU_ICONS_VISIBILITY_ATRONACH),
+			tooltip = GetString(HR_MENU_ICONS_VISIBILITY_ATRONACH_TT),
+			default = M.default.enableAtronachIcons,
+			getFunc = function() return M.sw.enableAtronachIcons end,
+			setFunc = function(value)
+				M.sw.enableAtronachIcons = value or false
+			end,
+			requiresReload = true,
+		},
+		{
+			type = "checkbox",
+			name = GetString(HR_MENU_ICONS_VISIBILITY_MISCULTIMATES),
+			tooltip = GetString(HR_MENU_ICONS_VISIBILITY_MISCULTIMATES_TT),
+			default = M.default.enableMiscUltimateIcons,
+			getFunc = function() return M.sw.enableMiscUltimateIcons end,
+			setFunc = function(value)
+				M.sw.enableMiscUltimateIcons = value or false
+			end,
+			requiresReload = true,
+		},
+		{
+			type = "checkbox",
 			name = GetString(HR_MENU_ICONS_VISIBILITY_COLORS),
 			tooltip = GetString(HR_MENU_ICONS_VISIBILITY_COLORS_TT),
 			default = M.default.enableColoredNames,

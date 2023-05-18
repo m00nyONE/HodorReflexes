@@ -63,6 +63,8 @@ HodorReflexes.modules.share = {
 		styleHornColor =  {0, 1, 1},
 		styleForceColor = {1, 1, 0},
 		styleColosColor = {1, 1, 0},
+		styleAtronachColor = {0, 1, 1},
+		styleBerserkColor = {1, 1, 0},
 		styleZeroTimerOpacity = 0.7,
 		styleTimerBlink = true,
 	},
@@ -151,6 +153,10 @@ local hornActive, forceActive = false, false
 local colosOrder = 10 -- Current player's order in the colossus chain
 local colosEnd = 0 -- Colossus end time
 local mvEnd = 0 -- Major Vulnerability end time
+
+local atronachEnd = 0 -- atronach end time
+local berserkEnd = 0 -- major berserk end time
+local atronachActive, berserkActive = false, false
 
 local countdownTimeline = nil -- Horn and Colossus animation timeline
 
@@ -746,9 +752,23 @@ function M.ToggleEnabled()
 			EM:AddFilterForEvent(eventName, EVENT_COMBAT_EVENT, REGISTER_FILTER_COMBAT_RESULT, ACTION_RESULT_EFFECT_GAINED)
 		end
 
+		-- Atronach cast
+		local atronachIds = {23634, 23492, 23495}
+		for i, id in ipairs(atronachIds) do
+			local eventName = strformat("%sAtronachCast%d", M.name, i)
+			EM:RegisterForEvent(eventName, EVENT_COMBAT_EVENT, M.AtronachCast)
+			EM:AddFilterForEvent(eventName, EVENT_COMBAT_EVENT, REGISTER_FILTER_ABILITY_ID, id)
+			EM:AddFilterForEvent(eventName, EVENT_COMBAT_EVENT, REGISTER_FILTER_COMBAT_RESULT, ACTION_RESULT_EFFECT_GAINED)
+		end
+
 		-- Vulnerability applied
 		EM:RegisterForEvent(M.name .. "MV", EVENT_EFFECT_CHANGED, M.MajorVulnerability)
 		EM:AddFilterForEvent(M.name .. "MV", EVENT_EFFECT_CHANGED, REGISTER_FILTER_ABILITY_ID, 106754)
+
+		-- major berserk applied
+		EM:RegisterForEvent(M.name .. "MajorBerserk", EVENT_EFFECT_CHANGED, M.MajorBerserk)
+		EM:AddFilterForEvent(M.name .. "MajorBerserk", EVENT_EFFECT_CHANGED, REGISTER_FILTER_ABILITY_ID, 61745)
+
 
 		CheckSlottedUlts()
 		EM:RegisterForEvent(M.name, EVENT_ACTION_SLOTS_ALL_HOTBARS_UPDATED, CheckSlottedUlts)
@@ -951,6 +971,100 @@ do
 	end
 end
 
+-- Atronach and major berserk.
+do
+	local eventNameTick = M.name .. "AtronachTick"
+	local blinkerAtronach = 0
+	local blinkerBerserk = 0
+
+	local function AtronachTick()
+		local t = time()
+
+		if atronachEnd < t - 2000 or not SW.styleTimerBlink and atronachEnd <= t then
+			HodorReflexes_Share_Atronach_AtronachDuration:SetText('  0.0')
+			HodorReflexes_Share_Atronach_AtronachDuration:SetAlpha(SW.styleZeroTimerOpacity)
+			HodorReflexes_Share_Atronach_AtronachIcon:SetAlpha(SW.styleZeroTimerOpacity)
+			atronachActive = false
+		else
+			if atronachEnd < t then
+				HodorReflexes_Share_Atronach_AtronachDuration:SetText(blinkerAtronach % 4 < 2 and '' or '  0.0')
+				blinkerAtronach = blinkerAtronach + 1
+			else
+				HodorReflexes_Share_Atronach_AtronachDuration:SetText(strformat('%5.1f', (atronachEnd - t) / 1000))
+				blinkerAtronach = 0
+			end
+			atronachActive = true
+		end
+
+		if berserkEnd < t - 2000 or not SW.styleTimerBlink and berserkEnd <= t then
+			HodorReflexes_Share_Atronach_BerserkDuration:SetText('  0.0')
+			HodorReflexes_Share_Atronach_BerserkDuration:SetAlpha(SW.styleZeroTimerOpacity)
+			HodorReflexes_Share_Atronach_BerserkIcon:SetAlpha(SW.styleZeroTimerOpacity)
+			berserkActive = false
+		else
+			if berserkEnd < t then
+				HodorReflexes_Share_Atronach_BerserkDuration:SetText(blinkerBerserk % 4 < 2 and '' or '  0.0')
+				blinkerBerserk = blinkerBerserk + 1
+			else
+				HodorReflexes_Share_Atronach_BerserkDuration:SetText(strformat('%5.1f', (berserkEnd - t) / 1000))
+				blinkerBerserk = 0
+			end
+			berserkActive = true
+		end
+
+		if not atronachActive and not berserkActive then
+			EM:UnregisterForUpdate(eventNameTick)
+		end
+	end
+
+	function M.AtronachCast(_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, targetUnitId)
+		---- Someone cast atronach.
+		-- Don't do anything if colossus list is disabled
+		if not SV.enableAtronachList then return end
+
+		local unitTag = units.GetTag(targetUnitId)
+		local userId = units.GetDisplayName(unitTag)
+		local data = userId and M.playersData[userId]
+		if data and data.ult > 0 then -- reset ult % in the colossus list
+			data.ult = 1
+			data.ultTime = time() + LDS:GetPingRate() -- don't let the next incoming ping overwrite this value
+			M.UpdateUltimates()
+		end
+
+		-- Ignore this cast if the caster is out of range
+		if not isTestRunning and SV.atronachSupportRange and (not unitTag or not M.IsUnitNearby(unitTag)) then return end
+
+		EM:UnregisterForUpdate(eventNameTick)
+		EM:RegisterForUpdate(eventNameTick, 100, AtronachTick)
+
+		HodorReflexes_Share_Atronach_AtronachDuration:SetAlpha(1)
+		HodorReflexes_Share_Atronach_AtronachIcon:SetAlpha(1)
+		atronachEnd = time() + 15000
+
+	end
+
+	function M.MajorBerserk(_, changeType, _, _, _, beginTime, endTime, _, _, _, _, _, _, _, _, abilityId)
+		if changeType == EFFECT_RESULT_GAINED or changeType == EFFECT_RESULT_UPDATED and endTime > 0 then
+			-- Convert endTime to time() format
+			endTime = zo_ceil(endTime * 1000)
+			--if abilityId == 61745 then
+			--	d("double check abilityID " .. abilityId)
+			--end
+			-- Prevent registering ColosTick multiple times within a short time span
+
+			if berserkEnd < endTime - 200 then
+				berserkEnd = endTime
+				EM:UnregisterForUpdate(eventNameTick)
+				EM:RegisterForUpdate(eventNameTick, 100, AtronachTick)
+				HodorReflexes_Share_Atronach_BerserkDuration:SetAlpha(1)
+				HodorReflexes_Share_Atronach_BerserkIcon:SetAlpha(1)
+				zo_callLater(AtronachTick, 50) -- wait 50ms for major berserk to apply
+			end
+		end
+	end
+end
+
+
 -- Process data decoded from a map ping.
 function M.ProcessData(tag, data, ms)
 	-- Custom data ping.
@@ -1142,18 +1256,6 @@ local function CreateControlsForUser(userId, playerData)
 	SetControlText(miscUltRow:GetNamedChild('_Name'), userName)
 	SetControlIcon(miscUltRow:GetNamedChild('_Icon'), SW.enableMiscUltimateIcons and userIcon or defaultIcon)
 
-	-- atronach Row
-	local atronachRow, atronachKey = atronachPool:AcquireObject()
-	atronachRow.poolKey = atronachKey
-	SetControlText(atronachRow:GetNamedChild('_Name'), userName)
-	SetControlIcon(atronachRow:GetNamedChild('_Icon'), SW.enableAtronachIcons and userIcon or defaultIcon)
-
-	-- Damage row
-	local dpsRow, dpsKey = dpsPool:AcquireObject()
-	dpsRow.poolKey = dpsKey
-	SetControlText(dpsRow:GetNamedChild('_Name'), userName)
-	SetControlIcon(dpsRow:GetNamedChild('_Icon'), SW.enableDamageIcons and userIcon or defaultIcon)
-
 	-- Colossus row
 	local clsRow, clsKey
 	if classId == 5 then -- create colossus control for necros only
@@ -1163,7 +1265,20 @@ local function CreateControlsForUser(userId, playerData)
 		SetControlIcon(clsRow:GetNamedChild('_Icon'), SW.enableColosIcons and userIcon or defaultIcon)
 	end
 
+	-- atronach Row
+	local atronachRow, atronachKey
+	if classId == 2 then -- create atronach control only for sorcs only
+		atronachRow, atronachKey = atronachPool:AcquireObject()
+		atronachRow.poolKey = atronachKey
+		SetControlText(atronachRow:GetNamedChild('_Name'), userName)
+		SetControlIcon(atronachRow:GetNamedChild('_Icon'), SW.enableAtronachIcons and userIcon or defaultIcon)
+	end
 
+	-- Damage row
+	local dpsRow, dpsKey = dpsPool:AcquireObject()
+	dpsRow.poolKey = dpsKey
+	SetControlText(dpsRow:GetNamedChild('_Name'), userName)
+	SetControlIcon(dpsRow:GetNamedChild('_Icon'), SW.enableDamageIcons and userIcon or defaultIcon)
 
 
 	-- Register icon animation if user has one
@@ -1171,7 +1286,7 @@ local function CreateControlsForUser(userId, playerData)
 		if SW.enableUltimateIcons then HR.anim.RegisterUserControl(userId, ultRow:GetNamedChild('_Icon')) end
 		if SW.enableMiscUltimateIcons then HR.anim.RegisterUserControl(userId, miscUltRow:GetNamedChild('_Icon')) end
 		if SW.enableDamageIcons then HR.anim.RegisterUserControl(userId, dpsRow:GetNamedChild('_Icon')) end
-		if SW.enableAtronachIcons then HR.anim.RegisterUserControl(userId, atronachRow:GetNamedChild('_Icon')) end
+		if atronachRow and SW.enableAtronachIcons then HR.anim.RegisterUserControl(userId, atronachRow:GetNamedChild('_Icon')) end
 		if clsRow and SW.enableColosIcons then HR.anim.RegisterUserControl(userId, clsRow:GetNamedChild('_Icon')) end
 		HR.anim.RunUserAnimations(userId)
 	end
@@ -1384,7 +1499,7 @@ do
 				-- atro
 				if atronachRow then
 					if atro > 0 and not IsUnitDead(tag) then
-						if colos >= 100 then colorAtronach = '00FF00' elseif colos >= 80 then colorAtronach = 'FFFF00' end
+						if atro >= 100 then colorAtronach = '00FF00' elseif atro >= 80 then colorAtronach = 'FFFF00' end
 						atronachRow:GetNamedChild('_Value'):SetText(strformat('|c%s%d%%|r', colorAtronach, zo_min(200, atro)))
 						atronachRow:GetNamedChild('_Value'):SetScale(SV.showAtronachPercentValue)
 						atronachRow:GetNamedChild('_RawValue'):SetText(strformat('|c%s%d|r', "FFFFFF", zo_min(500, data.ult)))
@@ -1654,14 +1769,20 @@ function M.RestoreColors()
 	HodorReflexes_Share_Ultimates_HornDuration:SetColor(unpack(SW.styleHornColor))
 	HodorReflexes_Share_Ultimates_ForceDuration:SetColor(unpack(SW.styleForceColor))
 	HodorReflexes_Share_Colos_Duration:SetColor(unpack(SW.styleColosColor))
+	HodorReflexes_Share_Atronach_AtronachDuration:SetColor(unpack(SW.styleAtronachColor))
+	HodorReflexes_Share_Atronach_BerserkDuration:SetColor(unpack(SW.styleBerserkColor))
 
 	HodorReflexes_Share_Ultimates_HornDuration:SetAlpha(SW.styleZeroTimerOpacity)
 	HodorReflexes_Share_Ultimates_ForceDuration:SetAlpha(SW.styleZeroTimerOpacity)
 	HodorReflexes_Share_Colos_Duration:SetAlpha(SW.styleZeroTimerOpacity)
+	HodorReflexes_Share_Atronach_AtronachDuration:SetAlpha(SW.styleZeroTimerOpacity)
+	HodorReflexes_Share_Atronach_BerserkDuration:SetAlpha(SW.styleZeroTimerOpacity)
 
 	HodorReflexes_Share_Ultimates_HornIcon:SetAlpha(SW.styleZeroTimerOpacity)
 	HodorReflexes_Share_Ultimates_ForceIcon:SetAlpha(SW.styleZeroTimerOpacity)
 	HodorReflexes_Share_Colos_Icon:SetAlpha(SW.styleZeroTimerOpacity)
+	HodorReflexes_Share_Atronach_AtronachIcon:SetAlpha(SW.styleZeroTimerOpacity)
+	HodorReflexes_Share_Atronach_BerserkIcon:SetAlpha(SW.styleZeroTimerOpacity)
 
 end
 
@@ -1802,6 +1923,9 @@ local function ToggleTest(players)
 		if playerData.classId == 5 then
 			playerData.ultType = ULT_HORN_COLOS
 		end
+		if playerData.classId == 2 then
+			playerData.ultType = ULT_ATRO
+		end
 
 		return playerData
 	end
@@ -1817,6 +1941,8 @@ local function ToggleTest(players)
 	M.OnHornEffectChanged(0, EFFECT_RESULT_GAINED, 0, 0, 0, GetFrameTimeSeconds(), GetFrameTimeSeconds() + 10, 0, 0, 0, 0, 0, 0, 0, 0, 61747)
 	M.ColosCast(0, ACTION_RESULT_EFFECT_GAINED)
 	M.MajorVulnerability(0, EFFECT_RESULT_GAINED, 0, 0, 0, 0, GetFrameTimeSeconds() + 12)
+	M.AtronachCast(0, ACTION_RESULT_EFFECT_GAINED)
+	M.MajorBerserk(0, EFFECT_RESULT_GAINED, 0, 0, 0, 0, GetFrameTimeSeconds() + 10)
 
 	M.UnlockUI()
 
