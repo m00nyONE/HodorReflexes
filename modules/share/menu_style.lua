@@ -31,6 +31,31 @@ function M.BuildStyleMenu()
 			end,
 		},
 		{
+			type = "slider",
+			name = GetString(HR_MENU_STYLE_TIMER_OPACITY),
+			tooltip = GetString(HR_MENU_STYLE_TIMER_OPACITY_TT),
+			min = 0,
+			max = 1,
+			step = 0.05,
+			decimals = 2,
+			clampInput = true,
+			getFunc = function() return M.sw.styleZeroTimerOpacity end,
+			setFunc = function(value)
+				M.sw.styleZeroTimerOpacity = value
+				M.RestoreColors()
+			end,
+		},
+		{
+			type = "checkbox",
+			name = GetString(HR_MENU_STYLE_TIMER_BLINK),
+			tooltip = GetString(HR_MENU_STYLE_TIMER_BLINK_TT),
+			default = M.default.styleTimerBlink,
+			getFunc = function() return M.sw.styleTimerBlink end,
+			setFunc = function(value)
+				M.sw.styleTimerBlink = value
+			end,
+		},
+		{
 			type = "header",
 			name = string.format("|cFFFACD%s|r", GetString(HR_MENU_STYLE_DPS)),
 		},
@@ -141,31 +166,6 @@ function M.BuildStyleMenu()
 			setFunc = function(r, g, b)
 				M.sw.styleForceColor = {r, g, b}
 				M.RestoreColors()
-			end,
-		},
-		{
-			type = "slider",
-			name = GetString(HR_MENU_STYLE_TIMER_OPACITY),
-			tooltip = GetString(HR_MENU_STYLE_TIMER_OPACITY_TT),
-			min = 0,
-			max = 1,
-			step = 0.05,
-			decimals = 2,
-			clampInput = true,
-			getFunc = function() return M.sw.styleZeroTimerOpacity end,
-			setFunc = function(value)
-				M.sw.styleZeroTimerOpacity = value
-				M.RestoreColors()
-			end,
-		},
-		{
-			type = "checkbox",
-			name = GetString(HR_MENU_STYLE_TIMER_BLINK),
-			tooltip = GetString(HR_MENU_STYLE_TIMER_BLINK_TT),
-			default = M.default.styleTimerBlink,
-			getFunc = function() return M.sw.styleTimerBlink end,
-			setFunc = function(value)
-				M.sw.styleTimerBlink = value
 			end,
 		},
 		{
