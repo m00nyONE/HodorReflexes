@@ -14,6 +14,7 @@ HodorReflexes.modules.share = {
 		enableMiscUltimateShare = false,
 		enableDamageShare = false,
 		enableColosShare = false,
+		enableAtronachShare = false,
 		enableUltimateList = false,
 		enableMiscUltimateList = false,
 		enableAtronachList = false,
@@ -104,7 +105,7 @@ local ULT_HORN_ATRO = 9
 --local ULT_HORN_ULT5 = 11
 --local ULT_HORN_ULT6 = 12
 --local ULT_HORN_ULT7 = 13
-local ULT_COLOS_ATRO = 14
+local ULT_COLOS_ATRO = 14 -- this can't exist
 --local ULT_COLOS_ULT4 = 15
 --local ULT_COLOS_ULT5 = 16
 --local ULT_COLOS_ULT6 = 17
@@ -284,13 +285,15 @@ local function SendData()
 	local pingType, ultType, ult, dmg, dps = DAMAGE_UNKNOWN, ULT_HORN, 0, 0, 0
 	local shareHorn = SV.enableUltimateShare ~= 0 and (hornSlotted and SV.enableUltimateShare or hasSaxhleel and type(SV.enableUltimateShare) == 'number' and SV.enableUltimateShare > 0)
 	local shareColos = SV.enableColosShare and colosSlotted
-	local shareAtronach = SV.enableShareAtronach and atronachSlotted
+	local shareAtronach = SV.enableAtronachShare and atronachSlotted
 	local shareMiscUltimates = SV.enableMiscUltimateShare
 	if M.IsEnabled() then
 		ultType = ULT_MISC
 		ult = roundDownToFive(zo_min(500, GetUnitPower("player", POWERTYPE_ULTIMATE)))
 		if shareColos then
 			ultType = shareHorn and ULT_HORN_COLOS or ULT_COLOS
+		elseif shareHorn and shareAtronach then
+			ultType = ULT_HORN_ATRO
 		elseif shareHorn then
 			ultType = ULT_HORN
 		elseif shareAtronach then
@@ -1157,16 +1160,16 @@ function M.GetUltPercentage(raw, abilityCost)
 
 	return zo_min(200, ultPercentage)
 end
-
-function M.GetUltType()
-	if SV.enableUltimateShare and SV.enableUltimateShare ~= 0 and SV.enableColosShare then
-		return ULT_HORN_COLOS
-	elseif SV.enableColosShare then
-		return ULT_COLOS
-	else
-		return ULT_HORN
-	end
-end
+--
+--function M.GetUltType()
+--	if SV.enableUltimateShare and SV.enableUltimateShare ~= 0 and SV.enableColosShare then
+--		return ULT_HORN_COLOS
+--	elseif SV.enableColosShare then
+--		return ULT_COLOS
+--	else
+--		return ULT_HORN
+--	end
+--end
 
 function M.GetDamageTypeName(t)
 	local names = {
@@ -1456,6 +1459,9 @@ do
 					colos = M.GetUltPercentage(data.ult, ABILITY_COST_COLOS)
 				elseif data.ultType == ULT_ATRO then
 					atro = M.GetUltPercentage(data.ult, ABILITY_COST_ATRONACH)
+				elseif data.ultType == ULT_HORN_ATRO then
+					atro = M.GetUltPercentage(data.ult, ABILITY_COST_ATRONACH)
+					horn = M.GetUltPercentage(data.ult, ABILITY_COST_HORN)
 				end
 				-- War Horn
 				if ultRow then
@@ -1485,17 +1491,6 @@ do
 						clsRow:SetHidden(true)
 					end
 				end
-				-- misc ultimates
-				if miscUltRow then
-					--if misc > 0 then
-					if misc > 0 then
-						miscUltRow:GetNamedChild('_RawValue'):SetText(strformat('|c%s%d|r', "FFFFFF", zo_min(500, data.ult)))
-						miscUltRow:SetHidden(false)
-						rowsMiscUlt[#rowsMiscUlt + 1] = {tag, misc, data}
-					else
-						miscUltRow:SetHidden(true)
-					end
-				end
 				-- atro
 				if atronachRow then
 					if atro > 0 and not IsUnitDead(tag) then
@@ -1508,6 +1503,17 @@ do
 						rowsAtronach[#rowsAtronach + 1] = {tag, atro, data}
 					else
 						atronachRow:SetHidden(true)
+					end
+				end
+				-- misc ultimates
+				if miscUltRow then
+					--if misc > 0 then
+					if misc > 0 then
+						miscUltRow:GetNamedChild('_RawValue'):SetText(strformat('|c%s%d|r', "FFFFFF", zo_min(500, data.ult)))
+						miscUltRow:SetHidden(false)
+						rowsMiscUlt[#rowsMiscUlt + 1] = {tag, misc, data}
+					else
+						miscUltRow:SetHidden(true)
 					end
 				end
 			else
