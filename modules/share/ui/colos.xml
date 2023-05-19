@@ -1,6 +1,7 @@
 <GuiXml>
     <Controls>
         <TopLevelControl name="HodorReflexes_Share_Colos" mouseEnabled="false" movable="false" resizeToFitDescendents="true" clampedToScreen="true" hidden="true">
+            <Dimensions x="232"/>
             <Anchor point="LEFT" relativeTo="GuiRoot" relativePoint="LEFT" offsetX="500" offsetY="0" />
             <OnMoveStop>HodorReflexes.modules.share.ColosOnMoveStop()</OnMoveStop>
             <Controls>
