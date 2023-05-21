@@ -754,7 +754,6 @@ u["@cpcharles"] = {"Charles", "|c00d6ffCharles|r", "HodorReflexes/users/misc/cpc
 u["@Arcane_Morrigan"] = {"Morrigan", "|ca45ee5Morrigan|r", "HodorReflexes/users/misc/arcanemorrigan.dds"}
 u["@liborio"] = {"liborio", "|c00d505li|r|cffffffbor|r|cff2020io|r", "HodorReflexes/users/misc/liborio.dds"}
 u["@Z0Y0"] = {"Z0Y0", "|c990000 Z 0 Y 0 |r", "HodorReflexes/users/misc/z0y0.dds"}
-u["@XapJloK"] = {"harlock", "|cff0525h|r|ceb0522a|r|cd30922r|r|cbb0c22l|r|ca40e21o|r|c8f0f1fc|r|c7f101ek|r", "HodorReflexes/users/misc/xapjlok.dds"}
 u["@AbhorashNL"] = {"AbhorashNL", "|cffff00AbhorashNL|r", "HodorReflexes/users/misc/abhorashnl.dds"}
 u["@Nephilim_NL"] = {"Nephilim", "|c00aeffNephilim|r"}
 u["@dizak3"] = {"dizak3", "|cff44f6dizak3|r", "HodorReflexes/users/misc/dizak3.dds"}
