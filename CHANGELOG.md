@@ -25,7 +25,7 @@ A special thanks to @BloodStainChild666 and @seadotarley for the long testing pe
 ### Changelist:
 - changed sharing to points instead of percentages
 - updated menu to reflect changes
-- adding new "Ultimates" window that allos showing and sharing of all ultimates your heart desires
+- adding new "Ultimates" window that allows showing and sharing of all ultimates your heart desires
 - adding option to show percentage and raw ult points for every window separately
 
 ## 1.10.0 - @m00nyONE
