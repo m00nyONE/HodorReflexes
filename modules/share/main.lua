@@ -1524,19 +1524,16 @@ do
 			end
 		end
 
+		-- sort row function
+		local function sortRows(a, b)
+			if a[2] == b[2] then return a[1] < b[1] else return a[2] > b[2] end
+		end
+
 		-- Sort by unitTag if % are the same
-		tsort(rowsHorn, function(a, b)
-			if a[2] == b[2] then return a[1] < b[1] else return a[2] > b[2] end
-		end)
-		tsort(rowsColos, function(a, b)
-			if a[2] == b[2] then return a[1] < b[1] else return a[2] > b[2] end
-		end)
-		tsort(rowsMiscUlt, function(a, b)
-			if a[2] == b[2] then return a[1] < b[1] else return a[2] > b[2] end
-		end)
-		tsort(rowsAtronach, function(a, b)
-			if a[2] == b[2] then return a[1] < b[1] else return a[2] > b[2] end
-		end)
+		tsort(rowsHorn,sortRows)
+		tsort(rowsColos, sortRows)
+		tsort(rowsMiscUlt, sortRows)
+		tsort(rowsAtronach, sortRows)
 
 		-- Order horn rows
 		local myHornNew = false
