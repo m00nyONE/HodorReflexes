@@ -214,7 +214,7 @@ u["@SpotlessFish"] = {"BOB", "|c55bb29B|r|caa7815O|r|cff3402B|r", "HodorReflexes
 
 -- December 2021
 u["@kanak2323"] = {"Kanak", "|cd50044K|r|ce00061a|r|cea007en|r|cf5009ba|r|cff00b8k|r", "HodorReflexes/users/misc2/kanak2323.dds"}
-u["@Amlir"] = {"Amlir", "|ccced0dA|r|c99f11bm|r|c66f628l|r|c33fa36i|r|c00ff43r|r", "HodorReflexes/users/misc2/amlir2.dds"}
+u["@Amlir"] = {"Amlir", "|c33f2ffA|r|c3af5ffm|r|c40f7ffl|r|c47faffi|r|c4efcffr|r", "HodorReflexes/users/misc2/Amlir_3.dds"}
 u["@Sartas203"] = {"Sartas203", "|c24e31cS|r|c24c639a|r|c24aa55r|r|c248e71t|r|c25718ea|r|c2555aas|r|c2539c62|r|c251ce30|r|c2500ff3|r", "HodorReflexes/users/misc2/sartas203.dds"}
 u["@ZoraxESO"] = {"Zorax", "|c991619Z|r|caa1518o|r|cba1317r|r|ccb1216a|r|cdc1015x|r", "HodorReflexes/users/misc2/zoraxeso.dds"}
 u["@RiftenOG"] = {"RiftenOG", "|cFF8000R|r|cFAAC58i|r|cF5D0A9f|r|cF8ECE0t|r|cF8ECE0e|r|cF5D0A9n|r|cFAAC58O|r|cFF8000G|r"}
