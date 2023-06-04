@@ -123,6 +123,9 @@ local ULT_COLOS_ATRO = 14 -- this can't exist
 
 --local ULT_NEW = 7 ultis in total (max) - 0-28 possible combinations
 
+local CLASSID_SORC = 2
+local CLASSID_TEMPLAR = 6
+
 -- Damage types.
 local DAMAGE_UNKNOWN = 0
 local DAMAGE_TOTAL = 1
@@ -133,7 +136,7 @@ local DAMAGE_BOSS = 2
 -- to avoid calling an expensive function GetAbilityCost() too often.
 local ABILITY_COST_HORN  = 250
 local ABILITY_COST_COLOS = 225
-local ABILITY_COST_ATRONACH = 170
+local ABILITY_COST_ATRONACH = 200
 
 local playerTag = '' -- real group tag instead of "player"
 --local playersData = M.playersData
@@ -434,10 +437,10 @@ function M.UnregisterCustomDataCallback(callback)
 end
 
 function M.UpdateAbilityCosts()
-
-	ABILITY_COST_HORN  = GetAbilityCost(40223)
-	ABILITY_COST_COLOS = GetAbilityCost(122395)
-	ABILITY_COST_ATRONACH = GetAbilityCost(23492)
+-- TEMP remove cost calculation because its not needed anymore
+	--ABILITY_COST_HORN  = GetAbilityCost(40223)
+	--ABILITY_COST_COLOS = GetAbilityCost(122395)
+	--ABILITY_COST_ATRONACH = GetAbilityCost(23492)
 
 end
 
@@ -705,7 +708,7 @@ end
 
 function M.ToggleEnabled()
 
-	M.UpdateAbilityCosts()
+	--M.UpdateAbilityCosts()
 
 	local colosIds = {122380, 122391, 122398} -- colossus ability cast
 	--local mvIds = {122177, 122397, 122389, 163060, 106754} -- major vuln applied (unmorphed, stam, mag, kynmarcher's cruelty effect, turning tide set)
@@ -1147,8 +1150,14 @@ function M.IsDamageListVisible()
 	end
 end
 
-function M.GetUltPercentage(raw, abilityCost)
+-- return the ultimate in percent from 0-100. from 100-200 its scaled acordingly. The costReduction is also taken into account
+function M.GetUltPercentage(raw, abilityCost, costReduction)
 	local ultPercentage = 0
+
+	if not costReduction then
+		costReduction = 0
+	end
+	abilityCost = abilityCost - zo_floor((abilityCost / 100 * costReduction))
 
 	if raw <= abilityCost then
 		-- When ult is not ready, we show real %
@@ -1442,6 +1451,16 @@ do
 			local miscUltRow = data.miscUltRow
 			local clsRow = data.clsRow
 			local atronachRow = data.atronachRow
+			local costReduction = 0
+
+			-- calculate cost reduction
+			if data.classId == CLASSID_SORC then
+				costReduction = 15
+			end
+			if data.classId == CLASSID_TEMPLAR then
+				costReduction = 5
+			end
+
 			-- Only shows rows for online players with non empty ult %
 			if data.ult > 0 and (isTestRunning or units.IsOnline(tag)) then
 				-- Get horn and colos values based on ultType
@@ -1451,17 +1470,17 @@ do
 				if data.ultType == ULT_MISC then
 					misc = data.ult
 				elseif data.ultType == ULT_HORN then
-					horn = M.GetUltPercentage(data.ult, ABILITY_COST_HORN)
+					horn = M.GetUltPercentage(data.ult, ABILITY_COST_HORN, costReduction)
 				elseif data.ultType == ULT_COLOS then
-					colos = M.GetUltPercentage(data.ult, ABILITY_COST_COLOS)
+					colos = M.GetUltPercentage(data.ult, ABILITY_COST_COLOS, costReduction)
 				elseif data.ultType == ULT_HORN_COLOS then
-					horn = M.GetUltPercentage(data.ult, ABILITY_COST_HORN)
-					colos = M.GetUltPercentage(data.ult, ABILITY_COST_COLOS)
+					horn = M.GetUltPercentage(data.ult, ABILITY_COST_HORN, costReduction)
+					colos = M.GetUltPercentage(data.ult, ABILITY_COST_COLOS, costReduction)
 				elseif data.ultType == ULT_ATRO then
-					atro = M.GetUltPercentage(data.ult, ABILITY_COST_ATRONACH)
+					atro = M.GetUltPercentage(data.ult, ABILITY_COST_ATRONACH, costReduction)
 				elseif data.ultType == ULT_HORN_ATRO then
-					atro = M.GetUltPercentage(data.ult, ABILITY_COST_ATRONACH)
-					horn = M.GetUltPercentage(data.ult, ABILITY_COST_HORN)
+					atro = M.GetUltPercentage(data.ult, ABILITY_COST_ATRONACH, costReduction)
+					horn = M.GetUltPercentage(data.ult, ABILITY_COST_HORN, costReduction)
 				end
 				-- War Horn
 				if ultRow then
@@ -1649,7 +1668,7 @@ function M.UpdateDamage()
 end
 
 function M.CombatStart()
-	M.UpdateAbilityCosts()
+	--M.UpdateAbilityCosts()
 	-- Reset damage values, so the player won't send old dps to a new fight before he does new damage
 	combat.Reset()
 	M.ResetFight()
