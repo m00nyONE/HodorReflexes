@@ -1,6 +1,8 @@
 ## 1.12.0 - @m00nyONE
 - adding atronach list
 - allow atronach sharing
+- adding cost reduction calculation ( 15% for sorc and 5% for templar ) - there is no way to check if the passives are active. This is just an assumption
+- fixed a bug that caused wrong percentage calculation on sorcs and templars. (thanks to @sheriffholmes for reporting and analyzing the issue)
 
 ## 1.11.0 - @m00nyONE
 
