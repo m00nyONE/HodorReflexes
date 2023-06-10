@@ -111,6 +111,7 @@ u["@Jay.ESO"] = {"Jay.ESO", "|cFFD700Jay.ESO|r"}
 a["@Jay.ESO"] = {"HodorReflexes/users/misc5/Jay.ESO_anim.dds", 8, 1, 10}
 u["@KEAWEATH"] = {"KEAWEATH", "|cdb08ffK|r|cc110ffE|r|ca618ffA|r|c8b20ffW|r|c7028ffE|r|c5630ffA|r|c3b38ffT|r|c2040ffH|r", "HodorReflexes/users/misc5/KEAWEATH.dds"}
 u["@S9id3R"] = {"S3²iD3r", "|cf8249eS|r|cf049833|r|ce96d69²|r|ce2924fi|r|cdbb635D|r|cd3db1a3|r|cccff00r|r", "HodorReflexes/users/misc5/S9id3R.dds"}
+a["@S9id3R"] = {"HodorReflexes/users/misc5/S9id3R_anim.dds", 10, 5, 28}
 u["@Water_meIon"] = {"Water_meIon", "|ce6a1f3W|r|ce991e8a|r|ceb81dct|r|cee71d0e|r|cf061c4r|r|cf350b9_|r|cf540adm|r|cf830a1e|r|cfa2095I|r|cfd108ao|r|cff007en|r"}
 a["@Water_meIon"] = {"HodorReflexes/users/misc5/Water_meIon_anim.dds", 11, 3, 11}
 u["@Canvolant"] = {"Canvolant", "|ce47b9fC|r|ce48896a|r|ce5948cn|r|ce5a183v|r|ce5ad79o|r|ce5ba70l|r|ce6c666a|r|ce6d35dn|r|ce6df53t|r"}
