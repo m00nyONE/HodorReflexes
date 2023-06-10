@@ -1,3 +1,6 @@
+## 1.12.1 - @m00nyONE
+- icon updates
+
 ## 1.12.0 - @m00nyONE
 - adding atronach list
 - allow atronach sharing
