@@ -253,4 +253,6 @@ u["@SuAzeria"] = {"SuAzeria", "|cff780cS|r|cff830bu|r|cff8e09A|r|cff9907z|r|cffa
 u["@wongers"] = {"wongs", "|cfb27dcw|r|cf74bdeo|r|cf46fe0n|r|cf093e2g|r|cecb7e4s|r", "HodorReflexes/users/misc6/wongers.dds"}
 u["@SmasharooIsOld"] = {"Smash", "|cff0024Smash|r"}
 a["@SmasharooIsOld"] = {"HodorReflexes/users/misc6/SmasharooIsOld_anim.dds", 9, 1, 20}
+u["@Bilvy"] = {"b i l v y", "|ccc911db|r |c99ad3ai|r |c66c857l|r |c33e474v|r |c00ff91y|r"}
+a["@Bilvy"] = {"HodorReflexes/users/misc6/Bilvy_anim.dds", 6, 6, 20}
 
