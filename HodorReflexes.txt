@@ -1,8 +1,8 @@
 ## Title: HodorReflexes
-## Version: 1.12.1
+## Version: 1.12.2
 ## Author: |cFFFF00andy.s|r, |c76c3f4@m00nyONE|r
 ## APIVersion: 101037 101038
-## AddOnVersion: 011201
+## AddOnVersion: 011202
 ## SavedVariables: HodorReflexesSV
 ## DependsOn: LibAddonMenu-2.0>=32 LibCombat>=54 LibDataShare>=3
 ## OptionalDependsOn: RuESO
@@ -22,6 +22,7 @@ extensions/anim.lua
 extensions/hud.lua
 
 HodorReflexesMenu.lua
+
 users/misc/misc.lua
 users/misc2/misc2.lua
 users/misc3/misc3.lua
