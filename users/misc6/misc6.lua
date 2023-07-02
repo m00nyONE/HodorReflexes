@@ -353,3 +353,6 @@ u["@Tonjeel"] = {"Tonje", "|cb299b3T|r|c9f73a1o|r|c8d4c8fn|r|c7a267dj|r|c67006be
 u["@CordingOnyx"] = {"CordingOnyx", "CordingOnyx", "HodorReflexes/users/misc6/CordingOnyx.dds"}
 u["@Bahdezdiil"] = {"Stubbi", "|cff140aS|r|cff2808t|r|cff3c06u|r|cff5004b|r|cff6402b|r|cff7800i|r"}
 a["@Bahdezdiil"] = {"HodorReflexes/users/misc6/Bahdezdiil_anim.dds", 8, 1, 25}
+u["@scherni"] = {"scherni", "|ca80b13s|r|c99151cc|r|c892025h|r|c792a2fe|r|c693538r|r|c5a3f41n|r|c4a4a4ai|r"}
+a["@scherni"] = {"HodorReflexes/users/misc6/scherni_anim.dds", 10, 3, 25}
+
