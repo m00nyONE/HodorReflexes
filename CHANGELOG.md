@@ -1,5 +1,5 @@
 ## 1.12.2 - @m00nyONE
-- icon updates
+- updates to minimum donation amounts for static and animated icons. Static is now 7M and animated is now 10M. For transparency reasons i posted an explanation in the HodorReflexes Discord here: https://discord.com/channels/1042112475451117649/1100194108049465426/1125051223658205214
 
 ## 1.12.1 - @m00nyONE
 - icon updates
