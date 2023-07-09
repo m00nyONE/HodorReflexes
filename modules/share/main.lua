@@ -84,7 +84,6 @@ local SV = nil -- shortcut for M.sv
 local SW = nil -- shortcut for M.sw
 
 local LDS = LibDataShare
-local LC = LibCombat
 local EM = EVENT_MANAGER
 
 local controlsVisible = false -- current state of UI controls
@@ -724,7 +723,7 @@ function M.ToggleEnabled()
 	HR.UnregisterCallback(HR_EVENT_UNITS_UPDATED, M.GroupChanged)
 
 	-- Colossus cast
-	for i, id in ipairs(colosIds) do
+	for i, _ in ipairs(colosIds) do
 		EM:UnregisterForEvent(M.name .. "ColosCast" .. i, EVENT_COMBAT_EVENT)
 	end
 
@@ -1248,7 +1247,7 @@ end
 -- Create horn, damage and colossus rows.
 local function CreateControlsForUser(userId, playerData)
 	-- Set user name and icon
-	local isPlayer = playerData.isPlayer
+	--local isPlayer = playerData.isPlayer
 	local userIcon = player.GetIconForUserId(userId)
 	local userName = player.GetAliasForUserId(userId, SW.enableColoredNames)
 
