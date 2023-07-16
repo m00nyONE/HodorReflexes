@@ -83,3 +83,6 @@ u["@Connor180"] = {"Connor", "|c83779fC|r|c978c99o|r|caca193n|r|cc0b68dn|r|cd5cb
 a["@Connor180"] = {"HodorReflexes/users/moo/Connor180_anim2.dds", 10, 1, 10}
 
 u["@BloodStainChild666"] = {"Childofbodom", "|c900C3FBSC's-DMG|r", "HodorReflexes/users/moo/BloodStainChild666.dds"}
+
+u["@FlaPi"] = {"FlaPi", "|c9477FCF|r|c007EFEl|r|c00BB00a|r|cFEF601P|r|cDD0000i|r"}
+a["@FlaPi"] = {"HodorReflexes/users/moo/FlaPi_anim.dds", 8, 1, 10}
