@@ -1,4 +1,5 @@
 ## 1.12.3 - @m00nyONE
+- add integrity check (unfinished!!!!) /hodor integrity
 - regular icon pack update
 
 ## 1.12.2 - @m00nyONE
