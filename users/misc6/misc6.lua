@@ -405,5 +405,5 @@ u["@PzeuSs"] = {"Pzeus", "|cfadb31Pzeus|r", "/esoui/art/icons/ability_templar_st
 u["@VoidHaze"] = {"VoidHaze", "|c7404dfV|r|c7b09bfo|r|c810d9fi|r|c881180d|r|c8e1560H|r|c941a40a|r|c9b1e20z|r|ca12200e|r"}
 a["@VoidHaze"] = {"HodorReflexes/users/misc6/VoidHaze_anim.dds", 12, 1, 10}
 u["@AyumiChiyo"] = {"Topsy", "|c5f008aTopsy|r", "HodorReflexes/users/misc6/AyumiChiyo.dds"}
-u["@Tokyo"] = {"Tokyo", "|ca3ff00Tokyo|r", "HodorReflexes/users/misc6/Tokyo.dds"}
+u["@AOTokyo"] = {"Tokyo", "|ca3ff00Tokyo|r", "HodorReflexes/users/misc6/Tokyo.dds"}
 u["@Elda_Snowprince"] = {"Elda_Snowprince", "|c11b9ffE|r|c22beffl|r|c33c3ffd|r|c44c8ffa|r|c55cdff_|r|c66d2ffS|r|c77d7ffn|r|c88dcffo|r|c99e1ffw|r|caae6ffp|r|cbbebffr|r|cccf0ffi|r|cddf5ffn|r|ceefaffc|r|cffffffe|r", "HodorReflexes/users/misc6/Elda_Snowprince.dds"}
