@@ -42,6 +42,9 @@ users/cfm/cfm.lua
 users/mot/mot.lua
 users/moo/moo.lua
 
+users/integritycheck.xml
+users/integritycheck.lua
+
 modules/share/main.lua
 modules/share/menu.lua
 modules/share/menu_icons.lua

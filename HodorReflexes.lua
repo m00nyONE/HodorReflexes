@@ -348,6 +348,9 @@ SLASH_COMMANDS["/hodor"] = function(str)
 	if str == "version" then
 		d(HR.version)
 	end
+	if str == "integrity" then
+		HR.integrity.Check()
+	end
 end
 
 EM:RegisterForEvent(HR.name, EVENT_ADD_ON_LOADED, function(_, name)
