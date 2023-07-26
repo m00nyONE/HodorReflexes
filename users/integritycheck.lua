@@ -19,13 +19,13 @@ local iconPool = {}
 local failedList = {}
 
 local function createTexture(iconNumber, userName, iconPath)
-
     local iconColumn = iconNumber % maxColumns
     local iconRow = (zo_floor((iconSize * iconNumber) / SCREEN_WIDTH)) % maxRows
 
-    local icon = WM:CreateControl( GUIControl:GetName() .. "_Icon_" .. tostring(iconNumber), GUIControl, CT_TEXTURE)
+    local icon = WM:CreateControl( GUIControl:GetName() .. "_" .. GetGameTimeMilliseconds() .. "_Icon_" .. tostring(iconNumber), GUIControl, CT_TEXTURE)
 
     icon.userName = userName
+    icon.iconPath = iconPath
     icon:ClearAnchors()
     icon:SetAnchor( TOPLEFT, GUIControl, TOPLEFT, (iconColumn * iconSize), (iconRow * iconSize))
     icon:SetTextureReleaseOption(RELEASE_TEXTURE_AT_ZERO_REFERENCES)
@@ -40,14 +40,11 @@ local function checkTexture(iconNumber)
     local icon = iconPool[iconNumber]
     local isLoaded = icon:IsTextureLoaded()
 
-    --d("checking " .. icon.userName)
-
     if isLoaded then
         iconPool[iconNumber]:SetTexture("HodorReflexes/assets/integrity/check.dds")
     else
-        --d("failed for " .. icon.userName)
-        table.insert(failedList, icon.userName)
-
+        --table.insert(failedList, icon.userName)
+        failedList[icon.userName] = icon.iconPath
         iconPool[iconNumber]:SetTexture("HodorReflexes/assets/integrity/cross.dds")
     end
 end
@@ -98,13 +95,23 @@ local function integrityCheck()
         for i, _ in pairs(iconPool) do
             deleteTexture(i)
         end
+        --ReloadUI()
 
     end, 7000)
     --HodorReflexes_IntegrityCheck = nil
 
     zo_callLater(function()
+        -- count items in failedList
+        local failed = 0
+        for _, _ in pairs(failedList) do
+            failed = failed +1
+        end
+
         d(failedList)
-        d("failed: " .. #failedList)
+        d("failed: " .. failed)
+
+        -- delete failedList again
+        failedList = {}
     end, 7000)
 
 end
