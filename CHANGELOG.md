@@ -1,3 +1,21 @@
+## 1.12.4 - @m00nyONE
+
+Because of many questions about missing icons, i added a new functionality to Hodor in 1.12.4 that will now go into Beta stage.
+You can now perform an integrity check to let hodor load and scan all icons. You can do this by typing ```/hodor integrity``` into chat.
+Don't be scared if it lags a lot :D it needs to load ALL icons and unload them again. The chat output should look something like this:
+```
+starting integritycheck
+icons to scan: 4353
+failed: 0
+```
+if *failed *is greater than 0, you should consider closing the game and reinstalling Hodor while the game is closed :-)
+
+**IMPORTANT!**: you HAVE TO RELOAD THE UI AFTERWARDS! ```/reloadui```
+Otherwise the iconcontrols do not get unloaded. blame ZoS for this pls
+
+- fixed a few missing old icons
+- icon pack update
+
 ## 1.12.3 - @m00nyONE
 - add integrity check (unfinished!!!!) /hodor integrity
 - regular icon pack update

@@ -83,7 +83,7 @@ local function integrityCheck()
         iconNumber = iconNumber + 1
     end
 
-    d(iconNumber)
+    d("icons to scan: " .. iconNumber)
 
     zo_callLater(function()
         for i, _ in pairs(iconPool) do
