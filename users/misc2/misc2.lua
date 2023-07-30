@@ -1,5 +1,3 @@
--- 1.8.0+ / Markarth DLC (U28)
-
 local u = HodorReflexes.users
 local a = HodorReflexes.anim.users
 
@@ -13,7 +11,8 @@ u["@Bauer_Horst"] = {"Bauer_Horst", "|ce000c1Bauer_Horst|r"}
 u["@setseed42"] = {"setseed42", "|c647defs|r|c6b8ddfe|r|c739ecet|r|c7aaebes|r|c82beaee|r|c89ce9ee|r|c91df8dd|r|c98ef7d4|r|ca0ff6d2|r"}
 u["@Skaringard"] = {"Skaringard", "|c7d14ffS|r|c6f28ffk|r|c613cffa|r|c5350ffr|r|c4664ffi|r|c3878ffn|r|c2a8cffg|r|c1ca0ffa|r|c0eb4ffr|r|c00c8ffd|r", "HodorReflexes/users/misc2/skaringard.dds"}
 u["@SKRVBB10RD"] = {"Skrubb", "|ce11ff3S|r|cc42af5k|r|ca635f8r|r|c8840fau|r|c6b4bfdb|r|c4d56ffb|r", "HodorReflexes/users/misc2/skrvbb10rd.dds"}
-u["@ACEINTHEHOLE"] = {"ACE", "|c641896A|r|c961e09C|r|c00961dE|r", "HodorReflexes/users/misc2/aceinthehole.dds"}
+u["@ACEINTHEHOLE"] = {"ACE", "|c641896A|r|c961e09C|r|c00961dE|r", "HodorReflexes/users/misc2/ACEINTHEHOLE_2.dds"}
+a["@ACEINTHEHOLE"] = {"HodorReflexes/users/misc2/ACEINTHEHOLE_anim2.dds", 27, 1, 10}
 u["@Hellhound5"] = {"Hellhound", "|cff1e00Hellhound|r", "HodorReflexes/users/misc2/hellhound5.dds"}
 u["@Bill_TH"] = {"BILL", "|c4f1ef0B|r|c603cecI|r|c705ae7L|r|c8078e2L|r", "HodorReflexes/users/misc2/billth.dds"}
 u["@Iwamura"] = {"IWA", "|c54ceffI|r|c9eb7ffW|r|ce9a0ffA|r", "HodorReflexes/users/misc2/iwamura.dds"}
@@ -446,7 +445,6 @@ a["@icAirborne"] = {"HodorReflexes/users/misc2/icairborne_anim.dds", 3, 1, 35}
 a["@moth3rlov3r"] = {"HodorReflexes/users/misc2/moth3rlov3r_anim.dds", 17, 2, 40}
 a["@madmaurice72"] = {"HodorReflexes/users/misc/deltexeso_anim.dds", 3, 1, 10}
 a["@stirfriedferret"] = {"HodorReflexes/users/misc2/stirfriedferret_anim.dds", 3, 1, 11}
-a["@ACEINTHEHOLE"] = {"HodorReflexes/users/misc2/ACEINTHEHOLE_anim2.dds", 27, 1, 10}
 --a["@PowerBottomBob"] = {"HodorReflexes/users/misc2/powerbottombob_anim.dds", 8, 6, 25}
 
 -- Gonzzzor's guild.
