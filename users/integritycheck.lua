@@ -189,13 +189,10 @@ function HodorReflexes.integrity.GetResults()
                             "please consider reinstalling the addon\n"
             )
 
-            local missingIcons = ""
-            for user, icon in pairs(M.sv.failedList) do
-                missingIcons = missingIcons .. user .. " (" .. icon .. ")\n"
-            end
-
             d(colorize("Missing icons:"))
-            d(colorize(missingIcons))
+            for user, icon in pairs(M.sv.failedList) do
+                d(colorize(user .. " (" .. icon .. ")"))
+            end
             d("")
         end
 
