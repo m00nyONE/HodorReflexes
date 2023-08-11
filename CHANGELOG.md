@@ -1,3 +1,6 @@
+## 1.13.0 - @m00nyONE
+- finalizing integrity check! you can try it with "/hodor integrity" - looks kinda funny tbo
+
 ## 1.12.4 - @m00nyONE
 
 Because of many questions about missing icons, i added a new functionality to Hodor in 1.12.4 that will now go into Beta stage.

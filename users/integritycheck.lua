@@ -1,6 +1,17 @@
 HodorReflexes.integrity = {
-
+    sv = nil,
+    default = {
+        timeStamp = 0,
+        failed = 0,
+        scannedIcons = 0,
+        failedList = {},
+    }
 }
+
+local EM = EVENT_MANAGER
+local HR = HodorReflexes
+local LAM = LibAddonMenu2
+local M = HodorReflexes.integrity
 
 local u = HodorReflexes.users
 local a = HodorReflexes.anim.users
@@ -14,6 +25,11 @@ local SCREEN_WIDTH = tonumber(GetCVar("WindowedWidth")) --GuiRoot:GetWidth()
 local SCREEN_HEIGHT = tonumber(GetCVar("WindowedHeight")) --GuiRoot:GetWidth()
 local maxColumns = zo_floor(SCREEN_WIDTH / iconSize)
 local maxRows = zo_floor(SCREEN_HEIGHT / iconSize)
+
+local checkAfter = 20000
+local unloadAfter = 5000
+local reportAfter = 1000
+local reloadAfter = 1000
 
 local iconPool = {}
 local failedList = {}
@@ -56,11 +72,10 @@ local function deleteTexture(iconNumber)
 end
 
 local function integrityCheck()
-    d("starting integritycheck")
-
     local limit = 9999999
     local iconNumber = 1
 
+    d("loading static icons ...")
     for userName, _ in pairs(u) do
         if iconNumber >= limit then
             break
@@ -73,6 +88,7 @@ local function integrityCheck()
         end
     end
 
+    d("loading animated icons ...")
     for userName, userData in pairs(a) do
         if iconNumber >= limit then
             break
@@ -83,40 +99,140 @@ local function integrityCheck()
         iconNumber = iconNumber + 1
     end
 
-    d("icons to scan: " .. iconNumber)
+    d("loaded " .. iconNumber .. " icons")
+    M.sv.scannedIcons = iconNumber
 
     zo_callLater(function()
+        d("checking icons...")
         for i, _ in pairs(iconPool) do
             checkTexture(i)
         end
-    end, 5000)
 
-    zo_callLater(function()
-        for i, _ in pairs(iconPool) do
-            deleteTexture(i)
-        end
-        --ReloadUI()
+        zo_callLater(function()
+            d("unloading icons ...")
+            for i, _ in pairs(iconPool) do
+                deleteTexture(i)
+            end
 
-    end, 7000)
-    --HodorReflexes_IntegrityCheck = nil
+            zo_callLater(function()
+                d("writing report ...")
+                -- count items in failedList
+                local failed = 0
+                for _, _ in pairs(failedList) do
+                    failed = failed +1
+                end
 
-    zo_callLater(function()
-        -- count items in failedList
-        local failed = 0
-        for _, _ in pairs(failedList) do
-            failed = failed +1
-        end
+                M.sv.failedList = failedList
+                M.sv.failed = failed
+                M.sv.timeStamp = GetTimeStamp()
 
-        d(failedList)
-        d("failed: " .. failed)
+                d(M.sv.failedList)
+                d(M.sv.failed)
+                d(M.sv.timeStamp)
 
-        -- delete failedList again
-        failedList = {}
-    end, 7000)
+                d("done")
+                zo_callLater(function()
+                    d("reloading ...")
+                    ReloadUI()
+                end, reloadAfter)
+            end, reportAfter)
+        end, unloadAfter)
+    end, checkAfter)
+
+
+
 
 end
+
+-- /script d(HodorReflexes.integrity.sv)
 
 function HodorReflexes.integrity.Check()
-    integrityCheck()
+    local calculatedTime = (reloadAfter + reportAfter + unloadAfter + checkAfter) / 1000
+
+    d("starting integritycheck")
+    d("this will take aproximatly " .. calculatedTime .. " seconds")
+    d("please wait and let it do its thing :-)")
+
+
+    if not ZO_Dialogs_IsShowingDialog() then
+        LAM.util.ShowConfirmationDialog(
+                "HodorReflexes Integrity check",
+                "Do you want to perform an integrity check? This will take approximately ".. calculatedTime .." seconds",
+                function() LAM.util.ShowConfirmationDialog(
+                            "HodorReflexes Integrity check",
+                            "Please do not interrupt the check. Just let it do its thing. The UI will reload after its finished and you will get the results",
+                            function()
+                                zo_callLater(integrityCheck, 250)
+                            end)
+                end)
+    end
+
 end
 --zo_callLater(function() integrityCheck() end, 2000)
+
+function HodorReflexes.integrity.GetResults()
+    zo_callLater(function()
+        local integrityFailed = M.sv.failed > 0
+        local color = "00FF00"
+        local status = "passed"
+        local message = "all fine :-)"
+
+        local function colorize(str)
+            return "|c" .. color .. str .. "|r"
+        end
+
+        if integrityFailed then
+            color = "FF0000"
+            status = "failed"
+            message = colorize(
+                    "\nThere might be an issue with your HodorReflexes installation.\n" ..
+                            "please consider reinstalling the addon\n"
+            )
+
+            local missingIcons = ""
+            for user, icon in pairs(M.sv.failedList) do
+                missingIcons = missingIcons .. user .. " (" .. icon .. ")\n"
+            end
+
+            d(colorize("Missing icons:"))
+            d(colorize(missingIcons))
+            d("")
+        end
+
+        d(colorize("summary:"))
+        d(colorize("icons scanned: " .. M.sv.scannedIcons))
+        d(colorize("icons failed: " .. M.sv.failed))
+        d("")
+
+        PlaySound(SOUNDS.BOOK_COLLECTION_COMPLETED)
+        if not ZO_Dialogs_IsShowingDialog() then
+            LAM.util.ShowConfirmationDialog(
+                    "HodorReflexes Integrity check",
+                    "Integrity check ".. colorize(status) .. "\n" ..
+                    "icons scanned: " .. M.sv.scannedIcons .. "\n" ..
+                    "icons failed: " .. colorize(M.sv.failed) .. "\n" ..
+                    message,
+                    nil)
+        end
+
+        M.sv.timeStamp = 0
+        M.sv.scannedIcons = 0
+        M.sv.failed = 0
+        M.sv.failedList = {}
+    end, 1000)
+end
+
+EM:RegisterForEvent("HodorReflexesIntegrityCheckSavedVariables", EVENT_ADD_ON_LOADED, function(_, name)
+    if name == HR.name then
+        EM:UnregisterForEvent("HodorReflexesIntegrityCheckSavedVariables", EVENT_ADD_ON_LOADED)
+
+        M.sv = ZO_SavedVars:NewAccountWide(HR.svName, HR.svVersion, 'integrity', M.default)
+        if M.sv.timeStamp > 0 then
+            EM:RegisterForEvent("HodorReflexesIntegrityCheckReportTrigger", EVENT_PLAYER_ACTIVATED, function()
+                EM:UnregisterForEvent("HodorReflexesIntegrityCheckReportTrigger", EVENT_PLAYER_ACTIVATED)
+
+                HodorReflexes.integrity.GetResults()
+            end)
+        end
+    end
+end)
