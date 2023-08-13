@@ -1,4 +1,5 @@
 ## 1.13.0 - @m00nyONE
+- adjustments for exiting instances - ready for update 39 
 - finalizing integrity check! you can try it with "/hodor integrity" - looks kinda funny tbo
 
 ## 1.12.4 - @m00nyONE
@@ -14,7 +15,7 @@ failed: 0
 if *failed *is greater than 0, you should consider closing the game and reinstalling Hodor while the game is closed :-)
 
 **IMPORTANT!**: you HAVE TO RELOAD THE UI AFTERWARDS! ```/reloadui```
-Otherwise the iconcontrols do not get unloaded. blame ZoS for this pls
+Otherwise, the iconcontrols do not get unloaded. blame ZoS for this pls
 
 - fixed a few missing old icons
 - icon pack update
