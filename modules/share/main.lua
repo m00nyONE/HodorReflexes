@@ -1980,4 +1980,16 @@ SLASH_COMMANDS["/hodor.share"] = function(str)
 	end
 end
 
+-- dgb
+if GetUnitDisplayName("player") == "@m00nyONE" then
+SLASH_COMMANDS["/h"] = function(str)
+	if str then
+		if IsUnitGrouped("player") then
+			d(strformat("|cFF0000%s|r", GetString(HR_TEST_LEAVE_GROUP)))
+		else
+			ToggleTest(IsValidString(str) and {zo_strsplit(" ", str)})
+		end
+	end
+end
+end
 RuESO_doubleNamesNPC = nil -- disable RuESO double names, because it breaks CMX boss detection
