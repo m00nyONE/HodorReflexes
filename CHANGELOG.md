@@ -1,6 +1,7 @@
 ## 1.13.0 - @m00nyONE
-- adjustments for exiting instances - ready for update 39 
 - finalizing integrity check! you can try it with "/hodor integrity" - looks kinda funny tbo
+- bump to API version 101039 ( U39 )
+- adjustments for exiting instances - ready for update 39
 
 ## 1.12.4 - @m00nyONE
 

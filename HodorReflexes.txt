@@ -1,7 +1,7 @@
 ## Title: HodorReflexes
 ## Version: 1.13.0
 ## Author: |cFFFF00andy.s|r, |c76c3f4@m00nyONE|r
-## APIVersion: 101037 101038
+## APIVersion: 101038 101039
 ## AddOnVersion: 011300
 ## SavedVariables: HodorReflexesSV
 ## DependsOn: LibAddonMenu-2.0>=32 LibCombat>=54 LibDataShare>=3
