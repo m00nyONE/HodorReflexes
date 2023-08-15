@@ -101,3 +101,11 @@ function M.StopAnimations()
 		M.StopUserAnimations(name)
 	end
 end
+
+-- get first frame. - returns the texture, left, right, top, bottom for SetTextureCoords(left, right, top, bottom)
+function M.GetFirstFrame(user)
+	local a = u[user]
+	if a then
+		return a[1], 0, 1/a[2], 0 , 1/a[3]
+	end
+end
