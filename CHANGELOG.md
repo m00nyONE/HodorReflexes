@@ -1,3 +1,6 @@
+## 1.13.1 - @m00nyONE
+- fixed some variable leaking into global space - thanks to @dack for pointing that out
+
 ## 1.13.0 - @m00nyONE
 - finalizing integrity check! you can try it with "/hodor integrity" - looks kinda funny tbo
 - bump to API version 101039 ( U39 )
