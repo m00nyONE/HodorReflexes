@@ -51,6 +51,7 @@ local GAMEPAD_STYLES =  {
 local incompatibleDependencyWarningTriggered = false
 
 -- Add some toxicity
+local text = {}
 local mockText = {}
 local mockZones = {
 	[636] = true, -- hrc

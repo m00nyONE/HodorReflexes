@@ -59,7 +59,7 @@ function M.BuildIconsMenu()
 
 	-- Create preview string and update control if needed.
 	local GeneratePreview = function(updateControl)
-		s = string.format('|t22:22:%s|t %s', M.sw.myIconPathFull, M.sw.myIconNameFormatted)
+		local s = string.format('|t22:22:%s|t %s', M.sw.myIconPathFull, M.sw.myIconNameFormatted)
 		if updateControl then
 			HodorReflexesIconsMenu_preview.data.text = s
 		end
