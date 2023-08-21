@@ -1,4 +1,5 @@
 ## 1.13.1 - @m00nyONE
+- fixed colos ultimate cost - This is fixed to 175 even if the pestilence colos is equipped. A fix on that will come in a future update. But who uses the other morph now anyways
 - fixed some variable leaking into global space - thanks to @dack for pointing that out
 
 ## 1.13.0 - @m00nyONE

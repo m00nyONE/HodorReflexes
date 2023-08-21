@@ -134,7 +134,7 @@ local DAMAGE_BOSS = 2
 -- Ability costs are only updated when player is activated or enters combat
 -- to avoid calling an expensive function GetAbilityCost() too often.
 local ABILITY_COST_HORN  = 250
-local ABILITY_COST_COLOS = 225
+local ABILITY_COST_COLOS = 175
 local ABILITY_COST_ATRONACH = 200
 
 local playerTag = '' -- real group tag instead of "player"
