@@ -93,3 +93,9 @@ a["@ASSA-Zz"] = {"HodorReflexes/users/moo/ASSA-Zz_anim.dds", 10, 1, 5}
 u["@sir_fabs"] = {"Drizzt ", "|cd81328D|r|cb11c50r|r|c8a2579i|r|c632ea1z|r|c3c37c9z|r|c1540f1t|r ", "HodorReflexes/users/moo/sir_fabs.dds"}
 
 u["@Lord_Drad"] = {"Drad", "|c0098d4D|r|cffffffr|r|c0098d4a|r|cffffffd|r", "HodorReflexes/users/moo/Lord_Drad.dds"}
+
+u["@GrungE81"] = {"GrungE", "GrungE"}
+a["@GrungE81"] = {"HodorReflexes/users/moo/grunge_anim.dds", 15, 1, 25}
+
+a["@SandroKilltDich"] = {"HodorReflexes/users/moo/sandrokilltdich_anim.dds", 30, 1, 10}
+u["@SandroKilltDich"] = {"Sandro", "|c00ff00S|c00ff6ba|c00ffa1n|c00ffcbd|c00ffebr|c00ffffo|r", "HodorReflexes/users/moo/sandrokilltdich.dds"}
