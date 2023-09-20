@@ -8,6 +8,7 @@ u["@stileanima"] = {"Stiles", "|c20CBF9Stiles|r", "HodorReflexes/users/mc/stiles
 u["@Swaggasm"] = {"Swag", "Swag", "HodorReflexes/users/mc/swag.dds"}
 u["@castlelel"] = {"Castle", "Castle", "HodorReflexes/users/mc/castle.dds"}
 u["@h1biol"] = {"Clive", "Clive", "HodorReflexes/users/mc/clive2.dds"}
+u["@hibiol"] = u["@h1biol"]
 u["@SamEds"] = u["@h1biol"]
 u["@Ihobi"] = {"ihobi", "ihobi", "HodorReflexes/users/mc/ihobi.dds"}
 u["@Spyrunite"] = {"Spy", "Spy", "HodorReflexes/users/mc/spy.dds"}
