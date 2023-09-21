@@ -599,3 +599,4 @@ u["@GomezZnl"] = {"GomezZnl", "|cefd700G|r|cdfc900o|r|ccfbb00m|r|cc0ad00e|r|cb09
 a["@GomezZnl"] = {"HodorReflexes/users/misc6/GomezZnl_anim.dds", 10, 5, 20}
 u["@Spoon.The_Sinner77"] = {"Spoon", "|cff0000Spoon|r"}
 a["@Spoon.The_Sinner77"] = {"HodorReflexes/users/misc6/Spoon.The_Sinner77_anim.dds", 8, 1, 2}
+u["@Xahxi"] = {"Xahxi", "|c331ad1X|r|c6614a3a|r|c990d74h|r|ccc0746x|r|cff0018i|r", "HodorReflexes/users/misc6/Xahxi.dds"}
