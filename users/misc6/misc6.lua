@@ -628,3 +628,4 @@ u["@Varkari"] = {"Varkari", "|c006cffV|r|c0085fea|r|c009dfer|r|c00b6fdk|r|c00cef
 a["@Varkari"] = {"HodorReflexes/users/misc6/Varkari_anim.dds", 6, 1, 15}
 u["@Accretions"] = {"Accretions", "|c4c36e8A|r|c5c34e4c|r|c6d32e1c|r|c7d30ddr|r|c8d2edae|r|c9d2cd7t|r|cad2ad3i|r|cbe28d0o|r|cce26ccn|r|cde24c9s|r"}
 a["@Accretions"] = {"HodorReflexes/users/misc6/Accretions_anim_3.dds", 47, 1, 25}
+u["@marcdk"] = {"NB Lover", "|c15e805N|r|c12d10bB|r |c0eba10L|r|c0ba416o|r|c078d1bv|r|c047621e|r|c005f26r|r", "HodorReflexes/users/misc6/marcdk.dds"}
