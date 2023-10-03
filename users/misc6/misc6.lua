@@ -602,4 +602,16 @@ a["@Spoon.The_Sinner77"] = {"HodorReflexes/users/misc6/Spoon.The_Sinner77_anim.d
 u["@Xahxi"] = {"Xahxi", "|c331ad1X|r|c6614a3a|r|c990d74h|r|ccc0746x|r|cff0018i|r", "HodorReflexes/users/misc6/Xahxi.dds"}
 u["@iPlugg"] = {"Plug", "|cffffffPlug|r"}
 a["@iPlugg"] = {"HodorReflexes/users/misc6/iPlugg_anim.dds", 7, 3, 12.5}
-
+u["@Tony_Skarface"] = {"Tony_Skarface", "|c6900faT|r|c7500f6o|r|c8200f1n|r|c8e00edy|r|c9b00e8_|r|ca700e4S|r|cb400dfk|r|cc000dba|r|ccd00d6r|r|cd900d2f|r|ce600cda|r|cf200c9c|r|cff00c4e|r", "HodorReflexes/users/misc6/Tony_Skarface.dds"}
+u["@KiraMariko"] = {"激辣ゲキカラ", "|c0053e6激|r|c0075cd辣|r|c0098b4ゲ|r|c00ba9bキ|r|c00dd82カ|r|c00ff69ラ|r", "HodorReflexes/users/misc6/KiraMariko.dds"}
+u["@CydrosDE"] = {"Cydros", "|c72d9f6C|r|c6dcdedy|r|c69c2e4d|r|c65b7dbr|r|c60abd2o|r|c5ca0c9s|r", "HodorReflexes/users/misc6/CydrosDE.dds"}
+u["@Spirit2726"] = {"Spirit2726", "|cb60322S|r|ca3053ap|r|c900853i|r|c7d0a6br|r|c6a0d84i|r|c570f9dt|r|c4412b52|r|c3114ce7|r|c1e17e62|r|c0b19ff6|r", "HodorReflexes/users/misc6/Spirit2726.dds"}
+u["@norncat"] = {"Norncat", "|c530eb8N|r|c5e1bc4o|r|c6929d0r|r|c7437dbn|r|c7f45e7c|r|c8a52f3a|r|c9560fft|r", "HodorReflexes/users/misc6/norncat.dds"}
+u["@Ideenloser"] = {"Ideenloser", "|cfa3416I|r|cf54315d|r|cf05214e|r|ceb6113e|r|ce67012n|r|ce17f10l|r|cdc8e0fo|r|cd79d0es|r|cd2ac0de|r|ccdbb0cr|r", "HodorReflexes/users/misc6/Ideenloser.dds"}
+u["@Taabahtee"] = {"Tabah", "|c522effT|r|c6e30ffa|r|c8b33ffb|r|ca735ffa|r|cc337ffh|r", "HodorReflexes/users/misc6/Taabahtee.dds"}
+u["@Xajiro"] = {"Xajiro", "|c14cee3X|r|c10c7c7a|r|c0cc0abj|r|c08b88fi|r|c04b173r|r|c00aa57o|r", "HodorReflexes/users/misc6/Xajiro.dds"}
+u["@Ciggyy"] = {"Ciggyy", "|cba63ffC|r|cc17fffi|r|cc99cffg|r|cd0b8ffg|r|cd7d4ffy|r|cdef0ffy|r"}
+a["@Ciggyy"] = {"HodorReflexes/users/misc6/Ciggyy_anim.dds", 7, 1, 7}
+u["@matarius"] = {"matarius", "matarius", "HodorReflexes/users/misc6/matarius.dds"}
+u["@Boon45"] = {"Boon45", "|cfffd30Boon45|r"}
+a["@Boon45"] = {"HodorReflexes/users/misc6/Boon45_anim.dds", 8, 5, 12.5}
