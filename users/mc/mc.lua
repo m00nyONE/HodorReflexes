@@ -31,7 +31,7 @@ u["@MrSockMonkey"] = {"MrSockMonkey", "MrSockMonkey", "HodorReflexes/users/mc/so
 u["@Peraseli"] = {"Pera", "Pera", "HodorReflexes/users/mc/pera.dds"}
 u["@kaevix"] = {"kaevix", "kaevix", "HodorReflexes/users/mc/kaevix.dds"}
 
-u["@kabs12"] = {"KABS", "|cde009dK|r|cbe00beA|r|c9d00deB|r|c7c00ffS|r", "HodorReflexes/users/mc/kabs2.dds"}
+u["@kabs12"] = {"Kabsi", "|cE100FFKabsi|r", "HodorReflexes/users/mc/kabs12_3.dds"}
 u["@Jokerjokerjoker"] = {"Joker", "|cFF5100Joker|r", "HodorReflexes/users/mc/jokerjokerjoker.dds"}
 u["@An0malyd"] = {"Anomaly", "|c468dffAnomaly|r", "HodorReflexes/users/mc/an0malyd.dds"}
 

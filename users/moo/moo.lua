@@ -105,3 +105,8 @@ u["@SandroKilltDich"] = {"Sandro", "|c00ff00S|c00ff6ba|c00ffa1n|c00ffcbd|c00ffeb
 a["@SandroKilltDich"] = {"HodorReflexes/users/moo/sandrokilltdich_anim.dds", 30, 1, 10}
 
 u["@ExoY94"] = {"ExoY", "|c00af00E|r|c009600x|r|c007c00o|r|c006300Y|r", "HodorReflexes/users/moo/ExoY94.dds"}
+
+u["@Bombarde"] = {"Bombarde", "|c9d8286Bombarde|r", "HodorReflexes/users/moo/Bombarde_3.dds"}
+
+u["@Einhorn23"] = {"Einhorn", "|c3d03e2E|r|c5e06c6i|r|c7e09a9n|r|c9e0c8dh|r|cbe0f70o|r|cdf1254r|r|cff1537n|r", "HodorReflexes/users/moo/Einhorn23.dds"}
+a["@Einhorn23"] = {"HodorReflexes/users/moo/Einhorn23_anim.dds", 23, 5, 25}

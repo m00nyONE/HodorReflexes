@@ -227,6 +227,7 @@ local function decodeData(rawData)
 		local ult = zo_ceil(((head % dmgTypeZone) - ultType * 110) * 5)
 		local dmg = zo_floor(rawData % 10000000 / 1000)
 		local dps = zo_floor(rawData % 1000)
+		--d("dmgType: " .. dmgType .. "\nultType: " .. ultType .. "\nult: " .. ult .. "\ndmg: " .. dmg .. "\ndps: " .. dps)
 		return true, dmgType, ultType, ult, dmg, dps
 	end
 
