@@ -674,5 +674,4 @@ u["@Ryziaa"] = {"Ryzia", "|cd55fa1R|r|cc887a3y|r|cbaafa6z|r|cadd7a8i|r|c9fffaba|
 a["@Ryziaa"] = {"HodorReflexes/users/misc6/Ryziaa_anim.dds", 10, 1, 16}
 u["@ZENON1996"] = {"ZENON", "|c221fffZENON|r", "HodorReflexes/users/misc6/ZENON1996.dds"}
 u["@Auri-El7"] = {"Auri-El7", "|c00edf8A|r|c00dbf9u|r|c00c9far|r|c00b7fbi|r|c00a5fc-|r|c0093fdE|r|c0081fel|r|c006fff7|r", "HodorReflexes/users/misc6/AuriEl.dds"}
-u["@DiaGnom_Ger"] = {"DiaGnom_Ger", "|c03fe37D|r|c06fc31i|r|c09fb2ca|r|c0cf926G|r|c0ff821n|r|c12f61bo|r|c15f516m|r|c18f310_|r|c1bf20bG|r|c1ef005e|r|c21ef00r|r", "HodorReflexes/users/misc6/diagnomGER.dds"}
 u["@Mashiroz233"] = {"椎名真白", "|cff544e椎|r|cff657a名|r|cff75a5真|r|cff85d1白|r", "HodorReflexes/users/misc6/Mashiroz233.dds"}
