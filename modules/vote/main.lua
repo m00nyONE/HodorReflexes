@@ -1,6 +1,6 @@
 HodorReflexes.modules.vote = {
 	name = "HodorReflexes_Vote",
-	version = "0.1.0",
+	version = "1.0.0",
 
 	uiLocked = true,
 
@@ -15,15 +15,14 @@ HodorReflexes.modules.vote = {
 
 local HR = HodorReflexes
 local M = HR.modules.vote
---local WM = GetWindowManager()
 local EM = EVENT_MANAGER
 local share = HR.modules.share
 
 local MAIN_FRAGMENT --= nil
 
 local DATA_ELECTION_REQUEST   = 100
-local DATA_ELECTION_ACCEPT    = 101
-local DATA_ELECTION_DECLINE   = 102
+--local DATA_ELECTION_ACCEPT    = 101
+--local DATA_ELECTION_DECLINE   = 102
 local DATA_ELECTION_COUNTDOWN = 105
 local DATA_ELECTION_LEADER    = 106
 --local DATA_ELECTION_PULL    = 203 .. 210
@@ -31,8 +30,6 @@ local DATA_ELECTION_LEADER    = 106
 local isPollActive = false -- is there an active ready check
 local isCountdown = false -- is current/next poll is a countdown
 local isCountdownActive = false -- is there an active countdown (5, 4, ..., 1)
-local pollEndTime = 0 -- poll end time
-local players = {} -- players in the current polling list
 local pullCooldown = 0 -- prevent countdown spam
 
 local strformat = string.format
@@ -48,97 +45,23 @@ local countdownButton = {
 	alignment = KEYBIND_STRIP_ALIGN_CENTER,
 }
 
-local function StopPoll()
-	isPollActive = false
-	pollEndTime = 0
-	M.RefreshVisibility()
-	EM:UnregisterForUpdate(M.name .. "Run")
-end
-
-local function StartPoll(owner)
-	if isCountdownActive then M.StopCountdown() end
-	players = {} -- clear previous votes
-	if owner then players[owner] = true end -- owner is ready
-	isPollActive = true
-	M.UpdatePlayers()
-	HodorReflexes_Vote_Main_Title:SetText(GetString(HR_READY_CHECK))
-	M.RefreshVisibility()
-	-- Stop the poll after 10 seconds
-	pollEndTime = GetFrameTimeSeconds() + 10
-	EM:UnregisterForUpdate(M.name .. "Run")
-	EM:RegisterForUpdate(M.name .. "Run", 1000, function()
-		if GetFrameTimeSeconds() >= pollEndTime then
-			if HasPendingGroupElectionVote() then CastGroupVote(GROUP_VOTE_CHOICE_AGAINST) end -- auto vote
-			StopPoll()
-		end
-	end)
-end
-
--- Delay poll end time by s seconds (5 by default), if it ends in less than s seconds.
-local function DelayPollEndTime(s)
-	s = s or 5
-	local t = GetFrameTimeSeconds()
-	if pollEndTime < t + s then pollEndTime = t + s end
-end
-
-local function SendReady(isReady)
-	local name = units.GetDisplayName('player')
-	if isPollActive and share.SendCustomData(isReady and DATA_ELECTION_ACCEPT or DATA_ELECTION_DECLINE) then
-		players[name] = isReady
-		M.UpdatePlayers()
-	end
-end
-
-local function SetEveryoneReady()
-	for i = 1, GetGroupSize() do
-		local tag = GetGroupUnitTagByIndex(i)
-		if units.IsOnline(tag) then
-			players[units.GetDisplayName(tag)] = true
-		end
-	end
-	HodorReflexes_Vote_Main_Title:SetText(GetString(HR_READY_CHECK_READY))
-	M.UpdatePlayers()
-end
-
 -- Callback for custom data from share module.
 local function HandleCustomData(tag, data)
-
 	local name = units.GetDisplayName(tag)
 	if not name then return end
-
 	-- Ready check
 	if data == DATA_ELECTION_REQUEST then
 		isCountdown = false
-		StartPoll()
-		players[name] = true
-		M.UpdatePlayers()
 		if M.sv.enableChatMessages then
 			d(strformat('|c00FFFF%s %s|r', name, GetString(HR_READY_CHECK_INIT_CHAT)))
 		end
-	-- Countdown
+		-- Countdown
 	elseif data == DATA_ELECTION_COUNTDOWN then
 		if IsUnitGroupLeader(tag) then
 			isCountdown = true
-			StartPoll()
-			players[name] = true
-			M.UpdatePlayers()
 			if M.sv.enableChatMessages then
 				d(strformat('|c00FFFF%s %s|r', name, GetString(HR_COUNTDOWN_INIT_CHAT)))
 			end
-		else
-			-- haxor!
-		end
-	-- Accepted
-	elseif data == DATA_ELECTION_ACCEPT then
-		if isPollActive then DelayPollEndTime() end -- wait 5 more seconds after each accept
-		players[name] = true
-		M.UpdatePlayers()
-	-- Declined
-	elseif data == DATA_ELECTION_DECLINE then
-		players[name] = false
-		M.UpdatePlayers()
-		if M.sv.enableChatMessages then
-			d(strformat('|cFF0000%s %s|r', name, GetString(HR_VOTE_NOT_READY_CHAT)))
 		end
 	elseif data == DATA_ELECTION_LEADER then
 		if M.sv.enableChatMessages then
@@ -146,15 +69,97 @@ local function HandleCustomData(tag, data)
 		end
 	elseif data >= 203 and data <= 210 then
 		if IsUnitGroupLeader(tag) then
-			d(strformat('|cf76bc1%s: %s|r', GetString(HR_COUNTDOWN_START), data - 200))
+			if M.sv.enableChatMessages then
+				d(strformat('|cf76bc1%s: %s|r', GetString(HR_COUNTDOWN_START), data - 200))
+			end
 			M.StartPullCountdown(data - 200)
 		end
 	end
 
 end
-
+-- /////////////////////////////////////////////////////////////////////////////
+--GROUP_ELECTION_TYPE_GENERIC_SIMPLEMAJORITY = 0,    GROUP_ELECTION_TYPE_GENERIC_SUPERMAJORITY = 1,    GROUP_ELECTION_TYPE_GENERIC_UNANIMOUS = 2,    GROUP_ELECTION_TYPE_KICK_MEMBER = 3,    GROUP_ELECTION_TYPE_NEW_LEADER = 4
+local function UpdateElection()
+	local electionType, timeRemainingSeconds, electionDescriptor, targetUnitTag = GetGroupElectionInfo()
+	local TimerInfo = zo_strformat("<<1>> [<<2>>]", GetString(HR_READY_CHECK), ZO_FormatCountdownTimer(timeRemainingSeconds))
+	if targetUnitTag ~= nil then
+		if electionType == GROUP_ELECTION_TYPE_KICK_MEMBER then
+			TimerInfo = zo_strformat(" Kick Player [<<1>>] [<<2>>]", GetUnitDisplayName(targetUnitTag), ZO_FormatCountdownTimer(timeRemainingSeconds))
+		elseif	electionType == GROUP_ELECTION_TYPE_NEW_LEADER then
+			TimerInfo = zo_strformat(" New Leader [<<1>>] [<<2>>]", GetUnitDisplayName(targetUnitTag), ZO_FormatCountdownTimer(timeRemainingSeconds))
+		end
+	end
+	HodorReflexes_Vote_Main_Title:SetText(TimerInfo)
+	local names = {}
+	for GRI = 1, GetGroupSize() do
+		local unitTag = GetGroupUnitTagByIndex(GRI)
+		if unitTag == nil or unitTag == "nil" then return end
+		local choice = GetGroupElectionVoteByUnitTag(unitTag)
+		if IsUnitOnline(unitTag) then
+			local name = units.GetDisplayName(unitTag)
+			local color = 'FFFFFF' -- didn't vote
+			if choice == GROUP_VOTE_CHOICE_FOR then
+				color = '00FF00'
+			elseif choice == GROUP_VOTE_CHOICE_AGAINST then
+				color = 'FF0000'
+			end
+			tinsert(names, strformat('|c%s%s|r', color, HR.player.GetAliasForUserId(name, false)))
+		end
+	end
+	HodorReflexes_Vote_Main_List:SetText(tconcat(names, ', '))
+end
+-- /////////////////////////////////////////////////////////////////////////////
+local bStarted = false
+local function StartElection()
+	if not bStarted then
+		bStarted = true
+		if isCountdownActive then M.StopCountdown() end
+		isPollActive = true
+		HodorReflexes_Vote_Main_Title:SetText(GetString(HR_READY_CHECK))
+		M.RefreshVisibility()
+		EVENT_MANAGER:RegisterForUpdate(M.name.."UpdateElection", 200, UpdateElection)
+	end
+end
+local function StopElection()
+	bStarted = false
+	EVENT_MANAGER:UnregisterForUpdate(M.name.."UpdateElection")
+	isPollActive = false
+	M.RefreshVisibility()
+end
+-- /////////////////////////////////////////////////////////////////////////////
+local function GroupElectionFailed(eventCode, failureReason, descriptor)
+	--d("GroupElectionFailed: failureReason["..failureReason.."] descriptor["..descriptor.."]")
+	if failureReason == GROUP_ELECTION_FAILURE_NONE then return end
+	if failureReason == GROUP_ELECTION_FAILURE_ANOTHER_IN_PROGRESS then return end
+	zo_callLater(function() StopElection() end, 2000)
+end
+-- /////////////////////////////////////////////////////////////////////////////
+local function GroupElectionResult(eventCode, electionResult, descriptor)
+	if isPollActive then
+		if electionResult == GROUP_ELECTION_RESULT_ELECTION_WON then
+			HodorReflexes_Vote_Main_Title:SetText(GetString(HR_READY_CHECK_READY))
+			if M.sv.enableChatMessages then d(strformat('|c00FF00%s|r', GetString(HR_READY_CHECK_READY))) end
+			M.StartCountdown(5, isCountdown)
+		else -- electionResult == GROUP_ELECTION_RESULT_ELECTION_LOST then
+			M.StartCountdown(5, false)
+			if M.sv.enableChatMessages then
+				local g1, g2, g3, g4, g5, g6, g7, g8 = GetGroupElectionUnreadyUnitTags()
+				local unreadyPlayers = { g1, g2, g3, g4, g5, g6, g7, g8 }
+				for id, group_tag in pairs(unreadyPlayers) do
+					if IsUnitOnline(group_tag) then
+						CHAT_ROUTER:AddSystemMessage(strformat('|cFF0000%s %s|r', units.GetDisplayName(group_tag), GetString(HR_VOTE_NOT_READY_CHAT)))
+					else
+						CHAT_ROUTER:AddSystemMessage(zo_strformat("<<1>><<2>> (OFFLINE)", color_orange, GetUnitDisplayName(group_tag)))
+					end
+				end
+			end
+		end
+	end
+	zo_callLater(function() StopElection() end, 3500) -- new
+	isCountdown = false -- make sure next ready check is not a countdown
+end
+-- /////////////////////////////////////////////////////////////////////////////
 function M.Initialize()
-
 	-- This module relies on the "share" module
 	if not share then return end
 
@@ -184,98 +189,44 @@ function M.Initialize()
 	if M.IsEnabled() then
 		-- Register callback for custom data
 		share.RegisterCustomDataCallback(HandleCustomData)
-		-- Need to override CastGroupVote(), because there are no events for accepting/declining a group election
-		local vote = CastGroupVote
-		CastGroupVote = function(choice)
-			local electionType, _, descriptor = GetGroupElectionInfo()
-			if isPollActive and descriptor == ZO_GROUP_ELECTION_DESCRIPTORS.READY_CHECK then
-				if choice == GROUP_VOTE_CHOICE_FOR then DelayPollEndTime() end -- wait 5 more seconds after positive vote
-				SendReady(choice == GROUP_VOTE_CHOICE_FOR)
-			end
-			vote(choice)
-		end
 		-- Election events
-		EM:RegisterForEvent(M.name, EVENT_GROUP_ELECTION_REQUESTED, function(_, descriptor) -- ready check initiated by this player
-			if descriptor == ZO_GROUP_ELECTION_DESCRIPTORS.READY_CHECK then
-				-- sending ping instantly should guarantee that other players will receive it before voting
-				if share.SendCustomData(isCountdown and DATA_ELECTION_COUNTDOWN or DATA_ELECTION_REQUEST, true) then
-					StartPoll(units.GetDisplayName('player'))
-				end
+		-- when you start vote
+		EVENT_MANAGER:RegisterForEvent(M.name, EVENT_GROUP_ELECTION_REQUESTED, function(_, descriptor)
+			if share.SendCustomData(isCountdown and DATA_ELECTION_COUNTDOWN or DATA_ELECTION_REQUEST, true) then
+				StartElection()
 			end
 		end)
-		EM:RegisterForEvent(M.name, EVENT_GROUP_ELECTION_RESULT, function(_, resultType, descriptor) -- ready check has ended
-			if isPollActive and descriptor == ZO_GROUP_ELECTION_DESCRIPTORS.READY_CHECK then
-				resultType = ZO_GetSimplifiedGroupElectionResultType(resultType)
-				if resultType == GROUP_ELECTION_RESULT_ELECTION_WON then
-					SetEveryoneReady()
-					if M.sv.enableChatMessages then d(strformat('|c00FF00%s|r', GetString(HR_READY_CHECK_READY))) end
-					M.StartCountdown(5, isCountdown)
-				else
-					M.StartCountdown(5, false)
-				end
-			end
-			StopPoll()
-			isCountdown = false -- make sure next ready check is not a countdown
-		end)
+		-- when someone else start vote
+		EVENT_MANAGER:RegisterForEvent(M.name, EVENT_GROUP_ELECTION_NOTIFICATION_ADDED, function(...) StartElection() end)
+		-- when voted endet/finished
+		EVENT_MANAGER:RegisterForEvent(M.name, EVENT_GROUP_ELECTION_RESULT, GroupElectionResult)
+		-- when vote failed for some reason "group dispand" for example
+		EVENT_MANAGER:RegisterForEvent(M.name, EVENT_GROUP_ELECTION_FAILED, GroupElectionFailed)
+
 		-- Add hotkey to group window
 		KEYBOARD_GROUP_MENU_SCENE:RegisterCallback('StateChange', OnStateChanged)
 		GAMEPAD_GROUP_SCENE:RegisterCallback('StateChange', OnStateChanged)
 	end
-
 	HR.RegisterCallback(HR_EVENT_PLAYER_ACTIVATED, function() M.RefreshVisibility() end)
-
 end
 
 function M.IsEnabled()
-
 	return HodorReflexes.modules.share.IsEnabled() and M.sv.enabled
-
 end
-
 function M.RefreshVisibility()
-
 	MAIN_FRAGMENT:SetHiddenForReason('hidden', not isPollActive and not isCountdownActive and M.uiLocked)
-
 end
-
-function M.UpdatePlayers()
-
-	local names = {}
-	for i = 1, GetGroupSize() do
-		local tag = GetGroupUnitTagByIndex(i)
-		if IsUnitOnline(tag) then
-			local name = units.GetDisplayName(tag)
-			local color = 'FFFFFF' -- didn't vote
-			if players[name] == true then -- voted Yes
-				color = '00FF00'
-			elseif players[name] == false then -- voted No
-				color = 'FF0000'
-			end
-			tinsert(names, strformat('|c%s%s|r', color, HR.player.GetAliasForUserId(name, false)))
-		end
-	end
-	HodorReflexes_Vote_Main_List:SetText(tconcat(names, ', '))
-
-end
-
 function M.SendReadyCheck()
-
 	isCountdown = false
 	ZO_SendReadyCheck()
-
 end
-
 function M.SendCountdown()
-
 	if IsUnitGroupLeader('player') then
 		isCountdown = true
 		ZO_SendReadyCheck()
 	end
-
 end
-
 function M.StartCountdown(count, showCountdown)
-
 	isCountdownActive = true
 	M.RefreshVisibility()
 	EM:UnregisterForUpdate(M.name .. "Countdown")
@@ -287,17 +238,12 @@ function M.StartCountdown(count, showCountdown)
 		count = count - 1
 		if count < 0 then M.StopCountdown() end
 	end)
-
 end
-
 function M.StopCountdown()
-
 	isCountdownActive = false
 	EM:UnregisterForUpdate(M.name .. "Countdown")
 	M.RefreshVisibility()
-
 end
-
 function M.SendPullCountdown(duration)
 	if not IsUnitGroupLeader('player') then
 		d(string.format('|cFF0000%s|r', GetString(HR_MENU_VOTE_ACTIONS_COUNTDOWN_CONFIRM)))
@@ -315,7 +261,6 @@ function M.SendPullCountdown(duration)
 		end
 	end
 end
-
 function M.StartPullCountdown(duration)
 	if duration and duration >= 3 and duration <= 10 then
 		local messageParams = CENTER_SCREEN_ANNOUNCE:CreateMessageParams(CSA_CATEGORY_COUNTDOWN_TEXT, SOUNDS.DUEL_START)
@@ -325,55 +270,30 @@ function M.StartPullCountdown(duration)
 		CENTER_SCREEN_ANNOUNCE:AddMessageWithParams(messageParams)
 	end
 end
-
 function M.BeginLeaderElection(tag)
-
 	share.SendCustomData(DATA_ELECTION_LEADER)
 	BeginGroupElection(GROUP_ELECTION_TYPE_NEW_LEADER, '', tag)
-
 end
-
 function M.UnlockUI()
-
 	M.uiLocked = false
 	M.RefreshVisibility()
-
 end
-
 function M.LockUI()
-
 	M.uiLocked = true
 	M.RefreshVisibility()
-
 end
-
 function M.RestorePosition()
-
 	local mainCenterX = M.sv.mainCenterX
 	local mainCenterY = M.sv.mainCenterY
-
 	if mainCenterX or mainCenterY then
 		HodorReflexes_Vote_Main:ClearAnchors()
 		HodorReflexes_Vote_Main:SetAnchor(CENTER, GuiRoot, TOPLEFT, mainCenterX, mainCenterY)
 	end
-
 end
-
 function M.MainOnMoveStop()
-
 	M.sv.mainCenterX, M.sv.mainCenterY = HodorReflexes_Vote_Main:GetCenter()
-
 	HodorReflexes_Vote_Main:ClearAnchors()
 	HodorReflexes_Vote_Main:SetAnchor(CENTER, GuiRoot, TOPLEFT, M.sv.mainCenterX, M.sv.mainCenterY)
-
-end
-
-SLASH_COMMANDS["/hodor.vote"] = function(str)
-	if str == '1' or str == 'yes' then
-		SendReady(true)
-	elseif str == '0' or str == 'no' then
-		SendReady(false)
-	end
 end
 
 SLASH_COMMANDS["/pull"] = function(duration)
