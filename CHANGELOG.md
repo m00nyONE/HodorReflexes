@@ -1,7 +1,9 @@
+## 1.14.0 - @m00nyONE
+- new vote module by @BloodStainChild666 - no more pling-pling-pling when doing ready checks :-) Thank you
+
 ## 1.13.3 - @m00nyONE
 - U41 API bump
 - icon update
-- bug with 999k dmg for necros not fixed yet because i can't reproduce it on my system atm
 
 ## 1.13.2 - @m00nyONE
 - from now on there will only be fixes due to API changes and user requests for the foreseeable future. No new features anymore..

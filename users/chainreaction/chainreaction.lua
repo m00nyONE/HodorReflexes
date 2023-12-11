@@ -21,6 +21,7 @@ u["@VeritableBijar"] = {"Veri", "|c4fc3f7Veri|r", "HodorReflexes/users/chainreac
 -- Friends
 u["@AlmaNOX"] = {"AlmaNOX", "AlmaNOX", "HodorReflexes/users/chainreaction/almanox.dds"}
 u["@Hammerarc"] = {"Hammerarc", "Hammerarc", "HodorReflexes/users/chainreaction/hammer.dds"}
+u["@Hamrny"] = {"Hammy", "Hammy", "HodorReflexes/users/chainreaction/Hamrny.dds"}
 u["@KingMagaw"] = {"KingMagaw", "|c029948Kin|r|cFFFFFFgMa|r|cFE7702gaw|r"}
 
 a["@KingMagaw"] = {"HodorReflexes/users/chainreaction/kingmagaw_anim2.dds", 4, 4, 8}
