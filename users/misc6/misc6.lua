@@ -688,7 +688,7 @@ a["@laowuchang"] = {"HodorReflexes/users/misc6/laowuchang_anim.dds", 5, 1, 12.5}
 u["@DaniDas78"] = {"DaniDas", "|cffd610D|r|cffce0ea|r|cffc70bn|r|cffbf08i|r|cffb805D|r|cffb003a|r|cffa900s|r", "HodorReflexes/users/misc6/DaniDas78.dds"}
 u["@RealDeas"] = {"RealDeas", "|cff1e33R|r|cff3d2ce|r|cff5b24a|r|cff791dl|r|cff9716D|r|cffb60fe|r|cffd407a|r|cfff200s|r"}
 a["@RealDeas"] = {"HodorReflexes/users/misc6/RealDeas_anim.dds", 10, 5, 29}
-u["@SanyaDieZockt"] = {"SanyaDieZockt", "|cff2dfaS|r|cff3efba|r|cff50fbn|r|cff61fcy|r|cff73fca|r|cff84fcD|r|cff96fdi|r|cffa7fde|r|cffb9fdZ|r|cffcafeo|r|cffdcfec|r|cffedffk|r|cfffffft|r"}
+u["@SanyaDieZockt"] = {"SanyaDieZockt", "|cff2dfaS|r|cff3efba|r|cff50fbn|r|cff61fcy|r|cff73fca|r|cff84fcD|r|cff96fdi|r|cffa7fde|r|cffb9fdZ|r|cffcafeo|r|cffdcfec|r|cffedffk|r|cfffffft|r", "HodorReflexes/users/misc6/SanyaDieZockt.dds"}
 a["@SanyaDieZockt"] = {"HodorReflexes/users/misc6/SanyaDieZockt_anim.dds", 8, 1, 8}
 u["@Polly22"] = {"Polly22", "|ccc50d7P|r|cd061d0o|r|cd573c8l|r|cda84c0l|r|cdf96b8y|r|ce3a7b12|r|ce8b9a92|r", "HodorReflexes/users/misc6/Polly22.dds"}
 u["@zot900"] = {"zot900", "|cffc52bz|r|cffd055o|r|cffdc80t|r|cffe8aa9|r|cfff3d40|r|cffffff0|r", "HodorReflexes/users/misc6/zot900.dds"}
@@ -767,3 +767,7 @@ a["@Miller_HighLife14"] = {"HodorReflexes/users/misc6/Miller_HighLife14_anim.dds
 u["@happy_p1neapple"] = {"happy_p1neapple", "|c34ff04happy_p1neapple|r", "HodorReflexes/users/misc6/happy_p1neapple.dds"}
 u["@Kaeki"] = {"Kaeki", "|c80d365K|r|c7ea78ca|r|c7c7bb2e|r|c7a4fd9k|r|c7823ffi|r"}
 a["@Kaeki"] = {"HodorReflexes/users/misc6/Kaeki_anim.dds", 6, 4, 10}
+u["@x-r"] = {"x-r", "|cff5406x|r|cffa903-|r|cfffd00r|r", "HodorReflexes/users/misc6/x-r.dds"}
+u["@Robthecoolio"] = {"Robthecoolio", "|cf1154fR|r|ce42a5fo|r|cd63f6fb|r|cc8547ft|r|cbb698fh|r|cad7e9fe|r|c9f93afc|r|c92a8bfo|r|c84bdcfo|r|c76d2dfl|r|c69e7efi|r|c5bfcffo|r", "HodorReflexes/users/misc6/Robthecoolio.dds"}
+u["@ZzLazyCat"] = {"懒猫(=•ェ•=)", "|c8c4ef3懒|r|c9b46e7猫|r|ca93ddc(|r|cb734d0=|r|cc62cc4•|r|cd423b8ェ|r|ce21aad•|r|cf112a1=|r|cff0995)|r", "HodorReflexes/users/misc6/ZzLazyCat.dds"}
+u["@ExcelUK"] = {"Excel", "|ccc33a2E|r|c9966adx|r|c6699b7c|r|c33ccc2e|r|c00ffccl|r", "HodorReflexes/users/misc6/ExcelUK.dds"}
