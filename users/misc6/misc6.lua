@@ -776,3 +776,4 @@ a["@MondayKiller"] = {"HodorReflexes/users/misc6/MondayKiller_anim.dds", 7, 7, 2
 u["@Natsuki_Sakura"] = {"Natsuki", "|cff7cd6N|r|cff8fd1a|r|cffa2cdt|r|cffb6c9s|r|cffc9c5u|r|cffdcc0k|r|cffefbci|r", "HodorReflexes/users/misc6/Natsuki_Sakura.dds"}
 u["@vanillasalt"] = {"Vanilla", "|cf7e3eaV|r|cf9c8d6a|r|cfaacc3n|r|cfb90b0i|r|cfc749dl|r|cfe5989l|r|cff3d76a|r", "HodorReflexes/users/misc6/vanillasalt.dds"}
 u["@JabbaSnowHaze"] = {"Jåbbå ‹(×_×)›", "|cf51315J|r|ceb122bå|r|ce21040b|r|cd80e55b|r|cce0c6aå|r |cc40b7f‹|r|cba0995(|r|cb007aa×|r|ca705bf_|r|c9d04d5×|r|c9302ea)|r|c8900ff›|r", "HodorReflexes/users/misc6/JabbaSnowHaze.dds"}
+u["@meanmegan"] = {"m3g4n", "m3g4n", "HodorReflexes/users/misc6/meanmegan.dds"}
