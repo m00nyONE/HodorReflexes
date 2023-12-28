@@ -782,3 +782,9 @@ a["@Nisiotika"] = {"HodorReflexes/users/misc6/Nisiotika_anim.dds", 10, 1, 10}
 u["@Valoryen"] = {"Valoryen", "|cb1fff6V|r|cb2fff0a|r|cb4ffeal|r|cb6ffe4o|r|cb7ffddr|r|cb9ffd7y|r|cbaffd1e|r|cbcffcbn|r", "HodorReflexes/users/misc6/Valoryen.dds"}
 u["@NATE_PK"] = {"NATÉ", "|cff0500NATÉ|r", "HodorReflexes/users/misc6/NATE_PK.dds"}
 u["@Kempo1597"] = {"Kempo1597", "|cfffe00Kempo1597|r", "HodorReflexes/users/misc6/Kempo1597.dds"}
+u["@NoSkids"] = {"NoSkids", "|c4a24fdN|r|c3d49fbo|r|c316df9S|r|c2592f8k|r|c19b6f6i|r|c0cdbf4d|r|c00fff2s|r"}
+u["@beijixiong987"] = {"北极熊", "|cc6d700北|r|ce3ae00极|r|cff8600熊|r", "HodorReflexes/users/misc6/beijixiong987.dds"}
+a["@beijixiong987"] = {"HodorReflexes/users/misc6/beijixiong987_anim.dds", 10, 5, 33}
+u["@Sarux11"] = {"Senisin", "|cf31922S|r|ce73239e|r|cdb4b51n|r|cd06469i|r|cc47d81s|r|cb89698i|r|cacafb0n|r"}
+a["@Sarux11"] = {"HodorReflexes/users/misc6/Sarux11_anim.dds", 7, 3, 10}
+
