@@ -1,3 +1,6 @@
+## 1.14.1 - @m00nyONE
+- icon update
+
 ## 1.14.0 - @m00nyONE
 - new vote module by @BloodStainChild666 - no more pling-pling-pling when doing ready checks :-) Thank you
 

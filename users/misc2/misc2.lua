@@ -134,7 +134,6 @@ u["@btk_GrAf"] = {"btk_GrAf", "|cff8800btk_GrAf|r", "HodorReflexes/users/misc2/b
 u["@DopeySmurf"] = {"Mani Manü", "|cFF17E8M|r|cEC27EDa|r|cDA37F3n|r|cC847F9i|r|c000000 |r|c0027FEM|r|c014EFEa|r|c0175FEn|r|c029CFEü|r"}
 u["@JonnyKreng"] = {"Jonny", "|c27ff00J|r|c4eff00o|r|c76ff00n|r|c9dff00n|r|cc4ff00y|r", "HodorReflexes/users/misc2/jonnykreng.dds"}
 u["@Nvisible6"] = {"Nvisible(ish)", "|cf7ef6dN|r|ceef16ev|r|ce6f26fi|r|cdef370s|r|cd5f571i|r|ccdf672b|r|cc5f774l|r|cbdf875e|r|cb4fa76(|r|cacfb77i|r|ca4fc78s|r|c9bfe79h|r|c93ff7a)|r", "HodorReflexes/users/misc2/nvisible6.dds"}
-u["@iSGNiDempsey1"] = {"Dempsey", "|cdd2a2aD|r|cbb384de|r|c994671m|r|c785394p|r|c5661b8s|r|c346fdbe|r|c127dffy|r", "HodorReflexes/users/misc2/isgnidempsey1.dds"}
 u["@TheRaOct"] = {"TheRaOct", "|c0a3b8cTheRaOct|r", "HodorReflexes/users/misc2/theraoct.dds"}
 u["@Lodner"] = {"Lodner", "|c159b8fLodner|r"}
 u["@Zimahere"] = {"Zima", "|cffd88cZima|r", "HodorReflexes/users/misc2/zimahere.dds"}
