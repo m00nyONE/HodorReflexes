@@ -1,3 +1,6 @@
+## 1.14.2 - @m00nyONE
+- icon update
+
 ## 1.14.1 - @m00nyONE
 - icon update
 
