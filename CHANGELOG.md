@@ -1,5 +1,8 @@
 ## 2024.02.04 - @m00nyONE
 - change versioning to YYYY.MM.DD for better readability
+- reverting some changes from an unauthorized person who requested changes for "friends", but instead made fun of them by putting chinese swear words in their names by abusing the fact that I can not read chinese ...
+  - You got banned mate ;-) Something like that is unacceptable 
+  - From now on changes will be more strict and require ingame ID verfication by sending one Gold to @m00nyONE -- This ensures that the person is knowing that a change is in progress 
 - icon update
 
 ## 1.14.1 - @m00nyONE
