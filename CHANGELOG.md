@@ -1,4 +1,5 @@
-## 1.14.2 - @m00nyONE
+## 2024.02.04 - @m00nyONE
+- change versioning to YYYY.MM.DD for better readability
 - icon update
 
 ## 1.14.1 - @m00nyONE
