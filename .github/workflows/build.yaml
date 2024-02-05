@@ -20,7 +20,7 @@ jobs:
   #      uses: lunarmodules/luacheck@v1
   build:
     runs-on: ubuntu-latest
-    needs: ["lint"]
+    #needs: ["lint"]
     steps:
       - name: set BUILD_DATE
         run: |
