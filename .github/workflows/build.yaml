@@ -39,53 +39,55 @@ jobs:
           retention-days: 1
           overwrite: true
 
-  release-nightly:
-    runs-on: ubuntu-latest
-    needs: ["build"]
-    permissions:
-      contents: write
-    if: github.ref == 'refs/heads/main'
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: set BUILD_DATE environment variables
-        run: |
-          echo "BUILD_DATE_YEAR"=$(date -u +"%Y") >> ${GITHUB_ENV}
-          echo "BUILD_DATE_MONTH"=$(date -u +"%m") >> ${GITHUB_ENV}
-          echo "BUILD_DATE_DAY"=$(date -u +"%d") >> ${GITHUB_ENV}
-      - name: Download Artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: HodorReflexesRealeaseZip
-      - name: Release
-        uses: softprops/action-gh-release@v1
-        with:
-          name: ${{ env.BUILD_DATE_YEAR }}-${{ env.BUILD_DATE_MONTH }}-${{ env.BUILD_DATE_DAY }}
-          prerelease: true
-          files: HodorReflexes-${{ env.BUILD_DATE_YEAR }}-${{ env.BUILD_DATE_MONTH }}-${{ env.BUILD_DATE_DAY }}.zip
-          body_path: "CHANGELOG.md"
+    release:
+      runs-on: ubuntu-latest
+      needs: ["build"]
+      permissions:
+        contents: write
+      if: ${{ startsWith(github.ref, 'refs/tags/') }}
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v4
+        - name: set BUILD_DATE environment variables
+          run: |
+            echo "BUILD_DATE_YEAR"=$(date -u +"%Y") >> ${GITHUB_ENV}
+            echo "BUILD_DATE_MONTH"=$(date -u +"%m") >> ${GITHUB_ENV}
+            echo "BUILD_DATE_DAY"=$(date -u +"%d") >> ${GITHUB_ENV}
+        - name: Download Artifact
+          uses: actions/download-artifact@v4
+          with:
+            name: HodorReflexesRealeaseZip
+        - name: Release
+          uses: ncipollo/release-action@v1
+          with:
+            name: ${{ env.BUILD_DATE_YEAR }}-${{ env.BUILD_DATE_MONTH }}-${{ env.BUILD_DATE_DAY }}
+            artifacts: HodorReflexes-${{ env.BUILD_DATE_YEAR }}-${{ env.BUILD_DATE_MONTH }}-${{ env.BUILD_DATE_DAY }}.zip
+            bodyFile: "CHANGELOG.md"
+            artifactContentType: "application/zip"
 
-  release:
-    runs-on: ubuntu-latest
-    needs: ["build"]
-    permissions:
-      contents: write
-    if: ${{ startsWith(github.ref, 'refs/tags/') }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: set BUILD_DATE environment variables
-        run: |
-          echo "BUILD_DATE_YEAR"=$(date -u +"%Y") >> ${GITHUB_ENV}
-          echo "BUILD_DATE_MONTH"=$(date -u +"%m") >> ${GITHUB_ENV}
-          echo "BUILD_DATE_DAY"=$(date -u +"%d") >> ${GITHUB_ENV}
-      - name: Download Artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: HodorReflexesRealeaseZip
-      - name: Release
-        uses: softprops/action-gh-release@v1
-        with:
-          name: ${{ env.BUILD_DATE_YEAR }}-${{ env.BUILD_DATE_MONTH }}-${{ env.BUILD_DATE_DAY }}
-          files: HodorReflexes-${{ env.BUILD_DATE_YEAR }}-${{ env.BUILD_DATE_MONTH }}-${{ env.BUILD_DATE_DAY }}.zip
-          body_path: "CHANGELOG.md"
+#  release-nightly:
+#    runs-on: ubuntu-latest
+#    needs: ["build"]
+#    permissions:
+#      contents: write
+#    if: github.ref == 'refs/heads/main'
+#    steps:
+#      - name: Checkout
+#        uses: actions/checkout@v4
+#      - name: set BUILD_DATE environment variables
+#        run: |
+#          echo "BUILD_DATE_YEAR"=$(date -u +"%Y") >> ${GITHUB_ENV}
+#          echo "BUILD_DATE_MONTH"=$(date -u +"%m") >> ${GITHUB_ENV}
+#          echo "BUILD_DATE_DAY"=$(date -u +"%d") >> ${GITHUB_ENV}
+#      - name: Download Artifact
+#        uses: actions/download-artifact@v4
+#        with:
+#          name: HodorReflexesRealeaseZip
+#      - name: Release
+#        uses: ncipollo/release-action@v1
+#        with:
+#          name: ${{ env.BUILD_DATE_YEAR }}-${{ env.BUILD_DATE_MONTH }}-${{ env.BUILD_DATE_DAY }}
+#          prerelease: true
+#          files: HodorReflexes-${{ env.BUILD_DATE_YEAR }}-${{ env.BUILD_DATE_MONTH }}-${{ env.BUILD_DATE_DAY }}.zip
+#          body_path: "CHANGELOG.md"
+
