@@ -1,3 +1,7 @@
+## 2024.03.08 - @m00nyONE
+- the 999k damage bug was identified but needs a ping protocol change to fix. This can take some time ... Thanks again for everyone reporting it
+- icon update
+
 ## 2024.02.04 - @m00nyONE
 - change versioning to YYYY.MM.DD for better readability
 - reverting some changes from an unauthorized person who requested changes for "friends", but instead made fun of them by putting chinese swear words in their names by abusing the fact that I can not read chinese ...

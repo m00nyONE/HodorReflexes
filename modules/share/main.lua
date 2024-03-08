@@ -205,7 +205,7 @@ local sendExitInstanceButton = {
 	alignment = KEYBIND_STRIP_ALIGN_CENTER,
 }
 
-local function encodeData(dmgType, ultType, ult, dmg, dps)
+local function encodeData(dmgType, ultType, ult, dmg, dps) -- 0-2 , 0-2, 0-500 , 0-9999 , 0-999
 	local dmgTypeZone = 27*110+110 -- 3080
 	local ultReduced = zo_ceil(ult / 5)
 	local rawData = DATA_PREFIX
@@ -227,6 +227,14 @@ local function decodeData(rawData)
 		local ult = zo_ceil(((head % dmgTypeZone) - ultType * 110) * 5)
 		local dmg = zo_floor(rawData % 10000000 / 1000)
 		local dps = zo_floor(rawData % 1000)
+		--if dmg >= 9000 then
+		--	d(rawData)
+		--	d(dmgTypeZone)
+		--	d(head)
+		--	d(dmgType)
+		--	d(ultType)
+		--	d("ult: " .. ult .. " dmg: " .. dmg .. " dps: " .. dps)
+		--end
 		--d("dmgType: " .. dmgType .. "\nultType: " .. ultType .. "\nult: " .. ult .. "\ndmg: " .. dmg .. "\ndps: " .. dps)
 		return true, dmgType, ultType, ult, dmg, dps
 	end
@@ -1980,4 +1988,25 @@ SLASH_COMMANDS["/hodor.share"] = function(str)
 		end
 	end
 end
+
+
+--SLASH_COMMANDS["/hrdbg"] = function()
+--	local errorvalue = 164299738086
+--	local rawData = encodeData(2, 2, 254, 188, 41) -- 245
+--
+--	local isSharing, dmgType, ultType, ult, dmg, dps = decodeData(rawData)
+--	local isSharing2, dmgType2, ultType2, ult2, dmg2, dps2 = decodeData(errorvalue)
+--
+--	d("raw " .. rawData .. " " .. errorvalue)
+--	d("isSharing " .. tostring(isSharing) .. " " .. tostring(isSharing2))
+--	d("dmgType " .. dmgType .. " " .. dmgType2)
+--	d("ultType " .. ultType .. " " .. ultType2)
+--	d("ult " .. ult .. " " .. ult2)
+--	d("dmg " .. dmg .. " " .. dmg2)
+--	d("dps " .. dps .. " " .. dps2)
+--end
+
+--SLASH_COMMANDS["/hrscd"] = function(str)
+--	share:SendData(tonumber(str))
+--end
 RuESO_doubleNamesNPC = nil -- disable RuESO double names, because it breaks CMX boss detection

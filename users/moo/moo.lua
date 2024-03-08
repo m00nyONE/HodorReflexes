@@ -110,3 +110,5 @@ u["@Bombarde"] = {"Bombarde", "|c9d8286Bombarde|r", "HodorReflexes/users/moo/Bom
 
 u["@Einhorn23"] = {"Einhorn", "|c3d03e2E|r|c5e06c6i|r|c7e09a9n|r|c9e0c8dh|r|cbe0f70o|r|cdf1254r|r|cff1537n|r", "HodorReflexes/users/moo/Einhorn23.dds"}
 a["@Einhorn23"] = {"HodorReflexes/users/moo/Einhorn23_anim.dds", 23, 5, 25}
+
+u["@Survivor2012"] = {"Survivor2012", "|cff1717Survivor2012|r", "HodorReflexes/users/moo/Survivor2012.dds"}
