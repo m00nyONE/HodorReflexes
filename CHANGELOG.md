@@ -1,5 +1,5 @@
-## 2024.03.08 - @m00nyONE
-- the 999k damage bug was identified but needs a ping protocol change to fix. This can take some time ... Thanks again for everyone reporting it
+## 2024.03.10 - @m00nyONE
+- the 999k damage bug should be fixed ( at least it should happen way less frequently ) ... Sadly it's impossible to "really" fix this issue as it's about the precision of the map pings being inconsistent in the ESO API.
 - icon update
 
 ## 2024.02.04 - @m00nyONE
