@@ -91,7 +91,7 @@ u["@BloodStainChild666"] = {"Childofbodom", "|c900C3FBSC's-DMG|r", "HodorReflexe
 u["@FlaPi"] = {"FlaPi", "|c9477FCF|r|c007EFEl|r|c00BB00a|r|cFEF601P|r|cDD0000i|r"}
 a["@FlaPi"] = {"HodorReflexes/users/moo/FlaPi_anim.dds", 8, 1, 10}
 
-u["@ASSA-Zz"] = {"ASSA", "|c60a4eaA|r|c8bb6e6S|r|cb5c7e3S|r|ce0d9dfA|r", "HodorReflexes/users/moo/ASSA-Zz_2.dds"}
+u["@ASSA-Zz"] = {"ASSA", "|c60a4eaA|r|c8bb6e6S|r|cb5c7e3S|r|ce0d9dfA|r", "HodorReflexes/users/moo/ASSA-Zz.dds"}
 a["@ASSA-Zz"] = {"HodorReflexes/users/moo/ASSA-Zz_anim.dds", 10, 1, 5}
 
 u["@sir_fabs"] = {"Drizzt ", "|cd81328D|r|cb11c50r|r|c8a2579i|r|c632ea1z|r|c3c37c9z|r|c1540f1t|r ", "HodorReflexes/users/moo/sir_fabs.dds"}
