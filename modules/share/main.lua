@@ -233,40 +233,6 @@ local function decodeData(rawData)
 	return false, nil, nil, nil, nil, nil
 end
 
---local function encodeData_old(dmgType, ultType, ult, dmg, dps) -- 0-2 , 0-2, 0-500 , 0-9999 , 0-999
---	local dmgTypeZone = 27*110+110 -- 3080
---	local ultReduced = zo_ceil(ult / 5)
---	local rawData = DATA_PREFIX
---	local head = dmgType * dmgTypeZone -- 0-3080, 3080 - 6160, 6160-9240
---	local head2 = ultType * 110 + ultReduced
---	local compressedUlt = (head + head2) * 10000000
---	rawData = rawData + zo_min(dps, 999) -- add DPS
---	rawData = rawData + zo_min(dmg, 9999) * 1000-- add DMG
---	rawData = rawData + compressedUlt -- add compressed ulti & ultiType & dmgType
---	return rawData
---end
---
---local function decodeData_old(rawData)
---	local dmgTypeZone = 27*110+110 -- 3080
---	local head = zo_floor(rawData / 10000000 % 10000)
---	local dmgType = zo_floor(head / dmgTypeZone)
---	local ultType = zo_floor((head % dmgTypeZone) / 110)
---	if dmgType >= 0 and dmgType <= 2 and ultType >= 0 and ultType <= 27 then -- extra check to avoid conflicts
---		local ult = zo_ceil(((head % dmgTypeZone) - ultType * 110) * 5)
---		local dmg = zo_floor(rawData % 10000000 / 1000)
---		local dps = zo_floor(rawData % 1000)
---		return true, dmgType, ultType, ult, dmg, dps
---	end
---
---	return false, nil, nil, nil, nil, nil
---end
-
-function HodorReflexes.test()
-	local raw = encodeData(1, 2, 200, 9999, 999)
-	local b, dmgType, ultType, ult, dmg, dps = decodeData(raw)
-	d(b, dmgType, ultType, ult, dmg, dps)
-end
-
 -- Check player ultimates for horn/colossus to share them only when they are slotted
 local function CheckSlottedUlts()
 	colosSlotted = false
