@@ -1,6 +1,6 @@
 ## Title: HodorReflexes
 ## Version: 2024.03.10
-## Author: |cFFFF00andy.s|r, |c76c3f4@m00nyONE|r
+## Author: |cFFFF00@andy.s|r, |c76c3f4@m00nyONE|r, |cef7682@seadotarley|r
 ## APIVersion: 101040 101041
 ## AddOnVersion: 20240310
 ## SavedVariables: HodorReflexesSV

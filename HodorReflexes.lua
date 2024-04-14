@@ -287,7 +287,7 @@ function HR.GetModulePanelConfig(listName, panelName)
 		type = 'panel',
 		name = listName and string.format('Hodor Reflexes - %s', listName) or 'Hodor Reflexes',
 		displayName = panelName and string.format('Hodor Reflexes - |cFFFACD%s|r', panelName) or 'Hodor Reflexes',
-		author = '|cFFFF00@andy.s|r, |c76c3f4@m00nyONE|r',
+		author = '|cFFFF00@andy.s|r, |c76c3f4@m00nyONE|r, |cef7682@seadotarley|r',
 		version = string.format('|c00FF00%s|r', HR.version),
 		website = 'https://www.esoui.com/downloads/info2311-HodorReflexes-DPSampUltimateShare.html#donate',
 		donation = HR.Donation,
