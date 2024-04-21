@@ -26,7 +26,7 @@ u["@firerapture"] = {"Timmy", "|cFFFF00Timmy|r", "HodorReflexes/users/vok/firera
 -- animated
 a["@Alom"] = {"HodorReflexes/users/vok/alom_anim.dds", 6, 1, 10}
 a["@EightDevils"] = {"HodorReflexes/users/vok/8D_anim.dds", 3, 3, 1}
-a["@implodingchicken"] = {"HodorReflexes/users/vok/chicken_anim.dds", 7, 7, 12}
+--a["@implodingchicken"] = {"HodorReflexes/users/vok/chicken_anim.dds", 7, 7, 12}
 a["@Mujuro"] = {"HodorReflexes/users/vok/mujuro_anim.dds", 9, 9, 14}
 a["@Raijindono"] = {"HodorReflexes/users/vok/Raijindono_anim.dds", 9, 1, 10}
 
