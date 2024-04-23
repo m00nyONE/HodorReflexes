@@ -264,6 +264,23 @@ function M.BuildIconsMenu()
 			end,
 			requiresReload = true,
 		},
+		{
+			type = "header",
+			name = string.format("|cFFFACD%s|r", GetString(HR_MENU_ICONS_INTEGRITY)),
+		},
+		{
+			type = "description",
+			text = string.format("|cFFFACD%s|r", GetString(HR_MENU_ICONS_INTEGRITY_DESCRIPTION)),
+		},
+		{
+			type = "button",
+			name = GetString(HR_MENU_ICONS_INTEGRITY_CHECK),
+			tooltip = GetString(HR_MENU_ICONS_INTEGRITY_DESCRIPTION),
+			func = function()
+				HodorReflexes.integrity.Check()
+			end,
+			width = 'half',
+		},
 	}
 
     LibAddonMenu2:RegisterAddonPanel(M.name .. "IconsMenu", panel)

@@ -109,6 +109,9 @@ local strings = {
 	HR_MENU_ICONS_VISIBILITY_COLORS_TT = "Färbe die Namen anderer Spieler.",
 	HR_MENU_ICONS_VISIBILITY_ANIM = "Animierte Symbole",
 	HR_MENU_ICONS_VISIBILITY_ANIM_TT = "Spiele animierte Symbole ab. Achtung: die Deaktivierung dieser Funktion wird deine FPS nicht erhöhen.",
+	HR_MENU_ICONS_INTEGRITY = "Integrität",
+	HR_MENU_ICONS_INTEGRITY_DESCRIPTION = "Überprüfe die Vollständigkeit der HodorReflexes Icons.",
+	HR_MENU_ICONS_INTEGRITY_CHECK = "Überprüfen",
 
 	HR_MENU_STYLE = "Style",
 	HR_MENU_STYLE_DPS = "Schadensliste",

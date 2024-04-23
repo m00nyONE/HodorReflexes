@@ -1,3 +1,7 @@
+## 2024.XX.XX - @m00nyONE
+- add integrity check to icon menu in the addon settings
+- slightly rework integrity check
+
 ## 2024.04.23 - @m00nyONE
 - add @seadotarley to the addon author/credit list
 - icon update

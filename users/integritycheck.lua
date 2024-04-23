@@ -20,9 +20,9 @@ local getIconForUserId = HodorReflexes.player.GetIconForUserId
 local WM = GetWindowManager()
 local GUIControl = HodorReflexes_IntegrityCheck
 
-local iconSize = 20
-local SCREEN_WIDTH = tonumber(GetCVar("WindowedWidth")) --GuiRoot:GetWidth()
-local SCREEN_HEIGHT = tonumber(GetCVar("WindowedHeight")) --GuiRoot:GetWidth()
+local iconSize = 32
+local SCREEN_WIDTH = GuiRoot:GetWidth()
+local SCREEN_HEIGHT = GuiRoot:GetHeight()
 local maxColumns = zo_floor(SCREEN_WIDTH / iconSize)
 local maxRows = zo_floor(SCREEN_HEIGHT / iconSize)
 
@@ -35,15 +35,20 @@ local iconPool = {}
 local failedList = {}
 
 local function createTexture(iconNumber, userName, iconPath)
-    local iconColumn = iconNumber % maxColumns
-    local iconRow = (zo_floor((iconSize * iconNumber) / SCREEN_WIDTH)) % maxRows
+    --local iconColumn = iconNumber % maxColumns
+    --local iconRow = (zo_floor((iconSize * iconNumber) / SCREEN_WIDTH)) % maxRows
+    local iconX = zo_floor(math.random(0, SCREEN_WIDTH - iconSize))
+    local iconY = zo_floor(math.random(0, SCREEN_HEIGHT - iconSize))
+
+
 
     local icon = WM:CreateControl( GUIControl:GetName() .. "_" .. GetGameTimeMilliseconds() .. "_Icon_" .. tostring(iconNumber), GUIControl, CT_TEXTURE)
 
     icon.userName = userName
     icon.iconPath = iconPath
     icon:ClearAnchors()
-    icon:SetAnchor( TOPLEFT, GUIControl, TOPLEFT, (iconColumn * iconSize), (iconRow * iconSize))
+    --icon:SetAnchor( TOPLEFT, GUIControl, TOPLEFT, (iconColumn * iconSize), (iconRow * iconSize))
+    icon:SetAnchor( TOPLEFT, GUIControl, TOPLEFT, iconX, iconY)
     icon:SetTextureReleaseOption(RELEASE_TEXTURE_AT_ZERO_REFERENCES)
     icon:SetHidden(false)
     icon:SetTexture(iconPath)
@@ -75,6 +80,17 @@ local function integrityCheck()
     local limit = 9999999
     local iconNumber = 1
 
+    d("loading animated icons ...")
+    for userName, userData in pairs(a) do
+        if iconNumber >= limit then
+            break
+        end
+
+        local iconPath = userData[1]
+        createTexture(iconNumber, userName, iconPath)
+        iconNumber = iconNumber + 1
+    end
+
     d("loading static icons ...")
     for userName, _ in pairs(u) do
         if iconNumber >= limit then
@@ -86,17 +102,6 @@ local function integrityCheck()
             createTexture(iconNumber, userName, iconPath)
             iconNumber = iconNumber + 1
         end
-    end
-
-    d("loading animated icons ...")
-    for userName, userData in pairs(a) do
-        if iconNumber >= limit then
-            break
-        end
-
-        local iconPath = userData[1]
-        createTexture(iconNumber, userName, iconPath)
-        iconNumber = iconNumber + 1
     end
 
     d("loaded " .. iconNumber .. " icons")
