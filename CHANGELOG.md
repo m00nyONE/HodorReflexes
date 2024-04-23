@@ -1,4 +1,4 @@
-## 2024.04.21 - @m00nyONE
+## 2024.04.23 - @m00nyONE
 - add @seadotarley to the addon author/credit list
 - icon update
 - reminder: I'm always open for contributions and ideas: https://github.com/m00nyONE/HodorReflexes

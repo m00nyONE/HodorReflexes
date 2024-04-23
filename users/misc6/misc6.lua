@@ -456,7 +456,7 @@ a["@xXScOrPiON96Xx"] = {"HodorReflexes/users/misc6/xXScOrPiON96Xx_anim.dds", 5, 
 u["@DarkSp00n"] = {"DarkSp00n", "|ca3ed00D|r|caeda00a|r|cbac800r|r|cc5b600k|r|cd1a300S|r|cdc9100p|r|ce87f000|r|cf36c000|r|cff5a00n|r"}
 a["@DarkSp00n"] = {"HodorReflexes/users/misc6/DarkSp00n_anim.dds", 8, 6, 10}
 u["@Gandalf_Sturmbringer"] = {"Gandalf", "|c6d8491Gandalf|r", "HodorReflexes/users/misc6/Gandalf_Sturmbringer.dds"}
-u["@Mælkorion"] = {"Mælkorion", "|c22cdf4M|r|c20d3e9æ|r|c1ddaddl|r|c1be0d2k|r|c18e6c7o|r|c16ecbcr|r|c13f3b0i|r|c11f9a5o|r|c0eff9an|r", "HodorReflexes/users/misc6/Mlkorion.dds"}
+u["@Atærius"] = {"Atærius", "|c1fcaffA|r|c3ecefft|r|c5dd3ffæ|r|c7cd8ffr|r|c9bddffi|r|cbae1ffu|r|cd9e6ffs|r", "HodorReflexes/users/misc6/Ataerius.dds"}
 u["@Murkmire_Prepper"] = {"Murkmire", "|c58001dMurkmire|r", "HodorReflexes/users/misc6/Murkmire_Prepper.dds"}
 u["@funkystatue2"] = {"funkystatue", "|c0be2fff|r|c16ccffu|r|c21b5ffn|r|c2c9effk|r|c3788ffy|r|c4371ffs|r|c4e5bfft|r|c5944ffa|r|c642dfft|r|c6f17ffu|r|c7a00ffe|r"}
 a["@funkystatue2"] = {"HodorReflexes/users/misc6/funkystatue2_anim.dds", 6, 4, 14}
@@ -1054,4 +1054,5 @@ a["@dongdaye8848"] = {"HodorReflexes/users/misc6/dongdaye8848_anim.dds", 7, 2, 2
 u["@Skids1"] = {"Skids", "|cffffffSkids|r", "HodorReflexes/esologo.dds"}
 u["@OhMyGodcat"] = {"OhMyGodcat", "|ce61a14O|r|ccc331ch|r|cb34d25M|r|c99662dy|r|c808036G|r|c66993eo|r|c4db347d|r|c33cc4fc|r|c1ae558a|r|c00ff60t|r", "HodorReflexes/users/misc6/OhMyGodcat.dds"}
 u["@SeanDUrban"] = {"SeanDUrban", "SeanDUrban", "HodorReflexes/users/misc6/SeanDUrban.dds"}
-
+u["@Rytic"] = {"Rytic", "|cdc183aR|r|cb92f5by|r|c95477dt|r|c725e9ei|r|c4f76c0c|r"}
+a["@Rytic"] = {"HodorReflexes/users/misc6/Rytic_anim.dds", 10, 2, 11}
