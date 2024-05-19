@@ -2,14 +2,22 @@ local u = HodorReflexes.users
 local a = HodorReflexes.anim.users
 
 u["@Green165"] = {"Green", "|c008a41G|r|c008a41r|r|c008a41e|r|c008a41e|r|c008a41n|r", "HodorReflexes/users/moo/green165.dds"}
+
 u["@Kuhpilot"] = {"Riso", "|c3dbbbfRiso|r", "HodorReflexes/users/moo/Kuhpilot.dds"}
+
 u["@JN_Slevin"] = {"Slevin", "|c2596a5S|r|c218485l|r|c1c7365e|r|c1c7365v|r|c218485i|r|c2596a5n|r", "/esoui/art/tutorial/progression_tabicon_dragonaspect_up.dds" }
+
 u["@SevenSinsGER"] = {"SevenSins", "|cc3373bS|r|cbe3236e|r|cb82c30v|r|cb3262be|r|cad2125n|r|ca81b20S|r|ca2151ai|r|c9d1015n|r|c970a0fs|r", "HodorReflexes/users/moo/SevenSinsGER.dds"}
+
 u["@Romulus1969"] = {"Romulus",  "|cea3156Romulus|r", "HodorReflexes/users/moo/Romulus1969.dds"}
+
 u["@Bluxx"] = {"Bluxx", "|cff2000B|r|cff4000l|r|cff6000u|r|cff8000x|r|cffa000x|r", "HodorReflexes/users/moo/Bluxx1.dds"}
+
 u["@Magiermädchen"] = {"Meruhe", "Meruhe", "HodorReflexes/users/moo/Magiermaedchen3.dds"}
 u["@Magiermaedchen"] = u["@Magiermädchen"]
+
 u["@PowerfulLevi"] = {"Levi", "|cd01120L|r|ca1222ce|r|c723237v|r|c434343i|r", "HodorReflexes/users/moo/PowerfulLevi.dds"}
+
 u["@xpleader"] = {"Mike", "|cef7215M|r|cf56b25i|r|cfa6536k|r|cff5e46e|r", "HodorReflexes/users/moo/xpleader.dds"}
 
 u["@m00nyONE"] = {"m00ny", "|c76c3f4m00ny|r", "HodorReflexes/users/moo/m00nyONE.dds"}
@@ -73,7 +81,6 @@ a["@Artaphernes"] = {"HodorReflexes/users/moo/Artaphernes_anim.dds", 6, 5, 12.5}
 u["@Natolia"] = {"Natolia", "|cdb24edN|r|cb648f0a|r|c926cf3t|r|c6d91f6o|r|c49b5f9l|r|c24d9fci|r|c00fdffa|r"}
 a["@Natolia"] = {"HodorReflexes/users/moo/Natolia_anim.dds", 8, 1, 10}
 
-
 u["@sushiman573"] = {"Susi", "|caac634S|r|cc6a62du|r|ce38525s|r|cff651ei|r", "HodorReflexes/users/moo/sushiman573.dds"}
 
 u["@skinnycheeks"] = {"skinny", "|c084b90skinny|r", "HodorReflexes/users/moo/skinnycheeks.dds"}
@@ -114,3 +121,15 @@ u["@Einhorn23"] = {"Einhorn", "|c3d03e2E|r|c5e06c6i|r|c7e09a9n|r|c9e0c8dh|r|cbe0
 a["@Einhorn23"] = {"HodorReflexes/users/moo/Einhorn23_anim.dds", 23, 5, 25}
 
 u["@Survivor2012"] = {"Survivor2012", "|cff1717Survivor2012|r", "HodorReflexes/users/moo/Survivor2012.dds"}
+
+u["@Hunterial"] = {"Hunter", "|cEE2537Hunter|r", "HodorReflexes/users/moo/Hunterial.dds"}
+
+u["@Ryvendur"] = {"Ryv", "|ca980feR|r|c9078ffy|r|c7771ffv|r", "HodorReflexes/users/moo/Ryvendur.dds"}
+
+u["@Eco_212"] = {"ECO", "|cff4b2fE|r|cff883eC|r|cffc54cO|r", "HodorReflexes/users/moo/Eco_212.dds"}
+a["@Eco_212"] = {"HodorReflexes/users/moo/Eco_212_anim.dds", 23, 2, 23}
+u["@Eco.212"] = u["@Eco_212"]
+a["@Eco.212"] = a["@Eco_212"]
+
+u["@NikG1"] = {"NikG1", "|c5fff4bNikG1|r"}
+a["@NikG1"] = {"HodorReflexes/users/moo/NikG1_anim.dds", 10, 5, 16}
