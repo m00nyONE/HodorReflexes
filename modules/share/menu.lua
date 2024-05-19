@@ -380,7 +380,7 @@ function M.BuildMenu()
 			name = string.format("|cFFFACD%s|r", GetString(HR_MENU_MISCULTIMATES))
 		},
 		{
-			type = "checkbox",
+			type = "dropdown",
 			name = GetString(HR_MENU_MISCULTIMATES_SHOW),
 			tooltip = GetString(HR_MENU_MISCULTIMATES_SHOW_TT),
 			default = M.default.enableMiscUltimateList,
@@ -388,6 +388,12 @@ function M.BuildMenu()
 			setFunc = function(value)
 				M.sv.enableMiscUltimateList = value or false
 			end,
+			choices = {
+				GetString(HR_MENU_DAMAGE_SHOW_NEVER), GetString(HR_MENU_DAMAGE_SHOW_ALWAYS), GetString(HR_MENU_DAMAGE_SHOW_OUT), GetString(HR_MENU_DAMAGE_SHOW_NONBOSS),
+			},
+			choicesValues = {
+				0, 1, 2, 3,
+			},
 			width = 'half',
 		},
 		{

@@ -450,7 +450,7 @@ local function CreateSceneFragments()
 	end
 
 	local function MiscUltFragmentCondition()
-		return SV.enableMiscUltimateList and controlsVisible
+		return M.IsMiscUltimatesListVisible() and controlsVisible
 	end
 
 	local function DpsFragmentCondition()
@@ -1143,6 +1143,18 @@ function M.IsDamageListVisible()
 	elseif SV.enableDamageList == 2 then
 		return not IsUnitInCombat('player')
 	elseif SV.enableDamageList == 3 then
+		return not IsUnitInCombat('player') or not DoesUnitExist('boss1') and not DoesUnitExist('boss2')
+	else
+		return false
+	end
+end
+
+function M.IsMiscUltimatesListVisible()
+	if SV.enableMiscUltimateList == 1 then
+		return true
+	elseif SV.enableMiscUltimateList == 2 then
+		return not IsUnitInCombat('player')
+	elseif SV.enableMiscUltimateList == 3 then
 		return not IsUnitInCombat('player') or not DoesUnitExist('boss1') and not DoesUnitExist('boss2')
 	else
 		return false
