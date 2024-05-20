@@ -133,3 +133,9 @@ a["@Eco.212"] = a["@Eco_212"]
 
 u["@NikG1"] = {"NikG1", "|c5fff4bNikG1|r"}
 a["@NikG1"] = {"HodorReflexes/users/moo/NikG1_anim.dds", 10, 5, 16}
+
+u["@User7Gaming"] = {"User7Gaming", "|c1a8cffU|r|c3198ffs|r|c48a3ffe|r|c5fafffr|r|c76baff7|r|c8cc6ffG|r|ca3d1ffa|r|cbaddffm|r|cd1e8ffi|r|ce8f4ffn|r|cffffffg|r", "HodorReflexes/users/moo/User7Gaming.dds"}
+
+u["@Protossyder"] = {"Protossyder", "|c5a8bfeP|r|c6a96fer|r|c7ba2feo|r|c8baefet|r|c9cb9feo|r|cacc5ffs|r|cbdd0ffs|r|ccddcffy|r|cdee8ffd|r|ceef3ffe|r|cffffffr|r", "HodorReflexes/users/moo/Protossyder.dds"}
+
+u["@Regenbogenman"] = {"Regen", "|cfeea57R|r|cfeea4fe|r|cffea48g|r|cffea40e|r|cffea38n|r", "esoui/art/icons/ability_templar_recovery.dds"}
