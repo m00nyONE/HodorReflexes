@@ -42,7 +42,7 @@
             <Anchor point="CENTER" relativeTo="GuiRoot" relativePoint="CENTER" offsetX="80" offsetY="0" />
             <Controls>
                 <Texture name="$(parent)_BG" color="000000" alpha="1">
-                    <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" />
+                    <Anchor point="CENTER" relativeTo="$(parent)" relativePoint="CENTER" />
                     <Dimensions x="64" y="64" />
                 </Texture>
                 <Texture name="$(parent)_Texture" textureFile="esoui/art/icons/ability_ava_003_a.dds">
