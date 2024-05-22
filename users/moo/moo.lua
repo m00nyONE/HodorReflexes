@@ -139,3 +139,5 @@ u["@User7Gaming"] = {"User7Gaming", "|c1a8cffU|r|c3198ffs|r|c48a3ffe|r|c5fafffr|
 u["@Protossyder"] = {"Protossyder", "|c5a8bfeP|r|c6a96fer|r|c7ba2feo|r|c8baefet|r|c9cb9feo|r|cacc5ffs|r|cbdd0ffs|r|ccddcffy|r|cdee8ffd|r|ceef3ffe|r|cffffffr|r", "HodorReflexes/users/moo/Protossyder.dds"}
 
 u["@Regenbogenman"] = {"Regen", "|cfeea57R|r|cfeea4fe|r|cffea48g|r|cffea40e|r|cffea38n|r", "esoui/art/icons/ability_templar_recovery.dds"}
+
+u["@Drachilo"] = {"Drachilo", "|c12acffD|r|c24b4ffr|r|c36bbffa|r|c48c2ffc|r|c59c9ffh|r|c6bd1ffi|r|c7dd8ffl|r|c8fdfffo|r", "HodorReflexes/users/moo/Drachilo.dds"}
