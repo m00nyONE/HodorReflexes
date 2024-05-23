@@ -1,8 +1,8 @@
-## 2024.XX.XX - @m00nyONE
+## 2024.05.24 - @m00nyONE
 - add integrity check to icon menu in the addon settings
 - slightly rework integrity check
 - add hide option for misc ultimates in combat. ( same options as for the dps list )
-- adjust Horn symbol background anchor to CENTER instead of TOP_LEFT - thanks to @Near717 for pointing that out - fixes: https://github.com/m00nyONE/HodorReflexes/issues/2
+- adjust Horn symbol background anchor to CENTER instead of TOPLEFT - thanks to @Near717 for pointing that out - fixes: https://github.com/m00nyONE/HodorReflexes/issues/2
 
 ## 2024.04.23 - @m00nyONE
 - add @seadotarley to the addon author/credit list
