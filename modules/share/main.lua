@@ -167,6 +167,8 @@ local DATA_PREFIX = 100000000000
 
 local isNecro = GetUnitClassId('player') == 5
 local isSorc = GetUnitClassId('player') == 2
+local playerClassId = GetUnitClassId('player')
+
 local classIcons = {}
 for i = 1, GetNumClasses() do
 	local id, _, _, _, _, _, icon, _, _, _ = GetClassInfo(i)
@@ -1573,9 +1575,16 @@ do
 			playerData.ultRow:ClearAnchors()
 			playerData.ultRow:SetAnchor(TOPLEFT, HodorReflexes_Share_Ultimates, TOPLEFT, 0, i*24)
 			-- We call M.GetHornPercent() instead of using row[2] value for better precision
-			if playerData.isPlayer and M.GetUltPercentage(GetUnitPower("player", POWERTYPE_ULTIMATE), ABILITY_COST_HORN) >= 100 then
-				myHornNew = true
-				hornOrder = i
+
+			if playerData.isPlayer then
+				local costReduction = 0
+				if playerClassId == CLASSID_SORC then costReduction = 15 end
+				if playerClassId == CLASSID_TEMPLAR then costReduction = 5 end
+
+				if M.GetUltPercentage(GetUnitPower("player", POWERTYPE_ULTIMATE), ABILITY_COST_HORN, costReduction) >= 100 then
+					myHornNew = true
+					hornOrder = i
+				end
 			end
 			-- Check if there is any ready horn
 			if row[2] >= 100 then

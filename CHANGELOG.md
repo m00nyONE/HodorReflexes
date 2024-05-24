@@ -1,3 +1,7 @@
+## 2024.06.xx - @m00nyONE
+- fix "ult now" not accounting ult cost reduction - thanks to @kawamonkey
+- fix horn beeing displayed when player is dead - thanks to @kawamonkey
+
 ## 2024.05.24 - @m00nyONE
 - add integrity check to icon menu in the addon settings
 - slightly rework integrity check
