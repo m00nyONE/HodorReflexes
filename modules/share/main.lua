@@ -1497,7 +1497,7 @@ do
 				end
 				-- War Horn
 				if ultRow then
-					if horn > 0 then
+					if horn > 0 and not IsUnitDead(tag) then
 						if horn >= 100 then colorHorn = '00FF00' elseif horn >= 80 then colorHorn = 'FFFF00' end
 						ultRow:GetNamedChild('_Value'):SetText(strformat('|c%s%d%%|r', colorHorn, zo_min(200, horn)))
 						ultRow:GetNamedChild('_Value'):SetScale(SV.showHornPercentValue)
