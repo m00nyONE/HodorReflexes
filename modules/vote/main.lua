@@ -149,7 +149,7 @@ local function GroupElectionResult(eventCode, electionResult, descriptor)
 					if IsUnitOnline(group_tag) then
 						CHAT_ROUTER:AddSystemMessage(strformat('|cFF0000%s %s|r', units.GetDisplayName(group_tag), GetString(HR_VOTE_NOT_READY_CHAT)))
 					else
-						CHAT_ROUTER:AddSystemMessage(zo_strformat("<<1>><<2>> (OFFLINE)", color_orange, GetUnitDisplayName(group_tag)))
+						CHAT_ROUTER:AddSystemMessage(zo_strformat("|cFFA500<<1>> (OFFLINE)|r", GetUnitDisplayName(group_tag)))
 					end
 				end
 			end
