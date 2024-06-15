@@ -1134,9 +1134,26 @@ a["@BreezyApex"] = {"HodorReflexes/users/misc6/BreezyApex_anim.dds", 15, 2, 20}
 u["@Tutorion"] = {"Tutorion", "|cfb2020T|r|cfb4040u|r|cfc6060t|r|cfd8080o|r|cfd9f9fr|r|cfebfbfi|r|cfedfdfo|r|cffffffn|r", "HodorReflexes/users/misc6/Tutorion.dds"}
 a["@Tutorion"] = {'HodorReflexes/users/misc6/Tutorion_anim.dds', 6, 8, 48}
 u["@IDontKnowMyRotation"] = {"Tali", "|cff8fe1T|r|cff99e2a|r|cffa2e2l|r|cffabe3i|r", "HodorReflexes/users/misc6/IDontKnowMyRotation.dds"}
-u["@chaoslulu"] = {"chaoslulu", "|ce42978c|r|ce5447bh|r|ce55e7fa|r|ce67982o|r|ce79385s|r|ce8c88cl|r|ce8c88cu|r|ce9e38fl|r|ceafd92u|r"}
-a["@chaoslulu"] = {"HodorReflexes/users/misc6/chaoslulu_anim.dds", 13, 3, 25} -- TODO: not implemented
 u["@xZephyria"] = {"xZephyria", "|ca3f4d4x|r|cafe8d4Z|r|cbaddd4e|r|cc6d2d4p|r|cd1c6d3h|r|cddbbd3y|r|ce8b0d3r|r|cf4a4d3i|r|cff99d3a|r", "HodorReflexes/users/misc6/xZephyria.dds"}
 u["@Shiriiio"] = {"Shiriiio", "|c3b3b3bS|r|c3b3b3bh|r|c3b3b3bi|r|cFF0000r|r|cFF0000i|r|cFF0000i|r|cFFD700i|r|cFFD700o|r"}
 a["@Shiriiio"] = {"HodorReflexes/users/misc6/Shiriiio_anim.dds", 8, 1, 6}
 u["@BillyBoah"] = {"BillyBoah", "|c00f740B|r|c00ef58i|r|c00e770l|r|c00df88l|r|c00d79fy|r|c00cfb7B|r|c00c7cfo|r|c00bfe7a|r|c00b7ffh|r","HodorReflexes/users/misc6/BillyBoah.dds"}
+u["@chaoslulu"] = {"chaoslulu", "|ce42978c|r|ce5447bh|r|ce55e7fa|r|ce67982o|r|ce79385s|r|ce8c88cl|r|ce8c88cu|r|ce9e38fl|r|ceafd92u|r"}
+a["@chaoslulu"] = {"HodorReflexes/users/misc6/chaoslulu_anim.dds", 5, 1, 10}
+u["@JJSugar"] = {"JJSugar", "|c01669aJ|r|c035e9eJ|r|c0456a2S|r|c064ea5u|r|c0746a9g|r|c093eada|r|c0a36b1r|r", "HodorReflexes/users/misc6/JJSugar.dds"}
+u["@NachoProblem"] = {"Nacho", "|cff8f2dN|r|cffa63ca|r|cffbc4cc|r|cffd35bh|r|cffe96bo|r"}
+a["@NachoProblem"] = {"HodorReflexes/users/misc6/NachoProblem_anim.dds", 13, 1, 33}
+u["@Lightshroom"] = {"Lightshroom", "|cee409aL|r|cdd53a4i|r|ccd65aeg|r|cbc78b8h|r|cab8bc2t|r|c9a9ecds|r|c89b1d7h|r|c78c4e1r|r|c68d6ebo|r|c57e9f5o|r|c46fcffm|r", "HodorReflexes/users/misc6/Lightshroom.dds"}
+u["@Nedchik"] = {"Nedchik", "|cd5cf85N|r|cbac490e|r|c9fba9ad|r|c83b0a5c|r|c68a6afh|r|c4d9bbai|r|c3291c4k|r", "HodorReflexes/users/misc6/Nedchik.dds"}
+u["@painelement"] = {"painelement", "|ce83617p|r|cd14a1fa|r|cb95e27i|r|ca2722fn|r|c8b8637e|r|c749b3fl|r|c5daf47e|r|c46c34fm|r|c2ed757e|r|c17eb5fn|r|c00ff67t|r"}
+a["@painelement"] = {"HodorReflexes/users/misc6/painelement_anim.dds", 16, 1, 10}
+u["@BradyNATO7"] = {"BradyNATO7", "|cee748aB|r|cdc8494r|r|ccb939ea|r|cb9a3a8d|r|ca8b2b3y|r|c96c1bdN|r|c85d1c7A|r|c73e0d1T|r|c62f0dbO|r|c50ffe57|r", "HodorReflexes/users/misc6/BradyNATO7.dds"}
+u["@MahhClique"] = {"clq", "|cdc00e0c|r|ced00c1l|r|cff00a2q|r", "HodorReflexes/users/misc6/MahhClique.dds"}
+u["@Chrisprouss"] = {"Chris", "|c5630f4C|r|c702ee9h|r|c892cddr|r|ca32ad2i|r|cbc28c7s|r"}
+a["@Chrisprouss"] = {"HodorReflexes/users/misc6/Chrisprouss_anim.dds", 17, 1, 20}
+u["@dragonflames67"] = {"dragonflames", "|cf126efd|r|ce323f0r|r|cd520f2a|r|cc71df3g|r|cb91af4o|r|cab17f5n|r|c9d15f7f|r|c8f12f8l|r|c810ff9a|r|c730cfam|r|c6509fbe|r|c5706fds|r", "HodorReflexes/users/misc6/dragonflames67.dds"}
+u["@Gaijinmarket"] = {"烈烈风", "|c60aaff烈|r|cb0d5ff烈|r|cffffff风|r", "HodorReflexes/users/misc6/Gaijinmarket.dds"}
+u["@TuonyS"] = {"驼驼子", "|cfaa4f7驼|r|cf4d1f5驼|r|ceffff3子|r", "HodorReflexes/users/misc6/TuonyS.dds"}
+
+
+
