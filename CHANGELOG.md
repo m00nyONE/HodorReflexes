@@ -1,4 +1,4 @@
-## 2024.06.xx - @m00nyONE
+## 2024.07.08 - @m00nyONE
 - fix "ult now" not accounting ult cost reduction - thanks to @kawamonkey
 - fix horn beeing displayed when player is dead - thanks to @kawamonkey
 

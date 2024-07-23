@@ -456,7 +456,7 @@ u["@SekiMou"] = {"Sekiii", "|cffb316Sekiii|r", "HodorReflexes/users/misc/sekimou
 u["@WrathOfInnos"] = {"Wrath", "|c00d7ffWrath|r", "HodorReflexes/users/misc/wrathofinnos.dds"}
 u["@coco.ca"] = {"coco", "|cce1701c|r|cde1f01o|r|cef2600c|r|cff2e00o|r", "HodorReflexes/users/misc/cococabana.dds"}
 u["@Ares8154"] = {"Ares8154", "|c00ff00Ares8154|r", "HodorReflexes/users/misc/ares8154.dds"}
-u["@LeLooty"] = {"LeLooty", "|cff3b83Le|r|ca273c5Looty|r", "HodorReflexes/users/misc/lelooty.dds"}
+u["@LoriEerie"] = {"Lori", "|c5f00eeL|r|c7900ddo|r|c9300cbr|r|cad00bai|r", "HodorReflexes/users/misc/lelooty.dds"}
 u["@Blackmagik"] = {"Blackmagik", "|c27f100Black|r|c000000magik|r", "HodorReflexes/users/misc/blackmagik.dds"}
 u["@iLLmEnTaLz"] = {"iLLz", "|cff1d1diLLz|r", "HodorReflexes/users/misc/illmentalz.dds"}
 u["@iLLmentalz"] = {"iLLz", "|cff1d1diLLz|r", "HodorReflexes/users/misc/illmentalz.dds"}
@@ -994,7 +994,7 @@ u["@Yoshieku"] = {"Yoshieku", "|c00FF7F Yoshieku|r"}
 u["@c0r73x"] = {"c0r73x", "|c636363c0r73x|r", "HodorReflexes/users/misc/c0r73x.dds"}
 u["@Ambernightwing"] = {"Ambernightwing", "|cff1d1dAmbernightwing|r", "HodorReflexes/users/misc/ambernightwing.dds"}
 u["@Badger3981"] = {"Badger3981", "|c1344fcBadger3981|r", "HodorReflexes/users/misc/badger3981.dds"}
-u["@MK_94"] = {"MARK", "|cff1414M|r|cffffffAR|r|cff1414K|r", "HodorReflexes/users/misc/mk94.dds"}
+u["@Stylez_00"] = {"MARK", "|cff1414M|r|cffffffAR|r|cff1414K|r", "HodorReflexes/users/misc/Stylez_00.dds"}
 u["@alavesti"] = {"alavesti", "|c39ff2balavesti|r", "HodorReflexes/users/misc/alavesti.dds"}
 u["@ROACH_O"] = {"ROACH", "|cff0028ROACH|r", "HodorReflexes/users/misc/roacho2.dds"}
 
