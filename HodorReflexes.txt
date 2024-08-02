@@ -41,6 +41,7 @@ users/pushdeeps/pushdeeps.lua
 users/cfm/cfm.lua
 users/mot/mot.lua
 users/moo/moo.lua
+users/corsair/corsair.lua
 
 users/integritycheck.xml
 users/integritycheck.lua
