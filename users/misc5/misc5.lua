@@ -1010,4 +1010,5 @@ u["@onnuk"] = {"onnuk", "|c14e014o|r|c28c128n|r|c3ba13bn|r|c4f824fu|r|c636363k|r
 u["@NoWnuggets"] = {"NoWnuggets", "|cf31d1aN|r|cf43433o|r|cf44c4dW|r|cf56366n|r|cf57b80u|r|cf59299g|r|cf6aab3g|r|cf6c1cce|r|cf7d9e5t|r|cf7f0ffs|r", "HodorReflexes/users/misc5/NoWnuggets.dds"}
 u["@Kleinkevin"] = {"ÄmpKävin", "|c3313c7Ä|r|c5011cem|r|c6d0ed6p|r|c8b0bddK|r|ca808e5ä|r|cc506ecv|r|ce203f4i|r|cff00fbn|r", "HodorReflexes/users/misc5/Kleinkevin.dds"}
 --a["@Kleinkevin"] = {"HodorReflexes/users/misc5/Kleinkevin_anim.dds", 6, 5, 14}
+u["@Tergon1988"] = {"Tergon1988", "|c0b46a3Tergon1988|r", "HodorReflexes/users/misc5/Tergon1988.dds"}
 -- end
