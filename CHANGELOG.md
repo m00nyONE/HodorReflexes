@@ -1,3 +1,6 @@
+## 2024.XX.XX - @m00nyONE
+- move hide popup binding to share module where it belongs
+
 ## 2024.08.25 - @m00nyONE
 - add keybind to close Hodor update popup. Steamdeck users now can close the window by binding it to a key. Closes: https://github.com/m00nyONE/HodorReflexes/issues/4
 - bump api to 101042 101043

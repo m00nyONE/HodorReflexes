@@ -10,6 +10,9 @@
 			<Action name="HR_BINDING_MISCULTIMATES_SHARE">
 				<Down>HodorReflexes.modules.share.ToggleMiscUltimatesShare()</Down>
 			</Action>
+			<Action name="HR_BINDING_CLOSE_UPDATE_POPUP">
+				<Down>HodorReflexes_Updated:SetHidden(true)</Down>
+			</Action>
 		</Category>
 	</Layer>
 </Bindings>
