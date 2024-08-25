@@ -1,6 +1,6 @@
 HodorReflexes = {
 	name = "HodorReflexes",
-	version = "2024.07.08",
+	version = "2024.08.25",
 
 	-- Default settings
 	default = {
