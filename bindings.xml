@@ -4,6 +4,9 @@
 			<Action name="HR_EXIT_INSTANCE">
 				<Down>HodorReflexes.ExitInstance()</Down>
 			</Action>
+			<Action name="HR_BINDINGS_CLOSE_UPDATE_POPUP">
+				<Down>HodorReflexes_Updated:SetHidden(true)</Down>
+			</Action>
 		</Category>
 	</Layer>
 </Bindings>

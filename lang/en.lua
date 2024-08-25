@@ -192,6 +192,7 @@ local strings = {
 	HR_BINDING_COUNTDOWN = "Countdown",
 	HR_BINDING_EXIT_INSTANCE = "Exit Instance Immediately",
 	HR_BINDING_SEND_EXIT_INSTANCE = "Eject Group",
+	HR_BINDINGS_CLOSE_UPDATE_POPUP = "Close update popup",
 
 	-------------------------
 	-- SHARE MODULE

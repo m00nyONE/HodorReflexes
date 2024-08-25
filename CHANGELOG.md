@@ -1,3 +1,6 @@
+## 2024.08.25 - @m00nyONE
+- add keybind to close Hodor update popup. Steamdeck users now can close the window by binding it to a key. Closes: https://github.com/m00nyONE/HodorReflexes/issues/4
+
 ## 2024.07.08 - @m00nyONE
 - fix "ult now" not accounting ult cost reduction - thanks to @kawamonkey
 - fix horn beeing displayed when player is dead - thanks to @kawamonkey
