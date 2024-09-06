@@ -2,7 +2,7 @@
 
 local u = HodorReflexes.users
 local a = HodorReflexes.anim.users
-
+LetsGerwin
 u["@nacktermann"] = {"@nacktermann", "|cff2b32n|r|cff2b32a|r|cff4047c|r|cff555bk|r|cff6a70t|r|cff7f84e|r|cff9599r|r|cffaaadm|r|cffbfc2a|r|cffd5d6n|r|cffeaebn|r|", "HodorReflexes/users/misc3/tob145.dds"}
 u["@c117"] = {"c117", "|c27fab6c|r|c1bf5ce1|r|c10f0e71|r|c04ebff7|r"}
 u["@KampfKeks13"] = {"KampfKeks", "|ce31c1cK|r|cc63938a|r|caa5555m|r|c8e7171p|r|c718e8df|r|c55aaa9K|r|c39c6c6e|r|c1ce3e2k|r|c00fffes|r", "HodorReflexes/users/misc3/kampfkeks13.dds"}
@@ -656,7 +656,8 @@ u["@SuperSquirtles"] = {"SuperSquirtles", "|c1b0fb8S|r|c2c1faau|r|c3d2e9cp|r|c4e
 u["@LyChen99"] = {"Chen", "|cffc800Chen|r"}
 u["@BitCopper"] = {"BitCopper", "|cffb72eBitCopper|r", "HodorReflexes/users/misc3/BitCopper3.dds"}
 u["@ItsEntrail"] = {"ItsEntrail", "|ce800c6I|r|cd000cdt|r|cb900d3s|r|ca200d9E|r|c8b01e0n|r|c7301e6t|r|c5c01ecr|r|c4501f2a|r|c2d01f9i|r|c1601ffl|r", "HodorReflexes/users/misc3/itsentrail.dds"}
-u["@LetsGerwin"] = {"Gawmin", "|c5eff5dGawmin|r", "HodorReflexes/users/misc3/letsgerwin.dds"}
+u["@LetsGerwin"] = {"Gawmin", "|c5eff5dGawmin|r"}
+a["@LetsGerwin"] = {"HodorReflexes/users/misc3/LetsGerwin_anim.dds", 8, 3, 11}
 u["@Storm_Artificer"] = {"Storm", "|c0009ffS|r|c000bfft|r|c000effo|r|c0010ffr|r|c0012ffm|r", "HodorReflexes/users/misc3/stormartificer.dds"}
 u["@SamXVII"] = {"SAM-XVII-", "|c16e39fS|r|c25c6abA|r|c35aab7M|r|c458ec3-|r|c5471cfX|r|c6455dbV|r|c7439e7I|r|c831cf3I|r|c9300ff-|r", "HodorReflexes/users/misc3/samxvii.dds"}
 u["@Giltine777"] = {"ADI", "|c5d4eb9A|r|cae4672D|r|cff3e2cI|r", "HodorReflexes/users/misc3/giltine777.dds"}
