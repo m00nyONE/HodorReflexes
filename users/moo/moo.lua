@@ -81,7 +81,7 @@ a["@Artaphernes"] = {"HodorReflexes/users/moo/Artaphernes_anim.dds", 6, 5, 12.5}
 u["@Natolia"] = {"Natolia", "|cdb24edN|r|cb648f0a|r|c926cf3t|r|c6d91f6o|r|c49b5f9l|r|c24d9fci|r|c00fdffa|r"}
 a["@Natolia"] = {"HodorReflexes/users/moo/Natolia_anim.dds", 8, 1, 10}
 
-u["@sushiman573"] = {"Susi", "|caac634S|r|cc6a62du|r|ce38525s|r|cff651ei|r", "HodorReflexes/users/moo/sushiman573.dds"}
+u["@sushiman573"] = {"Swooshi", "|caac634S|r|cc6a62du|r|ce38525s|r|cff651ei|r", "HodorReflexes/users/moo/sushiman573.dds"}
 
 u["@skinnycheeks"] = {"skinny", "|c084b90skinny|r", "HodorReflexes/users/moo/skinnycheeks.dds"}
 
