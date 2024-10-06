@@ -1,3 +1,5 @@
+-- 2023
+
 local u = HodorReflexes.users
 local a = HodorReflexes.anim.users
 
@@ -153,7 +155,7 @@ a["@Zizira"] = {"HodorReflexes/users/misc5/Zizira_anim.dds", 10, 5, 26}
 u["@DTA_REDHAWK"] = {"REDHAWK", "|cff6b00R|r|cff6000E|r|cff5600D|r|cff4b00H|r|cff4100A|r|cff3600W|r|cff2c00K|r", "HodorReflexes/users/misc5/DTA_REDHAWK.dds"}
 u["@Jeff920"] = {"Jeff920", "|c7e9fffJ|r|c8498ffe|r|c8b91fff|r|c918afff|r|c9883ff9|r|c9e7cff2|r|ca575ff0|r"}
 a["@Jeff920"] = {"HodorReflexes/users/misc5/Jeff920_anim3.dds", 11, 1, 20}
-u["@Grasps"] = {"Grasp", "|c170badGrasp|r", "HodorReflexes/users/misc5/Grasps.dds"}
+u["@G'az"] = {"Gaz", "|c170badGaz|r", "HodorReflexes/users/misc5/Gaz.dds"}
 --a["@Grasps"] = {"HodorReflexes/users/misc5/Grasps_anim.dds", 5, 2, 10}
 u["@YAKKSHA"] = {"YAKSHA", "|cf204d5Y|r|cf407aaA|r|cf70b80K|r|cfa0f55S|r|cfc122bH|r|cff1600A|r", "HodorReflexes/users/misc5/YAKKSHA4.dds"}
 u["@Yorshka7s"] = {"Yorshka7s", "|c6bd2ffY|r|c64c7ffo|r|c5cbcffr|r|c54b1ffs|r|c4da5ffh|r|c459affk|r|c3d8fffa|r|c3684ff7|r|c2e79ffs|r", "HodorReflexes/users/misc5/Yorshka7s.dds"}
