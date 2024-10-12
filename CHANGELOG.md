@@ -1,4 +1,4 @@
-## 2024.XX.XX - @m00nyONE
+## 2024.10.12 - @m00nyONE
 - move hide popup binding to share module where it belongs
 
 ## 2024.08.25 - @m00nyONE
