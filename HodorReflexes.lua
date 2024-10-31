@@ -41,11 +41,13 @@ local optionControls = {} -- additional addon settings provided by modules
 local KEYBOARD_STYLES = {
 	titleTemplate = "HodorReflexes_Updated_Title_Keyboard_Template",
 	dismissTemplate = "HodorReflexes_Updated_Dismiss_Keyboard_Template",
+	--dismissWithIntegrityTemplate = "HodorReflexes_Updated_Dismiss_With_Integrity_Keyboard_Template",
 }
 
 local GAMEPAD_STYLES =  {
 	titleTemplate = "HodorReflexes_Updated_Title_Gamepad_Template",
 	dismissTemplate = "HodorReflexes_Updated_Dismiss_Gamepad_Template",
+	--dismissWithIntegrityTemplate = "HodorReflexes_Updated_Dismiss_With_Integrity_Gamepad_Template",
 }
 
 local incompatibleDependencyWarningTriggered = false
@@ -100,6 +102,7 @@ local function UpdatePlatformStyles(styleTable)
 
     ApplyTemplateToControl(HodorReflexes_Updated_Title, styleTable.titleTemplate)
     ApplyTemplateToControl(HodorReflexes_Updated_Dismiss, styleTable.dismissTemplate)
+    --ApplyTemplateToControl(HodorReflexes_Updated_Dismiss_With_Integrity, styleTable.dismissWithIntegrityTemplate)
 
 end
 

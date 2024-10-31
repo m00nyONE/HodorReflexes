@@ -12,6 +12,17 @@
                 <Texture name="$(parent)GamepadIcon" hidden="true" />
             </Controls>
         </Button>
+<!--        <Button name="HodorReflexes_Updated_Dismiss_With_Integrity_Keyboard_Template" inherits="ZO_DefaultButton" text="HR_UPDATED_INTEGRITY" virtual="true">-->
+<!--            <Dimensions x="200" y="28" />-->
+<!--            <Anchor point="BOTTOM" offsetY="-3" />-->
+<!--            <OnClicked>-->
+<!--                HodorReflexes_Updated:SetHidden(true)-->
+<!--                HodorReflexes.integrity.Check()-->
+<!--            </OnClicked>-->
+<!--            <Controls>-->
+<!--                <Texture name="$(parent)GamepadIcon" hidden="true" />-->
+<!--            </Controls>-->
+<!--        </Button>-->
 
         <!-- Gamepad Templates-->
         <Label name="HodorReflexes_Updated_Title_Gamepad_Template" font="ZoFontGamepadBold34" text="HR_UPDATED_TITLE" color="FFFF00" wrapMode="ELLIPSIS" virtual="true">
@@ -36,6 +47,26 @@
                 </Texture>
             </Controls>
         </Button>
+<!--        <Button name="HodorReflexes_Updated_Dismiss_With_Integrity_Gamepad_Template" inherits="ZO_DefaultButton ZO_ButtonBehaviorClickSound" font="ZoFontGamepadBold22" text="HR_UPDATED_INTEGRITY" endCapWidth="9" verticalAlignment="CENTER" mouseOverBlendMode="ADD" virtual="true">-->
+<!--            <Dimensions x="200" y="28" />-->
+<!--            <Anchor point="BOTTOM" offsetY="-3" />-->
+<!--            <OnClicked>-->
+<!--                HodorReflexes_Updated:SetHidden(true)-->
+<!--                HodorReflexes.integrity.Check()-->
+<!--            </OnClicked>-->
+<!--            <Controls>-->
+<!--                <Texture name="$(parent)GamepadIcon" keyboardEnabled="true" hidden="true">-->
+<!--                    <Dimensions x="40" y="40" />-->
+<!--                    <Anchor point="RIGHT" relativePoint="LEFT" />-->
+<!--                    <OnKeyDown>-->
+<!--                        if key == KEY_GAMEPAD_BUTTON_2 then-->
+<!--                            HodorReflexes_Updated:SetHidden(true)-->
+<!--                            HodorReflexes.integrity.Check()-->
+<!--                        end-->
+<!--                    </OnKeyDown>-->
+<!--                </Texture>-->
+<!--            </Controls>-->
+<!--        </Button>-->
 
         <TopLevelControl name="HodorReflexes_Updated" clampedToScreen="true" hidden="true" tier="HIGH">
             <Dimensions x="900" y="230" />
@@ -91,6 +122,15 @@
 						</Texture>
 					</Controls>
 				</Button>
+<!--                <Button name="$(parent)_Dismiss_With_Integrity">-->
+<!--                    <Controls>-->
+<!--                        <Texture name="$(parent)GamepadIcon" inherits="ZO_KeyTexture" hidden="true">-->
+<!--                            <OnInitialized name="HodorReflexes_UpdatedFrame_Integrity">-->
+<!--                                self:SetKeyCode(KEY_GAMEPAD_BUTTON_2)-->
+<!--                            </OnInitialized>-->
+<!--                        </Texture>-->
+<!--                    </Controls>-->
+<!--                </Button>-->
 				
             </Controls>
         </TopLevelControl>

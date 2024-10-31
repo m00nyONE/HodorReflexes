@@ -274,6 +274,7 @@ local strings = {
 
 	HR_UPDATED_TEXT = "Hodor Reflexes has been successfully updated, or maybe not? Unfortunately, when updating via Minion, there is a moderate chance for some files to vanish. Usually they are just icons, usually... So here is a little test of five images from different addon folders. If you don't see all of them, then you should close the game and reinstall the addon. Otherwise, just ignore this message, it won't appear again.",
 	HR_UPDATED_DISMISS = "I see five icons!",
+	--HR_UPDATED_INTEGRITY = "Integrity Check",
 
 	HR_MISSING_ICON = "Couldn't load your Hodor Reflexes icon. Reinstall the addon or download it manually from esoui.com and restart the game.",
 
