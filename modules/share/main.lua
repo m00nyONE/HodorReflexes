@@ -316,6 +316,40 @@ local function SendData()
 
 	local rawData = encodeData(pingType, ultType, ult, dmg, dps)
 
+	--[[
+
+	packet = packet.new(rawdata)
+
+	if packet.version == 0 then
+		if packet.type == META_PACKET then
+
+		end
+
+	end
+
+
+
+	packet = packet.new(version, CTRL_PACKET)
+	packet.data = {
+		dps = dps,
+		dmg = dmg,
+		ult = ult
+	}
+	packet.encode()
+
+
+	when protocol initialized, then wrap functions in the packet itself
+
+	packet.use = ctrlPacketUse()
+	--->
+	sets values
+
+
+
+	package = packet.meta.New(pingType, ultType, ult, dmg, dps)
+	package = packet.data.New()
+	]]--
+
 	share:SendData(rawData)
 
 	-- Own pings are not processed, so we update our data manually.

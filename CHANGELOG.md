@@ -1,3 +1,7 @@
+## 2024.11.17 - @m00nyONE
+- bump api to 101044
+- deduplicate some icons
+
 ## 2024.10.12 - @m00nyONE
 - move hide popup binding to share module where it belongs
 
