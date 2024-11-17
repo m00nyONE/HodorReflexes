@@ -1340,4 +1340,4 @@ a["@EternaIGhost"] = {"HodorReflexes/users/misc6/EternaIGhost_anim.dds", 8, 3, 1
 u["@BYC2OR"] = {"BYCZOR", "|ce1c12eB|r|ce1c434Y|r|ce1c73bC|r|ce1c942Z|r|ce1cc48O|r|ce1cf4fR|r", "HodorReflexes/users/misc6/BYC2OR.dds"}
 u["@KingM0n3y"] = {"KingM0n3y", "|cff1920K|r|cff2d20i|r|cff4120n|r|cff5520g|r|cff691fM|r|cff7d1f0|r|cff911fn|r|cffa51f3|r|cffb91fy|r"}
 a["@KingM0n3y"] = {"HodorReflexes/users/misc6/KingM0n3y_anim.dds", 11, 3, 25}
-u["@Arkti_kA"] = {"Arkti_kA", "|cfc45d9A|r|cf954d7r|r|cf563d5k|r|cf272d3t|r|cef81d0i|r|cec90ce|r|ce89fcck|r|ce5aecaA|r", "HodorReflexes/users/misc6/Arkti_kA.dds"}
+u["@Arkti_kA"] = {"Arkti_kA", "|cfc45d9A|r|cf954d7r|r|cf563d5k|r|cf272d3t|r|cef81d0i|r|cec90ce_|r|ce89fcck|r|ce5aecaA|r", "HodorReflexes/users/misc6/Arkti_kA.dds"}
