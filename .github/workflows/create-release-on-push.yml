@@ -55,7 +55,6 @@ jobs:
           makeLatest: true
 
       - name: Send to ESOUI
-        if: false
         env:
           ESOUI_API_KEY: ${{ secrets.ESOUI_API_KEY }}
           ADDON_ID: 2311
