@@ -1,3 +1,7 @@
+## 2024.12.06 - @m00nyONE
+- new build pipeline for HodorReflexes - it now builds inside github actions & pushes the final addon.zip to ESOUI
+- this might get extended in the future for scheduled releases. You asked for smaller waiting times, now you maybe get them
+
 ## 2024.11.17 - @m00nyONE
 - bump api to 101044
 - deduplicate some icons

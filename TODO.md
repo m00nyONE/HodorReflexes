@@ -6,10 +6,15 @@
   - at the start of combat
 
 ## priority mid:
-- integrity checks
 - add compact table for sharing ultimates
 
 ## priority low:
 
 ## just thoughts:
 - adding Hodor icons to RectOver TargetFrame instead of CP symbol ???
+
+## repo todos:
+- add workflow to check if every user has an icon assigned and nothing is missing
+- make lua linting work with exceptions
+- weekly scheduled-release to ESOUI
+- create automatic dev pre-release release
