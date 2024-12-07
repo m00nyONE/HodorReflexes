@@ -21,3 +21,6 @@ u["@Halox48"] = {"Haløx ", "|c00e6ffH|r|c00cfffa|r|c00b9ffl|r|c00a2ffø|r|c008c
 a["@Halox48"] = {"HodorReflexes/users/corsair/Halox2_anim.dds", 48, 1, 10}
 u["@JohnAmok"] = {"Oli", "|c1143ffO|r|c2169ffl|r|c328effi|r", "HodorReflexes/users/corsair/oli.dds"}
 u["@Lulu_Laventus"] = {"Lulu Laventus", "|c1e08ffL|r|c2408ffu|r|c2b07ffl|r|c3106ffu|r |c3705ffL|r|c3d05ffa|r|c4304ffv|r|c4903ffe|r|c5002ffn|r|c5602fft|r|c5c01ffu|r|c6200ffs|r", "HodorReflexes/users/corsair/lulu.dds"}
+u["@cpcharles"] = {"Charles", "|c7c9dc7C|r|c68aad1h|r|c53b7daa|r|c3ec5e3r|r|c29d2ecl|r|c15dff6e|r|c00ecffs|r", "HodorReflexes/users/corsair/cpcharles.dds"}
+u["@Petitefeuille"] = {"Petitefeuille", "|cdf5334P|r|ce15e3ee|r|ce46947t|r|ce77351i|r|ce97e5at|r|cec8963e|r|cef946df|r|cf29f76e|r|cf4aa7fu|r|cf7b489i|r|cfabf92l|r|cfcca9cl|r|cffd5a5e|r", "HodorReflexes/users/corsair/petitefeuille.dds"}
+u["@Uni_ESO"] = {"Uni", "|c8a0008U|r|cb3000an|r|cdb000di|r", "HodorReflexes/users/corsair/uni_eso.dds"}
