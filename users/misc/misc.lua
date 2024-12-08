@@ -753,7 +753,6 @@ u["@Tura123"] = {"Tura123", "|c0e7b9fT|r|c108fb8u|r|c12a4d4r|r|c15c5ffa|r", "Hod
 u["@Eywa777"] = {"Eywa777", "|ca83aa4E|r|cbf42bay|r|cd84ad2w|r|cff57f7a|r", "HodorReflexes/users/misc/eywa777.dds"}
 u["@Aizeq"] = {"Aizeq", "|c1a78ffAizeq|r", "HodorReflexes/users/misc/aizeq.dds"}
 u["@Fluxx3"] = {"Fluxx3", "|cffeb00Fluxx3|r", "HodorReflexes/users/misc/fluxx3.dds"}
-u["@cpcharles"] = {"Charles", "|c00d6ffCharles|r", "HodorReflexes/users/misc/cpcharles.dds"}
 u["@Arcane_Morrigan"] = {"Morrigan", "|ca45ee5Morrigan|r", "HodorReflexes/users/misc/arcanemorrigan.dds"}
 u["@liborio"] = {"liborio", "|c00d505li|r|cffffffbor|r|cff2020io|r", "HodorReflexes/users/misc/liborio.dds"}
 u["@Z0Y0.x"] = {"Z0Y0.x", "|c990000 Z 0 Y 0 |r", "HodorReflexes/users/misc/Z0Y0.x.dds"}
