@@ -1,0 +1,56 @@
+name: Create Dev Release on Push
+
+on:
+  #schedule:
+  # every saturday at 05:07am
+  #  - cron: "7 5 * * 0"
+  push:
+    branches:
+      - main
+
+jobs:
+  release:
+    name: "release"
+    runs-on: ubuntu-latest
+    permissions: write-all
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Get current year, month and day
+        run: |
+          echo "BUILD_DATE_YEAR=$(date -u +'%Y')" >> $GITHUB_ENV
+          echo "BUILD_DATE_MONTH=$(date -u +'%m')" >> $GITHUB_ENV
+          echo "BUILD_DATE_DAY=$(date -u +'%d')" >> $GITHUB_ENV
+          echo "BUILD_DATE_NUMBER=$(date +'%Y%m%d')" >> $GITHUB_ENV
+          echo "BUILD_DATE_WITH_DOT=$(date +'%Y.%m.%d')" >> $GITHUB_ENV
+          echo "BUILD_DATE_WITH_HYPHEN=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+
+      - name: Replace placeholders with current date
+        run: |
+          sed -i "s/version = \"dev\"/version = \"${{ env.BUILD_DATE_WITH_DOT }}-dev\"/g" HodorReflexes.lua
+          sed -i "s/## Version: dev/## Version: ${{ env.BUILD_DATE_WITH_DOT }}-dev/g" HodorReflexes.txt
+          sed -i "s/## AddOnVersion: 00000000/## AddOnVersion: ${{ env.BUILD_DATE_NUMBER }}/g" HodorReflexes.txt
+
+      - name: Create ZIP archive
+        run: |
+          REPO_FOLDER=$(pwd)
+          mkdir -p /tmp/HodorReflexes
+          cp -r ./* /tmp/HodorReflexes
+          rm -rf /tmp/HodorReflexes/{.git,.github,.gitignore}
+          cd /tmp
+          zip -r "$REPO_FOLDER/HodorReflexes-${{ env.BUILD_DATE_WITH_HYPHEN }}-dev.zip" ./HodorReflexes -x "*.git*" "*.github*" ".gitignore"
+
+      - name: Create GitHub Release
+        uses: ncipollo/release-action@v1
+        with:
+          name: "${{ env.BUILD_DATE_WITH_DOT }}-dev"
+          commit: ${{ github.ref }}
+          tag: "${{ env.BUILD_DATE_WITH_DOT }}"
+          artifacts: "HodorReflexes-${{ env.BUILD_DATE_WITH_HYPHEN }}-dev.zip"
+          artifactContentType: application/zip
+          bodyFile: CHANGELOG.md
+          allowUpdates: true
+          makeLatest: true
+          prerelease: true
+          updateOnlyUnreleased: true
