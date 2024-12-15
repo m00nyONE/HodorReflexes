@@ -1,5 +1,6 @@
 ## 2024.12.15 - @m00nyONE
 - Implementing "Listen Before Transmit" (LBT): Hodor now checks if other group members are using the add-on before sharing data. This helps reduce unnecessary pings and minimizes stress on the ESO API.
+- update screen now shows your friends <3
 
 ## 2024.12.10 - @m00nyONE
 - finetune pipelines

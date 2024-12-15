@@ -635,8 +635,13 @@ function M.ApplyStyle()
 end
 
 
-local function initializeUpdateIcons()
+--- Initializes and updates texture controls with user icons or animations for the HodorReflexes addon.
+--- The function populates up to 5 texture controls with icons of friends who have valid icons or animations,
+--- ensuring a minimum of 4 entries by adding random user IDs if necessary.
+--- Additionally, it displays a version update window and notifies the player if any icons are missing.
 
+local function initializeUpdateIcons()
+	--- List of texture controls to be updated with icons, excluding the player's icon.
 	local updatedTextureControls = {
 		HodorReflexes_Updated_Icon4,
 		HodorReflexes_Updated_Icon3,
@@ -644,6 +649,9 @@ local function initializeUpdateIcons()
 		HodorReflexes_Updated_Icon1,
 	}
 
+	--- Updates a texture control with the given user ID's icon or animation.
+	--- @param userId string The user ID of the player whose icon or animation will be displayed.
+	--- @param texture_control userdata The texture control to update with the user's icon or animation.
 	local function _setUpdateIconOnTextureControl(userId, texture_control)
 		local userIcon = player.GetIconForUserId(userId)
 		texture_control:SetTextureCoords(0, 1, 0, 1)
@@ -655,15 +663,19 @@ local function initializeUpdateIcons()
 		end
 	end
 
+	--- Retrieves a list of friends with valid icons or animations.
+	--- @return table A list of user IDs for friends with valid icons or animations.
 	local function _getFriendsWithIcons()
 		local friends = {}
 		local numFriends = GetNumFriends()
 
+		-- Gather all friend display names.
 		for i = 1, numFriends do
 			local displayName, _, _, _, _, _, _, _, _, _ = GetFriendInfo(i)
 			table.insert(friends, displayName)
 		end
 
+		-- Filter friends who have valid icons or animations.
 		local filteredFriends = {}
 		for _, userId in ipairs(friends) do
 			if player.GetIconForUserId(userId) or HR.anim.IsValidUser(userId) then
@@ -674,6 +686,7 @@ local function initializeUpdateIcons()
 		return filteredFriends
 	end
 
+	-- Retrieve friends with icons and fill up to 4 entries with random user IDs if needed.
 	local updateIcons = _getFriendsWithIcons()
 	if #updateIcons < 4 then
 		local iconsNeeded = 4 - #updateIcons
@@ -682,13 +695,17 @@ local function initializeUpdateIcons()
 		end
 	end
 
+	-- Set the player's icon to the main texture control.
 	_setUpdateIconOnTextureControl(GetUnitDisplayName('player'), HodorReflexes_Updated_Icon5)
-	for i, control in ipairs(updatedTextureControls)  do
+
+	-- Update the other texture controls with user icons or animations.
+	for i, control in ipairs(updatedTextureControls) do
 		_setUpdateIconOnTextureControl(updateIcons[i], control)
 	end
 
-	-- Show version update window and notify player if his icon is missing.
+	--- Checks for missing icons and shows the version update window if required.
 	zo_callLater(function()
+		-- Notify the player if any icons failed to load.
 		if not (HodorReflexes_Updated_Icon5:IsTextureLoaded()
 			and HodorReflexes_Updated_Icon4:IsTextureLoaded()
 			and HodorReflexes_Updated_Icon3:IsTextureLoaded()
@@ -696,7 +713,8 @@ local function initializeUpdateIcons()
 			and HodorReflexes_Updated_Icon1:IsTextureLoaded()) then
 			d(strformat("|cFF6600%s|r", GetString(HR_MISSING_ICON)))
 		end
-		-- Version update window.
+
+		-- Display the version update window if there is a new version.
 		if SW.lastIconsVersion ~= HR.version then
 			SW.lastIconsVersion = HR.version
 			PlaySound(SOUNDS.BOOK_COLLECTION_COMPLETED)
