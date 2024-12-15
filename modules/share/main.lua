@@ -634,6 +634,78 @@ function M.ApplyStyle()
 	end
 end
 
+
+local function initializeUpdateIcons()
+
+	local updatedTextureControls = {
+		HodorReflexes_Updated_Icon4,
+		HodorReflexes_Updated_Icon3,
+		HodorReflexes_Updated_Icon2,
+		HodorReflexes_Updated_Icon1,
+	}
+
+	local function _setUpdateIconOnTextureControl(userId, texture_control)
+		local userIcon = player.GetIconForUserId(userId)
+		texture_control:SetTextureCoords(0, 1, 0, 1)
+		if HR.anim.RegisterUser(userId) then
+			HR.anim.RegisterUserControl(userId, texture_control)
+			HR.anim.RunUserAnimations(userId)
+		elseif userIcon then
+			texture_control:SetTexture(userIcon)
+		end
+	end
+
+	local function _getFriendsWithIcons()
+		local friends = {}
+		local numFriends = GetNumFriends()
+
+		for i = 1, numFriends do
+			local displayName, _, _, _, _, _, _, _, _, _ = GetFriendInfo(i)
+			table.insert(friends, displayName)
+		end
+
+		local filteredFriends = {}
+		for _, userId in ipairs(friends) do
+			if player.GetIconForUserId(userId) or HR.anim.IsValidUser(userId) then
+				table.insert(filteredFriends, userId)
+			end
+		end
+
+		return filteredFriends
+	end
+
+	local updateIcons = _getFriendsWithIcons()
+	if #updateIcons < 4 then
+		local iconsNeeded = 4 - #updateIcons
+		for _ = 1, iconsNeeded do
+			table.insert(updateIcons, player.GetRandomUserId())
+		end
+	end
+
+	_setUpdateIconOnTextureControl(GetUnitDisplayName('player'), HodorReflexes_Updated_Icon5)
+	for i, control in ipairs(updatedTextureControls)  do
+		_setUpdateIconOnTextureControl(updateIcons[i], control)
+	end
+
+	-- Show version update window and notify player if his icon is missing.
+	zo_callLater(function()
+		if not (HodorReflexes_Updated_Icon5:IsTextureLoaded()
+			and HodorReflexes_Updated_Icon4:IsTextureLoaded()
+			and HodorReflexes_Updated_Icon3:IsTextureLoaded()
+			and HodorReflexes_Updated_Icon2:IsTextureLoaded()
+			and HodorReflexes_Updated_Icon1:IsTextureLoaded()) then
+			d(strformat("|cFF6600%s|r", GetString(HR_MISSING_ICON)))
+		end
+		-- Version update window.
+		if SW.lastIconsVersion ~= HR.version then
+			SW.lastIconsVersion = HR.version
+			PlaySound(SOUNDS.BOOK_COLLECTION_COMPLETED)
+			HodorReflexes_Updated:SetHidden(false)
+		end
+	end, 1000)
+end
+
+
 -- This addon checks if someone in the group also has Hodor installed to minimize stress on the ESO API and avoid sending data to players who cannot process it.
 function M.Initialize()
 
@@ -654,29 +726,7 @@ function M.Initialize()
 	SV = M.sv
 	SW = M.sw
 
-	-- Load user icon, if he has one.
-	local userId = GetUnitDisplayName('player')
-	local userIcon = player.GetIconForUserId(userId)
-	HodorReflexes_Updated_Icon5:SetTextureCoords(0, 1, 0, 1)
-	if HR.anim.RegisterUser(userId) then
-		HR.anim.RegisterUserControl(userId, HodorReflexes_Updated_Icon5)
-		HR.anim.RunUserAnimations(userId)
-	elseif userIcon then
-		HodorReflexes_Updated_Icon5:SetTexture(userIcon)
-	end
-
-	-- Show version update window and notify player if his icon is missing.
-	zo_callLater(function()
-		if not HodorReflexes_Updated_Icon5:IsTextureLoaded() then
-			d(strformat("|cFF6600%s|r", GetString(HR_MISSING_ICON)))
-		end
-		-- Version update window.
-		if SW.lastIconsVersion ~= HR.version then
-			SW.lastIconsVersion = HR.version
-			PlaySound(SOUNDS.BOOK_COLLECTION_COMPLETED)
-			HodorReflexes_Updated:SetHidden(false)
-		end
-	end, 1000)
+	initializeUpdateIcons()
 
 	-- Set default values for custom name and color.
 	if not IsValidString(SW.myIconPathFull) then

@@ -92,3 +92,15 @@ function player.GetIconForUserId(id)
 	end
 
 end
+
+function player.GetRandomUserId()
+	local keys = {}
+	for userId in pairs(users) do
+		table.insert(keys, userId)
+	end
+	if #keys > 0 then
+		local randomIndex = math.random(#keys)
+		return keys[randomIndex]
+	end
+	return nil
+end
