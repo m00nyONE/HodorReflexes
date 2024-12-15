@@ -80,14 +80,14 @@ HodorReflexes.modules.share = {
 
 local HR = HodorReflexes
 local M = HR.modules.share
-local SV = nil -- shortcut for M.sv
-local SW = nil -- shortcut for M.sw
+local SV -- shortcut for M.sv
+local SW -- shortcut for M.sw
 
 local LDS = LibDataShare
 local EM = EVENT_MANAGER
 
 local controlsVisible = false -- current state of UI controls
-local countdownVisible = false
+--local countdownVisible = false
 
 -- Ultimate types.
 local ULT_MISC = 0
@@ -104,7 +104,7 @@ local ULT_HORN_ATRO = 9
 --local ULT_HORN_ULT5 = 11
 --local ULT_HORN_ULT6 = 12
 --local ULT_HORN_ULT7 = 13
-local ULT_COLOS_ATRO = 14 -- this can't exist
+--local ULT_COLOS_ATRO = 14 -- this can't exist
 --local ULT_COLOS_ULT4 = 15
 --local ULT_COLOS_ULT5 = 16
 --local ULT_COLOS_ULT6 = 17
@@ -161,7 +161,7 @@ local atronachEnd = 0 -- atronach end time
 local berserkEnd = 0 -- major berserk end time
 local atronachActive, berserkActive = false, false
 
-local countdownTimeline = nil -- Horn and Colossus animation timeline
+local countdownTimeline -- Horn and Colossus animation timeline
 
 local DATA_PREFIX = 100000000000
 
@@ -723,7 +723,8 @@ function M.Initialize()
 	M.ApplyStyle()
 
 	-- Add hotkey to exit instance
-	local function OnStateChanged(oldState, newState)
+	--local function OnStateChanged(oldState, newState)
+	local function OnStateChanged(_, newState)
 		if newState == SCENE_FRAGMENT_SHOWING and IsUnitGroupLeader('player') then
 			KEYBIND_STRIP:AddKeybindButton(sendExitInstanceButton)
 		elseif newState == SCENE_FRAGMENT_HIDING then
@@ -928,7 +929,8 @@ do
 		HNT_FRAGMENT:Refresh()
 	end
 
-	function M.OnHornEffectChanged(_, change, _, _, _, beginTime, endTime, _, _, _, _, _, _, _, _, abilityId)
+	--function M.OnHornEffectChanged(_, change, _, _, _, beginTime, endTime, _, _, _, _, _, _, _, _, abilityId)
+	function M.OnHornEffectChanged(_, change, _, _, _, _, endTime, _, _, _, _, _, _, _, _, abilityId)
 		-- War Horn or Major Force cast
 		if change == EFFECT_RESULT_GAINED then
 			local t = time()
@@ -995,7 +997,8 @@ do
 		colosEnd = time() + 3000
 	end
 
-	function M.MajorVulnerability(_, changeType, _, _, _, beginTime, endTime, _, _, _, _, _, _, _, _, abilityId)
+	--function M.MajorVulnerability(_, changeType, _, _, _, beginTime, endTime, _, _, _, _, _, _, _, _, abilityId)
+	function M.MajorVulnerability(_, changeType, _, _, _, _, endTime, _, _, _, _, _, _, _, _, _)
 		if changeType == EFFECT_RESULT_GAINED or changeType == EFFECT_RESULT_UPDATED and endTime > 0 then
 			-- Convert endTime to time() format
 			endTime = zo_ceil(endTime * 1000)
@@ -1084,7 +1087,8 @@ do
 
 	end
 
-	function M.MajorBerserk(_, changeType, _, _, _, beginTime, endTime, _, _, _, _, _, _, _, _, abilityId)
+	--function M.MajorBerserk(_, changeType, _, _, _, beginTime, endTime, _, _, _, _, _, _, _, _, abilityId)
+	function M.MajorBerserk(_, changeType, _, _, _, _, endTime, _, _, _, _, _, _, _, _, _)
 		if changeType == EFFECT_RESULT_GAINED or changeType == EFFECT_RESULT_UPDATED and endTime > 0 then
 			-- Convert endTime to time() format
 			endTime = zo_ceil(endTime * 1000)
@@ -1492,7 +1496,8 @@ do
 		local rowsAtronach = {}
 
 		-- Update rows
-		for name, data in pairs(M.playersData) do
+		--for name, data in pairs(M.playersData) do
+		for _, data in pairs(M.playersData) do
 			local tag = data.tag
 			local ultRow = data.ultRow
 			local miscUltRow = data.miscUltRow
@@ -1666,7 +1671,7 @@ end
 -- Refresh damage list.
 function M.UpdateDamage()
 	local rows = {}
-	local dmgType = nil
+	local dmgType
 
 	-- Update rows
 	for name, data in pairs(M.playersData) do
