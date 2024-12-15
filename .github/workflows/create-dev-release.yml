@@ -46,7 +46,7 @@ jobs:
         with:
           name: "${{ env.BUILD_DATE_WITH_DOT }}-dev"
           commit: ${{ github.ref }}
-          tag: "${{ env.BUILD_DATE_WITH_DOT }}"
+          tag: "${{ env.BUILD_DATE_WITH_DOT }}-dev"
           artifacts: "HodorReflexes-${{ env.BUILD_DATE_WITH_HYPHEN }}-dev.zip"
           artifactContentType: application/zip
           bodyFile: CHANGELOG.md
