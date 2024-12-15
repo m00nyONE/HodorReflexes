@@ -3,6 +3,7 @@
 - update screen now shows your friends icons <3
 - update the warning message from LibAddonMenu > version 32
 - adding some in-code documentation
+- add LC to mock zones
 
 ## 2024.12.10 - @m00nyONE
 - finetune pipelines

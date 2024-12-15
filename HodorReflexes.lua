@@ -95,6 +95,7 @@ local mockZones = {
 	[1263] = true, -- RG
 	[1344] = true, -- DSR
 	[1427] = true, -- SE
+	[1478] = true, -- LC
 }
 
 
