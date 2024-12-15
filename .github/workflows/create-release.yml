@@ -6,7 +6,7 @@ on:
   #  - cron: "7 5 * * 0"
   push:
     branches:
-      - release
+      - release # to be changed to main with schedule
 
 jobs:
   release:

@@ -1,3 +1,7 @@
+## 2024.12.10 - @m00nyONE
+- finetune pipelines
+- merge icon changes from @B7TxSpeed
+
 ## 2024.12.06 - @m00nyONE
 - new build pipeline for HodorReflexes - it now builds inside github actions & pushes the final addon.zip to ESOUI
 - this might get extended in the future for scheduled releases. You asked for smaller waiting times, now you maybe get them
