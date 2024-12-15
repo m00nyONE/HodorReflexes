@@ -165,6 +165,10 @@ local countdownTimeline = nil -- Horn and Colossus animation timeline
 
 local DATA_PREFIX = 100000000000
 
+local DATA_PING_EXITINSTANCE = 22
+local DATA_PING_HANDSHAKE = 32
+local isGroupMemberSharing = false -- Tracks the number of valid responses
+
 local isNecro = GetUnitClassId('player') == 5
 local isSorc = GetUnitClassId('player') == 2
 local playerClassId = GetUnitClassId('player')
@@ -349,11 +353,13 @@ local function SendData()
 	package = packet.meta.New(pingType, ultType, ult, dmg, dps)
 	package = packet.data.New()
 	]]--
-
-	share:SendData(rawData)
-
+	
 	-- Own pings are not processed, so we update our data manually.
 	M.UpdatePlayerData(playerTag, pingType, ultType, ult, dmg, dps, lastPingTime)
+
+	if isGroupMemberSharing then
+		share:SendData(rawData)
+	end
 end
 
 -- Send a number between 1 and 449953.
@@ -379,7 +385,7 @@ end
 local function SendExitInstance()
 	if exitInstancePending then return end -- prevent button spam
 	-- Leave yourself only after the ping is sent.
-	M.SendCustomData(22, false, function()
+	M.SendCustomData(DATA_PING_EXITINSTANCE, false, function()
 		if CanExitInstanceImmediately() then
 			zo_callLater(function()
 				exitInstancePending = false
@@ -628,6 +634,7 @@ function M.ApplyStyle()
 	end
 end
 
+-- This addon checks if someone in the group also has Hodor installed to minimize stress on the ESO API and avoid sending data to players who cannot process it.
 function M.Initialize()
 
 	-- Register Vvardenfell map for data sharing.
@@ -828,7 +835,13 @@ function M.ToggleEnabled()
 
 end
 
+function M.SendHandshakePing()
+	M.SendCustomData(DATA_PING_HANDSHAKE, false)
+end
+
 function M.GroupChanged()
+	isGroupMemberSharing = false
+	M.SendHandshakePing()
 
 	M.ToggleShare()
 
@@ -1108,9 +1121,13 @@ end
 
 -- Process data decoded from a map ping.
 function M.ProcessData(tag, data, ms)
+	if data > 0 then
+		isGroupMemberSharing = true
+	end
+
 	-- Custom data ping.
 	if data > 0 and data < share:GetMapSize() then
-		if data == 22 and IsUnitGroupLeader(tag) then
+		if data == DATA_PING_EXITINSTANCE and IsUnitGroupLeader(tag) then
 			-- Group leader wants everybody to exit the instance
 			HR.ExitInstance()
 		else
