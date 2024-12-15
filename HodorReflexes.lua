@@ -1,27 +1,54 @@
+--[[
+================================================================================
+HodorReflexes Addon for Elder Scrolls Online (ESO)
+================================================================================
+Author: @andy.s, @m00nyONE, @seadotarley
+Website: https://www.esoui.com/downloads/info2311-HodorReflexes-DPSampUltimateShare.html
+Version: "dev"
+
+Description:
+This addon enhances group coordination and performance tracking in ESO by
+providing features such as DPS sharing, ultimate sharing, mock messages,
+combat state notifications, and more. It utilizes the ESO API to manage
+group-related data, customize UI elements, and enable communication
+between players.
+
+This file contains the core functionality and initialization logic for the addon.
+
+Dependencies:
+- LibAddonMenu-2.0 > 32
+- LibDataShare
+- LibCombat
+- LibStub (optional, checks for outdated versions)
+================================================================================
+--]]
+
+
+-- Core Addon Table
 HodorReflexes = {
 	name = "HodorReflexes",
 	version = "dev",
 
-	-- Default settings
+	-- Default settings for saved variables
 	default = {
-		confirmExitInstance = true,
-		toxicMode = true,
-		disableIncompatibleDependencyWarning = false,
+		confirmExitInstance = true,                -- Show confirmation dialog before exiting instances
+		toxicMode = true,                          -- Enable "toxic" mock messages in specific zones
+		disableIncompatibleDependencyWarning = false -- Disable outdated library warning
 	},
 
-	-- Saved variables
-	sv = nil,
-	svVersion = 1,
-	svName = "HodorReflexesSV",
+	-- Saved variables configuration
+	sv = nil,                  -- Saved variables instance
+	svVersion = 1,             -- Version of the saved variables structure
+	svName = "HodorReflexesSV", -- Saved variables table name
 
-	modules = {},
+	modules = {},              -- Contains public modules like "share", "vote", etc.
 }
 
--- [@userId] = {"name", "pretty_name", "custom_icon.dds"}
 -- This array is used by the "share" module to display short names rather than full user ids.
+-- Format: [@userId] = {"name", "pretty_name", "custom_icon.dds"}
 HodorReflexes.users = {}
 
--- Addon events.
+-- Addon events (to be used with RegisterCallback)
 -- Use HodorReflexes.RegisterCallback(event, callback) to register a callback.
 HR_EVENT_PLAYER_ACTIVATED = "PlayerActivated"
 HR_EVENT_COMBAT_START = "CombatStart"
@@ -32,45 +59,47 @@ HR_EVENT_INTERRUPT = "Interrupt"
 HR_EVENT_STUNNED = "Stunned"
 HR_EVENT_GROUP_CHANGED = "GroupChanged"
 
+-- Import global variables and libraries
 local HR = HodorReflexes
 local EM = EVENT_MANAGER
 local LAM = LibAddonMenu2
 
 local optionControls = {} -- additional addon settings provided by modules
 
+-- Style definitions for keyboard and gamepad UI elements
 local KEYBOARD_STYLES = {
 	titleTemplate = "HodorReflexes_Updated_Title_Keyboard_Template",
 	dismissTemplate = "HodorReflexes_Updated_Dismiss_Keyboard_Template",
-	--dismissWithIntegrityTemplate = "HodorReflexes_Updated_Dismiss_With_Integrity_Keyboard_Template",
 }
-
-local GAMEPAD_STYLES =  {
+local GAMEPAD_STYLES = {
 	titleTemplate = "HodorReflexes_Updated_Title_Gamepad_Template",
 	dismissTemplate = "HodorReflexes_Updated_Dismiss_Gamepad_Template",
-	--dismissWithIntegrityTemplate = "HodorReflexes_Updated_Dismiss_With_Integrity_Gamepad_Template",
 }
 
+-- Incompatible dependency warning flag
 local incompatibleDependencyWarningTriggered = false
 
--- Add some toxicity
-local text = {}
-local mockText = {}
+-- Toxic mock messages configuration
+local text = {}  -- Stores the currently displayed mock message
+local mockText = {} -- Array of possible mock messages
 local mockZones = {
-	[636] = true, -- hrc
-	[638] = true, -- aa
-	[639] = true, -- so
-	[725] = true, -- mol
-	[975] = true, -- hof
-	[1000] = true, -- as
-	[1051] = true, -- cr
-	[1121] = true, -- ss
-	[1196] = true, -- ka
-	[1263] = true, -- rg
-	[1344] = true, -- dsr
-	[1427] = true, -- se
+	[636] = true,  -- HRC
+	[638] = true,  -- AA
+	[639] = true,  -- SO
+	[725] = true,  -- MoL
+	[975] = true,  -- HoF
+	[1000] = true, -- AS
+	[1051] = true, -- CR
+	[1121] = true, -- SS
+	[1196] = true, -- KA
+	[1263] = true, -- RG
+	[1344] = true, -- DSR
+	[1427] = true, -- SE
 }
 
--- Death recap is shown/hidden
+
+-- Function to handle changes in the Death Recap screen
+-- Displays mock messages when "toxicMode" is enabled.
 local function DeathRecapChanged(status)
 	if HR.sv.toxicMode and status and ZO_DeathRecapScrollContainerScrollChildHintsContainerHints1Text then
 		text = mockText[math.random(#mockText)]
@@ -78,22 +107,46 @@ local function DeathRecapChanged(status)
 	end
 end
 
--- Generate mocking strings
+-- Function to generate mock messages based on zone, language, and dungeon difficulty.
 local function GenerateMock()
+	-- Unregister the Death Recap callback to reset mock messages
 	DEATH_RECAP:UnregisterCallback("OnDeathRecapAvailableChanged", DeathRecapChanged)
-	mockText = {} -- wipe the current table
+
+	-- Reset the mockText table
+	mockText = {}
+
+	-- Retrieve the player's current zone ID and language setting
 	local zoneId = GetZoneId(GetUnitZoneIndex('player'))
 	local lang = GetCVar("language.2")
+
+	-- Check if the language and zone are supported for mock messages
 	if (lang == "en" or lang == "ru" or lang == "fr" or lang == "it") and mockZones[zoneId] then
-		-- Create new table
-		mockText = {HR_MOCK1, HR_MOCK2, HR_MOCK3, HR_MOCK4, HR_MOCK5, HR_MOCK6, HR_MOCK7, HR_MOCK8, HR_MOCK9, HR_MOCK10, HR_MOCK11, HR_MOCK12, HR_MOCK13, HR_MOCK14, HR_MOCK15, HR_MOCK16, HR_MOCK17, HR_MOCK18, HR_MOCK19, HR_MOCK20}
-		if zoneId < 700 then text = table.insert(mockText, HR_MOCK_AA1) end
-		if GetWorldName() == "EU Megaserver" then table.insert(mockText, HR_MOCK_EU1) end
+		-- Populate the mockText table with predefined mock messages
+		mockText = {
+			HR_MOCK1, HR_MOCK2, HR_MOCK3, HR_MOCK4, HR_MOCK5, HR_MOCK6,
+			HR_MOCK7, HR_MOCK8, HR_MOCK9, HR_MOCK10, HR_MOCK11, HR_MOCK12,
+			HR_MOCK13, HR_MOCK14, HR_MOCK15, HR_MOCK16, HR_MOCK17, HR_MOCK18,
+			HR_MOCK19, HR_MOCK20
+		}
+
+		-- Add zone-specific mock messages for zones with ID < 700
+		if zoneId < 700 then
+			text = table.insert(mockText, HR_MOCK_AA1)
+		end
+
+		-- Add region-specific mock messages for the EU Megaserver
+		if GetWorldName() == "EU Megaserver" then
+			table.insert(mockText, HR_MOCK_EU1)
+		end
+
+		-- Add mock messages based on dungeon difficulty
 		if GetCurrentZoneDungeonDifficulty() == DUNGEON_DIFFICULTY_NORMAL then
 			table.insert(mockText, HR_MOCK_NORMAL1)
 		else
 			table.insert(mockText, HR_MOCK_VET1)
 		end
+
+		-- Re-register the Death Recap callback to display new mock messages
 		DEATH_RECAP:RegisterCallback("OnDeathRecapAvailableChanged", DeathRecapChanged)
 	end
 end
@@ -106,6 +159,8 @@ local function UpdatePlatformStyles(styleTable)
 
 end
 
+-- Function to check for outdated versions of LibAddonMenu
+-- Displays a warning if an incompatible version is detected.
 -- Some people complain about this message... there is now an option to disable it.
 -- Do what you want, but then don't tell me that you have a problem. You have been warned
 local function CheckForOutdatedLibAddonMenu()
@@ -145,6 +200,7 @@ local function CheckForOutdatedLibAddonMenu()
 	end
 end
 
+-- Main initialization function for the addon
 local function Initialize()
 	-- Create callback manager
 	HR.cm = HR.cm or ZO_CallbackObject:New()
@@ -191,7 +247,7 @@ function HR.PlayerActivated()
 	EM:RegisterForEvent(HR.name .. "Combat", EVENT_PLAYER_COMBAT_STATE, HR.PlayerCombatState)
 	HR.PlayerCombatState(nil, IsUnitInCombat("player"))
 
-	-- Prevent group events spam by calling GroupChanged 1s later
+	-- Group event handling (with delay to avoid spam)
 	local function OnGroupChangeDelayed()
 		EM:UnregisterForUpdate(HR.name .. "GroupChangeDelayed")
 		EM:RegisterForUpdate(HR.name .. "GroupChangeDelayed", 1000, HR.GroupChanged)
@@ -312,7 +368,6 @@ end
 function HR.Donation()
 	SCENE_MANAGER:Show('mailSend')
 	zo_callLater(function() 
-		--ZO_MailSendToField:SetText("@andy.s") -- please come back soon bro <3
 		ZO_MailSendToField:SetText("@m00nyONE")
 		ZO_MailSendSubjectField:SetText("Donation for Hodor Reflexes")
 		ZO_MailSendBodyField:SetText("ticket-XXXX on Discord.")
@@ -351,21 +406,11 @@ function HR.ExitInstance()
 end
 
 SLASH_COMMANDS["/hodor"] = function(str)
-	if str == "lock" then
-		HR.LockUI()
-	end
-	if str == "isIncompatibleDependencyWarningDisabled" then
-		d(HR.sv.disableIncompatibleDependencyWarning)
-	end
-	if str == "isIncompatibleDependencyWarningTriggered" then
-		d(incompatibleDependencyWarningTriggered)
-	end
-	if str == "version" then
-		d(HR.version)
-	end
-	if str == "integrity" then
-		HR.integrity.Check()
-	end
+	if str == "lock" then HR.LockUI() return end
+	if str == "isIncompatibleDependencyWarningDisabled" then d(HR.sv.disableIncompatibleDependencyWarning) return end
+	if str == "isIncompatibleDependencyWarningTriggered" then d(incompatibleDependencyWarningTriggered)	return end
+	if str == "version" then d(HR.version) return end
+	if str == "integrity" then HR.integrity.Check()	return end
 end
 
 EM:RegisterForEvent(HR.name, EVENT_ADD_ON_LOADED, function(_, name)
