@@ -13,6 +13,6 @@ u["@pyromaaniac"] = {"PYRO", "|ce63e00P|r|cff4500Y|r|cff581aR|r|cff7d4dO|r", "Ho
 u["@DerFrostieee"] = {"Frostie", "Frostie", "HodorReflexes/users/ua/frostie.dds"}
 u["@l0tte"] = {"Lotte", "|c00FFFFLotte|r", "HodorReflexes/users/ua/l0tte.dds"}
 u["@L0tte"] = {"Lotte", "|c00FFFFLotte|r", "HodorReflexes/users/ua/l0tte.dds"}
-u["@Mjaues"] = {"MJ", "|c228B22MJ|r", "HodorReflexes/users/ua/mj.dds"}
+u["@mj_11"] = {"MJ", "|c228B22MJ|r", "HodorReflexes/users/ua/mj.dds"}
 u["@Helvana"] = {"Helvana", "Helvana", "HodorReflexes/users/ua/helvana2.dds"}
 u["@TingleTony"] = {"Tony", "|c96d7ffTony|r", "HodorReflexes/users/ua/tingletony.dds"}

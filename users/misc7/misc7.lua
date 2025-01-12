@@ -33,3 +33,4 @@ a["@Ponsie"] = {"HodorReflexes/users/misc7/Ponsie_anim.dds", 2, 2, 5}
 u["@Jdaytona"] = {"Jdaytona", "|c9b2228Jdaytona|r", "HodorReflexes/users/misc7/Jdaytona.dds"}
 u["@Mayhem86"] = {"Mayhem86", "|c5700ffM|r|c6d00ffa|r|c8400ffy|r|c9a00ffh|r|cb100ffe|r|cc700ffm|r|cde00ff8|r|cf400ff6|r", "HodorReflexes/users/misc7/Mayhem86.dds"}
 u["@Nyx_Si1ver116"] = {"Nyx_Si1ver116", "|c3d048cN|r|c3c0794y|r|c3a0b9dx|r|c390ea5_|r|c3712aeS|r|c3515b6i|r|c3419bf1|r|c321cc7v|r|c3020d0e|r|c2f23d8r|r|c2d27e11|r|c2c2ae91|r|c2a2ef26|r"}
+u["@Razor1991"] = {"Razor1991", "|c1852fdR|r|c2f67fca|r|c477dfaz|r|c5f93f8o|r|c76a8f7r|r|c8ebef51|r|ca6d4f39|r|cbde9f29|r|cd5fff01|r", "HodorReflexes/users/misc7/Razor1991.dds"}
