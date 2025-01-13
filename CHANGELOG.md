@@ -1,3 +1,6 @@
+## 2025.01.13 - @m00nyONE
+- adding optional dependencies ( LibGroupBroadcast & LibGroupCombatSTats) which will be released in a few weeks
+
 ## 2024.12.15 - @m00nyONE
 - Implementing "Listen Before Transmit" (LBT): Hodor now checks if other group members are using the add-on before sharing data. This helps reduce unnecessary pings and minimizes stress on the ESO API.
 - update screen now shows your friends icons <3
