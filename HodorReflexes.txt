@@ -43,7 +43,7 @@ users/cfm/cfm.lua
 users/mot/mot.lua
 users/moo/moo.lua
 users/corsair/corsair.lua
-
+users/Piou/Piou.lua
 users/integritycheck.xml
 users/integritycheck.lua
 
