@@ -1,3 +1,6 @@
+## 2025.01.23 - @m00nyONE
+- merging some icons from @TenshiRaitoEso - thanks for contributing
+
 ## 2025.01.13 - @m00nyONE
 - adding optional dependencies ( LibGroupBroadcast & LibGroupCombatSTats) which will be released in a few weeks
 
