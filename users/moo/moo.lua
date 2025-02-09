@@ -134,7 +134,7 @@ a["@Eco.212"] = a["@Eco_212"]
 u["@NikG1"] = {"NikG1", "|c5fff4bNikG1|r"}
 a["@NikG1"] = {"HodorReflexes/users/moo/NikG1_anim.dds", 10, 5, 16}
 
-u["@Mobitor"] = {"Mobitor", "|cad05ffM|r|cba09ffo|r|cc80effb|r|cd612fei|r|ce417fet|r|cf11bfeo|r|cff20fer|r", "HodorReflexes/users/moo/mobitor2.dds"}
+u["@Mobitor"] = {"Mobitor", "|ca604faM|r|cb207fao|r|cbe0bfab|r|ccb0ffai|r|cd713fat|r|ce316fao|r|cef1afar|r", "HodorReflexes/users/moo/Mobitor.dds"}
 
 u["@User7Gaming"] = {"User7Gaming", "|c1a8cffU|r|c3198ffs|r|c48a3ffe|r|c5fafffr|r|c76baff7|r|c8cc6ffG|r|ca3d1ffa|r|cbaddffm|r|cd1e8ffi|r|ce8f4ffn|r|cffffffg|r", "HodorReflexes/users/moo/User7Gaming.dds"}
 
