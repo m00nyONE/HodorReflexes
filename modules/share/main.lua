@@ -1696,7 +1696,7 @@ do
 		local anyHornNew = false
 		for i, row in ipairs(rowsHorn) do
 			local playerData = row[3]
-			playerData.ultRow:ClearAnchors()
+			--playerData.ultRow:ClearAnchors()
 			playerData.ultRow:SetAnchor(TOPLEFT, HodorReflexes_Share_Ultimates, TOPLEFT, 0, i*24)
 			-- We call M.GetHornPercent() instead of using row[2] value for better precision
 
@@ -1720,13 +1720,13 @@ do
 
 		for i, row in ipairs(rowsMiscUlt) do
 			local playerData = row[3]
-			playerData.miscUltRow:ClearAnchors()
+			--playerData.miscUltRow:ClearAnchors()
 			playerData.miscUltRow:SetAnchor(TOPLEFT, HodorReflexes_Share_MiscUltimates, TOPLEFT, 0, i*24)
 		end
 
 		for i, row in ipairs(rowsAtronach) do
 			local playerData = row[3]
-			playerData.atronachRow:ClearAnchors()
+			--playerData.atronachRow:ClearAnchors()
 			playerData.atronachRow:SetAnchor(TOPLEFT, HodorReflexes_Share_Atronach, TOPLEFT, 0, i*24)
 		end
 
@@ -1734,7 +1734,7 @@ do
 		local ultOrderFound = false -- found player in a list of ults
 		for i, row in ipairs(rowsColos) do
 			local playerData = row[3]
-			playerData.clsRow:ClearAnchors()
+			--playerData.clsRow:ClearAnchors()
 			playerData.clsRow:SetAnchor(TOPLEFT, HodorReflexes_Share_Colos, TOPLEFT, 0, i*24)
 			if playerData.isPlayer then
 				colosOrder = i - 1
@@ -1788,7 +1788,7 @@ function M.UpdateDamage()
 	-- Show rows
 	for i, row in ipairs(rows) do
 		local playerData = M.playersData[row[1]]
-		playerData.dpsRow:ClearAnchors()
+		--playerData.dpsRow:ClearAnchors()
 		playerData.dpsRow:SetAnchor(TOPLEFT, HodorReflexes_Share_Damage, TOPLEFT, 0, i*22)
 		playerData.dpsRow:SetAnchor(TOPRIGHT, HodorReflexes_Share_Damage, TOPRIGHT, 0, i*22)
 		playerData.dpsRow:SetHidden(false)
@@ -1885,42 +1885,42 @@ function M.RestorePosition()
 	local hornIconCenterY = SV.hornIconCenterY
 
 	if ultimateLeft or ultimateTop then
-		HodorReflexes_Share_Ultimates:ClearAnchors()
+		--HodorReflexes_Share_Ultimates:ClearAnchors()
 		HodorReflexes_Share_Ultimates:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, ultimateLeft, ultimateTop)
 	end
 
 	if miscUltimateLeft or miscUltimateTop then
-		HodorReflexes_Share_MiscUltimates:ClearAnchors()
+		--HodorReflexes_Share_MiscUltimates:ClearAnchors()
 		HodorReflexes_Share_MiscUltimates:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, miscUltimateLeft, miscUltimateTop)
 	end
 
 	if damageLeft or damageTop then
-		HodorReflexes_Share_Damage:ClearAnchors()
+		--HodorReflexes_Share_Damage:ClearAnchors()
 		HodorReflexes_Share_Damage:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, damageLeft, damageTop)
 	end
 
 	if colosLeft or colosTop then
-		HodorReflexes_Share_Colos:ClearAnchors()
+		--HodorReflexes_Share_Colos:ClearAnchors()
 		HodorReflexes_Share_Colos:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, colosLeft, colosTop)
 	end
 
 	if atronachLeft or atronachTop then
-		HodorReflexes_Share_Atronach:ClearAnchors()
+		--HodorReflexes_Share_Atronach:ClearAnchors()
 		HodorReflexes_Share_Atronach:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, atronachLeft, atronachTop)
 	end
 
 	if hornCountdownCenterX or hornCountdownCenterY then
-		HodorReflexes_Share_HornCountdown:ClearAnchors()
+		--HodorReflexes_Share_HornCountdown:ClearAnchors()
 		HodorReflexes_Share_HornCountdown:SetAnchor(CENTER, GuiRoot, TOPLEFT, hornCountdownCenterX, hornCountdownCenterY)
 	end
 
 	if colosCountdownCenterX or colosCountdownCenterY then
-		HodorReflexes_Share_ColosCountdown:ClearAnchors()
+		--HodorReflexes_Share_ColosCountdown:ClearAnchors()
 		HodorReflexes_Share_ColosCountdown:SetAnchor(CENTER, GuiRoot, TOPLEFT, colosCountdownCenterX, colosCountdownCenterY)
 	end
 
 	if hornIconCenterX or hornIconCenterY then
-		HodorReflexes_Share_HornIcon:ClearAnchors()
+		--HodorReflexes_Share_HornIcon:ClearAnchors()
 		HodorReflexes_Share_HornIcon:SetAnchor(CENTER, GuiRoot, TOPLEFT, hornIconCenterX, hornIconCenterY)
 	end
 	HodorReflexes_Share_HornIcon:SetScale(SV.hornIconScale)
