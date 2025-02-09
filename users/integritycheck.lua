@@ -26,7 +26,8 @@ local SCREEN_HEIGHT = GuiRoot:GetHeight()
 local maxColumns = zo_floor(SCREEN_WIDTH / iconSize)
 local maxRows = zo_floor(SCREEN_HEIGHT / iconSize)
 
-local checkAfter = 20000
+local LOAD_DELAY = 5 --5ms
+local checkAfter = 0
 local unloadAfter = 5000
 local reportAfter = 1000
 local reloadAfter = 1000
@@ -74,6 +75,23 @@ local function deleteTexture(iconNumber)
     iconPool[iconNumber]:SetHidden(true)
     iconPool[iconNumber]:SetTexture("none")
     iconPool[iconNumber] = nil
+end
+
+local function calculateCheckTime()
+    local iconNumber = 0
+
+    for _, _ in pairs(a) do
+        iconNumber = iconNumber + 1
+    end
+
+    for userName, _ in pairs(u) do
+        local iconPath = getIconForUserId(userName)
+        if iconPath then
+            iconNumber = iconNumber + 1
+        end
+    end
+
+    return iconNumber * LOAD_DELAY -- for each icon to load
 end
 
 local function integrityCheck()
@@ -129,7 +147,7 @@ local function integrityCheck()
 
                 M.sv.failedList = failedList
                 M.sv.failed = failed
-                M.sv.timeStamp = GetTimeStamp()
+                M.sv.timeStamp = GetGameTimeMilliseconds()
 
                 d(M.sv.failedList)
                 d(M.sv.failed)
@@ -152,6 +170,8 @@ end
 -- /script d(HodorReflexes.integrity.sv)
 
 function HodorReflexes.integrity.Check()
+    checkAfter = calculateCheckTime()
+
     local calculatedTime = (reloadAfter + reportAfter + unloadAfter + checkAfter) / 1000
 
     d("starting integritycheck")
@@ -177,7 +197,7 @@ end
 
 function HodorReflexes.integrity.GetResults()
     zo_callLater(function()
-        local integrityFailed = M.sv.failed > 0
+        local integrityFailed = M.sv.failed > 10
         local color = "00FF00"
         local status = "passed"
         local message = "all fine :-)"

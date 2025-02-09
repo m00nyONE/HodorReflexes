@@ -1,5 +1,9 @@
+[SIZE="2"][B]IMPORTANT:[/B] After updating HodorReflexes, keep Minion open for at least 2 minutes to allow all files to unpack properly and avoid corruption.[/SIZE]
+
 ## 2025.02.09 - @m00nyONE
 - improving overall UI update performance
+- improve integrity check
+- adding an info on top of the changelog to remind everyone to leave minion open for at least 2min after updating to avoid data corruption
 
 ## 2025.01.23 - @m00nyONE
 - merging some icons from @TenshiRaitoEso - thanks for contributing
