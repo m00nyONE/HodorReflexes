@@ -358,7 +358,7 @@ local function SendData()
 	M.UpdatePlayerData(playerTag, pingType, ultType, ult, dmg, dps, lastPingTime)
 
 	if isGroupMemberSharing then
-		share:SendData(rawData)
+		share:QueueData(rawData)
 	end
 end
 
@@ -385,7 +385,7 @@ end
 local function SendExitInstance()
 	if exitInstancePending then return end -- prevent button spam
 	-- Leave yourself only after the ping is sent.
-	M.SendCustomData(DATA_PING_EXITINSTANCE, false, function()
+	M.SendCustomData(DATA_PING_EXITINSTANCE, true, function()
 		if CanExitInstanceImmediately() then
 			zo_callLater(function()
 				exitInstancePending = false
