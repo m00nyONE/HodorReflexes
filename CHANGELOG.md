@@ -1,5 +1,8 @@
 [SIZE="2"][B]IMPORTANT:[/B] After updating HodorReflexes, keep Minion open for at least 2 minutes to allow all files to unpack properly and avoid corruption.[/SIZE]
 
+## 2025.02.12
+- fixed an issue that prevents moving the UI elements
+
 ## 2025.02.11 - @m00nyONE
 - improve compatibility with LibDataShare Legacy
 
