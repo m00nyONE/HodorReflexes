@@ -1130,7 +1130,6 @@ u["@Kowalski2684"] = {"Kowalski", "|cdfffffK|r|cbfffffo|r|c9ffeffw|r|c80feffa|r|
 u["@ZingMerway"] = {"ZingMerway", "|cf1002dZ|r|ce30045i|r|cd5005cn|r|cc70073g|r|cba008bM|r|cac00a2e|r|c9e00b9r|r|c9000d0w|r|c8200e8a|r|c7400ffy|r"}
 a["@ZingMerway"] = {"HodorReflexes/users/misc6/ZingMerway_anim.dds", 23, 1, 10}
 u["@Deodei"] = {"Deodei", "|c2b1c85D|r|c261793e|r|c2011a1o|r|c1a0bafd|r|c1506bde|r|c0f00cbi|r", "HodorReflexes/users/misc6/Deodei.dds"}
-u["@Tinkaaberu"] = {"Tinkaaberu", "|cfa0f17T|r|cf91b23i|r|cf7262en|r|cf63139k|r|cf53d45a|r|cf44850a|r|cf3535bb|r|cf15e66e|r|cf06a72r|r|cef757du|r", "HodorReflexes/users/misc6/Tinkaaberu.dds"}
 u["@IPleadThe5th"] = {"MUTED", "|cccbfbeM|r|c998f8fU|r|c66605fT|r|c333030E|r|c000000D|r"}
 a["@IPleadThe5th"] = {"HodorReflexes/users/misc6/IPleadThe5th_anim.dds", 7, 4, 10}
 u["@LAOSIJI_UUU"] = {"LAOSIJI_UUU", "|c2f35ffL|r|c3d33ffA|r|c4c32ffO|r|c5a31ffS|r|c6930ffI|r|c772effJ|r|c862dffI|r|c942cff_|r|ca32bffU|r|cb129ffU|r|cc028ffU|r"}
