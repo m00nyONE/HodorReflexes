@@ -93,3 +93,5 @@ u["@Antonyfly"] = {"Antonyfly", "|cff5800A|r|cff6b00n|r|cff7e00t|r|cff9100o|r|cf
 u["@Root118"] = {"root", "|ce300ebr|r|cec00d8o|r|cf600c4o|r|cff00b0t|r"}
 a["@Root118"] = {"HodorReflexes/users/misc7/Root118_anim.dds", 13, 2, 6}
 u["@GL0O"] = {"GLOO", "|c00f5dfGLOO|r", "HodorReflexes/users/misc7/GL0O.dds"}
+u["@Shirogami107"] = {"Shirogami", "|c00edfeS|r|c00dbfeh|r|c00c8fei|r|c00b6fer|r|c00a4ffo|r|c0092ffg|r|c007fffa|r|c006dffm|r|c005bffi|r"}
+a["@Shirogami107"] = {"HodorReflexes/users/misc7/Shirogami107_anim.dds", 5, 3, 15}
