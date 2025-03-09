@@ -84,6 +84,7 @@ local SV -- shortcut for M.sv
 local SW -- shortcut for M.sw
 
 local LDS = LibDataShare
+local LGCS = LibGroupCombatStats
 local EM = EVENT_MANAGER
 
 local controlsVisible = false -- current state of UI controls
@@ -195,6 +196,7 @@ local tsort = table.sort
 local time = GetGameTimeMilliseconds
 
 local share
+local lgcs
 local units = HR.units
 local player = HR.player
 local combat = HR.combat
@@ -210,34 +212,6 @@ local sendExitInstanceButton = {
 	callback = function() M.SendExitInstance() end,
 	alignment = KEYBIND_STRIP_ALIGN_CENTER,
 }
-
-local function encodeData(dmgType, ultType, ult, dmg, dps) -- 0-2 , 0-2, 0-500 , 0-9999 , 0-999
-	local dmgTypeZone = 27*110+110 -- 3080
-	local ultReduced = zo_ceil(ult / 5)
-	local head = dmgType * dmgTypeZone -- 0-3080, 3080 - 6160, 6160-9240
-	local head2 = ultType * 110 + ultReduced
-	local compressedUlt = (head + head2)
-	local dmgData = zo_min(dps, 999)
-	dmgData = dmgData + (zo_min(dmg, 9999) * 1000)
-	dmgData = dmgData * 10000
-	local rawData = DATA_PREFIX + dmgData + compressedUlt -- add compressed ulti & ultiType & dmgType
-	return rawData
-end
-
-local function decodeData(rawData)
-	local dmgTypeZone = 27*110+110 -- 3080
-	local head = zo_floor(rawData % 10000)
-	local dmgType = zo_floor(head / dmgTypeZone)
-	local ultType = zo_floor((head % dmgTypeZone) / 110)
-	if dmgType >= 0 and dmgType <= 2 and ultType >= 0 and ultType <= 27 then -- extra check to avoid conflicts
-		local ult = zo_ceil(((head % dmgTypeZone) - ultType * 110) * 5)
-		local dmg = zo_floor(rawData / 10000000 % 10000)
-		local dps = zo_floor(rawData / 10000 % 1000)
-		return true, dmgType, ultType, ult, dmg, dps
-	end
-
-	return false, nil, nil, nil, nil, nil
-end
 
 -- Check player ultimates for horn/colossus to share them only when they are slotted
 local function CheckSlottedUlts()
@@ -290,76 +264,42 @@ end
 -- Send player's ultimate and damage via map ping.
 -- This function must always be called from SendAttempt(), which checks whether it's safe to send data.
 local function SendData()
-	local pingType, ultType, ult, dmg, dps = DAMAGE_UNKNOWN, ULT_HORN, 0, 0, 0
-	local shareHorn = SV.enableUltimateShare ~= 0 and (hornSlotted and SV.enableUltimateShare or hasSaxhleel and type(SV.enableUltimateShare) == 'number' and SV.enableUltimateShare > 0)
-	local shareColos = SV.enableColosShare and colosSlotted
-	local shareAtronach = SV.enableAtronachShare and atronachSlotted
-	local shareMiscUltimates = SV.enableMiscUltimateShare
-	if M.IsEnabled() then
-		ultType = ULT_MISC
-		ult = roundDownToFive(zo_min(500, GetUnitPower("player", POWERTYPE_ULTIMATE)))
-		if shareColos then
-			ultType = shareHorn and ULT_HORN_COLOS or ULT_COLOS
-		elseif shareHorn and shareAtronach then
-			ultType = ULT_HORN_ATRO
-		elseif shareHorn then
-			ultType = ULT_HORN
-		elseif shareAtronach then
-			ultType = ULT_ATRO
-		-- TODO: test if it works
-		elseif not shareMiscUltimates then
-			ult = 0
-		end
-		if SV.enableDamageShare then
-			pingType, dmg, dps = M.GetPlayerDamage()
-			if dmg == 0 or dps == 0 then
-				pingType = DAMAGE_UNKNOWN
-			end
-		end
-	end
+	--local pingType, ultType, ult, dmg, dps = DAMAGE_UNKNOWN, ULT_HORN, 0, 0, 0
+	--local shareHorn = SV.enableUltimateShare ~= 0 and (hornSlotted and SV.enableUltimateShare or hasSaxhleel and type(SV.enableUltimateShare) == 'number' and SV.enableUltimateShare > 0)
+	--local shareColos = SV.enableColosShare and colosSlotted
+	--local shareAtronach = SV.enableAtronachShare and atronachSlotted
+	--local shareMiscUltimates = SV.enableMiscUltimateShare
+	--if M.IsEnabled() then
+	--	ultType = ULT_MISC
+	--	ult = roundDownToFive(zo_min(500, GetUnitPower("player", POWERTYPE_ULTIMATE)))
+	--	if shareColos then
+	--		ultType = shareHorn and ULT_HORN_COLOS or ULT_COLOS
+	--	elseif shareHorn and shareAtronach then
+	--		ultType = ULT_HORN_ATRO
+	--	elseif shareHorn then
+	--		ultType = ULT_HORN
+	--	elseif shareAtronach then
+	--		ultType = ULT_ATRO
+	--	-- TODO: test if it works
+	--	elseif not shareMiscUltimates then
+	--		ult = 0
+	--	end
+	--	if SV.enableDamageShare then
+	--		pingType, dmg, dps = M.GetPlayerDamage()
+	--		if dmg == 0 or dps == 0 then
+	--			pingType = DAMAGE_UNKNOWN
+	--		end
+	--	end
+	--end
 
-	local rawData = encodeData(pingType, ultType, ult, dmg, dps)
-
-	--[[
-
-	packet = packet.new(rawdata)
-
-	if packet.version == 0 then
-		if packet.type == META_PACKET then
-
-		end
-
-	end
-
-
-
-	packet = packet.new(version, CTRL_PACKET)
-	packet.data = {
-		dps = dps,
-		dmg = dmg,
-		ult = ult
-	}
-	packet.encode()
-
-
-	when protocol initialized, then wrap functions in the packet itself
-
-	packet.use = ctrlPacketUse()
-	--->
-	sets values
-
-
-
-	package = packet.meta.New(pingType, ultType, ult, dmg, dps)
-	package = packet.data.New()
-	]]--
+	--local rawData = encodeData(pingType, ultType, ult, dmg, dps)
 	
-	-- Own pings are not processed, so we update our data manually.
-	M.UpdatePlayerData(playerTag, pingType, ultType, ult, dmg, dps, lastPingTime)
-
-	if isGroupMemberSharing then
-		share:QueueData(rawData)
-	end
+	---- Own pings are not processed, so we update our data manually.
+	--M.UpdatePlayerData(playerTag, pingType, ultType, ult, dmg, dps, lastPingTime)
+	--
+	--if isGroupMemberSharing then
+	--	share:QueueData(rawData)
+	--end
 end
 
 -- Send a number between 1 and 449953.
@@ -728,7 +668,14 @@ end
 function M.Initialize()
 
 	-- Register Vvardenfell map for data sharing.
-	share = LDS:RegisterMap("Hodor Reflexes", 30, M.ProcessData)
+	share = LDS:RegisterMap("Hodor Reflexes", 30, M.ProcessMappingData)
+
+	lgcs = LGCS.RegisterAddon("HodorReflexes", {"ULT", "DPS"})
+
+	lgcs:RegisterForEvent(lgcs.EVENT_GROUP_ULT_UPDATE, M.onULTDataReceived)
+	lgcs:RegisterForEvent(lgcs.EVENT_PLAYER_ULT_UPDATE, M.onULTDataReceived)
+	lgcs:RegisterForEvent(lgcs.EVENT_GROUP_DPS_UPDATE, M.onDPSDataReceived)
+	lgcs:RegisterForEvent(lgcs.EVENT_PLAYER_DPS_UPDATE, M.onDPSDataReceived)
 
 	-- Create callback manager
 	M.cm = M.cm or ZO_CallbackObject:New()
@@ -1066,8 +1013,8 @@ do
 		local unitTag = units.GetTag(targetUnitId)
 		local userId = units.GetDisplayName(unitTag)
 		local data = userId and M.playersData[userId]
-		if data and data.ult > 0 then -- reset ult % in the colossus list
-			data.ult = 1
+		if data and data.ultValue > 0 then -- reset ult % in the colossus list
+			data.ultValue = 1
 			data.ultTime = time() + LDS:GetPingRate() -- don't let the next incoming ping overwrite this value
 			M.UpdateUltimates()
 		end
@@ -1150,8 +1097,8 @@ do
 		local unitTag = units.GetTag(targetUnitId)
 		local userId = units.GetDisplayName(unitTag)
 		local data = userId and M.playersData[userId]
-		if data and data.ult > 0 then -- reset ult % in the colossus list
-			data.ult = 1
+		if data and data.ultValue > 0 then -- reset ult % in the colossus list
+			data.ultValue = 1
 			data.ultTime = time() + LDS:GetPingRate() -- don't let the next incoming ping overwrite this value
 			M.UpdateUltimates()
 		end
@@ -1192,7 +1139,7 @@ end
 
 
 -- Process data decoded from a map ping.
-function M.ProcessData(tag, data, ms)
+function M.ProcessMappingData(tag, data, ms)
 	if data > 0 then
 		isGroupMemberSharing = true
 	end
@@ -1206,13 +1153,6 @@ function M.ProcessData(tag, data, ms)
 			M.cm:FireCallbacks('CustomData', tag, data)
 		end
 		-- Data is encoded between DATA_PREFIX and DATA_PREFIX * 2
-	elseif (data >= DATA_PREFIX and data < DATA_PREFIX * 2) then
-		local success, pingType, ultType, ult, dmg, dps = decodeData(data)
-		--d(ult)
-		if success == false then return end
-
-		M.UpdatePlayerData(tag, pingType, ultType, ult, dmg, dps, ms or time())
-
 	end
 end
 
@@ -1286,14 +1226,9 @@ function M.IsMiscUltimatesListVisible()
 	end
 end
 
--- return the ultimate in percent from 0-100. from 100-200 its scaled acordingly. The costReduction is also taken into account
-function M.GetUltPercentage(raw, abilityCost, costReduction)
+-- return the ultimate in percent from 0-100. from 100-200 its scaled acordingly.
+function M.GetUltPercentage(raw, abilityCost)
 	local ultPercentage = 0
-
-	if not costReduction then
-		costReduction = 0
-	end
-	abilityCost = abilityCost - zo_floor((abilityCost / 100 * costReduction))
 
 	if raw <= abilityCost then
 		-- When ult is not ready, we show real %
@@ -1447,14 +1382,51 @@ local function CreateControlsForUser(userId, playerData)
 	M.playersData[userId] = playerData
 end
 
--- Store player's data in the playersData array.
-function M.UpdatePlayerData(tag, pingType, ultType, ult, dmg, dps, dataTime)
-	-- It takes 1-2 seconds for units to fetch group data after reloadui,
-	-- so make sure it's finished.
+function M.onDPSDataReceived(tag, data)
 	if not units.IsGrouped(tag) then return end
+	local dataTime = time()
 
-	-- dataTime is time when player data was received
-	if not dataTime then dataTime = time() end
+	local userId = units.GetDisplayName(tag)
+	local playerData = M.playersData[userId]
+
+	-- Player already exists, only update values
+	if playerData then
+		-- Player's group tag can change any time
+		playerData.tag = tag
+
+		if playerData.dmgTime < dataTime then
+			playerData.dmg = data.dmg
+			playerData.dps = data.dps
+			playerData.dmgType = data.dmpType
+			playerData.dmgTime = dataTime
+		end
+
+		-- Create controls for a new player
+	elseif IsValidString(userId) then
+		playerData = {
+			tag = tag,
+			name = units.GetName(tag),
+			classId = units.GetClassId(tag),
+			isPlayer = units.IsPlayer(tag),
+
+			ultValue = 0,
+			ult1ID = 0,
+			ult2ID = 0,
+			ult1Cost = 0,
+			ult2Cost = 0,
+			ultActivatedSetID = 0,
+
+			dmg = data.dmg,
+			dps = data.dps,
+			dmgType = data.dmpType,
+			dmgTime = dataTime,
+		}
+		CreateControlsForUser(userId, playerData)
+	end
+end
+function M.onULTDataReceived(tag, data)
+	if not units.IsGrouped(tag) then return end
+	local dataTime = time()
 
 	local userId = units.GetDisplayName(tag)
 	local playerData = M.playersData[userId]
@@ -1467,15 +1439,13 @@ function M.UpdatePlayerData(tag, pingType, ultType, ult, dmg, dps, dataTime)
 		-- Only update ult and damage values if the data is fresh
 		-- e.g. ult can be set to 1 when a player uses colossus before received ping is processed
 		if playerData.ultTime < dataTime then
-			playerData.ult = ult
-			playerData.ultType = ultType
+			playerData.ultValue = data.ultValue
+			playerData.ult1ID = data.ult1ID
+			playerData.ult2ID = data.ult2ID
+			playerData.ult1Cost = data.ult1Cost
+			playerData.ult2Cost = data.ult2Cost
+			playerData.ultActivatedSetID = data.ultActivatedSetID
 			playerData.ultTime = dataTime
-		end
-		if playerData.dmgTime < dataTime then
-			playerData.dmg = dmg
-			playerData.dps = dps
-			playerData.dmgType = pingType
-			playerData.dmgTime = dataTime
 		end
 
 		-- Create controls for a new player
@@ -1485,16 +1455,56 @@ function M.UpdatePlayerData(tag, pingType, ultType, ult, dmg, dps, dataTime)
 			name = units.GetName(tag),
 			classId = units.GetClassId(tag),
 			isPlayer = units.IsPlayer(tag),
-			ult = ult,
-			ultType = ultType,
-			ultTime = dataTime,
-			dmg = dmg,
-			dps = dps,
-			dmgType = pingType,
+
+			ultValue = data.ultValue,
+			ult1ID = data.ult1ID,
+			ult2ID = data.ult2ID,
+			ult1Cost = data.ult1Cost,
+			ult2Cost = data.ult2Cost,
+			ultActivatedSetID = data.ultActivatedSetID,
+
+			dmg = 0,
+			dps = 0,
+			dmgType = 0,
 			dmgTime = dataTime,
 		}
 		CreateControlsForUser(userId, playerData)
 	end
+end
+
+local function HasUnitHorn(data)
+	local abilityIDs = {40223,	38563, 40220}
+	for id, _ in pairs(abilityIDs) do
+		if data.ult1ID == id then return true, data.ult1Cost end
+	end
+	for id, _ in pairs(abilityIDs) do
+		if data.ult2ID == id then return true, data.ult2Cost end
+	end
+	if data.ultActivatedSetID == 1 then	return true, 250 end
+
+	return false, 0
+end
+local function HasUnitColos(data)
+	local abilityIDs = {122395,	122388, 122174}
+	for id, _ in pairs(abilityIDs) do
+		if data.ult1ID == id then return true, data.ult1Cost end
+	end
+	for id, _ in pairs(abilityIDs) do
+		if data.ult2ID == id then return true, data.ult2Cost end
+	end
+
+	return false, 0
+end
+local function HasUnitAtro(data)
+	local abilityIDs = {23492,	23634, 23495}
+	for id, _ in pairs(abilityIDs) do
+		if data.ult1ID == id then return true, data.ult1Cost end
+	end
+	for id, _ in pairs(abilityIDs) do
+		if data.ult2ID == id then return true, data.ult2Cost end
+	end
+
+	return false, 0
 end
 
 -- War Horn Icon.
@@ -1588,44 +1598,38 @@ do
 			local miscUltRow = data.miscUltRow
 			local clsRow = data.clsRow
 			local atronachRow = data.atronachRow
-			local costReduction = 0
-
-			-- calculate cost reduction
-			if data.classId == CLASSID_SORC then
-				costReduction = 15
-			end
-			if data.classId == CLASSID_TEMPLAR then
-				costReduction = 5
-			end
 
 			-- Only shows rows for online players with non empty ult %
-			if data.ult > 0 and (isTestRunning or units.IsOnline(tag)) then
+			if data.ultValue > 0 and (isTestRunning or units.IsOnline(tag)) then
+
+				local hasHorn, hornCost = HasUnitHorn(data)
+				local hasColos, colosCost = HasUnitColos(data)
+				local hasAtro, atroCost = HasUnitAtro(data)
+
 				-- Get horn and colos values based on ultType
 				local horn, colos, atro = 0, 0, 0 -- ult %
 				local misc = 0 -- ult raw for no special ultType
 				local colorHorn, colorColos, colorAtronach = 'FFFFFF', 'FFFFFF', 'FFFFFF'
-				if data.ultType == ULT_MISC then
-					misc = data.ult
-				elseif data.ultType == ULT_HORN then
-					horn = M.GetUltPercentage(data.ult, ABILITY_COST_HORN, costReduction)
-				elseif data.ultType == ULT_COLOS then
-					colos = M.GetUltPercentage(data.ult, ABILITY_COST_COLOS, costReduction)
-				elseif data.ultType == ULT_HORN_COLOS then
-					horn = M.GetUltPercentage(data.ult, ABILITY_COST_HORN, costReduction)
-					colos = M.GetUltPercentage(data.ult, ABILITY_COST_COLOS, costReduction)
-				elseif data.ultType == ULT_ATRO then
-					atro = M.GetUltPercentage(data.ult, ABILITY_COST_ATRONACH, costReduction)
-				elseif data.ultType == ULT_HORN_ATRO then
-					atro = M.GetUltPercentage(data.ult, ABILITY_COST_ATRONACH, costReduction)
-					horn = M.GetUltPercentage(data.ult, ABILITY_COST_HORN, costReduction)
+				if not hasHorn and not hasColos and not hasAtro then
+					misc = data.ultValue
 				end
+				if hasHorn then
+					horn = M.GetUltPercentage(data.ultValue, hornCost)
+				end
+				if hasColos then
+					colos = M.GetUltPercentage(data.ultValue, colosCost)
+				end
+				if hasAtro then
+					atro = M.GetUltPercentage(data.ultValue, atroCost)
+				end
+
 				-- War Horn
 				if ultRow then
 					if horn > 0 and not IsUnitDead(tag) then
 						if horn >= 100 then colorHorn = '00FF00' elseif horn >= 80 then colorHorn = 'FFFF00' end
 						ultRow:GetNamedChild('_Value'):SetText(strformat('|c%s%d%%|r', colorHorn, zo_min(200, horn)))
 						ultRow:GetNamedChild('_Value'):SetScale(SV.showHornPercentValue)
-						ultRow:GetNamedChild('_RawValue'):SetText(strformat('|c%s%d|r', "FFFFFF", zo_min(500, data.ult)))
+						ultRow:GetNamedChild('_RawValue'):SetText(strformat('|c%s%d|r', "FFFFFF", zo_min(500, data.ultValue)))
 						ultRow:GetNamedChild('_RawValue'):SetScale(SV.showHornRawValue)
 						ultRow:SetHidden(false)
 						rowsHorn[#rowsHorn + 1] = {tag, horn, data}
@@ -1639,7 +1643,7 @@ do
 						if colos >= 100 then colorColos = '00FF00' elseif colos >= 80 then colorColos = 'FFFF00' end
 						clsRow:GetNamedChild('_Value'):SetText(strformat('|c%s%d%%|r', colorColos, zo_min(200, colos)))
 						clsRow:GetNamedChild('_Value'):SetScale(SV.showColosPercentValue)
-						clsRow:GetNamedChild('_RawValue'):SetText(strformat('|c%s%d|r', "FFFFFF", zo_min(500, data.ult)))
+						clsRow:GetNamedChild('_RawValue'):SetText(strformat('|c%s%d|r', "FFFFFF", zo_min(500, data.ultValue)))
 						clsRow:GetNamedChild('_RawValue'):SetScale(SV.showColosRawValue)
 						clsRow:SetHidden(false)
 						rowsColos[#rowsColos + 1] = {tag, colos, data}
@@ -1653,7 +1657,7 @@ do
 						if atro >= 100 then colorAtronach = '00FF00' elseif atro >= 80 then colorAtronach = 'FFFF00' end
 						atronachRow:GetNamedChild('_Value'):SetText(strformat('|c%s%d%%|r', colorAtronach, zo_min(200, atro)))
 						atronachRow:GetNamedChild('_Value'):SetScale(SV.showAtronachPercentValue)
-						atronachRow:GetNamedChild('_RawValue'):SetText(strformat('|c%s%d|r', "FFFFFF", zo_min(500, data.ult)))
+						atronachRow:GetNamedChild('_RawValue'):SetText(strformat('|c%s%d|r', "FFFFFF", zo_min(500, data.ultValue)))
 						atronachRow:GetNamedChild('_RawValue'):SetScale(SV.showAtronachRawValue)
 						atronachRow:SetHidden(false)
 						rowsAtronach[#rowsAtronach + 1] = {tag, atro, data}
@@ -1665,7 +1669,7 @@ do
 				if miscUltRow then
 					--if misc > 0 then
 					if misc > 0 then
-						miscUltRow:GetNamedChild('_RawValue'):SetText(strformat('|c%s%d|r', "FFFFFF", zo_min(500, data.ult)))
+						miscUltRow:GetNamedChild('_RawValue'):SetText(strformat('|c%s%d|r', "FFFFFF", zo_min(500, data.ultValue)))
 						miscUltRow:SetHidden(false)
 						rowsMiscUlt[#rowsMiscUlt + 1] = {tag, misc, data}
 					else
@@ -1701,11 +1705,8 @@ do
 			-- We call M.GetHornPercent() instead of using row[2] value for better precision
 
 			if playerData.isPlayer then
-				local costReduction = 0
-				if playerClassId == CLASSID_SORC then costReduction = 15 end
-				if playerClassId == CLASSID_TEMPLAR then costReduction = 5 end
-
-				if M.GetUltPercentage(GetUnitPower("player", POWERTYPE_ULTIMATE), ABILITY_COST_HORN, costReduction) >= 100 then
+				local hasHorn, hornCost = HasUnitHorn(playerData)
+				if M.GetUltPercentage(GetUnitPower("player", POWERTYPE_ULTIMATE), hornCost) >= 100 then
 					myHornNew = true
 					hornOrder = i
 				end
@@ -2078,8 +2079,11 @@ local function ToggleTest(players)
 			name = name,
 			classId = zo_random() < 0.5 and zo_random(1, 6) or 5, -- 50% chance for necro
 			isPlayer = name == GetUnitDisplayName('player'),
-			ult = zo_random(1, 500),
-			ultType = 0,
+			ultValue = zo_random(1, 500),
+			ult1ID = 0,
+			ult2ID = 0,
+			ult1Cost = 0,
+			ult2Cost = 0,
 			ultTime = time(),
 			dmg = dmg,
 			dps = dmg * 0.15,
@@ -2087,10 +2091,11 @@ local function ToggleTest(players)
 			dmgTime = time(),
 		}
 		if playerData.classId == 5 then
-			playerData.ultType = ULT_HORN_COLOS
+			playerData.ult1ID = 40223
+			playerData.ult2ID = 122395
 		end
 		if playerData.classId == 2 then
-			playerData.ultType = ULT_ATRO
+			playerData.ult1ID = 23492
 		end
 
 		return playerData
