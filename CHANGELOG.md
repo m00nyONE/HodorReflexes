@@ -1,6 +1,9 @@
 [SIZE="2"][B]IMPORTANT:[/B] After updating HodorReflexes, keep Minion open for at least 2 minutes to allow all files to unpack properly and avoid corruption.[/SIZE]
 
-## 2025.02.12
+## 2025.03.09 - @m00nyONE
+- just icons
+
+## 2025.02.12 - @m00nyONE
 - fixed an issue that prevents moving the UI elements
 
 ## 2025.02.11 - @m00nyONE
