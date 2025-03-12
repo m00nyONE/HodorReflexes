@@ -1465,10 +1465,8 @@ end
 
 local function HasUnitHorn(data)
 	local abilityIDs = {40223,	38563, 40220}
-	for id, _ in pairs(abilityIDs) do
+	for _, id in ipairs(abilityIDs) do
 		if data.ult1ID == id then return true, data.ult1Cost end
-	end
-	for id, _ in pairs(abilityIDs) do
 		if data.ult2ID == id then return true, data.ult2Cost end
 	end
 	if data.ultActivatedSetID == 1 then	return true, 250 end
@@ -1477,10 +1475,8 @@ local function HasUnitHorn(data)
 end
 local function HasUnitColos(data)
 	local abilityIDs = {122395,	122388, 122174}
-	for id, _ in pairs(abilityIDs) do
+	for _, id in ipairs(abilityIDs) do
 		if data.ult1ID == id then return true, data.ult1Cost end
-	end
-	for id, _ in pairs(abilityIDs) do
 		if data.ult2ID == id then return true, data.ult2Cost end
 	end
 
@@ -1488,10 +1484,8 @@ local function HasUnitColos(data)
 end
 local function HasUnitAtro(data)
 	local abilityIDs = {23492,	23634, 23495}
-	for id, _ in pairs(abilityIDs) do
+	for _, id in ipairs(abilityIDs) do
 		if data.ult1ID == id then return true, data.ult1Cost end
-	end
-	for id, _ in pairs(abilityIDs) do
 		if data.ult2ID == id then return true, data.ult2Cost end
 	end
 
@@ -1591,7 +1585,7 @@ do
 			local atronachRow = data.atronachRow
 
 			-- Only shows rows for online players with non empty ult %
-			if data.ultValue > 0 and (isTestRunning or units.IsOnline(tag)) then
+			if data.ultValue > 0 and (data.ult1ID ~= 0 or data.ult2ID ~= 0) and (isTestRunning or units.IsOnline(tag)) then
 
 				local hasHorn, hornCost = HasUnitHorn(data)
 				local hasColos, colosCost = HasUnitColos(data)
@@ -1661,6 +1655,8 @@ do
 					--if misc > 0 then
 					if misc > 0 then
 						miscUltRow:GetNamedChild('_RawValue'):SetText(strformat('|c%s%d|r', "FFFFFF", zo_min(500, data.ultValue)))
+						miscUltRow:GetNamedChild('_UltIconFrontbar'):SetTexture(GetAbilityIcon(data.ult1ID))
+						miscUltRow:GetNamedChild('_UltIconBackbar'):SetTexture(GetAbilityIcon(data.ult2ID))
 						miscUltRow:SetHidden(false)
 						rowsMiscUlt[#rowsMiscUlt + 1] = {tag, misc, data}
 					else
@@ -2063,16 +2059,24 @@ local function ToggleTest(players)
 
 	players = players or {'@WarfireX', '@LikoXie', '@andy.s', '@Alcast', '@NefasQS', '@Wheel5', '@PK44', '@LokiClermeil', '@m00nyONE'}
 
+	local randomUltPool = {
+		0,
+		40239,
+		32948,
+		85127,
+	}
+
+
 	local function GetRandomPlayerData(name)
 		local dmg = zo_random(500, 1200)
 		local playerData = {
 			tag = name,
 			name = name,
-			classId = zo_random() < 0.5 and zo_random(1, 6) or 5, -- 50% chance for necro
+			classId = zo_random() < 0.60 and zo_random(1, 7) or 5, -- 40% chance for necro
 			isPlayer = name == GetUnitDisplayName('player'),
 			ultValue = zo_random(1, 500),
-			ult1ID = 0,
-			ult2ID = 0,
+			ult1ID = randomUltPool[zo_random(1, #randomUltPool)],
+			ult2ID = randomUltPool[zo_random(1, #randomUltPool)],
 			ult1Cost = 0,
 			ult2Cost = 0,
 			ultTime = time(),
@@ -2082,8 +2086,8 @@ local function ToggleTest(players)
 			dmgTime = time(),
 		}
 		if playerData.classId == 5 then
-			playerData.ult1ID = 40223
-			playerData.ult2ID = 122395
+			playerData.ult1ID = 122395
+			playerData.ult2ID = 40223
 		end
 		if playerData.classId == 2 then
 			playerData.ult1ID = 23492
