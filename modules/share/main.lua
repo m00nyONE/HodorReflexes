@@ -167,7 +167,6 @@ local countdownTimeline -- Horn and Colossus animation timeline
 local DATA_PREFIX = 100000000000
 
 local DATA_PING_EXITINSTANCE = 22
-local DATA_PING_HANDSHAKE = 32
 local isGroupMemberSharing = false -- Tracks the number of valid responses
 
 local isNecro = GetUnitClassId('player') == 5
@@ -297,9 +296,7 @@ local function SendData()
 	---- Own pings are not processed, so we update our data manually.
 	--M.UpdatePlayerData(playerTag, pingType, ultType, ult, dmg, dps, lastPingTime)
 	--
-	--if isGroupMemberSharing then
-	--	share:QueueData(rawData)
-	--end
+	--share:QueueData(rawData)
 end
 
 -- Send a number between 1 and 449953.
@@ -851,14 +848,7 @@ function M.ToggleEnabled()
 
 end
 
-function M.SendHandshakePing()
-	M.SendCustomData(DATA_PING_HANDSHAKE, false)
-end
-
 function M.GroupChanged()
-	isGroupMemberSharing = false
-	M.SendHandshakePing()
-
 	M.ToggleShare()
 
 	-- Stop running test and clean group data
@@ -1140,10 +1130,6 @@ end
 
 -- Process data decoded from a map ping.
 function M.ProcessMappingData(tag, data, ms)
-	if data > 0 then
-		isGroupMemberSharing = true
-	end
-
 	-- Custom data ping.
 	if data > 0 and data < share:GetMapSize() then
 		if data == DATA_PING_EXITINSTANCE and IsUnitGroupLeader(tag) then
