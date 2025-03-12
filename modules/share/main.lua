@@ -660,6 +660,179 @@ local function initializeUpdateIcons()
 	end, 1000)
 end
 
+-- Set control text and color.
+local function SetControlText(control, text, color)
+	control:SetText(text)
+	if color then
+		control:SetColor(unpack(color))
+	else
+		control:SetColor(1, 1, 1)
+	end
+end
+
+-- Set control texture and reset coordinates.
+local function SetControlIcon(control, fileName)
+	control:SetTextureCoords(0, 1, 0, 1)
+	control:SetTexture(fileName)
+end
+
+-- Create horn, damage and colossus rows.
+local function CreateControlsForUser(userId, playerData)
+	-- Set user name and icon
+	--local isPlayer = playerData.isPlayer
+	local userIcon = player.GetIconForUserId(userId)
+	local userName = player.GetAliasForUserId(userId, SW.enableColoredNames)
+
+	-- Default player icon (if he doesn't have a custom icon or disabled them)
+	local classId = playerData.classId
+	local defaultIcon = classIcons[classId] and classIcons[classId] or 'esoui/art/campaign/campaignbrowser_guestcampaign.dds'
+
+	-- War Horn row
+	local ultRow, ultKey = ultPool:AcquireObject()
+	ultRow.poolKey = ultKey
+	SetControlText(ultRow:GetNamedChild('_Name'), userName)
+	SetControlIcon(ultRow:GetNamedChild('_Icon'), SW.enableUltimateIcons and userIcon or defaultIcon)
+
+	-- miscUltimates row
+	local miscUltRow, miscUltKey = miscUltPool:AcquireObject()
+	miscUltRow.poolKey = miscUltKey
+	SetControlText(miscUltRow:GetNamedChild('_Name'), userName)
+	SetControlIcon(miscUltRow:GetNamedChild('_Icon'), SW.enableMiscUltimateIcons and userIcon or defaultIcon)
+
+	-- Colossus row
+	local clsRow, clsKey
+	if classId == 5 then -- create colossus control for necros only
+		clsRow, clsKey = clsPool:AcquireObject()
+		clsRow.poolKey = clsKey
+		SetControlText(clsRow:GetNamedChild('_Name'), userName)
+		SetControlIcon(clsRow:GetNamedChild('_Icon'), SW.enableColosIcons and userIcon or defaultIcon)
+	end
+
+	-- atronach Row
+	local atronachRow, atronachKey
+	if classId == 2 then -- create atronach control only for sorcs only
+		atronachRow, atronachKey = atronachPool:AcquireObject()
+		atronachRow.poolKey = atronachKey
+		SetControlText(atronachRow:GetNamedChild('_Name'), userName)
+		SetControlIcon(atronachRow:GetNamedChild('_Icon'), SW.enableAtronachIcons and userIcon or defaultIcon)
+	end
+
+	-- Damage row
+	local dpsRow, dpsKey = dpsPool:AcquireObject()
+	dpsRow.poolKey = dpsKey
+	SetControlText(dpsRow:GetNamedChild('_Name'), userName)
+	SetControlIcon(dpsRow:GetNamedChild('_Icon'), SW.enableDamageIcons and userIcon or defaultIcon)
+
+
+	-- Register icon animation if user has one
+	if SW.enableAnimIcons and HR.anim.RegisterUser(userId) then
+		if SW.enableUltimateIcons then HR.anim.RegisterUserControl(userId, ultRow:GetNamedChild('_Icon')) end
+		if SW.enableMiscUltimateIcons then HR.anim.RegisterUserControl(userId, miscUltRow:GetNamedChild('_Icon')) end
+		if SW.enableDamageIcons then HR.anim.RegisterUserControl(userId, dpsRow:GetNamedChild('_Icon')) end
+		if atronachRow and SW.enableAtronachIcons then HR.anim.RegisterUserControl(userId, atronachRow:GetNamedChild('_Icon')) end
+		if clsRow and SW.enableColosIcons then HR.anim.RegisterUserControl(userId, clsRow:GetNamedChild('_Icon')) end
+		HR.anim.RunUserAnimations(userId)
+	end
+
+	playerData.ultRow = ultRow
+	playerData.dpsRow = dpsRow
+	playerData.clsRow = clsRow
+	playerData.miscUltRow = miscUltRow
+	playerData.atronachRow = atronachRow
+	M.playersData[userId] = playerData
+end
+
+local function onDPSDataReceived(tag, data)
+	if not units.IsGrouped(tag) then return end
+	local dataTime = time()
+
+
+
+	local userId = units.GetDisplayName(tag)
+	local playerData = M.playersData[userId]
+
+	-- Player already exists, only update values
+	if playerData then
+		-- Player's group tag can change any time
+		playerData.tag = tag
+
+		if playerData.dmgTime < dataTime then
+			playerData.dmg = data.dmg
+			playerData.dps = data.dps
+			playerData.dmgType = data.dmpType
+			playerData.dmgTime = dataTime
+		end
+
+		-- Create controls for a new player
+	elseif IsValidString(userId) then
+		playerData = {
+			tag = tag,
+			name = units.GetName(tag),
+			classId = units.GetClassId(tag),
+			isPlayer = units.IsPlayer(tag),
+
+			ultValue = 0,
+			ult1ID = 0,
+			ult2ID = 0,
+			ult1Cost = 0,
+			ult2Cost = 0,
+			ultActivatedSetID = 0,
+
+			dmg = data.dmg,
+			dps = data.dps,
+			dmgType = data.dmpType,
+			dmgTime = dataTime,
+		}
+		CreateControlsForUser(userId, playerData)
+	end
+end
+local function onULTDataReceived(tag, data)
+	if not units.IsGrouped(tag) then return end
+	local dataTime = time()
+
+	local userId = units.GetDisplayName(tag)
+	local playerData = M.playersData[userId]
+
+	-- Player already exists, only update values
+	if playerData then
+		-- Player's group tag can change any time
+		playerData.tag = tag
+
+		-- Only update ult and damage values if the data is fresh
+		-- e.g. ult can be set to 1 when a player uses colossus before received ping is processed
+		--if playerData.ultTime < dataTime then
+			playerData.ultValue = data.ultValue
+			playerData.ult1ID = data.ult1ID
+			playerData.ult2ID = data.ult2ID
+			playerData.ult1Cost = data.ult1Cost
+			playerData.ult2Cost = data.ult2Cost
+			playerData.ultActivatedSetID = data.ultActivatedSetID
+			playerData.ultTime = dataTime
+		--end
+
+		-- Create controls for a new player
+	elseif IsValidString(userId) then
+		playerData = {
+			tag = tag,
+			name = units.GetName(tag),
+			classId = units.GetClassId(tag),
+			isPlayer = units.IsPlayer(tag),
+
+			ultValue = data.ultValue,
+			ult1ID = data.ult1ID,
+			ult2ID = data.ult2ID,
+			ult1Cost = data.ult1Cost,
+			ult2Cost = data.ult2Cost,
+			ultActivatedSetID = data.ultActivatedSetID,
+
+			dmg = 0,
+			dps = 0,
+			dmgType = 0,
+			dmgTime = dataTime,
+		}
+		CreateControlsForUser(userId, playerData)
+	end
+end
 
 -- This addon checks if someone in the group also has Hodor installed to minimize stress on the ESO API and avoid sending data to players who cannot process it.
 function M.Initialize()
@@ -668,11 +841,15 @@ function M.Initialize()
 	share = LDS:RegisterMap("Hodor Reflexes", 30, M.ProcessMappingData)
 
 	lgcs = LGCS.RegisterAddon("HodorReflexes", {"ULT", "DPS"})
-
-	lgcs:RegisterForEvent(lgcs.EVENT_GROUP_ULT_UPDATE, M.onULTDataReceived)
-	lgcs:RegisterForEvent(lgcs.EVENT_PLAYER_ULT_UPDATE, M.onULTDataReceived)
-	lgcs:RegisterForEvent(lgcs.EVENT_GROUP_DPS_UPDATE, M.onDPSDataReceived)
-	lgcs:RegisterForEvent(lgcs.EVENT_PLAYER_DPS_UPDATE, M.onDPSDataReceived)
+	if not lgcs then
+		d("Failed to register addon with LibGroupCombatStats.")
+		return
+	end
+	d("Addon registered")
+	lgcs:RegisterForEvent(LGCS.EVENT_GROUP_ULT_UPDATE, onULTDataReceived)
+	lgcs:RegisterForEvent(LGCS.EVENT_PLAYER_ULT_UPDATE, onULTDataReceived)
+	lgcs:RegisterForEvent(LGCS.EVENT_GROUP_DPS_UPDATE, onDPSDataReceived)
+	lgcs:RegisterForEvent(LGCS.EVENT_PLAYER_DPS_UPDATE, onDPSDataReceived)
 
 	-- Create callback manager
 	M.cm = M.cm or ZO_CallbackObject:New()
@@ -1284,178 +1461,6 @@ function M.IsUnitNearby(tag)
 		end
 	end
 	return false
-end
-
--- Set control text and color.
-local function SetControlText(control, text, color)
-	control:SetText(text)
-	if color then
-		control:SetColor(unpack(color))
-	else
-		control:SetColor(1, 1, 1)
-	end
-end
-
--- Set control texture and reset coordinates.
-local function SetControlIcon(control, fileName)
-	control:SetTextureCoords(0, 1, 0, 1)
-	control:SetTexture(fileName)
-end
-
--- Create horn, damage and colossus rows.
-local function CreateControlsForUser(userId, playerData)
-	-- Set user name and icon
-	--local isPlayer = playerData.isPlayer
-	local userIcon = player.GetIconForUserId(userId)
-	local userName = player.GetAliasForUserId(userId, SW.enableColoredNames)
-
-	-- Default player icon (if he doesn't have a custom icon or disabled them)
-	local classId = playerData.classId
-	local defaultIcon = classIcons[classId] and classIcons[classId] or 'esoui/art/campaign/campaignbrowser_guestcampaign.dds'
-
-	-- War Horn row
-	local ultRow, ultKey = ultPool:AcquireObject()
-	ultRow.poolKey = ultKey
-	SetControlText(ultRow:GetNamedChild('_Name'), userName)
-	SetControlIcon(ultRow:GetNamedChild('_Icon'), SW.enableUltimateIcons and userIcon or defaultIcon)
-
-	-- miscUltimates row
-	local miscUltRow, miscUltKey = miscUltPool:AcquireObject()
-	miscUltRow.poolKey = miscUltKey
-	SetControlText(miscUltRow:GetNamedChild('_Name'), userName)
-	SetControlIcon(miscUltRow:GetNamedChild('_Icon'), SW.enableMiscUltimateIcons and userIcon or defaultIcon)
-
-	-- Colossus row
-	local clsRow, clsKey
-	if classId == 5 then -- create colossus control for necros only
-		clsRow, clsKey = clsPool:AcquireObject()
-		clsRow.poolKey = clsKey
-		SetControlText(clsRow:GetNamedChild('_Name'), userName)
-		SetControlIcon(clsRow:GetNamedChild('_Icon'), SW.enableColosIcons and userIcon or defaultIcon)
-	end
-
-	-- atronach Row
-	local atronachRow, atronachKey
-	if classId == 2 then -- create atronach control only for sorcs only
-		atronachRow, atronachKey = atronachPool:AcquireObject()
-		atronachRow.poolKey = atronachKey
-		SetControlText(atronachRow:GetNamedChild('_Name'), userName)
-		SetControlIcon(atronachRow:GetNamedChild('_Icon'), SW.enableAtronachIcons and userIcon or defaultIcon)
-	end
-
-	-- Damage row
-	local dpsRow, dpsKey = dpsPool:AcquireObject()
-	dpsRow.poolKey = dpsKey
-	SetControlText(dpsRow:GetNamedChild('_Name'), userName)
-	SetControlIcon(dpsRow:GetNamedChild('_Icon'), SW.enableDamageIcons and userIcon or defaultIcon)
-
-
-	-- Register icon animation if user has one
-	if SW.enableAnimIcons and HR.anim.RegisterUser(userId) then
-		if SW.enableUltimateIcons then HR.anim.RegisterUserControl(userId, ultRow:GetNamedChild('_Icon')) end
-		if SW.enableMiscUltimateIcons then HR.anim.RegisterUserControl(userId, miscUltRow:GetNamedChild('_Icon')) end
-		if SW.enableDamageIcons then HR.anim.RegisterUserControl(userId, dpsRow:GetNamedChild('_Icon')) end
-		if atronachRow and SW.enableAtronachIcons then HR.anim.RegisterUserControl(userId, atronachRow:GetNamedChild('_Icon')) end
-		if clsRow and SW.enableColosIcons then HR.anim.RegisterUserControl(userId, clsRow:GetNamedChild('_Icon')) end
-		HR.anim.RunUserAnimations(userId)
-	end
-
-	playerData.ultRow = ultRow
-	playerData.dpsRow = dpsRow
-	playerData.clsRow = clsRow
-	playerData.miscUltRow = miscUltRow
-	playerData.atronachRow = atronachRow
-	M.playersData[userId] = playerData
-end
-
-function M.onDPSDataReceived(tag, data)
-	if not units.IsGrouped(tag) then return end
-	local dataTime = time()
-
-	local userId = units.GetDisplayName(tag)
-	local playerData = M.playersData[userId]
-
-	-- Player already exists, only update values
-	if playerData then
-		-- Player's group tag can change any time
-		playerData.tag = tag
-
-		if playerData.dmgTime < dataTime then
-			playerData.dmg = data.dmg
-			playerData.dps = data.dps
-			playerData.dmgType = data.dmpType
-			playerData.dmgTime = dataTime
-		end
-
-		-- Create controls for a new player
-	elseif IsValidString(userId) then
-		playerData = {
-			tag = tag,
-			name = units.GetName(tag),
-			classId = units.GetClassId(tag),
-			isPlayer = units.IsPlayer(tag),
-
-			ultValue = 0,
-			ult1ID = 0,
-			ult2ID = 0,
-			ult1Cost = 0,
-			ult2Cost = 0,
-			ultActivatedSetID = 0,
-
-			dmg = data.dmg,
-			dps = data.dps,
-			dmgType = data.dmpType,
-			dmgTime = dataTime,
-		}
-		CreateControlsForUser(userId, playerData)
-	end
-end
-function M.onULTDataReceived(tag, data)
-	if not units.IsGrouped(tag) then return end
-	local dataTime = time()
-
-	local userId = units.GetDisplayName(tag)
-	local playerData = M.playersData[userId]
-
-	-- Player already exists, only update values
-	if playerData then
-		-- Player's group tag can change any time
-		playerData.tag = tag
-
-		-- Only update ult and damage values if the data is fresh
-		-- e.g. ult can be set to 1 when a player uses colossus before received ping is processed
-		if playerData.ultTime < dataTime then
-			playerData.ultValue = data.ultValue
-			playerData.ult1ID = data.ult1ID
-			playerData.ult2ID = data.ult2ID
-			playerData.ult1Cost = data.ult1Cost
-			playerData.ult2Cost = data.ult2Cost
-			playerData.ultActivatedSetID = data.ultActivatedSetID
-			playerData.ultTime = dataTime
-		end
-
-		-- Create controls for a new player
-	elseif IsValidString(userId) then
-		playerData = {
-			tag = tag,
-			name = units.GetName(tag),
-			classId = units.GetClassId(tag),
-			isPlayer = units.IsPlayer(tag),
-
-			ultValue = data.ultValue,
-			ult1ID = data.ult1ID,
-			ult2ID = data.ult2ID,
-			ult1Cost = data.ult1Cost,
-			ult2Cost = data.ult2Cost,
-			ultActivatedSetID = data.ultActivatedSetID,
-
-			dmg = 0,
-			dps = 0,
-			dmgType = 0,
-			dmgTime = dataTime,
-		}
-		CreateControlsForUser(userId, playerData)
-	end
 end
 
 local function HasUnitHorn(data)
