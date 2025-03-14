@@ -1,5 +1,8 @@
 [SIZE="2"][B]IMPORTANT:[/B] After updating HodorReflexes, keep Minion open for at least 2 minutes to allow all files to unpack properly and avoid corruption.[/SIZE]
 
+## 2025.03.15 - @m00nyONE
+- the next update of HodorReflexes will require 2 new dependencies: LibGroupBroadcast and LibGroupCombatStats
+
 ## 2025.03.09 - @m00nyONE
 - just icons
 
