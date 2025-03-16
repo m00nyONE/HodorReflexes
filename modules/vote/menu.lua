@@ -54,47 +54,23 @@ function M.BuildMenu()
 					M.sv.enableChatMessages = value or false
 				end,
 			},
-			{
-				type = "slider",
-				name = GetString(HR_MENU_VOTE_COUNTDOWN_DURATION),
-				min = 3,
-				max = 10,
-				step = 1,
-				decimals = 0,
-				clampInput = true,
-				default = M.default.pullDuration,
-				getFunc = function() return M.sv.countdownDuration end,
-				setFunc = function(value)
-					M.sv.countdownDuration = value
-				end,
-			},
+			--{
+			--	type = "slider",
+			--	name = GetString(HR_MENU_VOTE_COUNTDOWN_DURATION),
+			--	min = 3,
+			--	max = 10,
+			--	step = 1,
+			--	decimals = 0,
+			--	clampInput = true,
+			--	default = M.default.pullDuration,
+			--	getFunc = function() return M.sv.countdownDuration end,
+			--	setFunc = function(value)
+			--		M.sv.countdownDuration = value
+			--	end,
+			--},
 			{
 				type = "header",
 				name = string.format("|cFFFACD%s|r", GetString(HR_MENU_VOTE_ACTIONS)),
-			},
-			{
-				type = "button",
-				name = GetString(HR_MENU_VOTE_ACTIONS_RC),
-				tooltip = GetString(HR_MENU_VOTE_ACTIONS_RC_TT),
-				func = M.SendReadyCheck,
-				width = 'half',
-			},
-			{
-				type = "button",
-				name = GetString(HR_MENU_VOTE_ACTIONS_COUNTDOWN),
-				tooltip = GetString(HR_MENU_VOTE_ACTIONS_COUNTDOWN_TT),
-				func = function()
-					if IsUnitGroupLeader('player') then
-						M.SendPullCountdown()
-					else
-						LAM.util.ShowConfirmationDialog(GetString(HR_MENU_VOTE_ACTIONS_COUNTDOWN), GetString(HR_MENU_VOTE_ACTIONS_COUNTDOWN_CONFIRM), function()
-							if M.sv.enableChatMessages then
-								d(string.format('|cFF0000%s|r', GetString(HR_MENU_VOTE_ACTIONS_COUNTDOWN_CONFIRM)))
-							end
-						end)
-					end
-				end,
-				width = 'half',
 			},
 			{
 				reference = "HodorReflexesMenu_Vote_LeaderOptions",
