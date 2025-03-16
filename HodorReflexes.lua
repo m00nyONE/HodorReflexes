@@ -207,10 +207,9 @@ local function CheckForOutdatedLibAddonMenu()
 end
 
 local function registerLGBHandler()
-
 	local handler = LGB:RegisterHandler("HodorReflexes")
 	handler:SetDisplayName("Hodor Reflexes")
-	handler:SetDescription("provides various group tools like pull countdowns, leader elections and more")
+	handler:SetDescription("provides various group tools like pull countdowns, exit instance requests and leader elections")
 
 	_LGBHandler = handler
 end
