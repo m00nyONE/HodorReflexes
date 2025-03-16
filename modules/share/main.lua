@@ -10,11 +10,11 @@ HodorReflexes.modules.share = {
 		accountWide = false,
 		enabled = true,
 		disablePvP = true,
-		enableUltimateShare = 0,
-		enableMiscUltimateShare = false,
-		enableDamageShare = false,
-		enableColosShare = false,
-		enableAtronachShare = false,
+		--enableUltimateShare = 0,
+		--enableMiscUltimateShare = false,
+		--enableDamageShare = false,
+		--enableColosShare = false,
+		--enableAtronachShare = false,
 		enableUltimateList = false,
 		enableMiscUltimateList = false,
 		enableAtronachList = false,
@@ -54,7 +54,7 @@ HodorReflexes.modules.share = {
 		myIconColor2 = {1, 1, 1},
 		myIconGradient = false,
 		-- style
-		enableMapPins = false,
+		--enableMapPins = false,
 		styleDamageHeaderOpacity = 0.8,
 		styleDamageRowEvenOpacity = 0.65,
 		styleDamageRowOddOpacity = 0.45,
@@ -90,53 +90,14 @@ local EM = EVENT_MANAGER
 local controlsVisible = false -- current state of UI controls
 --local countdownVisible = false
 
--- Ultimate types.
-local ULT_MISC = 0
-local ULT_HORN = 1
-local ULT_COLOS = 2
-local ULT_ATRO = 3
---local ULT_ULT4 = 4
---local ULT_ULT5 = 5
---local ULT_ULT6 = 6
---local ULT_ULT7 = 7
-local ULT_HORN_COLOS = 8
-local ULT_HORN_ATRO = 9
---local ULT_HORN_ULT4 = 10
---local ULT_HORN_ULT5 = 11
---local ULT_HORN_ULT6 = 12
---local ULT_HORN_ULT7 = 13
---local ULT_COLOS_ATRO = 14 -- this can't exist
---local ULT_COLOS_ULT4 = 15
---local ULT_COLOS_ULT5 = 16
---local ULT_COLOS_ULT6 = 17
---local ULT_COLOS_ULT7 = 18
---local ULT_ATRO_ULT4 = 19
---local ULT_ATRO_ULT5 = 20
---local ULT_ATRO_ULT6 = 21
---local ULT_ATRO_ULT7 = 22
---local ULT_ULT4_ULT5 = 23
---local ULT_ULT4_ULT6 = 24
---local ULT_ULT4_ULT7 = 25
---local ULT_ULT5_ULT6 = 26
---local ULT_ULT5_ULT7 = 27
---local ULT_ULT6_ULT7 = 28
-
---local ULT_NEW = 7 ultis in total (max) - 0-28 possible combinations
-
-local CLASSID_SORC = 2
-local CLASSID_TEMPLAR = 6
-
 -- Damage types.
 local DAMAGE_UNKNOWN = 0
 local DAMAGE_TOTAL = 1
 local DAMAGE_BOSS = 2
---local DAMAGE_NEW = 2 (max)
 
 -- Ability costs are only updated when player is activated or enters combat
 -- to avoid calling an expensive function GetAbilityCost() too often.
-local ABILITY_COST_HORN  = 250
-local ABILITY_COST_COLOS = 175
-local ABILITY_COST_ATRONACH = 200
+local ABILITY_COST_COLOS = GetAbilityCost(122395)
 
 local playerTag = '' -- real group tag instead of "player"
 --local playersData = M.playersData
@@ -164,10 +125,7 @@ local atronachActive, berserkActive = false, false
 
 local countdownTimeline -- Horn and Colossus animation timeline
 
-local DATA_PREFIX = 100000000000
-
 local DATA_PING_EXITINSTANCE = 22
-local isGroupMemberSharing = false -- Tracks the number of valid responses
 
 local isNecro = GetUnitClassId('player') == 5
 local isSorc = GetUnitClassId('player') == 2
@@ -251,54 +209,6 @@ local function IsValidColor(c)
 	return type(c) == 'table' and #c >= 3
 end
 
-local function roundDownToFive(number)
-	local rounded = zo_floor(number / 5) * 5
-	if rounded > number then
-		return rounded - 5
-	else
-		return rounded
-	end
-end
-
--- Send player's ultimate and damage via map ping.
--- This function must always be called from SendAttempt(), which checks whether it's safe to send data.
-local function SendData()
-	--local pingType, ultType, ult, dmg, dps = DAMAGE_UNKNOWN, ULT_HORN, 0, 0, 0
-	--local shareHorn = SV.enableUltimateShare ~= 0 and (hornSlotted and SV.enableUltimateShare or hasSaxhleel and type(SV.enableUltimateShare) == 'number' and SV.enableUltimateShare > 0)
-	--local shareColos = SV.enableColosShare and colosSlotted
-	--local shareAtronach = SV.enableAtronachShare and atronachSlotted
-	--local shareMiscUltimates = SV.enableMiscUltimateShare
-	--if M.IsEnabled() then
-	--	ultType = ULT_MISC
-	--	ult = roundDownToFive(zo_min(500, GetUnitPower("player", POWERTYPE_ULTIMATE)))
-	--	if shareColos then
-	--		ultType = shareHorn and ULT_HORN_COLOS or ULT_COLOS
-	--	elseif shareHorn and shareAtronach then
-	--		ultType = ULT_HORN_ATRO
-	--	elseif shareHorn then
-	--		ultType = ULT_HORN
-	--	elseif shareAtronach then
-	--		ultType = ULT_ATRO
-	--	-- TODO: test if it works
-	--	elseif not shareMiscUltimates then
-	--		ult = 0
-	--	end
-	--	if SV.enableDamageShare then
-	--		pingType, dmg, dps = M.GetPlayerDamage()
-	--		if dmg == 0 or dps == 0 then
-	--			pingType = DAMAGE_UNKNOWN
-	--		end
-	--	end
-	--end
-
-	--local rawData = encodeData(pingType, ultType, ult, dmg, dps)
-	
-	---- Own pings are not processed, so we update our data manually.
-	--M.UpdatePlayerData(playerTag, pingType, ultType, ult, dmg, dps, lastPingTime)
-	--
-	--share:QueueData(rawData)
-end
-
 -- Send a number between 1 and 449953.
 -- If force is true, then data is sent immediately, otherwise it's queued.
 -- If callback function is provided, then it will be called right after the data has been sent (so it might not be received yet).
@@ -343,13 +253,6 @@ function M.SendExitInstance()
 		else
 			SendExitInstance()
 		end
-	end
-end
-
--- This function is called every 100ms and attempts to send player's data ping.
-local function SendAttempt()
-	if LDS:IsSendWindow() then
-		SendData()
 	end
 end
 
@@ -412,14 +315,6 @@ end
 
 function M.UnregisterCustomDataCallback(callback)
 	M.cm:UnregisterCallback('CustomData', callback)
-end
-
-function M.UpdateAbilityCosts()
--- TEMP remove cost calculation because its not needed anymore
-	--ABILITY_COST_HORN  = GetAbilityCost(40223)
-	--ABILITY_COST_COLOS = GetAbilityCost(122395)
-	--ABILITY_COST_ATRONACH = GetAbilityCost(23492)
-
 end
 
 local function CreateSceneFragments()
@@ -746,8 +641,6 @@ local function onDPSDataReceived(tag, data)
 	if not units.IsGrouped(tag) then return end
 	local dataTime = time()
 
-
-
 	local userId = units.GetDisplayName(tag)
 	local playerData = M.playersData[userId]
 
@@ -933,15 +826,10 @@ function M.Initialize()
 end
 
 function M.IsEnabled()
-
 	return SW.enabled and (not SW.disablePvP or not IsPlayerInAvAWorld() and not IsActiveWorldBattleground())
-
 end
 
 function M.ToggleEnabled()
-
-	--M.UpdateAbilityCosts()
-
 	local colosIds = {122380, 122391, 122398} -- colossus ability cast
 	--local mvIds = {122177, 122397, 122389, 163060, 106754} -- major vuln applied (unmorphed, stam, mag, kynmarcher's cruelty effect, turning tide set)
 
@@ -1026,8 +914,6 @@ function M.ToggleEnabled()
 end
 
 function M.GroupChanged()
-	M.ToggleShare()
-
 	-- Stop running test and clean group data
 	if isTestRunning then
 		CleanGroupData(true)
@@ -1337,20 +1223,6 @@ function M.RefreshControls()
 	isUltControlRefresh = not isUltControlRefresh
 end
 
--- Enable/disable sharing.
-function M.ToggleShare()
-	EM:UnregisterForUpdate(M.name .. "SendData")
-	if units.IsGrouped('player') then
-		if M.IsEnabled() and (SV.enableUltimateShare and SV.enableUltimateShare ~= 0 or SV.enableDamageShare or SV.enableColosShare or SV.enableMiscUltimateShare or SV.enableAtronachShare) then
-			-- Enable data sharing
-			EM:RegisterForUpdate(M.name .. "SendData", 100, SendAttempt)
-		else
-			share:QueueData(0) -- send zero values
-		end
-	end
-	M.RefreshVisibility()
-end
-
 function M.RefreshVisibility()
 	controlsVisible = not M.uiLocked or M.IsEnabled() and units.IsGrouped('player')
 	-- Refresh fragments
@@ -1403,16 +1275,6 @@ function M.GetUltPercentage(raw, abilityCost)
 
 	return zo_min(200, ultPercentage)
 end
---
---function M.GetUltType()
---	if SV.enableUltimateShare and SV.enableUltimateShare ~= 0 and SV.enableColosShare then
---		return ULT_HORN_COLOS
---	elseif SV.enableColosShare then
---		return ULT_COLOS
---	else
---		return ULT_HORN
---	end
---end
 
 function M.GetDamageTypeName(t)
 	local names = {
@@ -1833,19 +1695,6 @@ function M.LockUI()
 	hud.LockControls(HodorReflexes_Share_Ultimates, HodorReflexes_Share_MiscUltimates, HodorReflexes_Share_Damage, HodorReflexes_Share_Colos, HodorReflexes_Share_ColosCountdown, HodorReflexes_Share_HornCountdown, HodorReflexes_Share_HornIcon, HodorReflexes_Share_Atronach)
 end
 
-function M.ToggleDamageShare()
-	SV.enableDamageShare = not SV.enableDamageShare
-	M.ToggleShare()
-end
-
-function M.ToggleMiscUltimatesShare()
-	SV.enableMiscUltimateShare = not SV.enableMiscUltimateShare
-end
-
-function M.ToggleAtronachShare()
-	SV.enableAtronachShare = not SV.enableAtronachShare
-end
-
 function M.RestorePosition()
 
 	local ultimateLeft = SV.ultimateLeft
@@ -1977,65 +1826,49 @@ function M.ToggleAnimations(enabled, updateSW)
 end
 
 function M.UltimatesOnMoveStop()
-
 	SV.ultimateLeft = HodorReflexes_Share_Ultimates:GetLeft()
 	SV.ultimateTop = HodorReflexes_Share_Ultimates:GetTop()
-
 end
 
 function M.MiscUltimatesOnMoveStop()
-
 	SV.miscUltimateLeft = HodorReflexes_Share_MiscUltimates:GetLeft()
 	SV.miscUltimateTop = HodorReflexes_Share_MiscUltimates:GetTop()
-
 end
 
 function M.DamageOnMoveStop()
-
 	SV.damageLeft = HodorReflexes_Share_Damage:GetLeft()
 	SV.damageTop = HodorReflexes_Share_Damage:GetTop()
-
 end
 
 function M.ColosOnMoveStop()
-
 	SV.colosLeft = HodorReflexes_Share_Colos:GetLeft()
 	SV.colosTop = HodorReflexes_Share_Colos:GetTop()
-
 end
 
 function M.AtronachOnMoveStop()
-
 	SV.atronachLeft = HodorReflexes_Share_Atronach:GetLeft()
 	SV.atronachTop = HodorReflexes_Share_Atronach:GetTop()
-
 end
 
 function M.HornCountdownOnMoveStop()
-
 	SV.hornCountdownCenterX, SV.hornCountdownCenterY = HodorReflexes_Share_HornCountdown:GetCenter()
 
 	HodorReflexes_Share_HornCountdown:ClearAnchors()
 	HodorReflexes_Share_HornCountdown:SetAnchor(CENTER, GuiRoot, TOPLEFT, SV.hornCountdownCenterX, SV.hornCountdownCenterY)
-
 end
 
 function M.ColosCountdownOnMoveStop()
-
 	SV.colosCountdownCenterX, SV.colosCountdownCenterY = HodorReflexes_Share_ColosCountdown:GetCenter()
 
 	HodorReflexes_Share_ColosCountdown:ClearAnchors()
 	HodorReflexes_Share_ColosCountdown:SetAnchor(CENTER, GuiRoot, TOPLEFT, SV.colosCountdownCenterX, SV.colosCountdownCenterY)
-
 end
 
 function M.HornIconOnMoveStop()
-
 	SV.hornIconCenterX, SV.hornIconCenterY = HodorReflexes_Share_HornIcon:GetCenter()
 
 	HodorReflexes_Share_HornIcon:ClearAnchors()
 	HodorReflexes_Share_HornIcon:SetAnchor(CENTER, GuiRoot, TOPLEFT, SV.hornIconCenterX, SV.hornIconCenterY)
-
 end
 
 function M.HornIconOnMouseWheel(delta)

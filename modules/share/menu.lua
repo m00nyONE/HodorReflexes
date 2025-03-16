@@ -61,7 +61,6 @@ function M.BuildMenu()
 			getFunc = function() return M.sw.disablePvP end,
 			setFunc = function(value)
 				M.sw.disablePvP = value or false
-				M.ToggleShare()
 			end
 		},
 		{
@@ -95,18 +94,6 @@ function M.BuildMenu()
 			width = 'half',
 		},
 		{
-			type = "checkbox",
-			name = GetString(HR_MENU_DAMAGE_SHARE),
-			tooltip = GetString(HR_MENU_DAMAGE_SHARE_TT),
-			default = M.default.enableDamageShare,
-			getFunc = function() return M.sv.enableDamageShare end,
-			setFunc = function(value)
-				M.sv.enableDamageShare = value or false
-				M.ToggleShare()
-			end,
-			width = 'half',
-		},
-		{
 			type = "header",
 			name = string.format("|cFFFACD%s|r", GetString(HR_MENU_HORN))
 		},
@@ -119,24 +106,6 @@ function M.BuildMenu()
 			setFunc = function(value)
 				M.sv.enableUltimateList = value or false
 			end,
-			width = 'half',
-		},
-		{
-			type = "dropdown",
-			name = GetString(HR_MENU_HORN_SHARE),
-			tooltip = GetString(HR_MENU_HORN_SHARE_TT),
-			default = M.default.enableUltimateShare,
-			getFunc = function() return M.sv.enableUltimateShare or 0 end,
-			setFunc = function(value)
-				M.sv.enableUltimateShare = value or 0
-				M.ToggleShare()
-			end,
-			choices = {
-				GetString(HR_MENU_HORN_SHARE_NONE), GetString(HR_MENU_HORN_SHARE_HORN), GetString(HR_MENU_HORN_SHARE_SAXHLEEL1), GetString(HR_MENU_HORN_SHARE_SAXHLEEL250),
-			},
-			choicesValues = {
-				0, true, 1, 250,
-			},
 			width = 'half',
 		},
 		{
@@ -226,18 +195,6 @@ function M.BuildMenu()
 		},
 		{
 			type = "checkbox",
-			name = GetString(HR_MENU_COLOS_SHARE),
-			tooltip = GetString(HR_MENU_COLOS_SHARE_TT),
-			default = M.default.enableColosShare,
-			getFunc = function() return M.sv.enableColosShare end,
-			setFunc = function(value)
-				M.sv.enableColosShare = value or false
-				M.ToggleShare()
-			end,
-			width = 'half',
-		},
-		{
-			type = "checkbox",
 			name = GetString(HR_MENU_COLOS_SHOW_PERCENT),
 			tooltip = GetString(HR_MENU_COLOS_SHOW_PERCENT_TT),
 			default = function() if M.default.showColosPercentValue == 1 then return true end return false end,
@@ -254,26 +211,6 @@ function M.BuildMenu()
 			setFunc = function(value) if value then M.sv.showColosRawValue = 1 return end M.sv.showColosRawValue = 0 end,
 			width = 'half',
 		},
-		--{
-		--	type = "dropdown",
-		--	name = GetString(HR_MENU_COLOS_PRIORITY),
-		--	tooltip = GetString(HR_MENU_COLOS_PRIORITY_TT),
-		--	default = M.sv.colosPriority,
-		--	getFunc = function()
-		--		local priority = M.sv.colosPriority
-		--		if priority == 'tank' then priority = 'default' end
-		--		return priority end,
-		--	setFunc = function(value)
-		--		M.sv.colosPriority = value or 'default'
-		--	end,
-		--	choices = {
-		--		GetString(HR_MENU_COLOS_PRIORITY_DEFAULT), GetString(HR_MENU_COLOS_PRIORITY_ALWAYS), GetString(HR_MENU_COLOS_PRIORITY_NEVER),
-		--	},
-		--	choicesValues = {
-		--		'default', 'always', 'never',
-		--	},
-		--	width = 'half',
-		--},
 		{
 			type = "checkbox",
 			name = GetString(HR_MENU_COLOS_SUPPORT_RANGE),
@@ -347,18 +284,6 @@ function M.BuildMenu()
 		},
 		{
 			type = "checkbox",
-			name = GetString(HR_MENU_ATRONACH_SHARE),
-			tooltip = GetString(HR_MENU_ATRONACH_SHARE_TT),
-			default = M.default.enableAtronachShare,
-			getFunc = function() return M.sv.enableAtronachShare end,
-			setFunc = function(value)
-				M.sv.enableAtronachShare = value or false
-				M.ToggleShare()
-			end,
-			width = 'half',
-		},
-		{
-			type = "checkbox",
 			name = GetString(HR_MENU_ATRONACH_SHOW_PERCENT),
 			tooltip = GetString(HR_MENU_ATRONACH_SHOW_PERCENT_TT),
 			default = function() if M.default.showAtronachPercentValue == 1 then return true end return false end,
@@ -394,17 +319,6 @@ function M.BuildMenu()
 			choicesValues = {
 				0, 1, 2, 3,
 			},
-			width = 'half',
-		},
-		{
-			type = "checkbox",
-			name = GetString(HR_MENU_MISCULTIMATES_SHARE),
-			tooltip = GetString(HR_MENU_MISCULTIMATES_SHARE_TT),
-			default = M.default.enableMiscUltimateShare,
-			getFunc = function() return M.sv.enableMiscUltimateShare end,
-			setFunc = function(value)
-				M.sv.enableMiscUltimateShare = value or false
-			end,
 			width = 'half',
 		},
 		{
