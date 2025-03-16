@@ -56,12 +56,14 @@ modules/share/ui/colos.xml
 modules/share/ui/atronach.xml
 modules/share/ui/miscUltimates.xml
 modules/share/ui/damage.xml
-modules/share/bindings.xml
 
 modules/vote/main.lua
 modules/vote/menu.lua
 modules/vote/ui.xml
-modules/vote/bindings.xml
+modules/pull/main.lua
+modules/pull/bindings.lua
+modules/exitinstance/main.lua
+modules/exitinstance/bindings.xml
 
 modules/events/main.lua
 modules/events/menu.lua

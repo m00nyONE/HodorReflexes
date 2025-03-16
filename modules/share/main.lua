@@ -125,8 +125,6 @@ local atronachActive, berserkActive = false, false
 
 local countdownTimeline -- Horn and Colossus animation timeline
 
-local DATA_PING_EXITINSTANCE = 22
-
 local isNecro = GetUnitClassId('player') == 5
 local isSorc = GetUnitClassId('player') == 2
 local playerClassId = GetUnitClassId('player')
@@ -160,15 +158,6 @@ local combat = HR.combat
 local hud = HR.hud
 
 local ULT_FRAGMENT, DPS_FRAGMENT, CLS_FRAGMENT, CNT_FRAGMENT, HRN_FRAGMENT, HNT_FRAGMENT, MISCULT_FRAGMENT, ATRO_FRAGMENT -- HUD fragments
-
-local exitInstancePending = false
-
-local sendExitInstanceButton = {
-	name = GetString(HR_SEND_EXIT_INSTANCE),
-	keybind = 'HR_SEND_EXIT_INSTANCE',
-	callback = function() M.SendExitInstance() end,
-	alignment = KEYBIND_STRIP_ALIGN_CENTER,
-}
 
 -- Check player ultimates for horn/colossus to share them only when they are slotted
 local function CheckSlottedUlts()
@@ -229,32 +218,6 @@ function M.SendCustomData(data, force, callback)
 	end
 end
 
-local function SendExitInstance()
-	if exitInstancePending then return end -- prevent button spam
-	-- Leave yourself only after the ping is sent.
-	M.SendCustomData(DATA_PING_EXITINSTANCE, true, function()
-		if CanExitInstanceImmediately() then
-			zo_callLater(function()
-				exitInstancePending = false
-				ExitInstanceImmediately()
-			end, 100)
-		end
-	end)
-	exitInstancePending = true
-end
-
--- Send ping to force everyone in the group to exit the current instance (raid leader only).
-function M.SendExitInstance()
-	if IsUnitGroupLeader('player') then
-		if HR.sv.confirmExitInstance then
-			LibAddonMenu2.util.ShowConfirmationDialog(GetString(HR_BINDING_SEND_EXIT_INSTANCE), GetString(HR_SEND_EXIT_INSTANCE_CONFIRM), function()
-				SendExitInstance()
-			end)
-		else
-			SendExitInstance()
-		end
-	end
-end
 
 -- Clean playersData from players who are not in the group anymore.
 local function CleanGroupData(force)
@@ -786,8 +749,7 @@ function M.Initialize()
 	end
 
 	-- Bindings
-	ZO_CreateStringId('SI_BINDING_NAME_HR_SEND_EXIT_INSTANCE', GetString(HR_BINDING_SEND_EXIT_INSTANCE))
-	ZO_CreateStringId('SI_BINDING_NAME_HR_SHARE_TOGGLE_DPS', GetString(HR_BINDING_DPS_SHARE))
+	--ZO_CreateStringId('SI_BINDING_NAME_HR_SHARE_TOGGLE_DPS', GetString(HR_BINDING_DPS_SHARE))
 
 	-- Build settings menus
 	M.BuildMenu()
@@ -810,18 +772,6 @@ function M.Initialize()
 	M.ToggleAnimations(SW.enableAnimations, false)
 
 	M.ApplyStyle()
-
-	-- Add hotkey to exit instance
-	--local function OnStateChanged(oldState, newState)
-	local function OnStateChanged(_, newState)
-		if newState == SCENE_FRAGMENT_SHOWING and IsUnitGroupLeader('player') then
-			KEYBIND_STRIP:AddKeybindButton(sendExitInstanceButton)
-		elseif newState == SCENE_FRAGMENT_HIDING then
-			KEYBIND_STRIP:RemoveKeybindButton(sendExitInstanceButton)
-		end
-	end
-	KEYBOARD_GROUP_MENU_SCENE:RegisterCallback('StateChange', OnStateChanged)
-	GAMEPAD_GROUP_SCENE:RegisterCallback('StateChange', OnStateChanged)
 
 end
 
@@ -1195,12 +1145,7 @@ end
 function M.ProcessMappingData(tag, data, ms)
 	-- Custom data ping.
 	if data > 0 and data < share:GetMapSize() then
-		if data == DATA_PING_EXITINSTANCE and IsUnitGroupLeader(tag) then
-			-- Group leader wants everybody to exit the instance
-			HR.ExitInstance()
-		else
-			M.cm:FireCallbacks('CustomData', tag, data)
-		end
+		M.cm:FireCallbacks('CustomData', tag, data)
 		-- Data is encoded between DATA_PREFIX and DATA_PREFIX * 2
 	end
 end

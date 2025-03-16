@@ -17,7 +17,8 @@ This file contains the core functionality and initialization logic for the addon
 
 Dependencies:
 - LibAddonMenu-2.0 > 32
-- LibDataShare
+- LibGroupBroadcast
+- LibGroupCombatStats
 - LibCombat
 - LibStub (optional, checks for outdated versions)
 ================================================================================
@@ -63,6 +64,10 @@ HR_EVENT_GROUP_CHANGED = "GroupChanged"
 local HR = HodorReflexes
 local EM = EVENT_MANAGER
 local LAM = LibAddonMenu2
+local LGB = LibGroupBroadcast
+
+local _LGBHandler = {}
+local _LGBProtocols = {}
 
 local optionControls = {} -- additional addon settings provided by modules
 
@@ -201,6 +206,15 @@ local function CheckForOutdatedLibAddonMenu()
 	end
 end
 
+local function registerLGBHandler()
+
+	local handler = LGB:RegisterHandler("HodorReflexes")
+	handler:SetDisplayName("Hodor Reflexes")
+	handler:SetDescription("provides various group tools like pull countdowns, leader elections and more")
+
+	_LGBHandler = handler
+end
+
 -- Main initialization function for the addon
 local function Initialize()
 	-- Create callback manager
@@ -212,9 +226,7 @@ local function Initialize()
 	-- check for incompatibilities
 	CheckForOutdatedLibAddonMenu()
 
-
-	-- Bindings
-	ZO_CreateStringId('SI_BINDING_NAME_HR_EXIT_INSTANCE', GetString(HR_BINDING_EXIT_INSTANCE))
+	registerLGBHandler()
 
 	-- Register events
 	EM:RegisterForEvent(HR.name .. "PlayerActivated", EVENT_PLAYER_ACTIVATED, HR.PlayerActivated)
@@ -223,9 +235,16 @@ local function Initialize()
 	if HR.modules.share then HR.modules.share.Initialize() end
 	if HR.modules.vote then HR.modules.vote.Initialize() end
 	if HR.modules.events then HR.modules.events.Initialize() end
+	if HR.modules.pull then
+		HR.modules.pull.DeclareLGBProtocols(_LGBHandler)
+		HR.modules.pull.Initialize()
+	end
+	if HR.modules.exitinstance then
+		HR.modules.exitinstance.DeclareLGBProtocols(_LGBHandler)
+		HR.modules.exitinstance.Initialize()
+	end
 
 	-- Bindings
-	ZO_CreateStringId('SI_BINDING_NAME_HR_EXIT_INSTANCE', GetString(HR_BINDING_EXIT_INSTANCE))
 	ZO_CreateStringId('HR_UPDATED_TITLE', 'Hodor Reflexes ' .. HR.version)
 
 	-- Apply platform styles
@@ -388,22 +407,6 @@ function HR.LockUI()
 
 	if HodorReflexesMenu_LockUI then LAM.util.RequestRefreshIfNeeded(HodorReflexesMenu_LockUI) end
 
-end
-
--- Jump out of the current instance immediately. Show confirmation dialog if needed.
-function HR.ExitInstance()
-	if CanExitInstanceImmediately() then
-		if HR.sv.confirmExitInstance then
-			-- This one checks if there is ANY dialog showing. Rework it to check exit instance dialog.
-			if not ZO_Dialogs_IsShowingDialog() then
-				LAM.util.ShowConfirmationDialog(GetString(HR_EXIT_INSTANCE), GetString(HR_EXIT_INSTANCE_CONFIRM), function()
-					ExitInstanceImmediately()
-				end)
-			end
-		else
-			ExitInstanceImmediately()		
-		end
-	end
 end
 
 SLASH_COMMANDS["/hodor"] = function(str)
