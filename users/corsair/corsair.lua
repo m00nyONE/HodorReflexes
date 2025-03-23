@@ -14,6 +14,7 @@ u["@Ipnoz"] = {"Ipnoz", "|cff2117I|r|cff4315p|r|cff6412n|r|cff8610o|r|cffa70ez|r
 u["@Reachy"] = {"Reachy", "|cfffb00R|r|cfff800e|r|cfff500a|r|cfff200c|r|cffef00h|r|cffec00y|r", "HodorReflexes/users/corsair/reachy.dds"}
 u["@Thelinor"] = {"Thelinor", "|cc1c2c0T|r|cafafaeh|r|c9c9d9ce|r|c8a8b8al|r|c787877i|r|c666665n|r|c535353o|r|c414141r|r", "HodorReflexes/users/corsair/thelinor.dds"}
 u["@xTazu"] = {"xTazu", "|cd6931bx|r|caeae1aT|r|c85c918a|r|c5de417z|r|c34ff15u|r", "HodorReflexes/users/corsair/xtazu.dds"}
+u["@Darkiros"] = {"Darkiros", "|c2045e4D|r|c403bc9a|r|c6031aer|r|c802893k|r|c9f1e77i|r|cbf145cr|r|cdf0a41o|r|cff0026s|r", "HodorReflexes/users/corsair/Darkiros.dds"}
 
 -- Friends
 u["@AppelleMoiPepette"] = {"Pepette", "|cffae4aP|r|cffbc68e|r|cffc986p|r|cffd7a5e|r|cffe4c3t|r|cfff2e1t|r|cffffffe|r", "HodorReflexes/users/corsair/pepette.dds"}
