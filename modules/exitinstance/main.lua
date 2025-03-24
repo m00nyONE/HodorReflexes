@@ -14,10 +14,10 @@ local M = HR.modules.exitinstance
 local LGB = LibGroupBroadcast
 local LAM = LibAddonMenu2
 local EVENT_ID_EXITINSTANCEREQUEST = 3
---local EVENT_EXIT_INSTANCE_REQUEST_NAME = "exit instance request"
 local EVENT_EXIT_INSTANCE_REQUEST_NAME = "ExitInstanceRequest"
 local _sendExitInstanceRequest
 local localPlayer = "player"
+local localEM = ZO_CallbackObject:New()
 
 
 function M.SendExitInstanceRequest()
