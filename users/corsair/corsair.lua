@@ -14,6 +14,7 @@ u["@Ipnoz"] = {"Ipnoz", "|cff2117I|r|cff4315p|r|cff6412n|r|cff8610o|r|cffa70ez|r
 u["@Reachy"] = {"Reachy", "|cfffb00R|r|cfff800e|r|cfff500a|r|cfff200c|r|cffef00h|r|cffec00y|r", "HodorReflexes/users/corsair/reachy.dds"}
 u["@Thelinor"] = {"Thelinor", "|cc1c2c0T|r|cafafaeh|r|c9c9d9ce|r|c8a8b8al|r|c787877i|r|c666665n|r|c535353o|r|c414141r|r", "HodorReflexes/users/corsair/thelinor.dds"}
 u["@xTazu"] = {"xTazu", "|cd6931bx|r|caeae1aT|r|c85c918a|r|c5de417z|r|c34ff15u|r", "HodorReflexes/users/corsair/xtazu.dds"}
+u["@Darkiros"] = {"Darkiros", "|c2045e4D|r|c403bc9a|r|c6031aer|r|c802893k|r|c9f1e77i|r|cbf145cr|r|cdf0a41o|r|cff0026s|r", "HodorReflexes/users/corsair/Darkiros.dds"}
 
 -- Friends
 u["@AppelleMoiPepette"] = {"Pepette", "|cffae4aP|r|cffbc68e|r|cffc986p|r|cffd7a5e|r|cffe4c3t|r|cfff2e1t|r|cffffffe|r", "HodorReflexes/users/corsair/pepette.dds"}
@@ -24,3 +25,4 @@ u["@Lulu_Laventus"] = {"Lulu Laventus", "|c1e08ffL|r|c2408ffu|r|c2b07ffl|r|c3106
 u["@cpcharles"] = {"Charles", "|c7c9dc7C|r|c68aad1h|r|c53b7daa|r|c3ec5e3r|r|c29d2ecl|r|c15dff6e|r|c00ecffs|r", "HodorReflexes/users/corsair/cpcharles.dds"}
 u["@Petitefeuille"] = {"Petitefeuille", "|cdf5334P|r|ce15e3ee|r|ce46947t|r|ce77351i|r|ce97e5at|r|cec8963e|r|cef946df|r|cf29f76e|r|cf4aa7fu|r|cf7b489i|r|cfabf92l|r|cfcca9cl|r|cffd5a5e|r", "HodorReflexes/users/corsair/petitefeuille.dds"}
 u["@Uni_ESO"] = {"Uni", "|c8a0008U|r|cb3000an|r|cdb000di|r", "HodorReflexes/users/corsair/uni_eso.dds"}
+u["@Tinkaaberu"] = {"Tinkaaberu", "|cfa0f17T|r|cf91b23i|r|cf7262en|r|cf63139k|r|cf53d45a|r|cf44850a|r|cf3535bb|r|cf15e66e|r|cf06a72r|r|cef757du|r", "HodorReflexes/users/corsair/Tinkaaberu.dds"}
