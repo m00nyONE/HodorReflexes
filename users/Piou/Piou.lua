@@ -18,3 +18,5 @@ u["@zLieBe"] = {"Liebe", "|cc6180bLiebe|r", "HodorReflexes/users/Piou/Lie.dds"}
 														--[Back up]--
 u["@Karma-Akabane19"] = {"Karma", "|cd22737K|r|cdd4e37a|r|ce97536r|r|cf49c36m|r|cffc336a|r", "HodorReflexes/users/Piou/Kar.dds"} 
 u["@Odin76"] = {"Odin", "|cffc800Odin|r", "HodorReflexes/users/Piou/Odin.dds"}
+u["@Nyo-Rdn"] = {"Nyo", "|c4168f0N|r|c8234e1y|r|cc300d2o|r", "HodorReflexes/users/Piou/Nyo.dds"}
+a["@Nyo-Rdn"] = {"HodorReflexes/users/Piou/Nyo_anim.dds", 52, 1, 15}
