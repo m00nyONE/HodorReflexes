@@ -1193,18 +1193,6 @@ function M.GetDamageTypeName(t)
 	return names[t] and names[t] or strformat('|c%s%s|r |c%s(DPS)|r', SW.styleBossDamageColor, GetString(HR_MISC_DAMAGE), SW.styleTotalDamageColor)
 end
 
--- Return damage type, total damage or boss dps (if it's a boss fight), total dps
-function M.GetPlayerDamage()
-	local data = combat.GetData()
-	if data.DPSOut == 0 then return DAMAGE_UNKNOWN, 0, 0 end
-	local bossUnits, bossDamage, bossTime = combat.GetBossTargetDamage()
-	if bossUnits > 0 then
-		return DAMAGE_BOSS, zo_floor(bossDamage / bossTime / 100), zo_floor(data.DPSOut / 1000)
-	else
-		return DAMAGE_TOTAL, zo_floor(combat.GetFullDamage() / 10000), zo_floor(data.DPSOut / 1000)
-	end
-end
-
 function M.IsUnitNearby(tag)
 	if IsUnitInGroupSupportRange(tag) then
 		return true
