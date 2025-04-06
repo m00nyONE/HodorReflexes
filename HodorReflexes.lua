@@ -209,7 +209,7 @@ end
 local function registerLGBHandler()
 	local handler = LGB:RegisterHandler("HodorReflexes")
 	handler:SetDisplayName("Hodor Reflexes")
-	handler:SetDescription("provides various group tools like pull countdowns, exit instance requests and leader elections")
+	handler:SetDescription("provides various group tools like pull countdowns and exit instance requests")
 
 	_LGBHandler = handler
 end

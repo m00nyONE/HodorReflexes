@@ -5,7 +5,7 @@
             <Anchor point="LEFT" relativeTo="GuiRoot" relativePoint="LEFT" offsetX="900" offsetY="0" />
             <OnMoveStop>HodorReflexes.modules.share.AtronachOnMoveStop()</OnMoveStop>
             <Controls>
-                <Texture name="$(parent)_AtronachIcon" textureFile="HodorReflexes/assets/share/atronach.dds">
+                <Texture name="$(parent)_AtronachIcon" textureFile="HodorReflexes/assets/ui/atronach.dds">
                     <Dimensions x="28" y="28"/>
                     <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)" offsetX="4" offsetY="-8" />
                 </Texture>
@@ -13,7 +13,7 @@
                     <Dimensions x="50" y="24"/>
                     <Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$(parent)_AtronachIcon" offsetX="2" offsetY="0" />
                 </Label>
-                <Texture name="$(parent)_BerserkIcon" textureFile="HodorReflexes/assets/share/major_berserk.dds">
+                <Texture name="$(parent)_BerserkIcon" textureFile="HodorReflexes/assets/ui/major_berserk.dds">
                     <Dimensions x="28" y="28"/>
                     <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)" offsetX="90" offsetY="-8" />
                 </Texture>
