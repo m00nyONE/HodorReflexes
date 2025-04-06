@@ -3,7 +3,6 @@ HodorReflexes.player = {}
 local HR = HodorReflexes
 local player = HR.player
 local util = HR.util
-local units = HR.units
 local users = HR.users
 
 local currentZoneId = 0
@@ -60,13 +59,6 @@ end
 
 function player.GetCurrentHouseId()
 	return currentHouseId
-end
-
-function player.GetUserIdForUnitId(unitId, default)
-
-	local name = GetUnitDisplayName(units.GetTag(unitId))
-	return name and name or default
-
 end
 
 function player.GetAliasForUserId(id, pretty)

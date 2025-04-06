@@ -15,7 +15,6 @@ HodorReflexes.xml
 bindings.xml
 
 extensions/util.lua
-extensions/units.lua
 extensions/player.lua
 extensions/combat.lua
 extensions/anim.lua

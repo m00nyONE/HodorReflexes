@@ -152,7 +152,6 @@ local time = GetGameTimeMilliseconds
 
 local share
 local lgcs
-local units = HR.units
 local player = HR.player
 local combat = HR.combat
 local hud = HR.hud
@@ -768,7 +767,7 @@ function M.ToggleEnabled()
 	-- HodorReflexes callbacks
 	HR.UnregisterCallback(HR_EVENT_COMBAT_START, M.CombatStart)
 	HR.UnregisterCallback(HR_EVENT_COMBAT_END, M.CombatEnd)
-	HR.UnregisterCallback(HR_EVENT_UNITS_UPDATED, M.GroupChanged)
+	HR.UnregisterCallback(HR_EVENT_GROUP_CHANGED, M.GroupChanged)
 
 	-- Colossus cast
 	for i, _ in ipairs(colosIds) do
@@ -795,7 +794,7 @@ function M.ToggleEnabled()
 		-- HodorReflexes callbacks
 		HR.RegisterCallback(HR_EVENT_COMBAT_START, M.CombatStart)
 		HR.RegisterCallback(HR_EVENT_COMBAT_END, M.CombatEnd)
-		HR.RegisterCallback(HR_EVENT_UNITS_UPDATED, M.GroupChanged)
+		HR.RegisterCallback(HR_EVENT_GROUP_CHANGED, M.GroupChanged)
 
 		-- Colossus cast
 		for i, id in ipairs(colosIds) do
@@ -986,13 +985,13 @@ do
 	end
 
 	-- Someone cast colossus.
-	function M.ColosCast(_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, targetUnitId)
+	function M.ColosCast(_, _, _, _, _, _, displayName, _, _, _, _, _, _, _, _, targetUnitId)
 		-- Don't do anything if colossus list is disabled
 		if not SV.enableColosList then return end
 
-		local unitTag = units.GetTag(targetUnitId)
-		local userId = GetUnitDisplayName(unitTag)
-		local data = userId and M.playersData[userId]
+		local userId = getRealDisplayName(displayName)
+		local unitTag = playersData.tag
+		local data = userId and playersData[userId]
 		if data and data.ultValue > 0 then -- reset ult % in the colossus list
 			data.ultValue = 1
 			data.ultTime = time() + LDS:GetPingRate() -- don't let the next incoming ping overwrite this value
@@ -1069,14 +1068,14 @@ do
 		end
 	end
 
-	function M.AtronachCast(_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, targetUnitId)
+	function M.AtronachCast(_, _, _, _, _, _, displayName, _, _, _, _, _, _, _, _, targetUnitId)
 		---- Someone cast atronach.
 		-- Don't do anything if colossus list is disabled
 		if not SV.enableAtronachList then return end
 
-		local unitTag = units.GetTag(targetUnitId)
-		local userId = GetUnitDisplayName(unitTag)
-		local data = userId and M.playersData[userId]
+		local userId = getRealDisplayName(displayName)
+		local unitTag = playersData.tag
+		local data = userId and playersData[userId]
 		if data and data.ultValue > 0 then -- reset ult % in the colossus list
 			data.ultValue = 1
 			data.ultTime = time() + LDS:GetPingRate() -- don't let the next incoming ping overwrite this value

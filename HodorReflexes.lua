@@ -258,7 +258,6 @@ end
 function HR.PlayerActivated()
 
 	HR.player.Initialize()
-	HR.units.Initialize()
 
 	HR.cm:FireCallbacks(HR_EVENT_PLAYER_ACTIVATED)
 
