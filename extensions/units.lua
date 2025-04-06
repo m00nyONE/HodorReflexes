@@ -36,39 +36,39 @@ function units.GetTag(id)
 	return idTag[id]
 end
 
-function units.GetId(tag)
-	local unit = unitList[tag] -- accessing unitList[tag] twice is slower than creating a local variable for it
-	return unit and unit.id
-end
+--function units.GetId(tag)
+--	local unit = unitList[tag] -- accessing unitList[tag] twice is slower than creating a local variable for it
+--	return unit and unit.id
+--end
 
-function units.IsOnline(tag)
-	local unit = unitList[tag]
-	return unit ~= nil and unit.isOnline
-end
+--function units.IsOnline(tag)
+--	local unit = unitList[tag]
+--	return unit ~= nil and unit.isOnline
+--end
 
-function units.IsPlayer(tag)
-	local unit = unitList[tag]
-	return unit and unit.isPlayer
-end
+--function units.IsPlayer(tag)
+--	local unit = unitList[tag]
+--	return unit and unit.isPlayer
+--end
 
-function units.GetClassId(tag)
-	local unit = unitList[tag]
-	return unit and unit.classId
-end
+--function units.GetClassId(tag)
+--	local unit = unitList[tag]
+--	return unit and unit.classId
+--end
 
-function units.GetName(tag)
-	local unit = unitList[tag]
-	return unit and unit.name
-end
+--function units.GetName(tag)
+--	local unit = unitList[tag]
+--	return unit and unit.name
+--end
 
-function units.GetDisplayName(tag)
-	local unit = unitList[tag]
-	return unit and unit.displayName
-end
+--function units.GetDisplayName(tag)
+--	local unit = unitList[tag]
+--	return unit and unit.displayName
+--end
 
-function units.IsGrouped(tag)
-	return unitList[tag] ~= nil
-end
+--function units.IsGrouped(tag)
+--	return unitList[tag] ~= nil
+--end
 
 -- Returns a real group tag for "player".
 function units.GetPlayerTag()
