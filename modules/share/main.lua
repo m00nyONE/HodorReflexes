@@ -247,6 +247,8 @@ local function CleanGroupData(force)
 		dpsPool:ReleaseAllObjects()
 		clsPool:ReleaseAllObjects()
 		atronachPool:ReleaseAllObjects()
+
+		M.RefreshVisibility()
 	end
 
 end
@@ -577,6 +579,8 @@ local function CreateControlsForUser(userId, playerData)
 	playerData.miscUltRow = miscUltRow
 	playerData.atronachRow = atronachRow
 	M.playersData[userId] = playerData
+
+	M.RefreshVisibility()
 end
 
 local function onDPSDataReceived(tag, data)
