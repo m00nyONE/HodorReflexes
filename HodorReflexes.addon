@@ -4,7 +4,7 @@
 ## APIVersion: 101044
 ## AddOnVersion: 99999999
 ## SavedVariables: HodorReflexesSV
-## DependsOn: LibAddonMenu-2.0>=32 LibCombat>=54 LibDataShare>=3 LibGroupCombatStats>=20250310 LibGroupBroadcast
+## DependsOn: LibAddonMenu-2.0>=32 LibCombat>=54 LibGroupCombatStats>=20250406 LibGroupBroadcast
 ## OptionalDependsOn: RuESO
 
 lang/en.lua

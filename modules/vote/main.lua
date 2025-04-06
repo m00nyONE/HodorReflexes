@@ -15,9 +15,6 @@ HodorReflexes.modules.vote = {
 
 local HR = HodorReflexes
 local M = HR.modules.vote
-local EM = EVENT_MANAGER
---local share = HR.modules.share
---local LGB = LibGroupBroadcast
 
 local MAIN_FRAGMENT --= nil
 

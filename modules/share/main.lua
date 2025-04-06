@@ -91,9 +91,9 @@ local controlsVisible = false -- current state of UI controls
 --local countdownVisible = false
 
 -- Damage types.
-local DAMAGE_UNKNOWN = 0
-local DAMAGE_TOTAL = 1
-local DAMAGE_BOSS = 2
+local DAMAGE_UNKNOWN = LGCS.DAMAGE_UNKNOWN
+local DAMAGE_TOTAL = LGCS.DAMAGE_TOTAL
+local DAMAGE_BOSS = LGCS.DAMAGE_BOSS
 
 -- Ability costs are only updated when player is activated or enters combat
 -- to avoid calling an expensive function GetAbilityCost() too often.
@@ -197,27 +197,6 @@ end
 local function IsValidColor(c)
 	return type(c) == 'table' and #c >= 3
 end
-
--- Send a number between 1 and 449953.
--- If force is true, then data is sent immediately, otherwise it's queued.
--- If callback function is provided, then it will be called right after the data has been sent (so it might not be received yet).
--- TODO: pillager send
-function M.SendCustomData(data, force, callback)
-	if data > 0 and data < share:GetMapSize() then
-		if force then
-			local result = share:SendData(data)
-			if type(callback) == "function" then
-				callback(result)
-			end
-			return result
-		else
-			return share:QueueData(data, callback)
-		end
-	else
-		return false
-	end
-end
-
 
 -- Clean playersData from players who are not in the group anymore.
 local function CleanGroupData(force)
@@ -690,10 +669,6 @@ end
 
 -- This addon checks if someone in the group also has Hodor installed to minimize stress on the ESO API and avoid sending data to players who cannot process it.
 function M.Initialize()
-
-	-- Register Vvardenfell map for data sharing.
-	share = LDS:RegisterMap("Hodor Reflexes", 30, M.ProcessMappingData)
-
 	lgcs = LGCS.RegisterAddon("HodorReflexes", {"ULT", "DPS"})
 	if not lgcs then
 		d("Failed to register addon with LibGroupCombatStats.")
@@ -1135,16 +1110,6 @@ do
 				zo_callLater(AtronachTick, 50) -- wait 50ms for major berserk to apply
 			end
 		end
-	end
-end
-
-
--- Process data decoded from a map ping.
-function M.ProcessMappingData(tag, data, ms)
-	-- Custom data ping.
-	if data > 0 and data < share:GetMapSize() then
-		M.cm:FireCallbacks('CustomData', tag, data)
-		-- Data is encoded between DATA_PREFIX and DATA_PREFIX * 2
 	end
 end
 
@@ -1918,7 +1883,4 @@ end
 --	d("dps " .. dps .. " " .. dps2)
 --end
 
---SLASH_COMMANDS["/hrscd"] = function(str)
---	share:SendData(tonumber(str))
---end
 RuESO_doubleNamesNPC = nil -- disable RuESO double names, because it breaks CMX boss detection
