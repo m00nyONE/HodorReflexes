@@ -223,14 +223,14 @@ end
 local function CleanGroupData(force)
 
 	-- Find all offline players and players who are not in the current group anymore and remove them
-	if not force and units.IsGrouped('player') then
+	if not force and IsUnitGrouped('player') then
 		-- Find online players in the current group
 		local newPlayers = {}
 		for i = 1, GetGroupSize() do
 			local tag = GetGroupUnitTagByIndex(i)
-			local userId = units.GetDisplayName(tag)
-			if userId and units.IsOnline(tag) then
-				newPlayers[userId] = {tag, units.GetName(tag)}
+			local userId = GetUnitDisplayName(tag)
+			if userId and IsUnitOnline(tag) then
+				newPlayers[userId] = {tag, GetUnitName(tag)}
 			end
 		end
 		-- Remove offline players from playersData
@@ -601,10 +601,9 @@ local function CreateControlsForUser(userId, playerData)
 end
 
 local function onDPSDataReceived(tag, data)
-	if not units.IsGrouped(tag) then return end
+	if not IsUnitGrouped(tag) then return end
 	local dataTime = time()
-
-	local userId = units.GetDisplayName(tag)
+	local userId = GetUnitDisplayName(tag)
 	local playerData = M.playersData[userId]
 
 	-- Player already exists, only update values
@@ -623,9 +622,9 @@ local function onDPSDataReceived(tag, data)
 	elseif IsValidString(userId) then
 		playerData = {
 			tag = tag,
-			name = units.GetName(tag),
-			classId = units.GetClassId(tag),
-			isPlayer = units.IsPlayer(tag),
+			name = GetUnitName(tag),
+			classId = GetUnitClassId(tag),
+			isPlayer = IsUnitPlayer(tag),
 
 			ultValue = 0,
 			ult1ID = 0,
@@ -643,10 +642,9 @@ local function onDPSDataReceived(tag, data)
 	end
 end
 local function onULTDataReceived(tag, data)
-	if not units.IsGrouped(tag) then return end
+	if not IsUnitGrouped(tag) then return end
 	local dataTime = time()
-
-	local userId = units.GetDisplayName(tag)
+	local userId = GetUnitDisplayName(tag)
 	local playerData = M.playersData[userId]
 
 	-- Player already exists, only update values
@@ -670,9 +668,9 @@ local function onULTDataReceived(tag, data)
 	elseif IsValidString(userId) then
 		playerData = {
 			tag = tag,
-			name = units.GetName(tag),
-			classId = units.GetClassId(tag),
-			isPlayer = units.IsPlayer(tag),
+			name = GetUnitName(tag),
+			classId = GetUnitClassId(tag),
+			isPlayer = IsUnitPlayer(tag),
 
 			ultValue = data.ultValue,
 			ult1ID = data.ult1ID,
@@ -875,7 +873,7 @@ function M.GroupChanged()
 
 	-- Update lists every M.refreshRateList if the player is grouped
 	EM:UnregisterForUpdate(M.name .. "RefreshControls")
-	if units.IsGrouped('player') then
+	if IsUnitGrouped("player") then
 		playerTag = units.GetPlayerTag()
 		if M.IsEnabled() then
 			EM:RegisterForUpdate(M.name .. "RefreshControls", M.refreshRateList, M.RefreshControls)
@@ -1014,7 +1012,7 @@ do
 		if not SV.enableColosList then return end
 
 		local unitTag = units.GetTag(targetUnitId)
-		local userId = units.GetDisplayName(unitTag)
+		local userId = GetUnitDisplayName(unitTag)
 		local data = userId and M.playersData[userId]
 		if data and data.ultValue > 0 then -- reset ult % in the colossus list
 			data.ultValue = 1
@@ -1098,7 +1096,7 @@ do
 		if not SV.enableAtronachList then return end
 
 		local unitTag = units.GetTag(targetUnitId)
-		local userId = units.GetDisplayName(unitTag)
+		local userId = GetUnitDisplayName(unitTag)
 		local data = userId and M.playersData[userId]
 		if data and data.ultValue > 0 then -- reset ult % in the colossus list
 			data.ultValue = 1
@@ -1169,7 +1167,7 @@ function M.RefreshControls()
 end
 
 function M.RefreshVisibility()
-	controlsVisible = not M.uiLocked or M.IsEnabled() and units.IsGrouped('player')
+	controlsVisible = not M.uiLocked or M.IsEnabled() and IsUnitGrouped('player')
 	-- Refresh fragments
 	ULT_FRAGMENT:Refresh()
 	MISCULT_FRAGMENT:Refresh()
@@ -1392,7 +1390,7 @@ do
 			local atronachRow = data.atronachRow
 
 			-- Only shows rows for online players with non empty ult %
-			if data.ultValue > 0 and (data.ult1ID ~= 0 or data.ult2ID ~= 0) and (isTestRunning or units.IsOnline(tag)) then
+			if data.ultValue > 0 and (data.ult1ID ~= 0 or data.ult2ID ~= 0) and (isTestRunning or IsUnitOnline(tag)) then
 
 				local hasHorn, hornCost = HasUnitHorn(data)
 				local hasColos, colosCost = HasUnitColos(data)
@@ -1557,7 +1555,7 @@ function M.UpdateDamage()
 	for name, data in pairs(M.playersData) do
 		local tag = data.tag
 		-- Only shows rows for online players with non empty damage
-		if data.dmg > 0 and (isTestRunning or units.IsOnline(tag)) then
+		if data.dmg > 0 and (isTestRunning or IsUnitOnline(tag)) then
 			-- Generate damage string
 			local dmgStr = ''
 			if data.dmgType == DAMAGE_TOTAL then

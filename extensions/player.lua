@@ -64,7 +64,7 @@ end
 
 function player.GetUserIdForUnitId(unitId, default)
 
-	local name = units.GetDisplayName(units.GetTag(unitId))
+	local name = GetUnitDisplayName(units.GetTag(unitId))
 	return name and name or default
 
 end
