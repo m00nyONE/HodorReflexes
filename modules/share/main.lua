@@ -99,8 +99,8 @@ local DAMAGE_BOSS = LGCS.DAMAGE_BOSS
 -- to avoid calling an expensive function GetAbilityCost() too often.
 local ABILITY_COST_COLOS = GetAbilityCost(122395)
 
-local playerTag = '' -- real group tag instead of "player"
---local playersData = M.playersData
+local localPlayer = "player"
+local playersData = M.playersData
 local ultPool, dpsPool, clsPool, miscUltPool, atronachPool -- control pools (https://www.esoui.com/forums/showthread.php?t=143)
 
 local isUltControlRefresh = true
@@ -148,6 +148,7 @@ local isTestRunning = false
 -- Always use zo_floor, zo_min, etc. instead of math.* functions!
 local strformat = string.format
 local tsort = table.sort
+local strfind = string.find
 local time = GetGameTimeMilliseconds
 
 local share
@@ -201,7 +202,7 @@ end
 local function CleanGroupData(force)
 
 	-- Find all offline players and players who are not in the current group anymore and remove them
-	if not force and IsUnitGrouped('player') then
+	if not force and IsUnitGrouped(localPlayer) then
 		-- Find online players in the current group
 		local newPlayers = {}
 		for i = 1, GetGroupSize() do
@@ -212,7 +213,7 @@ local function CleanGroupData(force)
 			end
 		end
 		-- Remove offline players from playersData
-		for userId, data in pairs(M.playersData) do
+		for userId, data in pairs(playersData) do
 			local newData = newPlayers[userId]
 			-- We need to compare character names, because the same user can have 2+ characters in group
 			if newData and data.name == newData[2] then
@@ -229,17 +230,17 @@ local function CleanGroupData(force)
 				if data.miscUltRow then miscUltPool:ReleaseObject(data.miscUltRow.poolKey) end
 				if data.atronachRow then atronachPool:ReleaseObject(data.atronachRow.poolKey) end
 				-- Clear player data
-				M.playersData[userId] = nil
+				playersData[userId] = nil
 			end
 		end
 	else
 		-- Player is not grouped. Delete everyone!
 		-- Stop animations
-		for userId in pairs(M.playersData) do
+		for userId in pairs(playersData) do
 			HR.anim.UnregisterUser(userId)
 		end
 		-- Clear players data list
-		M.playersData = {}
+		playersData = {}
 		-- Release all controls
 		ultPool:ReleaseAllObjects()
 		miscUltPool:ReleaseAllObjects()
@@ -290,7 +291,7 @@ local function CreateSceneFragments()
 		elseif not M.uiLocked then -- unlocked UI, show default notification
 			HodorReflexes_Share_ColosCountdown_Label:SetText(strformat("%s: |cFFFF002.5|r", SV.colosCountdownText))
 			result = true
-		elseif colosOrder == 0 and IsUnitInCombat('player') and M.GetUltPercentage(GetUnitPower("player", POWERTYPE_ULTIMATE), ABILITY_COST_COLOS) >= 100 and (DoesUnitExist('boss1') or DoesUnitExist('boss2') or player.GetCurrentHouseId() > 0) then
+		elseif colosOrder == 0 and IsUnitInCombat(localPlayer) and M.GetUltPercentage(GetUnitPower(localPlayer, POWERTYPE_ULTIMATE), ABILITY_COST_COLOS) >= 100 and (DoesUnitExist('boss1') or DoesUnitExist('boss2') or player.GetCurrentHouseId() > 0) then
 			local t = time()
 			local count = mvEnd - t - 1000
 			if colosEnd - t < 0 and count <= 5000 then -- show if colos is not being casted by anyone and major vuln remaining time is below 5000
@@ -313,7 +314,7 @@ local function CreateSceneFragments()
 		elseif not M.uiLocked then -- unlocked UI, show default notification
 			HodorReflexes_Share_HornCountdown_Label:SetText(strformat("%s: |cFFFF003.0|r", GetString(HR_HORN)))
 			result = true
-		elseif IsUnitInCombat('player') and ((SV.hornCountdownType == 'horn_all' or SV.hornCountdownType == 'force_all') and anyHorn or (SV.hornCountdownType == 'horn_self' or SV.hornCountdownType == 'force_self') and myHorn and hornOrder == 1) then
+		elseif IsUnitInCombat(localPlayer) and ((SV.hornCountdownType == 'horn_all' or SV.hornCountdownType == 'force_all') and anyHorn or (SV.hornCountdownType == 'horn_self' or SV.hornCountdownType == 'force_self') and myHorn and hornOrder == 1) then
 			local t = GetFrameTimeSeconds()
 			local count = 0
 			if SV.hornCountdownType == 'horn_all' or SV.hornCountdownType == 'horn_self' then
@@ -471,7 +472,7 @@ local function initializeUpdateIcons()
 	end
 
 	-- Set the player's icon to the main texture control.
-	_setUpdateIconOnTextureControl(GetUnitDisplayName('player'), HodorReflexes_Updated_Icon5)
+	_setUpdateIconOnTextureControl(GetUnitDisplayName(localPlayer), HodorReflexes_Updated_Icon5)
 
 	-- Update the other texture controls with user icons or animations.
 	for i, control in ipairs(updatedTextureControls) do
@@ -577,7 +578,7 @@ local function CreateControlsForUser(userId, playerData)
 	playerData.clsRow = clsRow
 	playerData.miscUltRow = miscUltRow
 	playerData.atronachRow = atronachRow
-	M.playersData[userId] = playerData
+	playersData[userId] = playerData
 
 	M.RefreshVisibility()
 end
@@ -586,7 +587,7 @@ local function onDPSDataReceived(tag, data)
 	if not IsUnitGrouped(tag) then return end
 	local dataTime = time()
 	local userId = GetUnitDisplayName(tag)
-	local playerData = M.playersData[userId]
+	local playerData = playersData[userId]
 
 	-- Player already exists, only update values
 	if playerData then
@@ -627,7 +628,7 @@ local function onULTDataReceived(tag, data)
 	if not IsUnitGrouped(tag) then return end
 	local dataTime = time()
 	local userId = GetUnitDisplayName(tag)
-	local playerData = M.playersData[userId]
+	local playerData = playersData[userId]
 
 	-- Player already exists, only update values
 	if playerData then
@@ -851,8 +852,7 @@ function M.GroupChanged()
 
 	-- Update lists every M.refreshRateList if the player is grouped
 	EM:UnregisterForUpdate(M.name .. "RefreshControls")
-	if IsUnitGrouped("player") then
-		playerTag = units.GetPlayerTag()
+	if IsUnitGrouped(localPlayer) then
 		if M.IsEnabled() then
 			EM:RegisterForUpdate(M.name .. "RefreshControls", M.refreshRateList, M.RefreshControls)
 		end
@@ -882,7 +882,7 @@ do
 				local eventName = strformat('%sHorn%d', M.name, i)
 				EM:RegisterForEvent(eventName, EVENT_EFFECT_CHANGED, M.OnHornEffectChanged)
 				if SV.selfishMode then
-					EM:AddFilterForEvent(eventName, EVENT_EFFECT_CHANGED, REGISTER_FILTER_UNIT_TAG, 'player', REGISTER_FILTER_ABILITY_ID, hornId[i])
+					EM:AddFilterForEvent(eventName, EVENT_EFFECT_CHANGED, REGISTER_FILTER_UNIT_TAG, localPlayer, REGISTER_FILTER_ABILITY_ID, hornId[i])
 				else
 					EM:AddFilterForEvent(eventName, EVENT_EFFECT_CHANGED, REGISTER_FILTER_UNIT_TAG_PREFIX, 'group', REGISTER_FILTER_ABILITY_ID, hornId[i])
 				end
@@ -1135,7 +1135,7 @@ function M.RefreshControls()
 end
 
 function M.RefreshVisibility()
-	controlsVisible = not M.uiLocked or M.IsEnabled() and IsUnitGrouped('player')
+	controlsVisible = not M.uiLocked or M.IsEnabled() and IsUnitGrouped(localPlayer)
 	-- Refresh fragments
 	ULT_FRAGMENT:Refresh()
 	MISCULT_FRAGMENT:Refresh()
@@ -1152,9 +1152,9 @@ function M.IsDamageListVisible()
 	if SV.enableDamageList == 1 then
 		return true
 	elseif SV.enableDamageList == 2 then
-		return not IsUnitInCombat('player')
+		return not IsUnitInCombat(localPlayer)
 	elseif SV.enableDamageList == 3 then
-		return not IsUnitInCombat('player') or not DoesUnitExist('boss1') and not DoesUnitExist('boss2')
+		return not IsUnitInCombat(localPlayer) or not DoesUnitExist('boss1') and not DoesUnitExist('boss2')
 	else
 		return false
 	end
@@ -1164,9 +1164,9 @@ function M.IsMiscUltimatesListVisible()
 	if SV.enableMiscUltimateList == 1 then
 		return true
 	elseif SV.enableMiscUltimateList == 2 then
-		return not IsUnitInCombat('player')
+		return not IsUnitInCombat(localPlayer)
 	elseif SV.enableMiscUltimateList == 3 then
-		return not IsUnitInCombat('player') or not DoesUnitExist('boss1') and not DoesUnitExist('boss2')
+		return not IsUnitInCombat(localPlayer) or not DoesUnitExist('boss1') and not DoesUnitExist('boss2')
 	else
 		return false
 	end
@@ -1209,7 +1209,7 @@ function M.IsUnitNearby(tag)
 			-- and if unit is out of support range, then he is probably in the same boss fight anyway
 			return true
 		elseif zoneId == 1121 then -- sunspire
-			if IsUnitInCombat('player') and DoesUnitExist('boss1') then
+			if IsUnitInCombat(localPlayer) and DoesUnitExist('boss1') then
 				-- during boss fights everyone is ported to the same room
 				-- but on the last boss we need to exclude portal group
 				local _, hp = GetUnitPower('boss1', POWERTYPE_HEALTH)
@@ -1279,7 +1279,7 @@ do
 			local label = HodorReflexes_Share_HornIcon_Label
 			local bg = HodorReflexes_Share_HornIcon_BG
 
-			local _, x1, y1, z1 = GetUnitWorldPosition('player')
+			local _, x1, y1, z1 = GetUnitWorldPosition(localPlayer)
 			for i = 1, GetGroupSize() do
 				local tag = GetGroupUnitTagByIndex(i)
 				local distance = 21
@@ -1337,8 +1337,7 @@ do
 		local rowsAtronach = {}
 
 		-- Update rows
-		--for name, data in pairs(M.playersData) do
-		for _, data in pairs(M.playersData) do
+		for _, data in pairs(playersData) do
 			local tag = data.tag
 			local ultRow = data.ultRow
 			local miscUltRow = data.miscUltRow
@@ -1454,7 +1453,7 @@ do
 
 			if playerData.isPlayer then
 				local hasHorn, hornCost = HasUnitHorn(playerData)
-				if M.GetUltPercentage(GetUnitPower("player", POWERTYPE_ULTIMATE), hornCost) >= 100 then
+				if M.GetUltPercentage(GetUnitPower(localPlayer, POWERTYPE_ULTIMATE), hornCost) >= 100 then
 					myHornNew = true
 					hornOrder = i
 				end
@@ -1508,7 +1507,7 @@ function M.UpdateDamage()
 	local dmgType
 
 	-- Update rows
-	for name, data in pairs(M.playersData) do
+	for name, data in pairs(playersData) do
 		local tag = data.tag
 		-- Only shows rows for online players with non empty damage
 		if data.dmg > 0 and (isTestRunning or IsUnitOnline(tag)) then
@@ -1536,7 +1535,7 @@ function M.UpdateDamage()
 
 	-- Show rows
 	for i, row in ipairs(rows) do
-		local playerData = M.playersData[row[1]]
+		local playerData = playersData[row[1]]
 		playerData.dpsRow:ClearAnchors()
 		playerData.dpsRow:SetAnchor(TOPLEFT, HodorReflexes_Share_Damage, TOPLEFT, 0, i*22)
 		playerData.dpsRow:SetAnchor(TOPRIGHT, HodorReflexes_Share_Damage, TOPRIGHT, 0, i*22)
@@ -1805,7 +1804,7 @@ local function ToggleTest(players)
 			tag = name,
 			name = name,
 			classId = zo_random() < 0.60 and zo_random(1, 7) or 5, -- 40% chance for necro
-			isPlayer = name == GetUnitDisplayName('player'),
+			isPlayer = name == GetUnitDisplayName(localPlayer),
 			ultValue = zo_random(1, 500),
 			ult1ID = randomUltPool[zo_random(1, #randomUltPool)],
 			ult2ID = randomUltPool[zo_random(1, #randomUltPool)],
@@ -1849,7 +1848,7 @@ end
 SLASH_COMMANDS["/hodor.share"] = function(str)
 	local players = zo_strmatch(str, "^test%s*(.*)")
 	if players then
-		if IsUnitGrouped("player") then
+		if IsUnitGrouped(localPlayer) then
 			d(strformat("|cFF0000%s|r", GetString(HR_TEST_LEAVE_GROUP)))
 		else
 			ToggleTest(IsValidString(players) and {zo_strsplit(" ", players)})
