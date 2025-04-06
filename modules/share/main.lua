@@ -83,7 +83,6 @@ local M = HR.modules.share
 local SV -- shortcut for M.sv
 local SW -- shortcut for M.sw
 
-local LDS = LibDataShare
 local LGCS = LibGroupCombatStats
 local EM = EVENT_MANAGER
 
@@ -104,10 +103,6 @@ local playersData = M.playersData
 local ultPool, dpsPool, clsPool, miscUltPool, atronachPool -- control pools (https://www.esoui.com/forums/showthread.php?t=143)
 
 local isUltControlRefresh = true
-
-local hornSlotted = false -- player has war horn slotted
-local colosSlotted = false -- player has colossus slotted
-local atronachSlotted = false
 
 local myHorn = false -- it's player's turn to horn
 local anyHorn = false -- any horn is ready
@@ -946,7 +941,7 @@ do
 	end
 
 	-- Someone cast colossus.
-	function M.ColosCast(_, _, _, _, _, _, displayName, _, _, _, _, _, _, _, _, targetUnitId)
+	function M.ColosCast(_, _, _, _, _, _, displayName, _, _, _, _, _, _, _, _, _)
 		-- Don't do anything if colossus list is disabled
 		if not SV.enableColosList then return end
 
@@ -1028,7 +1023,7 @@ do
 		end
 	end
 
-	function M.AtronachCast(_, _, _, _, _, _, displayName, _, _, _, _, _, _, _, _, targetUnitId)
+	function M.AtronachCast(_, _, _, _, _, _, displayName, _, _, _, _, _, _, _, _, _)
 		---- Someone cast atronach.
 		-- Don't do anything if colossus list is disabled
 		if not SV.enableAtronachList then return end
@@ -1411,7 +1406,7 @@ do
 			-- We call M.GetHornPercent() instead of using row[2] value for better precision
 
 			if playerData.isPlayer then
-				local hasHorn, hornCost = HasUnitHorn(playerData)
+				local _, hornCost = HasUnitHorn(playerData)
 				if M.GetUltPercentage(GetUnitPower(localPlayer, POWERTYPE_ULTIMATE), hornCost) >= 100 then
 					myHornNew = true
 					hornOrder = i
