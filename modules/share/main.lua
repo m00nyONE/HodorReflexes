@@ -125,10 +125,6 @@ local atronachActive, berserkActive = false, false
 
 local countdownTimeline -- Horn and Colossus animation timeline
 
-local isNecro = GetUnitClassId('player') == 5
-local isSorc = GetUnitClassId('player') == 2
-local playerClassId = GetUnitClassId('player')
-
 local classIcons = {}
 for i = 1, GetNumClasses() do
 	local id, _, _, _, _, _, icon, _, _, _ = GetClassInfo(i)
@@ -151,7 +147,6 @@ local tsort = table.sort
 local strfind = string.find
 local time = GetGameTimeMilliseconds
 
-local share
 local lgcs
 local player = HR.player
 local combat = HR.combat
@@ -159,27 +154,12 @@ local hud = HR.hud
 
 local ULT_FRAGMENT, DPS_FRAGMENT, CLS_FRAGMENT, CNT_FRAGMENT, HRN_FRAGMENT, HNT_FRAGMENT, MISCULT_FRAGMENT, ATRO_FRAGMENT -- HUD fragments
 
--- Check player ultimates for horn/colossus to share them only when they are slotted
-local function CheckSlottedUlts()
-	colosSlotted = false
-	hornSlotted = false
-	atronachSlotted = false
-
-	-- Check backbar ult first, cuz we are smart coderz
-	local ult1 = GetSlotBoundId(ACTION_BAR_ULTIMATE_SLOT_INDEX + 1, HOTBAR_CATEGORY_BACKUP)
-	local ult2 = GetSlotBoundId(ACTION_BAR_ULTIMATE_SLOT_INDEX + 1, HOTBAR_CATEGORY_PRIMARY)
-	-- Check both slots for aggressive horn first, cuz we are smart coderz
-	if ult1 == 40223 or ult2 == 40223 or ult1 == 38563 or ult2 == 38563 or ult1 == 40220 or ult2 == 40220 then
-		hornSlotted = true
+local function getRealDisplayName(displayname)
+	for unit, _ in pairs(playersData) do
+		local found = strfind(displayname, unit)
+		if found then return unit end
 	end
-	-- Check morphed colos first
-	if isNecro and (ult1 == 122395 or ult2 == 122395 or ult1 == 122388 or ult2 == 122388 or ult1 == 122174 or ult2 == 122174) then
-		colosSlotted = true
-	end
-	-- check for sorc attro -- check greater storm attro first
-	if isSorc and(ult1 == 23492 or ult2 == 23492 or ult1 == 23634 or ult2 == 23634 or ult1 == 23495 or ult2 == 23495) then
-		atronachSlotted = true
-	end
+	return nil
 end
 
 local function CheckEquippedSets()
@@ -390,15 +370,6 @@ function M.GetDamageNumFont()
 end
 
 function M.ApplyStyle()
-	if not SW.enableMapPins then
-		-- Hide pings on the world map
-		ZO_PreHook(ZO_MapPin, 'ShouldShowPin', function(self)
-			return self.m_PinType == MAP_PIN_TYPE_PING
-		end)
-		-- Hide pins on the compass
-		COMPASS.container:SetAlphaDropoffBehavior(MAP_PIN_TYPE_PING, 0, 0, 0, 0)
-	end
-
 	HodorReflexes_Share_Damage_BG:SetAlpha(SW.styleDamageHeaderOpacity)
 
 	local font = M.GetDamageNumFont()
@@ -781,16 +752,10 @@ function M.ToggleEnabled()
 	-- Duel
 	isDuel = GetDuelInfo() > 0
 
-	-- Check slotted ults
-	EM:UnregisterForEvent(M.name, EVENT_ACTION_SLOTS_ALL_HOTBARS_UPDATED)
-
 	-------------------------------------------------------
 	-- Register everything again if the addon is enabled --
 	-------------------------------------------------------
 	if M.IsEnabled() then
-
-		-- Disable all conflicting addons.
-		LDS:ResolveConflicts()
 
 		-- HodorReflexes callbacks
 		HR.RegisterCallback(HR_EVENT_COMBAT_START, M.CombatStart)
@@ -821,10 +786,6 @@ function M.ToggleEnabled()
 		-- major berserk applied
 		EM:RegisterForEvent(M.name .. "MajorBerserk", EVENT_EFFECT_CHANGED, M.MajorBerserk)
 		EM:AddFilterForEvent(M.name .. "MajorBerserk", EVENT_EFFECT_CHANGED, REGISTER_FILTER_ABILITY_ID, 61745)
-
-
-		CheckSlottedUlts()
-		EM:RegisterForEvent(M.name, EVENT_ACTION_SLOTS_ALL_HOTBARS_UPDATED, CheckSlottedUlts)
 
 		-- Equipped items changed.
 		CheckEquippedSets()
@@ -994,7 +955,6 @@ do
 		local data = userId and playersData[userId]
 		if data and data.ultValue > 0 then -- reset ult % in the colossus list
 			data.ultValue = 1
-			data.ultTime = time() + LDS:GetPingRate() -- don't let the next incoming ping overwrite this value
 			M.UpdateUltimates()
 		end
 
@@ -1078,7 +1038,6 @@ do
 		local data = userId and playersData[userId]
 		if data and data.ultValue > 0 then -- reset ult % in the colossus list
 			data.ultValue = 1
-			data.ultTime = time() + LDS:GetPingRate() -- don't let the next incoming ping overwrite this value
 			M.UpdateUltimates()
 		end
 
