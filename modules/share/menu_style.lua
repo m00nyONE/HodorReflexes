@@ -11,17 +11,6 @@ function M.BuildStyleMenu()
 		},
 		{
 			type = "checkbox",
-			name = GetString(HR_MENU_STYLE_PINS),
-			tooltip = GetString(HR_MENU_STYLE_PINS_TT),
-			default = M.default.enableMapPins,
-			getFunc = function() return M.sw.enableMapPins end,
-			setFunc = function(value)
-				M.sw.enableMapPins = value or false
-			end,
-			requiresReload = true,
-		},
-		{
-			type = "checkbox",
 			name = GetString(HR_MENU_ANIMATIONS),
 			tooltip = GetString(HR_MENU_ANIMATIONS_TT),
 			default = M.default.enableAnimations,

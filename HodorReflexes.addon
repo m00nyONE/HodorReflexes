@@ -4,7 +4,7 @@
 ## APIVersion: 101044
 ## AddOnVersion: 99999999
 ## SavedVariables: HodorReflexesSV
-## DependsOn: LibAddonMenu-2.0>=32 LibCombat>=79 LibDataShare>=3 LibGroupCombatStats>=20250406 LibGroupBroadcast>=88
+## DependsOn: LibAddonMenu-2.0>=32 LibCombat>=79 LibGroupCombatStats>=20250406 LibGroupBroadcast>=88
 ## OptionalDependsOn: RuESO
 
 lang/en.lua
@@ -15,7 +15,6 @@ HodorReflexes.xml
 bindings.xml
 
 extensions/util.lua
-extensions/units.lua
 extensions/player.lua
 extensions/combat.lua
 extensions/anim.lua
@@ -56,12 +55,14 @@ modules/share/ui/colos.xml
 modules/share/ui/atronach.xml
 modules/share/ui/miscUltimates.xml
 modules/share/ui/damage.xml
-modules/share/bindings.xml
 
 modules/vote/main.lua
 modules/vote/menu.lua
 modules/vote/ui.xml
-modules/vote/bindings.xml
+modules/pull/main.lua
+modules/pull/bindings.lua
+modules/exitinstance/main.lua
+modules/exitinstance/bindings.xml
 
 modules/events/main.lua
 modules/events/menu.lua
