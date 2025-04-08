@@ -945,12 +945,14 @@ do
 		-- Don't do anything if colossus list is disabled
 		if not SV.enableColosList then return end
 
-		local userId = getRealDisplayName(displayName)
-		local unitTag = playersData.tag
-		local data = userId and playersData[userId]
-		if data and data.ultValue > 0 then -- reset ult % in the colossus list
-			data.ultValue = 1
-			M.UpdateUltimates()
+		if displayName then
+			local userId = getRealDisplayName(displayName)
+			local unitTag = playersData.tag
+			local data = userId and playersData[userId]
+			if data and data.ultValue > 0 then -- reset ult % in the colossus list
+				data.ultValue = 1
+				M.UpdateUltimates()
+			end
 		end
 
 		-- Ignore this cast if the caster is out of range
@@ -1028,12 +1030,14 @@ do
 		-- Don't do anything if colossus list is disabled
 		if not SV.enableAtronachList then return end
 
-		local userId = getRealDisplayName(displayName)
-		local unitTag = playersData.tag
-		local data = userId and playersData[userId]
-		if data and data.ultValue > 0 then -- reset ult % in the colossus list
-			data.ultValue = 1
-			M.UpdateUltimates()
+		if displayName then
+			local userId = getRealDisplayName(displayName)
+			local unitTag = playersData.tag
+			local data = userId and playersData[userId]
+			if data and data.ultValue > 0 then -- reset ult % in the colossus list
+				data.ultValue = 1
+				M.UpdateUltimates()
+			end
 		end
 
 		-- Ignore this cast if the caster is out of range
