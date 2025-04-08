@@ -1,5 +1,21 @@
 [SIZE="2"][B]IMPORTANT:[/B] After updating HodorReflexes, keep Minion open for at least 2 minutes to allow all files to unpack properly and avoid corruption.[/SIZE]
 
+## 2025.04.09 - @m00nyONE
+- HodorReflexes2.0 ALPHA release!!! - Backwards incompatible!
+- Almost rewritten the whole codebase ( still a lot TODO )
+- using new sharing system
+- data now gets shared via LibGroupCombatStats and no longer by HodorReflexes itself
+  - Instead of sending everything every 2 seconds, now data is only shared when it changed!
+  - much higher resolution of Ult Points and all ultimates can now be shared together with their cost! No more client side estimating a cost of another members ultimate!
+  - mapPings are GONE! you can uninstall LibDataShare now :-)
+- Small UI improvements
+- a lot of performance enhancements
+- new UIs, Pillager, MA support will follow hopefully soon
+- there might be some translation issues and menu entries that do not work properly - this will get fixed in the next update
+
+If you encounter any problems chill :D
+almost ALL of them can be fixed by either reinstalling LibGroupBroadcast or HodorReflexes
+
 ## 2025.04.08 - @m00nyONE
 - HodorReflexes2.0 is almost ready :-)
 - introducing 2 new dependencies: LibGroupBroadcast, LibGroupCombatStats
