@@ -29,8 +29,8 @@ jobs:
       - name: Replace placeholders with current date
         run: |
           sed -i "s/version = \"dev\"/version = \"${{ env.BUILD_DATE_WITH_DOT }}-dev\"/g" HodorReflexes.lua
-          sed -i "s/## Version: dev/## Version: ${{ env.BUILD_DATE_WITH_DOT }}-dev/g" HodorReflexes.txt
-          sed -i "s/## AddOnVersion: 99999999/## AddOnVersion: ${{ env.BUILD_DATE_NUMBER }}/g" HodorReflexes.txt
+          sed -i "s/## Version: dev/## Version: ${{ env.BUILD_DATE_WITH_DOT }}-dev/g" HodorReflexes.addon
+          sed -i "s/## AddOnVersion: 99999999/## AddOnVersion: ${{ env.BUILD_DATE_NUMBER }}/g" HodorReflexes.addon
 
       - name: Create ZIP archive
         run: |
