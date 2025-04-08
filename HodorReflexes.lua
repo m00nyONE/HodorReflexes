@@ -34,7 +34,6 @@ HodorReflexes = {
 	default = {
 		confirmExitInstance = true,                -- Show confirmation dialog before exiting instances
 		toxicMode = true,                          -- Enable "toxic" mock messages in specific zones
-		disableIncompatibleDependencyWarning = false -- Disable outdated library warning
 	},
 
 	-- Saved variables configuration
@@ -80,9 +79,6 @@ local GAMEPAD_STYLES = {
 	titleTemplate = "HodorReflexes_Updated_Title_Gamepad_Template",
 	dismissTemplate = "HodorReflexes_Updated_Dismiss_Gamepad_Template",
 }
-
--- Incompatible dependency warning flag
-local incompatibleDependencyWarningTriggered = false
 
 -- Toxic mock messages configuration
 local text = {}  -- Stores the currently displayed mock message
@@ -165,47 +161,6 @@ local function UpdatePlatformStyles(styleTable)
 
 end
 
--- Function to check for outdated versions of LibAddonMenu
--- Displays a warning if an incompatible version is detected.
--- Some people complain about this message... there is now an option to disable it.
--- Do what you want, but then don't tell me that you have a problem. You have been warned
-local function CheckForOutdatedLibAddonMenu()
-	if LibStub == nil then return end
-
-	local _, minor = LibStub:GetLibrary("LibAddonMenu-2.0", true)
-	if minor == nil then return end
-
-	if minor <= 32 then
-		incompatibleDependencyWarningTriggered = true
-		if HR.sv.disableIncompatibleDependencyWarning == true then return end
-
-		zo_callLater(function()
-			d("**************************************************")
-			d("**                IMPORTANT NOTICE              **")
-			d("**************************************************")
-			d("Hodor Reflexes has detected an outdated version of LibAddonMenu-2.0 installed!")
-			d("")
-			d("This issue occurs because another addon includes an old version of LibAddonMenu-2.0,")
-			d("which overwrites the version required for Hodor Reflexes to function properly.")
-			d("")
-			d("To fix this issue, you must identify the addon causing the problem and remove the")
-			d("embedded LibAddonMenu-2.0 folder from that addon. Unfortunately, Hodor Reflexes")
-			d("cannot identify the exact addon for you.")
-			d("")
-			d("What you can do:")
-			d("1. Look for addons that have a 'Lib' folder containing LibAddonMenu-2.0.")
-			d("2. Delete the LibAddonMenu-2.0 folder from those addons.")
-			d("3. Ensure that your game uses the latest version of LibAddonMenu-2.0.")
-			d("")
-			d("Note: This is not an issue with Hodor Reflexes itself but a conflict caused by")
-			d("another addon with outdated dependencies.")
-			d("")
-			d("Until you resolve this, Hodor Reflexes may not function as intended.")
-			d("**************************************************")
-		end, 5000)
-	end
-end
-
 local function registerLGBHandler()
 	local handler = LGB:RegisterHandler("HodorReflexes")
 	handler:SetDisplayName("Hodor Reflexes")
@@ -221,9 +176,6 @@ local function Initialize()
 
 	-- Retrieve saved variables
 	HR.sv = ZO_SavedVars:NewAccountWide(HR.svName, HR.svVersion, nil, HR.default)
-
-	-- check for incompatibilities
-	CheckForOutdatedLibAddonMenu()
 
 	registerLGBHandler()
 
@@ -422,8 +374,6 @@ end
 
 SLASH_COMMANDS["/hodor"] = function(str)
 	if str == "lock" then HR.LockUI() return end
-	if str == "isIncompatibleDependencyWarningDisabled" then d(HR.sv.disableIncompatibleDependencyWarning) return end
-	if str == "isIncompatibleDependencyWarningTriggered" then d(incompatibleDependencyWarningTriggered)	return end
 	if str == "version" then d(HR.version) return end
 	if str == "integrity" then HR.integrity.Check()	return end
 end
