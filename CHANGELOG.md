@@ -1,5 +1,24 @@
 [SIZE="2"][B]IMPORTANT:[/B] After updating HodorReflexes, keep Minion open for at least 2 minutes to allow all files to unpack properly and avoid corruption.[/SIZE]
 
+## 2025.04.08 - @m00nyONE
+- HodorReflexes2.0 is almost ready :-)
+- introducing 2 new dependencies: LibGroupBroadcast, LibGroupCombatStats
+
+if you get the following error:
+
+```
+user:/AddOns/LibGroupBroadcast/HandlerManager.lua:34: Handler name 'GroupResources' has already been registered by 'LibGroupResources'.
+stack traceback:
+[C]: in function 'error'
+user:/AddOns/LibGroupBroadcast/HandlerManager.lua:34: in function 'HandlerManager:RegisterHandler'
+(tail call): ?
+user:/AddOns/LibGroupBroadcast/LibGroupBroadcastGroupResources/StartUp.lua:8: in function '(main chunk)'
+```
+
+Do not click reinstall in Minion, it will not help.
+Uninstall LibGroupBroadcast and then install it again after it got removed.
+This will fix the issue!
+
 ## 2025.03.15 - @m00nyONE
 - the next update of HodorReflexes will require 2 new dependencies: LibGroupBroadcast and LibGroupCombatStats
 
