@@ -1471,9 +1471,7 @@ function M.UpdateDamage()
 		if data.dmg > 0 and (isTestRunning or IsUnitOnline(tag)) then
 			-- Generate damage string
 			local dmgStr = ''
-			d(data.dmgType)
 			if data.dmgType == DAMAGE_TOTAL then
-				d("debug")
 				dmgStr = strformat('|c%s%0.2fM|r |c%s(%dK)|r|u0:2::|u', SW.styleBossDamageColor, data.dmg / 100, SW.styleTotalDamageColor, data.dps)
 			else
 				dmgStr = strformat('|c%s%0.1fK|r |c%s(%dK)|r|u0:2::|u', SW.styleBossDamageColor, data.dmg / 10, SW.styleTotalDamageColor, data.dps)
