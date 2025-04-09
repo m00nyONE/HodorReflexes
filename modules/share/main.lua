@@ -1198,7 +1198,7 @@ local function HasUnitHorn(data)
 	return false, 0
 end
 local function HasUnitColos(data)
-	local abilityIDs = {122395,	122388, 122174}
+	local abilityIDs = {122388, 122395, 122174}
 	for _, id in ipairs(abilityIDs) do
 		if data.ult1ID == id then return true, data.ult1Cost end
 		if data.ult2ID == id then return true, data.ult2Cost end
@@ -1208,6 +1208,16 @@ local function HasUnitColos(data)
 end
 local function HasUnitAtro(data)
 	local abilityIDs = {23492,	23634, 23495}
+	for _, id in ipairs(abilityIDs) do
+		if data.ult1ID == id then return true, data.ult1Cost end
+		if data.ult2ID == id then return true, data.ult2Cost end
+	end
+
+	return false, 0
+end
+
+local function HasUnitBarrier(data)
+	local abilityIDs = {40237,	40239, 38573}
 	for _, id in ipairs(abilityIDs) do
 		if data.ult1ID == id then return true, data.ult1Cost end
 		if data.ult2ID == id then return true, data.ult2Cost end
