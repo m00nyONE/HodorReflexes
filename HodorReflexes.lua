@@ -197,6 +197,7 @@ local function Initialize()
 
 	-- Bindings
 	ZO_CreateStringId('HR_UPDATED_TITLE', 'Hodor Reflexes ' .. HR.version)
+	ZO_CreateStringId('SI_BINDING_NAME_HR_BINDING_CLOSE_UPDATE_POPUP', GetString(HR_BINDING_CLOSE_UPDATE_POPUP))
 
 	-- Apply platform styles
 	ZO_PlatformStyle:New(UpdatePlatformStyles, KEYBOARD_STYLES, GAMEPAD_STYLES)

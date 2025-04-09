@@ -201,6 +201,7 @@ local strings = {
 
 	HR_SEND_EXIT_INSTANCE = "Eject Group",
 	HR_SEND_EXIT_INSTANCE_CONFIRM = "Do you want everyone to leave the instance (including yourself)?",
+	HR_BINDING_CLOSE_UPDATE_POPUP = "Close update dialog",
 
 	HR_COLOS_COUNTDOWN_DEFAULT_TEXT = "ULT",
 	HR_MAJOR_FORCE = "Major Force",
