@@ -4,6 +4,9 @@
             <Action name="HR_SEND_EXIT_INSTANCE">
                 <Down>HodorReflexes.modules.exitinstance.SendExitInstanceRequest()</Down>
             </Action>
+            <Action name="HR_EXIT_INSTANCE">
+                <Down>HodorReflexes.modules.exitinstance.ExitInstance()</Down>
+            </Action>
         </Category>
     </Layer>
 </Bindings>

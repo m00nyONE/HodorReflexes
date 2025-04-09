@@ -26,12 +26,25 @@ function M.SendExitInstanceRequest()
     _sendExitInstanceRequest()
 end
 
+function M.ExitInstance()
+    if CanExitInstanceImmediately() then
+        if HR.sv.confirmExitInstance and not ZO_Dialogs_IsShowingDialog() then
+            LAM.util.ShowConfirmationDialog(GetString(HR_EXIT_INSTANCE), GetString(HR_EXIT_INSTANCE_CONFIRM), ExitInstanceImmediately)
+        else
+            ExitInstanceImmediately()
+        end
+    end
+end
+
 local function onExitInstanceRequestEventReceived(unitTag)
     if not IsUnitGroupLeader(unitTag) then return end
-    if HR.sv.confirmExitInstance and not ZO_Dialogs_IsShowingDialog() then
-        LAM.util.ShowConfirmationDialog(GetString(HR_BINDING_SEND_EXIT_INSTANCE), GetString(HR_SEND_EXIT_INSTANCE_CONFIRM), ExitInstanceImmediately)
-    else
-        ExitInstanceImmediately()
+
+    if CanExitInstanceImmediately() then
+        if HR.sv.confirmExitInstance and not ZO_Dialogs_IsShowingDialog() then
+            LAM.util.ShowConfirmationDialog(GetString(HR_BINDING_SEND_EXIT_INSTANCE), GetString(HR_SEND_EXIT_INSTANCE_CONFIRM), ExitInstanceImmediately)
+        else
+            ExitInstanceImmediately()
+        end
     end
 end
 
@@ -57,6 +70,7 @@ function M.Initialize()
 
     -- Bindings
     ZO_CreateStringId('SI_BINDING_NAME_HR_SEND_EXIT_INSTANCE', GetString(HR_BINDING_SEND_EXIT_INSTANCE))
+    ZO_CreateStringId('SI_BINDING_NAME_HR_EXIT_INSTANCE', GetString(HR_BINDING_EXIT_INSTANCE))
 
     -- Add hotkey to group window
     local function OnStateChanged(_, newState)
