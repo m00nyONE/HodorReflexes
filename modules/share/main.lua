@@ -563,7 +563,7 @@ local function onDPSDataReceived(tag, data)
 		if playerData.dmgTime < dataTime then
 			playerData.dmg = data.dmg
 			playerData.dps = data.dps
-			playerData.dmgType = data.dmpType
+			playerData.dmgType = data.dmgType
 			playerData.dmgTime = dataTime
 		end
 
@@ -584,7 +584,7 @@ local function onDPSDataReceived(tag, data)
 
 			dmg = data.dmg,
 			dps = data.dps,
-			dmgType = data.dmpType,
+			dmgType = data.dmgType,
 			dmgTime = dataTime,
 		}
 		CreateControlsForUser(userId, playerData)
