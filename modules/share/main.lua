@@ -94,6 +94,11 @@ local DAMAGE_UNKNOWN = LGCS.DAMAGE_UNKNOWN
 local DAMAGE_TOTAL = LGCS.DAMAGE_TOTAL
 local DAMAGE_BOSS = LGCS.DAMAGE_BOSS
 
+local EVENT_GROUP_ULT_UPDATE = LGCS.EVENT_GROUP_ULT_UPDATE
+local EVENT_PLAYER_ULT_UPDATE = LGCS.EVENT_PLAYER_ULT_UPDATE
+local EVENT_GROUP_DPS_UPDATE = LGCS.EVENT_GROUP_DPS_UPDATE
+local EVENT_PLAYER_DPS_UPDATE = LGCS.EVENT_PLAYER_DPS_UPDATE
+
 -- Ability costs are only updated when player is activated or enters combat
 -- to avoid calling an expensive function GetAbilityCost() too often.
 local ABILITY_COST_COLOS = GetAbilityCost(122395)
@@ -645,10 +650,10 @@ function M.Initialize()
 		return
 	end
 	d("Addon registered")
-	lgcs:RegisterForEvent(LGCS.EVENT_GROUP_ULT_UPDATE, onULTDataReceived)
-	lgcs:RegisterForEvent(LGCS.EVENT_PLAYER_ULT_UPDATE, onULTDataReceived)
-	lgcs:RegisterForEvent(LGCS.EVENT_GROUP_DPS_UPDATE, onDPSDataReceived)
-	lgcs:RegisterForEvent(LGCS.EVENT_PLAYER_DPS_UPDATE, onDPSDataReceived)
+	lgcs:RegisterForEvent(EVENT_GROUP_ULT_UPDATE, onULTDataReceived)
+	lgcs:RegisterForEvent(EVENT_PLAYER_ULT_UPDATE, onULTDataReceived)
+	lgcs:RegisterForEvent(EVENT_GROUP_DPS_UPDATE, onDPSDataReceived)
+	lgcs:RegisterForEvent(EVENT_PLAYER_DPS_UPDATE, onDPSDataReceived)
 
 	-- Create callback manager
 	M.cm = M.cm or ZO_CallbackObject:New()
@@ -1193,7 +1198,7 @@ local function HasUnitHorn(data)
 	return false, 0
 end
 local function HasUnitColos(data)
-	local abilityIDs = {122395,	122388, 122174}
+	local abilityIDs = {122388, 122395, 122174}
 	for _, id in ipairs(abilityIDs) do
 		if data.ult1ID == id then return true, data.ult1Cost end
 		if data.ult2ID == id then return true, data.ult2Cost end
@@ -1203,6 +1208,16 @@ local function HasUnitColos(data)
 end
 local function HasUnitAtro(data)
 	local abilityIDs = {23492,	23634, 23495}
+	for _, id in ipairs(abilityIDs) do
+		if data.ult1ID == id then return true, data.ult1Cost end
+		if data.ult2ID == id then return true, data.ult2Cost end
+	end
+
+	return false, 0
+end
+
+local function HasUnitBarrier(data)
+	local abilityIDs = {40237,	40239, 38573}
 	for _, id in ipairs(abilityIDs) do
 		if data.ult1ID == id then return true, data.ult1Cost end
 		if data.ult2ID == id then return true, data.ult2Cost end
