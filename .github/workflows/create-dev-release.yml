@@ -17,6 +17,10 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
+      - name: check icon integrity
+        run: |
+          ./.github/scripts/integrity.sh
+
       - name: Get current year, month and day
         run: |
           echo "BUILD_DATE_YEAR=$(date -u +'%Y')" >> $GITHUB_ENV
