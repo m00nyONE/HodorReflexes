@@ -19,7 +19,7 @@ jobs:
 
       - name: check icon integrity
         run: |
-          ./.github/scripts/integrity.sh
+          python3 .github/scripts/integrity.py
 
       - name: Get current year, month and day
         run: |
