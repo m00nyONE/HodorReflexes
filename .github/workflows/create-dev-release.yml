@@ -43,7 +43,7 @@ jobs:
           cp -r ./* /tmp/HodorReflexes
           rm -rf /tmp/HodorReflexes/{.git,.github,.gitignore}
           cd /tmp
-          zip -r "$REPO_FOLDER/HodorReflexes-${{ env.BUILD_DATE_WITH_HYPHEN }}-dev.zip" ./HodorReflexes -x "*.git*" "*.github*" ".gitignore" "TODO.md"
+          zip -r "$REPO_FOLDER/HodorReflexes-${{ env.BUILD_DATE_WITH_HYPHEN }}-dev.zip" ./HodorReflexes -x "*.git*" "*.github*" ".gitignore" "TODO.md" "config.ld"
 
       - name: Create GitHub Release
         uses: ncipollo/release-action@v1
