@@ -1,5 +1,8 @@
 [SIZE="2"][B]IMPORTANT:[/B] After updating HodorReflexes, keep Minion open for at least 2 minutes to allow all files to unpack properly and avoid corruption.[/SIZE]
 
+## 2025.04.11 - @m00nyONE
+- add integrity check to github actions pipeline. Hopefully less Hotfixes for you now :-)
+
 ## 2025.04.09 - @m00nyONE
 - HodorReflexes2.0 ALPHA release!!! - Backwards incompatible!
 - Almost rewritten the whole codebase ( still a lot TODO )

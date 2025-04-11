@@ -17,6 +17,10 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
+      - name: Check icon integrity
+        run: |
+          python3 .github/scripts/integrity.py
+
       - name: Get current year, month and day
         run: |
           echo "BUILD_DATE_YEAR=$(date -u +'%Y')" >> $GITHUB_ENV
@@ -39,7 +43,7 @@ jobs:
           cp -r ./* /tmp/HodorReflexes
           rm -rf /tmp/HodorReflexes/{.git,.github,.gitignore}
           cd /tmp
-          zip -r "$REPO_FOLDER/HodorReflexes-${{ env.BUILD_DATE_WITH_HYPHEN }}.zip" ./HodorReflexes -x "*.git*" "*.github*" ".gitignore"
+          zip -r "$REPO_FOLDER/HodorReflexes-${{ env.BUILD_DATE_WITH_HYPHEN }}.zip" ./HodorReflexes -x "*.git*" "*.github*" ".gitignore" "TODO.md"
 
       - name: Create GitHub Release
         uses: ncipollo/release-action@v1
