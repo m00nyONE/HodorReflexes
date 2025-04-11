@@ -1,5 +1,10 @@
 # HodorReflexes
 
+[![Create ESOUI Release](https://github.com/m00nyONE/HodorReflexes/actions/workflows/create-release.yml/badge.svg)](https://github.com/m00nyONE/HodorReflexes/actions/workflows/create-release.yml)
+[![Create Dev Release on Push](https://github.com/m00nyONE/HodorReflexes/actions/workflows/create-dev-release.yml/badge.svg?branch=main)](https://github.com/m00nyONE/HodorReflexes/actions/workflows/create-dev-release.yml)
+
+https://m00nyone.github.io/HodorReflexes/
+
 Hodor Reflexes allows you to view shared DPS and Ult data from group members.
 
 Install guide:

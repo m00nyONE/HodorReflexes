@@ -1,4 +1,4 @@
-name: Create Dev Release on Push
+name: Dev Release
 
 on:
   #schedule:

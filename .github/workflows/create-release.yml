@@ -1,4 +1,4 @@
-name: Create ESOUI Release
+name: ESOUI Release
 
 on:
   #schedule:
