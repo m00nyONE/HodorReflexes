@@ -11,13 +11,11 @@ on:
 jobs:
   integrity:
     uses: ./.github/workflows/_integrity.yml
-  generate-docs:
-    uses: ./.github/workflows/_generate_docs.yml
   release:
     name: "dev release"
     runs-on: ubuntu-latest
     permissions: write-all
-    needs: [ 'integrity', 'generate-docs' ]
+    needs: [ 'integrity' ]
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
