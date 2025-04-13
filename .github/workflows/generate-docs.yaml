@@ -1,5 +1,8 @@
 name: LDoc Documentation
-on: [ push, pull_request ]
+on:
+  push:
+    branches:
+      - release # to be changed to main with schedule
 jobs:
   ldoc:
     runs-on: ubuntu-latest
