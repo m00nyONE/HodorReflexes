@@ -63,7 +63,19 @@ jobs:
           allowUpdates: true
           makeLatest: true
 
+      - name: Check ESOUI secrets
+        id: check-secrets
+        run: |
+          if [ -z "${{ secrets.ESOUI_API_KEY }}" ]; then
+            echo "::warning::EsoUI API key are not set. Skipping send."
+            echo "valid=false" >> $GITHUB_OUTPUT
+          else
+            echo "EsoUI API key are set"
+            echo "valid=true" >> $GITHUB_OUTPUT
+          fi
+
       - name: Send to ESOUI
+        if: ${{ steps.check-secrets.outputs.valid == 'true' }}
         env:
           ESOUI_API_KEY: ${{ secrets.ESOUI_API_KEY }}
           ADDON_ID: 2311
