@@ -50,6 +50,11 @@ jobs:
           cd /tmp
           zip -r "$REPO_FOLDER/HodorReflexes-${{ env.BUILD_DATE_WITH_HYPHEN }}.zip" ./HodorReflexes -x "*.git*" "*.github*" ".gitignore" "TODO.md" "config.ld"
 
+      - name: Extract latest changelog entry
+        run: |
+          awk '/^## / { if (!found) { found=1; print; next } else { exit } } found' CHANGELOG.md > latest_changes.md
+          cat latest_changes.md
+
       - name: Create GitHub Release
         uses: ncipollo/release-action@v1
         with:
@@ -58,7 +63,7 @@ jobs:
           tag: "${{ env.BUILD_DATE_WITH_DOT }}"
           artifacts: "HodorReflexes-${{ env.BUILD_DATE_WITH_HYPHEN }}.zip"
           artifactContentType: application/zip
-          bodyFile: CHANGELOG.md
+          bodyFile: latest_changes.md
           allowUpdates: true
           makeLatest: true
 
