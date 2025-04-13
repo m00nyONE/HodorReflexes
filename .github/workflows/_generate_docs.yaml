@@ -1,14 +1,12 @@
 name: LDoc Documentation
 on:
-  push:
-    branches:
-      - release # to be changed to main with schedule
+  workflow_call:
 jobs:
   ldoc:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Generate docs with LDoc
         uses: lunarmodules/ldoc@v1
       - name: Deploy

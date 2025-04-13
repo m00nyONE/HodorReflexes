@@ -1,0 +1,5 @@
+name: Check integrity
+on: [ pull_request ]
+jobs:
+    integrity:
+        uses: ./.github/workflows/_integrity.yml

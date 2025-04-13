@@ -9,17 +9,18 @@ on:
       - main
 
 jobs:
+  integrity:
+    uses: ./.github/workflows/_integrity.yml
+  generate-docs:
+    uses: ./.github/workflows/_generate_docs.yml
   release:
     name: "dev release"
     runs-on: ubuntu-latest
     permissions: write-all
+    needs: [ 'integrity', 'generate-docs' ]
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
-
-      - name: Check icon integrity
-        run: |
-          python3 .github/scripts/integrity.py
 
       - name: Get current year, month and day
         run: |

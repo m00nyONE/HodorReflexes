@@ -9,10 +9,15 @@ on:
       - release # to be changed to main with schedule
 
 jobs:
+  integrity:
+    uses: ./.github/workflows/_integrity.yml
+  generate-docs:
+    uses: ./.github/workflows/_generate_docs.yml
   release:
     name: "release"
     runs-on: ubuntu-latest
     permissions: write-all
+    needs: [ 'integrity', 'generate-docs' ]
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
