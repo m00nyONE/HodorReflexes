@@ -100,7 +100,7 @@ jobs:
           ESOUI_API_KEY: ${{ secrets.ESOUI_API_KEY }}
           ADDON_ID: 2311
         run: |
-          curl -X POST \
+          curl --silent --fail -X POST \
             -H "x-api-token: $ESOUI_API_KEY" \
             -F "id=${ADDON_ID}" \
             -F "version=${{ env.ADDON_VERSION }}" \
