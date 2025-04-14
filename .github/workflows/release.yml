@@ -83,27 +83,11 @@ jobs:
           allowUpdates: true
           makeLatest: true
 
-      - name: Check ESOUI secrets
-        id: check-secrets
-        run: |
-          if [ -z "${{ secrets.ESOUI_API_KEY }}" ]; then
-            echo "::warning::EsoUI API key are not set. Skipping send."
-            echo "valid=false" >> $GITHUB_OUTPUT
-          else
-            echo "EsoUI API key are set"
-            echo "valid=true" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Send to ESOUI
-        if: ${{ steps.check-secrets.outputs.valid == 'true' }}
-        env:
-          ESOUI_API_KEY: ${{ secrets.ESOUI_API_KEY }}
-          ADDON_ID: 2311
-        run: |
-          curl --silent --fail -X POST \
-            -H "x-api-token: $ESOUI_API_KEY" \
-            -F "id=${ADDON_ID}" \
-            -F "version=${{ env.ADDON_VERSION }}" \
-            -F "updatefile=@${{ env.ZIP_FULL_NAME }}" \
-            -F "changelog=$(cat CHANGELOG.md)" \
-            https://api.esoui.com/addons/update
+      - name: Upload to ESOUI
+        uses: m00nyONE/esoui-upload@v1
+        with:
+          api_key: ${{ secrets.ESOUI_API_KEY }}
+          addon_id: '2311'
+          version: ${{ env.ADDON_VERSION }}
+          zip_file: ${{ env.ZIP_FULL_NAME }}
+          changelog_file: 'CHANGELOG.md'
