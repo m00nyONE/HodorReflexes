@@ -22,10 +22,6 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Check icon integrity
-        run: |
-          python3 .github/scripts/integrity.py
-
       - name: Get current year, month and day
         run: |
           echo "BUILD_DATE_YEAR=$(date -u +'%Y')" >> $GITHUB_ENV
@@ -35,20 +31,40 @@ jobs:
           echo "BUILD_DATE_WITH_DOT=$(date +'%Y.%m.%d')" >> $GITHUB_ENV
           echo "BUILD_DATE_WITH_HYPHEN=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
 
+      - name: Create env variables
+        run: |
+          addon_name="HodorReflexes"
+          version="${{ env.BUILD_DATE_WITH_HYPHEN }}"
+          
+          zip_name="${addon_name}-${version}.zip"
+          
+          echo "ADDON_NAME=$addon_name" >> $GITHUB_ENV
+          echo "ADDON_VERSION=$version" >> $GITHUB_ENV
+          echo "ZIP_FULL_NAME=$zip_name" >> $GITHUB_ENV
+
       - name: Replace placeholders with current date
         run: |
-          sed -i "s/version = \"dev\"/version = \"${{ env.BUILD_DATE_WITH_DOT }}\"/g" HodorReflexes.lua
-          sed -i "s/## Version: dev/## Version: ${{ env.BUILD_DATE_WITH_DOT }}/g" HodorReflexes.addon
+          sed -i "s/version = \"dev\"/version = \"${{ env.ADDON_VERSION }}\"/g" HodorReflexes.lua
+          sed -i "s/## Version: dev/## Version: ${{ env.ADDON_VERSION }}/g" HodorReflexes.addon
           sed -i "s/## AddOnVersion: 99999999/## AddOnVersion: ${{ env.BUILD_DATE_NUMBER }}/g" HodorReflexes.addon
 
       - name: Create ZIP archive
         run: |
           REPO_FOLDER=$(pwd)
-          mkdir -p /tmp/HodorReflexes
-          cp -r ./* /tmp/HodorReflexes
-          rm -rf /tmp/HodorReflexes/{.git,.github,.gitignore}
-          cd /tmp
-          zip -r "$REPO_FOLDER/HodorReflexes-${{ env.BUILD_DATE_WITH_HYPHEN }}.zip" ./HodorReflexes -x "*.git*" "*.github*" ".gitignore" "TODO.md" "config.ld"
+          TMP_FOLDER="/tmp/${{ env.ADDON_NAME }}"
+          
+          # Define the path to the ignore pattern file
+          ignore_file=".build-ignore"
+          
+          # Read and process ignore patterns into a single line
+          exclude_patterns=$(cat "$ignore_file" | awk '{print "--exclude " $0}' | tr '\n' ' ')
+          
+          # Make folder and copy content
+          mkdir -p $TMP_FOLDER
+          rsync -a --quiet $exclude_patterns "$REPO_FOLDER/" "$TMP_FOLDER/"
+          
+          # Make full version zip
+          (cd /tmp && zip -r --quiet "$REPO_FOLDER/${{ env.ZIP_FULL_NAME }}" "${{ env.ADDON_NAME }}")
 
       - name: Extract latest changelog entry
         run: |
@@ -58,16 +74,28 @@ jobs:
       - name: Create GitHub Release
         uses: ncipollo/release-action@v1
         with:
-          name: "${{ env.BUILD_DATE_WITH_DOT }}"
+          name: "${{ env.ADDON_VERSION }}"
           commit: ${{ github.ref }}
-          tag: "${{ env.BUILD_DATE_WITH_DOT }}"
-          artifacts: "HodorReflexes-${{ env.BUILD_DATE_WITH_HYPHEN }}.zip"
+          tag: "${{ env.ADDON_VERSION }}"
+          artifacts: "${{ env.ZIP_FULL_NAME }}"
           artifactContentType: application/zip
           bodyFile: latest_changes.md
           allowUpdates: true
           makeLatest: true
 
+      - name: Check ESOUI secrets
+        id: check-secrets
+        run: |
+          if [ -z "${{ secrets.ESOUI_API_KEY }}" ]; then
+            echo "::warning::EsoUI API key are not set. Skipping send."
+            echo "valid=false" >> $GITHUB_OUTPUT
+          else
+            echo "EsoUI API key are set"
+            echo "valid=true" >> $GITHUB_OUTPUT
+          fi
+
       - name: Send to ESOUI
+        if: ${{ steps.check-secrets.outputs.valid == 'true' }}
         env:
           ESOUI_API_KEY: ${{ secrets.ESOUI_API_KEY }}
           ADDON_ID: 2311
@@ -75,7 +103,7 @@ jobs:
           curl -X POST \
             -H "x-api-token: $ESOUI_API_KEY" \
             -F "id=${ADDON_ID}" \
-            -F "version=${{ env.BUILD_DATE_WITH_DOT }}" \
-            -F "updatefile=@HodorReflexes-${{ env.BUILD_DATE_WITH_HYPHEN }}.zip" \
+            -F "version=${{ env.ADDON_VERSION }}" \
+            -F "updatefile=@${{ env.ZIP_FULL_NAME }}" \
             -F "changelog=$(cat CHANGELOG.md)" \
             https://api.esoui.com/addons/update
