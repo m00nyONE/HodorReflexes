@@ -1,6 +1,11 @@
 [SIZE="2"][B]IMPORTANT:[/B] After updating HodorReflexes, keep Minion open for at least 2 minutes to allow all files to unpack properly and avoid corruption.[/SIZE]
 
 ## 2025.04.22 - @m00nyONE
+- adding HodorReflexes Lite version to Github releases ( Version without any icons ). Thanks to @NeBioNik
+  - This version will NOT be available on ESOUI or Minion for now and MUST BE INSTALLED MANUALLY after each update. 
+  - There is no support on this version as there are no automatic updates or fixes that get pushed to the enduser!
+  - If you encounter incompatibility issues with other addons, you are on your own.
+  - There can only be ONE version of HodorReflexes installed at the same time! It is not possible to "switch" between version in the Addon Menu.
 - disable toxic mode for now to stay in line with ZoS Terms of Service
 
 ## 2025.04.11 - @m00nyONE
