@@ -30,6 +30,8 @@ HodorReflexes = {
 	name = "HodorReflexes",
 	version = "dev",
 
+	liteVersion = false,
+
 	-- Default settings for saved variables
 	default = {
 		confirmExitInstance = true,                -- Show confirmation dialog before exiting instances

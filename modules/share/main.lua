@@ -388,6 +388,11 @@ end
 --- Additionally, it displays a version update window and notifies the player if any icons are missing.
 
 local function initializeUpdateIcons()
+	if HR.liteVersion then
+		-- d("Using Lite Version. No user icons loaded")
+		return
+	end
+
 	--- List of texture controls to be updated with icons, excluding the player's icon.
 	local updatedTextureControls = {
 		HodorReflexes_Updated_Icon4,
