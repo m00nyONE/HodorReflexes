@@ -33,7 +33,7 @@ HodorReflexes = {
 	-- Default settings for saved variables
 	default = {
 		confirmExitInstance = true,                -- Show confirmation dialog before exiting instances
-		toxicMode = true,                          -- Enable "toxic" mock messages in specific zones
+		--toxicMode = false,                          -- Enable "toxic" mock messages in specific zones
 	},
 
 	-- Saved variables configuration
@@ -242,7 +242,7 @@ function HR.PlayerActivated()
 	EM:RegisterForEvent(HR.name, EVENT_GROUP_MEMBER_CONNECTED_STATUS, OnGroupChangeDelayed)
 	OnGroupChangeDelayed()
 
-	GenerateMock()
+	--GenerateMock()
 
 end
 

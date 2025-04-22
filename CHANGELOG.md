@@ -1,5 +1,8 @@
 [SIZE="2"][B]IMPORTANT:[/B] After updating HodorReflexes, keep Minion open for at least 2 minutes to allow all files to unpack properly and avoid corruption.[/SIZE]
 
+## 2025.04.22 - @m00nyONE
+- disable toxic mode for now to stay in line with ZoS Terms of Service
+
 ## 2025.04.11 - @m00nyONE
 - add integrity check to github actions pipeline. Hopefully less Hotfixes for you now :-)
 
