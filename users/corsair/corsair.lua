@@ -26,3 +26,4 @@ u["@cpcharles"] = {"Charles", "|c7c9dc7C|r|c68aad1h|r|c53b7daa|r|c3ec5e3r|r|c29d
 u["@Petitefeuille"] = {"Petitefeuille", "|cdf5334P|r|ce15e3ee|r|ce46947t|r|ce77351i|r|ce97e5at|r|cec8963e|r|cef946df|r|cf29f76e|r|cf4aa7fu|r|cf7b489i|r|cfabf92l|r|cfcca9cl|r|cffd5a5e|r", "HodorReflexes/users/corsair/petitefeuille.dds"}
 u["@Uni_ESO"] = {"Uni", "|c8a0008U|r|cb3000an|r|cdb000di|r", "HodorReflexes/users/corsair/uni_eso.dds"}
 u["@Tinkaaberu"] = {"Tinkaaberu", "|cfa0f17T|r|cf91b23i|r|cf7262en|r|cf63139k|r|cf53d45a|r|cf44850a|r|cf3535bb|r|cf15e66e|r|cf06a72r|r|cef757du|r", "HodorReflexes/users/corsair/Tinkaaberu.dds"}
+u["@FightOne"] = {"FightOne", "|cffba2fF|r|cffc136i|r|cffc83cg|r|cffcf43h|r|cffd549t|r|cffdc4fO|r|cffe356n|r|cffea5ce|r", "HodorReflexes/users/corsair/fightone.dds"}
