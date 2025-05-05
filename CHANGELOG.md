@@ -1,5 +1,8 @@
 [SIZE="2"][B]IMPORTANT:[/B] After updating HodorReflexes, keep Minion open for at least 2 minutes to allow all files to unpack properly and avoid corruption.[/SIZE]
 
+## 2025.05.05 - @m00nyONE
+- fixing an issue on PTS that colossus and atronachs are not shown when players are not "real" necros or sorcs.
+
 ## 2025.04.22 - @m00nyONE
 - adding HodorReflexes Lite version to Github releases ( Version without any icons ). Thanks to @NeBioNik
   - This version will NOT be available on ESOUI or Minion for now and MUST BE INSTALLED MANUALLY after each update. 

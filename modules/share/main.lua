@@ -516,21 +516,18 @@ local function CreateControlsForUser(userId, playerData)
 
 	-- Colossus row
 	local clsRow, clsKey
-	if classId == 5 then -- create colossus control for necros only
-		clsRow, clsKey = clsPool:AcquireObject()
-		clsRow.poolKey = clsKey
-		SetControlText(clsRow:GetNamedChild('_Name'), userName)
-		SetControlIcon(clsRow:GetNamedChild('_Icon'), SW.enableColosIcons and userIcon or defaultIcon)
-	end
+	clsRow, clsKey = clsPool:AcquireObject()
+	clsRow.poolKey = clsKey
+	SetControlText(clsRow:GetNamedChild('_Name'), userName)
+	SetControlIcon(clsRow:GetNamedChild('_Icon'), SW.enableColosIcons and userIcon or defaultIcon)
+
 
 	-- atronach Row
 	local atronachRow, atronachKey
-	if classId == 2 then -- create atronach control only for sorcs only
-		atronachRow, atronachKey = atronachPool:AcquireObject()
-		atronachRow.poolKey = atronachKey
-		SetControlText(atronachRow:GetNamedChild('_Name'), userName)
-		SetControlIcon(atronachRow:GetNamedChild('_Icon'), SW.enableAtronachIcons and userIcon or defaultIcon)
-	end
+	atronachRow, atronachKey = atronachPool:AcquireObject()
+	atronachRow.poolKey = atronachKey
+	SetControlText(atronachRow:GetNamedChild('_Name'), userName)
+	SetControlIcon(atronachRow:GetNamedChild('_Icon'), SW.enableAtronachIcons and userIcon or defaultIcon)
 
 	-- Damage row
 	local dpsRow, dpsKey = dpsPool:AcquireObject()
