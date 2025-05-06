@@ -149,3 +149,5 @@ u["@Ermsi"] = {"Ermsi", "|cc9f9c6E|r|c9cf397r|r|c6eed68m|r|c41e739s|r|c14e10ai|r
 a["@Ermsi"] = {"HodorReflexes/users/moo/Ermsi_anim.dds", 14, 1, 20}
 u["@Ermsi2"] = u["@Ermsi"]
 a["@Ermsi2"] = a["@Ermsi"]
+
+u["@NovaPixel"] = {"Nova", "|cdda140N|r|cbb6b80o|r|c9936bfv|r|c7700ffa|r", "HodorReflexes/users/moo/NovaPixel.dds"}
