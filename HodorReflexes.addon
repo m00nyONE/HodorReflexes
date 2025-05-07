@@ -5,7 +5,7 @@
 ## AddOnVersion: 99999999
 ## SavedVariables: HodorReflexesSV
 ## DependsOn: LibAddonMenu-2.0>=32 LibCombat>=79 LibGroupCombatStats>=20250406 LibGroupBroadcast>=88
-## OptionalDependsOn: RuESO
+## OptionalDependsOn: RuESO LibPlayerIcons
 
 lang/en.lua
 lang/$(language).lua
