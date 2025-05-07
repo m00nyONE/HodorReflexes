@@ -703,7 +703,9 @@ function M.Initialize()
 
 	-- Build settings menus
 	M.BuildMenu()
-	M.BuildIconsMenu()
+	if not HR.liteVersion then
+		M.BuildIconsMenu()
+	end
 	M.BuildStyleMenu()
 
 	-- Create scene fragments for controls
