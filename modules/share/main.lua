@@ -104,7 +104,6 @@ local EVENT_PLAYER_DPS_UPDATE = LGCS.EVENT_PLAYER_DPS_UPDATE
 local ABILITY_COST_COLOS = GetAbilityCost(122395)
 
 local localPlayer = "player"
-local playersData = M.playersData
 local ultPool, dpsPool, clsPool, miscUltPool, atronachPool -- control pools (https://www.esoui.com/forums/showthread.php?t=143)
 
 local isUltControlRefresh = true
@@ -155,7 +154,7 @@ local hud = HR.hud
 local ULT_FRAGMENT, DPS_FRAGMENT, CLS_FRAGMENT, CNT_FRAGMENT, HRN_FRAGMENT, HNT_FRAGMENT, MISCULT_FRAGMENT, ATRO_FRAGMENT -- HUD fragments
 
 local function getRealDisplayName(displayname)
-	for unit, _ in pairs(playersData) do
+	for unit, _ in pairs(M.playersData) do
 		local found = strfind(displayname, unit)
 		if found then return unit end
 	end
@@ -193,7 +192,7 @@ local function CleanGroupData(force)
 			end
 		end
 		-- Remove offline players from playersData
-		for userId, data in pairs(playersData) do
+		for userId, data in pairs(M.playersData) do
 			local newData = newPlayers[userId]
 			-- We need to compare character names, because the same user can have 2+ characters in group
 			if newData and data.name == newData[2] then
@@ -210,17 +209,17 @@ local function CleanGroupData(force)
 				if data.miscUltRow then miscUltPool:ReleaseObject(data.miscUltRow.poolKey) end
 				if data.atronachRow then atronachPool:ReleaseObject(data.atronachRow.poolKey) end
 				-- Clear player data
-				playersData[userId] = nil
+				M.playersData[userId] = nil
 			end
 		end
 	else
 		-- Player is not grouped. Delete everyone!
 		-- Stop animations
-		for userId in pairs(playersData) do
+		for userId in pairs(M.playersData) do
 			HR.anim.UnregisterUser(userId)
 		end
 		-- Clear players data list
-		playersData = {}
+		M.playersData = {}
 		-- Release all controls
 		ultPool:ReleaseAllObjects()
 		miscUltPool:ReleaseAllObjects()
@@ -551,7 +550,7 @@ local function CreateControlsForUser(userId, playerData)
 	playerData.clsRow = clsRow
 	playerData.miscUltRow = miscUltRow
 	playerData.atronachRow = atronachRow
-	playersData[userId] = playerData
+	M.playersData[userId] = playerData
 
 	M.RefreshVisibility()
 end
@@ -560,7 +559,7 @@ local function onDPSDataReceived(tag, data)
 	if not IsUnitGrouped(tag) then return end
 	local dataTime = time()
 	local userId = GetUnitDisplayName(tag)
-	local playerData = playersData[userId]
+	local playerData = M.playersData[userId]
 
 	-- Player already exists, only update values
 	if playerData then
@@ -601,7 +600,7 @@ local function onULTDataReceived(tag, data)
 	if not IsUnitGrouped(tag) then return end
 	local dataTime = time()
 	local userId = GetUnitDisplayName(tag)
-	local playerData = playersData[userId]
+	local playerData = M.playersData[userId]
 
 	-- Player already exists, only update values
 	if playerData then
@@ -956,8 +955,8 @@ do
 
 		if displayName then
 			local userId = getRealDisplayName(displayName)
-			local unitTag = playersData.tag
-			local data = userId and playersData[userId]
+			local unitTag = M.playersData.tag
+			local data = userId and M.playersData[userId]
 			if data and data.ultValue > 0 then -- reset ult % in the colossus list
 				data.ultValue = 1
 				M.UpdateUltimates()
@@ -1041,8 +1040,8 @@ do
 
 		if displayName then
 			local userId = getRealDisplayName(displayName)
-			local unitTag = playersData.tag
-			local data = userId and playersData[userId]
+			local unitTag = M.playersData.tag
+			local data = userId and M.playersData[userId]
 			if data and data.ultValue > 0 then -- reset ult % in the colossus list
 				data.ultValue = 1
 				M.UpdateUltimates()
@@ -1314,7 +1313,7 @@ do
 		local rowsAtronach = {}
 
 		-- Update rows
-		for _, data in pairs(playersData) do
+		for _, data in pairs(M.playersData) do
 			local tag = data.tag
 			local ultRow = data.ultRow
 			local miscUltRow = data.miscUltRow
@@ -1484,7 +1483,7 @@ function M.UpdateDamage()
 	local dmgType
 
 	-- Update rows
-	for name, data in pairs(playersData) do
+	for name, data in pairs(M.playersData) do
 		local tag = data.tag
 		-- Only shows rows for online players with non empty damage
 		if data.dmg > 0 and (isTestRunning or IsUnitOnline(tag)) then
@@ -1512,7 +1511,7 @@ function M.UpdateDamage()
 
 	-- Show rows
 	for i, row in ipairs(rows) do
-		local playerData = playersData[row[1]]
+		local playerData = M.playersData[row[1]]
 		playerData.dpsRow:ClearAnchors()
 		playerData.dpsRow:SetAnchor(TOPLEFT, HodorReflexes_Share_Damage, TOPLEFT, 0, i*22)
 		playerData.dpsRow:SetAnchor(TOPRIGHT, HodorReflexes_Share_Damage, TOPRIGHT, 0, i*22)
