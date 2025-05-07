@@ -1,5 +1,10 @@
 [SIZE="2"][B]IMPORTANT:[/B] After updating HodorReflexes, keep Minion open for at least 2 minutes to allow all files to unpack properly and avoid corruption.[/SIZE]
 
+## 2025.05.07 - @m00nyONE
+- fixing an issue where the playerStats table was not exposed causing other addons like HodorRestyle to not work anymore - thanks to @B7TxSpeed
+- hiding menu for the HRLite build - by @NeBioNik
+- adding LibPlayerIcons as an optional dependency - addon will follow soon
+
 ## 2025.05.05 - @m00nyONE
 - fixing an issue on PTS that colossus and atronachs are not shown when players are not "real" necros or sorcs.
 
