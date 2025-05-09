@@ -157,3 +157,5 @@ u["@TheInquisitiveSpoon"] = {"Spoon", "|c8500ffS|r|c8500ffp|r|c8500ffo|r|c8500ff
 u["@shigeatzu"] = {"shigeatzu", "|ce446ffs|r|cd159ffh|r|cbd6dffi|r|caa81ffg|r|c9694ffe|r|c83a8ffa|r|c6fbcfft|r|c5ccfffz|r|c48e3ffu|r", "HodorReflexes/users/misc7/shigeatzu.dds"}
 u["@BayzBlackBaccara"] = {"BayzBlackBaccara", "|cf00d26B|r|ceb1535a|r|ce61c43y|r|ce12452z|r|cdc2b60B|r|cd7326fl|r|cd23a7da|r|ccd418cc|r|cc8489ak|r|cc350a8B|r|cbe57b7a|r|cb95fc5c|r|cb466d4c|r|caf6de2a|r|caa75f1r|r|ca57cffa|r", "HodorReflexes/users/misc7/BayzBlackBaccara.dds"}
 u["@Sai_ESO"] = {"Sai", "|c20b0e2S|r|c10d7c6a|r|c00ffa9i|r", "HodorReflexes/users/misc7/Sai_ESO.dds"}
+u["@MiguelCura"] = {"mIgUeL", "|c0ffb52m|r|c13f669I|r|c18f281g|r|c1dee98U|r|c21e9afe|r|c26e5c6L|r"}
+a["@MiguelCura"] = {"HodorReflexes/users/misc7/MiguelCura_anim.dds", 5, 2, 14}
