@@ -3,7 +3,7 @@
 ## 2025.05.07 - @m00nyONE
 - fixing an issue where the playerStats table was not exposed causing other addons like HodorRestyle to not work anymore - thanks to @B7TxSpeed
 - hiding menu for the HRLite build - by @NeBioNik
-- adding LibPlayerIcons as an optional dependency - addon will follow soon
+- adding LibPlayerIcons as an optional dependency - addon will follow soon - ihope you see where this is going :D
 
 ## 2025.05.05 - @m00nyONE
 - fixing an issue on PTS that colossus and atronachs are not shown when players are not "real" necros or sorcs.
