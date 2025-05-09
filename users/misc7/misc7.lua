@@ -172,3 +172,4 @@ u["@Loreuh"] = {"Loreuh", "|c92dad8L|r|ca3b5b2o|r|cb4918cr|r|cc56c66e|r|cd64740u
 a["@Loreuh"] = {"HodorReflexes/users/misc7/Loreuh_anim.dds", 5, 2, 33}
 u["@Noobl3t"] = {"Noobl3t", "|cdb1624N|r|cb62c49o|r|c92426do|r|c6d5792b|r|c496db6l|r|c2483db3|r|c0099fft|r"}
 a["@Noobl3t"] = {"HodorReflexes/users/misc7/Noobl3t_anim.dds", 9, 5, 13}
+u["@BosmerBathWater"] = {"Tali", "|cff5383T|r|cff709fa|r|cff8cbbl|r|cffa9d7i|r", "HodorReflexes/users/misc7/BosmerBathWater.dds"}

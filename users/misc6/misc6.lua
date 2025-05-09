@@ -1138,7 +1138,6 @@ u["@BreezyApex"] = {"BreezyApex", "|ce61689B|r|ccc2c96r|r|cb342a3e|r|c9958b0e|r|
 a["@BreezyApex"] = {"HodorReflexes/users/misc6/BreezyApex_anim.dds", 15, 2, 20}
 u["@Tutorion"] = {"Tutorion", "|cfb2020T|r|cfb4040u|r|cfc6060t|r|cfd8080o|r|cfd9f9fr|r|cfebfbfi|r|cfedfdfo|r|cffffffn|r", "HodorReflexes/users/misc6/Tutorion.dds"}
 a["@Tutorion"] = {'HodorReflexes/users/misc6/Tutorion_anim.dds', 6, 8, 48}
-u["@IDontKnowMyRotation"] = {"Tali", "|cff8fe1T|r|cff99e2a|r|cffa2e2l|r|cffabe3i|r", "HodorReflexes/users/misc6/IDontKnowMyRotation.dds"}
 u["@xZephyria"] = {"xZephyria", "|ca3f4d4x|r|cafe8d4Z|r|cbaddd4e|r|cc6d2d4p|r|cd1c6d3h|r|cddbbd3y|r|ce8b0d3r|r|cf4a4d3i|r|cff99d3a|r", "HodorReflexes/users/misc6/xZephyria.dds"}
 u["@Shiriiio"] = {"Shiriiio", "|c3b3b3bS|r|c3b3b3bh|r|c3b3b3bi|r|cFF0000r|r|cFF0000i|r|cFF0000i|r|cFFD700i|r|cFFD700o|r"}
 a["@Shiriiio"] = {"HodorReflexes/users/misc6/Shiriiio_anim.dds", 8, 1, 6}
