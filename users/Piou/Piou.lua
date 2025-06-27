@@ -20,3 +20,7 @@ u["@Karma-Akabane19"] = {"Karma", "|cd22737K|r|cdd4e37a|r|ce97536r|r|cf49c36m|r|
 u["@Odin76"] = {"Odin", "|cffc800Odin|r", "HodorReflexes/users/Piou/Odin.dds"}
 u["@Nyo-Rdn"] = {"Nyo", "|c4168f0N|r|c8234e1y|r|cc300d2o|r", "HodorReflexes/users/Piou/Nyo.dds"}
 a["@Nyo-Rdn"] = {"HodorReflexes/users/Piou/Nyo_anim.dds", 52, 1, 15}
+u["@Chelgoumy"] = {"Chelgoumy", "|cff2101Che|r|c000000lg|r|cFFFFFFou|r|c58FF0Amy|r" , "HodorReflexes/users/Piou/Chelgou.dds"}
+a["@Chelgoumy"] = {"HodorReflexes/users/Piou/Chelgou_anim.dds", 12, 1, 5}
+u["@KOZYMEISTER"] = {"Kozy", "|c8f00bfK|r|c5f0080o|r|c300040z|r|c000000y|r", "HodorReflexes/users/Piou/Koz.dds"}
+a["@KOZYMEISTER"] = {"HodorReflexes/users/Piou/Koz_anim.dds", 16, 1, 15}
