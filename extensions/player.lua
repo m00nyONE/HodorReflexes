@@ -77,13 +77,5 @@ function player.GetIconForUserId(id)
 end
 
 function player.GetRandomUserId()
-	local keys = {}
-	for userId in pairs(LCI.GetAllStaticIcons()) do
-		table.insert(keys, userId)
-	end
-	if #keys > 0 then
-		local randomIndex = math.random(#keys)
-		return keys[randomIndex]
-	end
-	return nil
+	return LCI.GetRandomUserId()
 end
