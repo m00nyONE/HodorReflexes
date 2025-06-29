@@ -21,7 +21,7 @@ u["@Hjelmi"] = {"Hjelmi", "|cff71C6Hjelmi|r", "HodorReflexes/users/hodor/hjelmi.
 u["@ChaosAD2077"] = {"Chaos", "|c98FB98Chaos|r", "HodorReflexes/users/hodor/chaos.dds"}
 u["@VanaEvr"] = {"Vana", "Vana"}
 
-a["@andy.s"] = {'HodorReflexes/users/animated/mario.dds', 2, 2, 10}
-a["@PK44"] = {'HodorReflexes/users/animated/pikadab.dds', 7, 7, 20}
-a["@WarfireX"] = {'HodorReflexes/users/hodor/warfire_anim2.dds', 22, 1, 50}
-a["@LikoXie"] = {'HodorReflexes/users/hodor/likoxie_anim.dds', 12, 1, 10}
+a["@andy.s"] = {"HodorReflexes/users/animated/mario.dds", 2, 2, 10}
+a["@PK44"] = {"HodorReflexes/users/animated/pikadab.dds", 7, 7, 20}
+a["@WarfireX"] = {"HodorReflexes/users/hodor/warfire_anim2.dds", 22, 1, 50}
+a["@LikoXie"] = {"HodorReflexes/users/hodor/likoxie_anim.dds", 12, 1, 10}
