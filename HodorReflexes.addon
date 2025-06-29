@@ -4,8 +4,8 @@
 ## APIVersion: 101045 101046
 ## AddOnVersion: 99999999
 ## SavedVariables: HodorReflexesSV
-## DependsOn: LibAddonMenu-2.0>=32 LibCombat>=79 LibGroupCombatStats>=20250406 LibGroupBroadcast>=88
-## OptionalDependsOn: RuESO LibCustomNames LibCustomIcons
+## DependsOn: LibAddonMenu-2.0>=32 LibCombat>=79 LibGroupCombatStats>=20250406 LibGroupBroadcast>=88 LibCustomNames LibCustomIcons
+## OptionalDependsOn: RuESO
 
 lang/en.lua
 lang/$(language).lua
@@ -21,30 +21,6 @@ extensions/anim.lua
 extensions/hud.lua
 
 HodorReflexesMenu.lua
-
-users/misc/misc.lua
-users/misc2/misc2.lua
-users/misc3/misc3.lua
-users/misc4/misc4.lua
-users/misc5/misc5.lua
-users/misc6/misc6.lua
-users/misc7/misc7.lua
-users/hodor/hodor.lua
-users/frenchkiss/frenchkiss.lua
-users/chainreaction/chainreaction.lua
-users/ua/ua.lua
-users/mc/mc.lua
-users/luck/luck.lua
-users/vok/vok.lua
-users/equinoxe/equinoxe.lua
-users/pushdeeps/pushdeeps.lua
-users/cfm/cfm.lua
-users/mot/mot.lua
-users/moo/moo.lua
-users/corsair/corsair.lua
-users/Piou/Piou.lua
-users/integritycheck.xml
-users/integritycheck.lua
 
 modules/share/main.lua
 modules/share/menu.lua

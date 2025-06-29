@@ -1,7 +1,0 @@
-<GuiXml>
-    <Controls>
-        <TopLevelControl name="HodorReflexes_IntegrityCheck" mouseEnabled="true" movable="true" resizeToFitDescendents="true" clampedToScreen="true" hidden="false">
-            <Anchor point="TOPLEFT" relativeTo="GuiRoot" relativePoint="TOPLEFT" offsetX="0" offsetY="0" />
-        </TopLevelControl>
-    </Controls>
-</GuiXml>

@@ -1,9 +1,18 @@
-[SIZE="2"][B]IMPORTANT:[/B] After updating HodorReflexes, keep Minion open for at least 2 minutes to allow all files to unpack properly and avoid corruption.[/SIZE]
+[SIZE="2"][B]IMPORTANT:[/B] You need LibCustomNames and LibCustomIcons now.[/SIZE]
+
+## 2025.06.29 - @m00nyONE
+- MAJOR UPDATE !
+- HodorReflexes goes lite by default! There are no icons in the addon itself anymore! Instead, I introduced two new dependencies: LibCustomNames and LibCustomIcons. They both need to be installed for HodorReflexes to work atm.
+- Hodor will now only get updates when there are new features or fixes. Icon updates will be in LibCustomIcons. No more broken HodorReflexes installations after every update! *cheer*
+- LibCustomNames and LibCustomIcons is open for contributions (like HodorReflexes has been for years now). If you know how to code, just open a Pull-Request with your new icon or the ones of your friends and you are good to go :-) If not, there is still the option to donate to let a teammember of HodorReflexes do it for you.
+- This update breaks all addons that use the old hacky way of retrieving icons from HodorReflexes by peaking into the HodorReflexes.users table. All addons that used the API function from Hodor to retrieve icons are fine. All addons that added custom icons to HodorReflexes will not work anymore! Merge your stuff to LibCustomIcons please. 
+- To all the Addon developers: migrate to LibCustomIcons if you want to continue using Hodorreflexes icons please. It's super easy and quickly done.
+- Other addons can no longer add/edit/remove icons from Hodor or tamper with them in any way. If you want to add/edit/delete something, create a Pull-Request or ask for it. We do not want bad actors manipulating icons and names of others in a harmfull way ever again.
 
 ## 2025.05.07 - @m00nyONE
 - fixing an issue where the playerStats table was not exposed causing other addons like HodorRestyle to not work anymore - thanks to @B7TxSpeed
 - hiding menu for the HRLite build - by @NeBioNik
-- adding LibPlayerIcons as an optional dependency - addon will follow soon - ihope you see where this is going :D
+- adding LibCustomIcons as an optional dependency - addon will follow soon - i hope you see where this is going :D
 
 ## 2025.05.05 - @m00nyONE
 - fixing an issue on PTS that colossus and atronachs are not shown when players are not "real" necros or sorcs.

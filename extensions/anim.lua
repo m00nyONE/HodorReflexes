@@ -8,6 +8,8 @@ local M = HR.anim
 --local EM = EVENT_MANAGER
 local anims = {}
 
+local LCI = LibCustomIcons
+
 -- Format: {"icon_path", columns, rows, frame_rate}
 -- Don't add anything here! Use files in HodorReflexes/users/
 local u = HR.anim.users
@@ -18,13 +20,15 @@ u["dancingcat"] = {"HodorReflexes/users/animated/dancingcat.dds", 6, 6, 20}
 
 -- Initialize a user.
 function M.RegisterUser(user)
-	if u[user] then
+	local userAnim = LCI.GetAnimated(user)
+	if userAnim then
 		if anims[user] then M.UnregisterUser(user) end
 		anims[user] = {
 			timeline = ANIMATION_MANAGER:CreateTimeline(),
-			width = u[user][2],
-			height = u[user][3],
-			frameRate = u[user][4],
+			texture = userAnim[1],
+			width = userAnim[2],
+			height = userAnim[3],
+			frameRate = userAnim[4],
 		}
 		return true
 	end
@@ -33,7 +37,7 @@ end
 
 -- Delete all user animations.
 function M.UnregisterUser(user)
-	if u[user] then
+	if LCI.HasAnimated(user) then
 		M.StopUserAnimations(user)
 		anims[user] = nil
 	end
@@ -47,7 +51,7 @@ end
 
 -- Returns true if a user is in HR.anim.users table.
 function M.IsValidUser(user)
-	return u[user] ~= nil
+	return LCI.HasAnimated(user)
 end
 
 -- Register a texture control to update.
@@ -57,7 +61,7 @@ function M.RegisterUserControl(user, control)
 		local animation = a.timeline:InsertAnimation(ANIMATION_TEXTURE, control)
 		animation:SetImageData(a.width, a.height)
 		animation:SetFramerate(a.frameRate)
-		control:SetTexture(u[user][1])
+		control:SetTexture(a.texture)
 	end
 end
 
@@ -104,7 +108,7 @@ end
 
 -- get first frame. - returns the texture, left, right, top, bottom for SetTextureCoords(left, right, top, bottom)
 function M.GetFirstFrame(user)
-	local a = u[user]
+	local a = LCI.GetAnimated(user)
 	if a then
 		return a[1], 0, 1/a[2], 0 , 1/a[3]
 	end

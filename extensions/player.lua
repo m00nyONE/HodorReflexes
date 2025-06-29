@@ -3,7 +3,9 @@ HodorReflexes.player = {}
 local HR = HodorReflexes
 local player = HR.player
 local util = HR.util
-local users = HR.users
+
+local LCI = LibCustomIcons
+local LCN = LibCustomNames
 
 local currentZoneId = 0
 local currentHouseId = 0
@@ -63,32 +65,20 @@ end
 
 function player.GetAliasForUserId(id, pretty)
 
-	local user = users[id]
-	if user then
-		if pretty then
-			return user[2] or user[1]
-		else
-			return user[1]
-		end
-	end
+	local user = LCN.Get(id, pretty)
+	if user then return user end
+
 	return id and UndecorateDisplayName(id) or '' -- just remove @
 
 end
 
 function player.GetIconForUserId(id)
-
-	local user = users[id]
-	if user and user[3] then
-		return user[3]
-	else
-		return nil
-	end
-
+	return LCI.GetStatic(id)
 end
 
 function player.GetRandomUserId()
 	local keys = {}
-	for userId in pairs(users) do
+	for userId in pairs(LCI.GetAllStaticIcons()) do
 		table.insert(keys, userId)
 	end
 	if #keys > 0 then
