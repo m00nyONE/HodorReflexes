@@ -206,19 +206,6 @@ local function Initialize()
 
 	HR.BuildMenu()
 
-	if not LibGroupBroadcast then
-		zo_callLater(function()
-			d("The next release of HodorReflexes requires a new dependency: |cFF0000LibGroupBroadcast|r")
-			d("Please download it on ESOUI or via Minion")
-		end, 7000)
-	end
-	if not LibGroupCombatStats then
-		zo_callLater(function()
-			d("The next release of HodorReflexes requires a new dependency: |cFF0000LibGroupCombatStats|r")
-			d("Please download it on ESOUI or via Minion")
-		end, 7000)
-	end
-
 end
 
 -- EVENT_PLAYER_ACTIVATED handler
