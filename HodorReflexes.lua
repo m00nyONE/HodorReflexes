@@ -365,7 +365,6 @@ end
 SLASH_COMMANDS["/hodor"] = function(str)
 	if str == "lock" then HR.LockUI() return end
 	if str == "version" then d(HR.version) return end
-	if str == "integrity" then HR.integrity.Check()	return end
 end
 
 EM:RegisterForEvent(HR.name, EVENT_ADD_ON_LOADED, function(_, name)

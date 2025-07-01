@@ -120,9 +120,6 @@ local strings = {
 	HR_MENU_ICONS_VISIBILITY_COLORS_TT = "Color names of other players.",
 	HR_MENU_ICONS_VISIBILITY_ANIM = "Animated Icons",
 	HR_MENU_ICONS_VISIBILITY_ANIM_TT = "Play animated icons. Note: disabling this feature won't increase your FPS.",
-	HR_MENU_ICONS_INTEGRITY = "Integrity",
-	HR_MENU_ICONS_INTEGRITY_DESCRIPTION = "Check the integrity of HodorReflexes Icons",
-	HR_MENU_ICONS_INTEGRITY_CHECK = "Check",
 
 	HR_MENU_ICONS_README1 = "Use the settings below to customize your name and icon in the addon. It's only a preview, which means nobody will see your changes until you send the generated LUA code to the addon's author.",
 	HR_MENU_ICONS_README2 = "The game only supports DirectDraw Surface file format for images, and the required dimensions by the addon are 32x32 px. You can skip this part if it sounds complicated, and just send the original file alongside your LUA code.",
@@ -277,7 +274,6 @@ local strings = {
 
 	HR_UPDATED_TEXT = "Hodor Reflexes has been successfully updated, or maybe not? Unfortunately, when updating via Minion, there is a moderate chance for some files to vanish. Usually they are just icons, usually... So here is a little test of five images from different addon folders. If you don't see all of them, then you should close the game and reinstall the addon. Otherwise, just ignore this message, it won't appear again.",
 	HR_UPDATED_DISMISS = "I see five icons!",
-	--HR_UPDATED_INTEGRITY = "Integrity Check",
 
 	HR_MISSING_ICON = "Couldn't load your Hodor Reflexes icon. Reinstall the addon or download it manually from esoui.com and restart the game.",
 
