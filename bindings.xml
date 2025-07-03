@@ -1,9 +1,0 @@
-<Bindings>
-	<Layer name="SI_KEYBINDINGS_LAYER_GENERAL">
-		<Category name="|cFFFF00Hodor Reflexes|r">
-			<Action name="HR_BINDING_CLOSE_UPDATE_POPUP">
-				<Down>HodorReflexes_Updated:SetHidden(true)</Down>
-			</Action>
-		</Category>
-	</Layer>
-</Bindings>

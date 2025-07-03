@@ -72,16 +72,6 @@ local _LGBProtocols = {}
 
 local optionControls = {} -- additional addon settings provided by modules
 
--- Style definitions for keyboard and gamepad UI elements
-local KEYBOARD_STYLES = {
-	titleTemplate = "HodorReflexes_Updated_Title_Keyboard_Template",
-	dismissTemplate = "HodorReflexes_Updated_Dismiss_Keyboard_Template",
-}
-local GAMEPAD_STYLES = {
-	titleTemplate = "HodorReflexes_Updated_Title_Gamepad_Template",
-	dismissTemplate = "HodorReflexes_Updated_Dismiss_Gamepad_Template",
-}
-
 -- Toxic mock messages configuration
 local text = {}  -- Stores the currently displayed mock message
 local mockText = {} -- Array of possible mock messages
@@ -155,14 +145,6 @@ local function GenerateMock()
 	end
 end
 
-local function UpdatePlatformStyles(styleTable)
-
-    ApplyTemplateToControl(HodorReflexes_Updated_Title, styleTable.titleTemplate)
-    ApplyTemplateToControl(HodorReflexes_Updated_Dismiss, styleTable.dismissTemplate)
-    --ApplyTemplateToControl(HodorReflexes_Updated_Dismiss_With_Integrity, styleTable.dismissWithIntegrityTemplate)
-
-end
-
 local function registerLGBHandler()
 	local handler = LGB:RegisterHandler("HodorReflexes")
 	handler:SetDisplayName("Hodor Reflexes")
@@ -197,15 +179,7 @@ local function Initialize()
 		HR.modules.exitinstance.Initialize()
 	end
 
-	-- Bindings
-	ZO_CreateStringId('HR_UPDATED_TITLE', 'Hodor Reflexes ' .. HR.version)
-	ZO_CreateStringId('SI_BINDING_NAME_HR_BINDING_CLOSE_UPDATE_POPUP', GetString(HR_BINDING_CLOSE_UPDATE_POPUP))
-
-	-- Apply platform styles
-	ZO_PlatformStyle:New(UpdatePlatformStyles, KEYBOARD_STYLES, GAMEPAD_STYLES)
-
 	HR.BuildMenu()
-
 end
 
 -- EVENT_PLAYER_ACTIVATED handler

@@ -11,8 +11,6 @@ lang/en.lua
 lang/$(language).lua
 
 HodorReflexes.lua
-HodorReflexes.xml
-bindings.xml
 
 extensions/util.lua
 extensions/player.lua
