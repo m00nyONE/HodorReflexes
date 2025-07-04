@@ -75,7 +75,3 @@ end
 function player.GetIconForUserId(id)
 	return LCI.GetStatic(id)
 end
-
-function player.GetRandomUserId()
-	return LCI.GetRandomUserId()
-end

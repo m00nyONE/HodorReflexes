@@ -10,14 +10,6 @@ local anims = {}
 
 local LCI = LibCustomIcons
 
--- Format: {"icon_path", columns, rows, frame_rate}
--- Don't add anything here! Use files in HodorReflexes/users/
-local u = HR.anim.users
-u["pikadab"] = {"HodorReflexes/users/animated/pikadab.dds", 7, 7, 20}
-u["pikahi"] = {"HodorReflexes/users/animated/pikahi.dds", 69, 1, 33}
-u["catjam"] = {"HodorReflexes/users/animated/catjam.dds", 79, 2, 25}
-u["dancingcat"] = {"HodorReflexes/users/animated/dancingcat.dds", 6, 6, 20}
-
 -- Initialize a user.
 function M.RegisterUser(user)
 	local userAnim = LCI.GetAnimated(user)
