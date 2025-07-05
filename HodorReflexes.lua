@@ -44,10 +44,6 @@ HodorReflexes = {
 	modules = {},              -- Contains public modules like "share", "vote", etc.
 }
 
--- This array is used by the "share" module to display short names rather than full user ids.
--- Format: [@userId] = {"name", "pretty_name", "custom_icon.dds"}
-HodorReflexes.users = {}
-
 -- Addon events (to be used with RegisterCallback)
 -- Use HodorReflexes.RegisterCallback(event, callback) to register a callback.
 HR_EVENT_PLAYER_ACTIVATED = "PlayerActivated"

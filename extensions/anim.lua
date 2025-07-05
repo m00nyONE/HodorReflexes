@@ -1,6 +1,5 @@
 HodorReflexes.anim = {
 	name = "HodorReflexes_Anim",
-	users = {},
 }
 
 local HR = HodorReflexes
