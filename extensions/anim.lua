@@ -28,10 +28,8 @@ end
 
 -- Delete all user animations.
 function M.UnregisterUser(user)
-	if LCI.HasAnimated(user) then
-		M.StopUserAnimations(user)
-		anims[user] = nil
-	end
+	M.StopUserAnimations(user)
+	anims[user] = nil
 end
 
 -- Clear all users.
@@ -102,5 +100,14 @@ function M.GetFirstFrame(user)
 	local a = LCI.GetAnimated(user)
 	if a then
 		return a[1], 0, 1/a[2], 0 , 1/a[3]
+	end
+end
+
+if not LCI then
+	M.RegisterUser = function(user)
+		return false
+	end
+	M.IsValidUser = function(user)
+		return false
 	end
 end

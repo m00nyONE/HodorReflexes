@@ -15,6 +15,20 @@ function player.Initialize()
 	currentZoneId = GetZoneId(GetUnitZoneIndex('player'))
 	currentHouseId = GetCurrentZoneHouseId()
 
+	-- remove name functionality
+	if not LCN then
+		player.GetAliasForUserId = function(id, pretty)
+			return id
+		end
+	end
+
+	-- remove icon functionality
+	if not LCI then
+		player.GetIconForUserId = function(id)
+			return nil
+		end
+	end
+
 end
 
 -- Returns map distance, not meters
