@@ -47,6 +47,7 @@ HodorReflexes.modules.share = {
 		showAtronachPercentValue = 1,
 		showAtronachRawValue = 1,
 		-- my icon and name
+		selectedDonationTier = 1,
 		myIconPathFull = '',
 		myIconNameRaw = '',
 		myIconNameFormatted = '',
