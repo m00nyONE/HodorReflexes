@@ -9,7 +9,7 @@ Hodor Reflexes allows you to view shared DPS and Ult data from group members.
 
 Install guide:
 
-1. Download the following libraries and put them into your AddOns folder (or just use Minion): `LibAddonMenu-2.0`, `LibGroupCombatStats`, `LibCombat`, `LibCustomNames`, `LibCustomIcons`. Most likely you already have them installed.
+1. Download the following libraries and put them into your AddOns folder (or just use Minion): `LibAddonMenu-2.0`, `LibGroupCombatStats`, `LibCombat`, `LibCustomNames`, `LibCustomIcons`, `LibGroupBroadcast`. Most likely you already have them installed.
 2. Install this addon, make sure it's enabled and all dependencies are up-to-date in the in-game add-ons list.
 3. Once you've joined a group that also uses HodorReflexes, you'll start seeing ultimate/dps data.
 
