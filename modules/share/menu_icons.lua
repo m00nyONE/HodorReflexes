@@ -331,27 +331,11 @@ local function getCustomIconOptions()
 
 		{
 			type = "header",
-			name = strfmt("|cFFFACD4. %s|r", GetString(HR_MENU_ICONS_HEADER_DISCORD))
+			name = strfmt("|cFFFACD4. %s|r", GetString(HR_MENU_ICONS_HEADER_TICKET))
 		},
 		{
 			type = "description",
 			text = GetString(HR_MENU_ICONS_README_5),
-		},
-		{
-			type = "button",
-			name = GetString(HR_MENU_ICONS_CONFIGURATOR_DISCORD),
-			tooltip = GetString(HR_MENU_ICONS_CONFIGURATOR_DISCORD_TT),
-			func = function() RequestOpenUnsafeURL(discordURL) end,
-			width = "full"
-		},
-
-		{
-			type = "header",
-			name = strfmt("|cFFFACD5. %s|r", GetString(HR_MENU_ICONS_HEADER_TICKET))
-		},
-		{
-			type = "description",
-			text = GetString(HR_MENU_ICONS_README_6),
 		},
 		{
 			type = "editbox",
@@ -362,6 +346,17 @@ local function getCustomIconOptions()
 			isMultiline = true,
 			isExtraWide = true,
 			reference = "HodorReflexes_ShareIconsMenu_Code",
+		},
+		{
+			type = "description",
+			text = GetString(HR_MENU_ICONS_README_6),
+		},
+		{
+			type = "button",
+			name = GetString(HR_MENU_ICONS_CONFIGURATOR_DISCORD),
+			tooltip = GetString(HR_MENU_ICONS_CONFIGURATOR_DISCORD_TT),
+			func = function() RequestOpenUnsafeURL(discordURL) end,
+			width = "full"
 		},
 		{
 			type = "header",
