@@ -149,7 +149,6 @@ local function getCustomIconOptions()
 	-- Create preview string and update control if needed.
 	local _generatePreview = function(updateControl)
 		local s = strfmt("                    %s", sv.myIconNameFormatted)
-		--local s = strfmt('|t22:22:%s|t %s', M.sw.myIconPathFull, M.sw.myIconNameFormatted)
 		if updateControl then
 			HodorReflexes_ShareIconsMenu_preview.data.text = s
 		end
