@@ -78,3 +78,13 @@ jobs:
           makeLatest: true
           prerelease: true
           updateOnlyUnreleased: true
+
+      - name: Upload to ESOUI
+        uses: m00nyONE/esoui-upload@v2
+        with:
+          api_key: ${{ secrets.ESOUI_API_KEY }}
+          addon_id: '2311'
+          version: ${{ env.ADDON_VERSION }}
+          zip_file: ${{ env.ZIP_FULL_NAME }}
+          changelog_file: 'CHANGELOG.md'
+          test: true
