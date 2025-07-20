@@ -1,6 +1,6 @@
 [SIZE="2"][B]IMPORTANT:[/B] You need LibCustomNames and LibCustomIcons now.[/SIZE]
 
-## 2025.07.19 - @m00nyONE
+## 2025.07.20 - @m00nyONE
 - MAJOR UPDATE !
 - HodorReflexes goes lite by default! There are no icons in the addon itself anymore! Instead, I introduced two new dependencies: LibCustomNames and LibCustomIcons. They both need to be installed for HodorReflexes to work atm.
 - Hodor will now only get updates when there are new features or fixes. Icon updates will be in LibCustomIcons. No more broken HodorReflexes installations after every update! *cheer*
