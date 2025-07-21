@@ -15,20 +15,6 @@ function player.Initialize()
 	currentZoneId = GetZoneId(GetUnitZoneIndex('player'))
 	currentHouseId = GetCurrentZoneHouseId()
 
-	-- remove name functionality
-	if not LCN then
-		player.GetAliasForUserId = function(id, pretty)
-			return id
-		end
-	end
-
-	-- remove icon functionality
-	if not LCI then
-		player.GetIconForUserId = function(id)
-			return nil
-		end
-	end
-
 end
 
 -- Returns map distance, not meters
@@ -78,6 +64,7 @@ function player.GetCurrentHouseId()
 end
 
 function player.GetAliasForUserId(id, pretty)
+	if not LCN then return id and UndecorateDisplayName(id) or '' end
 
 	local user = LCN.Get(id, pretty)
 	if user then return user end
@@ -87,5 +74,7 @@ function player.GetAliasForUserId(id, pretty)
 end
 
 function player.GetIconForUserId(id)
+	if not LCI then return nil end
+
 	return LCI.GetStatic(id)
 end
