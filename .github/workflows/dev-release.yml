@@ -68,7 +68,7 @@ jobs:
       - name: Create GitHub Release
         uses: ncipollo/release-action@v1
         with:
-          name: "${{ env.ADDON_VERSION }}"
+          name: "latest"
           commit: ${{ github.ref }}
           tag: "${{ env.ADDON_VERSION }}"
           artifacts: "${{ env.ZIP_FULL_NAME }}"
@@ -81,6 +81,7 @@ jobs:
 
       - name: Upload to ESOUI
         uses: m00nyONE/esoui-upload@v2
+        if: github.repository_owner == 'm00nyONE'
         with:
           api_key: ${{ secrets.ESOUI_API_KEY }}
           addon_id: '2311'

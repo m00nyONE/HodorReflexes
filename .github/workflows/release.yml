@@ -10,8 +10,10 @@ on:
 
 jobs:
   generate-docs:
+    if: github.repository_owner == 'm00nyONE'
     uses: ./.github/workflows/_generate_docs.yml
   release:
+    if: github.repository_owner == 'm00nyONE'
     name: "release"
     runs-on: ubuntu-latest
     permissions: write-all
@@ -78,6 +80,16 @@ jobs:
           bodyFile: latest_changes.md
           allowUpdates: true
           makeLatest: true
+
+      - name: Test Upload to ESOUI
+        uses: m00nyONE/esoui-upload@v2
+        with:
+          api_key: ${{ secrets.ESOUI_API_KEY }}
+          addon_id: '2311'
+          version: ${{ env.ADDON_VERSION }}
+          zip_file: ${{ env.ZIP_FULL_NAME }}
+          changelog_file: 'CHANGELOG.md'
+          test: true
 
       - name: Upload to ESOUI
         uses: m00nyONE/esoui-upload@v2
