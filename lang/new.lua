@@ -115,8 +115,6 @@ local strings = {
 	HR_MENU_ICONS_CONFIGURATOR_DONATE_TT = "opens the mail window and puts in some text.",
 
 	HR_MENU_STYLE = "Style",
-	HR_MENU_STYLE_PINS = "Show map pings",
-	HR_MENU_STYLE_PINS_TT = "Show players' pings on the world map and compass.",
 	HR_MENU_STYLE_DPS = "Damage list",
 	HR_MENU_STYLE_DPS_FONT = "Numbers font",
 	HR_MENU_STYLE_DPS_FONT_DEFAULT = "Default",
@@ -209,8 +207,8 @@ local strings = {
 	-------------------------
 
 	HR_MOCK1 = "Imagine dying with all these addons enabled.",
-	HR_MOCK2 = "Try equipping Mighty Chudan, Plague Doctor and Beekeeper's Gear.",
-	HR_MOCK3 = "Are you going to blame the servers again?",
+    HR_MOCK2 = "Try equipping Mighty Chudan, Plague Doctor and Beekeeper's Gear.",
+    HR_MOCK3 = "Are you going to blame the servers again?",
 	HR_MOCK4 = "A bad instance, obviously.",
 	HR_MOCK5 = "Maybe tanking or healing would be a better role for you.",
 	HR_MOCK6 = "Have you missed the addon notification?",
@@ -252,6 +250,6 @@ local strings = {
 }
 
 for id, val in pairs(strings) do
-	ZO_CreateStringId(id, val)
-	SafeAddVersion(id, 1)
+   ZO_CreateStringId(id, val)
+   SafeAddVersion(id, 1)
 end
