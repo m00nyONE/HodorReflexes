@@ -557,7 +557,6 @@ function M.Initialize()
 		d("Failed to register addon with LibGroupCombatStats.")
 		return
 	end
-	d("Addon registered")
 	lgcs:RegisterForEvent(EVENT_GROUP_ULT_UPDATE, onULTDataReceived)
 	lgcs:RegisterForEvent(EVENT_PLAYER_ULT_UPDATE, onULTDataReceived)
 	lgcs:RegisterForEvent(EVENT_GROUP_DPS_UPDATE, onDPSDataReceived)
