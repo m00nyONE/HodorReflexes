@@ -1,4 +1,4 @@
--- German translation by @muh, @Freebaer
+-- German translation by @muh, @Freebaer. @m00nyONE
 
 local strings = {
 
@@ -8,22 +8,27 @@ local strings = {
 
 	HR_MENU_GENERAL = "Allgemein",
 	HR_MENU_GENERAL_ENABLED = "Aktiviert",
-	HR_MENU_GENERAL_ENABLED_TT = "De-/aktiviere dieses Addon. Wenn deaktiviert, werden von dem Addon Pings auf der Karte stumm geschaltet und Pings von anderen Spielern verarbeitet.",
+	HR_MENU_GENERAL_ENABLED_TT = "De-/aktiviere dieses Addon.",
 	HR_MENU_GENERAL_UI_LOCKED = "UI verankert",
 	HR_MENU_GENERAL_UI_LOCKED_TT = "Löse UI um alle aktivierten Elemente zu zeigen.",
 	HR_MENU_GENERAL_ACCOUNT_WIDE = "Account übergreifende Einstellungen",
 	HR_MENU_GENERAL_ACCOUNT_WIDE_TT = "Wechsel zwischen Account übergreifenden Einstellungen und Charakter spezifischen Einstellungen.",
+	HR_MENU_GENERAL_DISABLE_PVP = "Deaktivieren in PvP",
+	HR_MENU_GENERAL_DISABLE_PVP_TT = "Deaktiviert das Addon in PvP Zonen.",
+	HR_MENU_GENERAL_EXIT_INSTANCE = "Verlassen der Instanz bestätigen",
+	HR_MENU_GENERAL_EXIT_INSTANCE_TT = "Zeigt einen Bestätigungsdialog wenn der Gruppenleiter dich zum verlassen der Instanz auffordert.",
 
 	HR_MENU_DAMAGE = "Schaden",
 	HR_MENU_DAMAGE_SHOW = "Zeige Schaden:",
 	HR_MENU_DAMAGE_SHOW_TT = "Zeige eine Liste mit verursachtem Schaden der Gruppenmitglieder.",
-	HR_MENU_DAMAGE_SHARE = "Teile DPS:",
-	HR_MENU_DAMAGE_SHARE_TT = "Sendet deinen verursachten Schaden an Gruppenmitglieder.",
+	HR_MENU_DAMAGE_SHOW_NEVER = "Niemals",
+	HR_MENU_DAMAGE_SHOW_ALWAYS = "Immer",
+	HR_MENU_DAMAGE_SHOW_OUT = "Außerhalb des Kampfes",
+	HR_MENU_DAMAGE_SHOW_NONBOSS = "in Nicht-Bosskämpfen",
 
 	HR_MENU_HORN = "Kriegshorn",
 	HR_MENU_HORN_SHOW = "Zeige Kriegshorn:",
 	HR_MENU_HORN_SHOW_TT = "Zeige eine Liste mit dem aktuellem Füllstand der ultimativen Fähigkeit der Gruppenmitglieder.",
-	HR_MENU_HORN_SHARE = "Teile ultimative Fähigkeit:",
 	HR_MENU_HORN_SHOW_PERCENT = "Zeige Prozent",
 	HR_MENU_HORN_SHOW_PERCENT_TT = "Zeige die errechnete Prozentzahl der ultimativen Fähigkeit",
 	HR_MENU_HORN_SHOW_RAW = "Zeige Ulti Punkte",
@@ -48,14 +53,6 @@ local strings = {
 	HR_MENU_COLOS_SHOW_PERCENT_TT = "Zeige die errechnete Prozentzahl der ultimativen Fähigkeit",
 	HR_MENU_COLOS_SHOW_RAW = "Zeige Ulti Punkte",
 	HR_MENU_COLOS_SHOW_RAW_TT = "Zeige die Ulti Punkte die der Spieler hat",
-	HR_MENU_COLOS_SHARE = "Teile ultimative Fähigkeit",
-	HR_MENU_COLOS_SHARE_TT = "Sendet deinen Füllstand der ultimativen Fähigkeit in % an Gruppenmitglieder (nur wenn Koloss ausgerüstet ist).",
-	HR_MENU_COLOS_PRIORITY = "Priorität:",
-	HR_MENU_COLOS_PRIORITY_TT = "- Standard: Maximaler Füllstand ist 200%.\n- Tank Rolle: Sende 201% wenn du Tank bist und dein Koloss bereit ist.\n- Immer: Sende immer 201% wenn dein Koloss bereit ist.\n- Nie: Sende immer 99% oder weniger.\n|cFFFFFFACHTUNG: Das Senden von 99% oder 201% betrifft ebenfalls Kriegshorn solltest du beide ultimativen Fähigkeiten teilen.|r",
-	HR_MENU_COLOS_PRIORITY_DEFAULT = "Standard",
-	HR_MENU_COLOS_PRIORITY_TANK = "Tank Rolle",
-	HR_MENU_COLOS_PRIORITY_ALWAYS = "Immer",
-	HR_MENU_COLOS_PRIORITY_NEVER = "Nie",
 	HR_MENU_COLOS_SUPPORT_RANGE = "Zeige nur Spieler in deiner Nähe:",
 	HR_MENU_COLOS_SUPPORT_RANGE_TT = "Spieler die zu weit von dir entfernt sind werden nicht in der Liste angezeigt.",
 	HR_MENU_COLOS_COUNTDOWN = "Zeige Countdown an:",
@@ -66,8 +63,6 @@ local strings = {
 	HR_MENU_ATRONACH = "Atronach",
 	HR_MENU_ATRONACH_SHOW = "Zeige Atronach",
 	HR_MENU_ATRONACH_SHOW_TT =  "Zeige eine Liste mit dem aktuellem Füllstand der ultimativen Fähigkeit der Gruppenmitglieder.",
-	HR_MENU_ATRONACH_SHARE = "Teile Atronach",
-	HR_MENU_ATRONACH_SHARE_TT = "Sendet deinen Füllstand der ultimativen Fähigkeit an Gruppenmitglieder (nur wenn Atronach ausgerüstet ist).",
 	HR_MENU_ATRONACH_SHOW_PERCENT = "Zeige Prozent",
 	HR_MENU_ATRONACH_SHOW_PERCENT_TT = "Zeige die errechnete Prozentzahl der ultimativen Fähigkeit",
 	HR_MENU_ATRONACH_SHOW_RAW = "Zeige Ulti Punkte",
@@ -76,8 +71,6 @@ local strings = {
 	HR_MENU_MISCULTIMATES = "Andere Ultimates",
 	HR_MENU_MISCULTIMATES_SHOW = "Zeige alle Ultis",
 	HR_MENU_MISCULTIMATES_SHOW_TT = "Zeige alle nicht unterstützten Ultis",
-	HR_MENU_MISCULTIMATES_SHARE = "Teile alle Ultis",
-	HR_MENU_MISCULTIMATES_SHARE_TT = "Teile alle auch nicht unterstützten Ultis",
 
 	HR_MENU_MISC = "Sonstiges",
 	HR_MENU_MISC_DESC = "Um eine Beispielliste mit Spielern anzuzeigen/auszublenden gib |c999999/hodor.share test|r in den Chat ein.\nDu kannst ebenfalls auswählen welche Spieler angezeigt werden sollen, indem du ihre Namen angibst:\n|c999999/hodor.share test @andy.s @Alcast|r",
@@ -121,6 +114,7 @@ local strings = {
 	HR_MENU_ICONS_README_DONATION_TIER = "Donation-Stufe: ",
 	HR_MENU_ICONS_README_DONATION_TIER_TT = "Wenn du die Donation-Stufe änderst, wird im Konfigurator unten zusätzlicher LUA-Code erzeugt – abhängig von der gewählten Stufe.",
 	HR_MENU_ICONS_CONFIGURATOR_LUA_TT = "Klicke in die Textbox und drücke STRG+A, um den gesamten Code zu markieren. Drücke anschließend STRG+C, um ihn in die Zwischenablage zu kopieren.",
+	HR_MENU_ICONS_CONFIGURATOR_DONATE_TT = "öffnet den eine Mail und schreibt etwas text hinein.",
 
 	HR_MENU_STYLE = "Style",
 	HR_MENU_STYLE_DPS = "Schadensliste",
@@ -134,6 +128,18 @@ local strings = {
 	HR_MENU_STYLE_DPS_ODD_OPACITY = "Transparenz ungerader Zeilen:",
 	HR_MENU_STYLE_DPS_HIGHLIGHT = "hervorgehobene Farbe:",
 	HR_MENU_STYLE_DPS_HIGHLIGHT_TT = "Dein Name wird in der hervorgehobenen Farbe in der Schadensliste angezeigt. Wenn du deinen Namen nicht hervorheben möchtest, setze die Transparenz auf 0. Der Name wird ausschließlich für dich hervorgehoben.",
+	HR_MENU_STYLE_HORN_COLOR = "Kriegshorn verbleibene Zeit Farbe",
+	HR_MENU_STYLE_FORCE_COLOR = "Größere Kraft verbleibende Zeit Farbe",
+	HR_MENU_STYLE_ATRONACH_COLOR = "Atronach verbleibende Zeit Farbe",
+	HR_MENU_STYLE_BERSERK_COLOR = "Major Berserk verbleibende Zeit Farbe",
+	HR_MENU_STYLE_COLOS_COLOR = "Koloss verbleibende Zeit Farbe",
+	HR_MENU_STYLE_TIMER_OPACITY = "Ausgelaufener Timer Transparenz",
+	HR_MENU_STYLE_TIMER_OPACITY_TT = "Text- und Icontransparenz wenn der Timer 0 erreicht",
+	HR_MENU_STYLE_TIMER_BLINK = "Blinkende TImer",
+	HR_MENU_STYLE_TIMER_BLINK_TT = "Die TImer blinken wenn sie 0 erreichen. Danach wird die Transparenz angewendet.",
+
+	HR_MENU_ANIMATIONS = "Animierte Benachrichtigungen",
+	HR_MENU_ANIMATIONS_TT = "Animiert Horn und Koloss Countdowns um sie sichtbarer zu machen.",
 
 	HR_MENU_VOTE = "Abstimmung",
 	HR_MENU_VOTE_DISABLED = "Für dieses Modul muss Hodor Reflexes aktiviert sein!",
@@ -142,38 +148,37 @@ local strings = {
 	HR_MENU_VOTE_CHAT = "Chat Nachrichten",
 	HR_MENU_VOTE_CHAT_TT = "Zeigt Abstimmungsergebnisse und andere Informationen im Chatfenster an.",
 	HR_MENU_VOTE_ACTIONS = "Aktionen",
-	HR_MENU_VOTE_ACTIONS_RC = "Bereitschaftsabfrage",
-	HR_MENU_VOTE_ACTIONS_RC_TT = "Starte eine Bereitschaftsabfrage.",
 	HR_MENU_VOTE_ACTIONS_COUNTDOWN = "Countdown",
-	--HR_MENU_VOTE_ACTIONS_COUNTDOWN_TT = "Starte einen 5-sekündigen Countdown, wenn alle Spieler bereit sind.\nDu musst der Gruppenleiter sein um diese Funktion zu nutzen.",
+	HR_MENU_VOTE_ACTIONS_COUNTDOWN_TT = "Startet einen Countdown mit der oben angegebenen Zeit. Du musst der Gruppenleiter sein um das zu tun.",
 	HR_MENU_VOTE_ACTIONS_COUNTDOWN_CONFIRM = "Du musst der Gruppenleiter sein um einen Countdown zu starten!",
 	HR_MENU_VOTE_ACTIONS_LEADER = "Ändere Gruppenleiter",
 	HR_MENU_VOTE_ACTIONS_LEADER_TT = "60% der Gruppenmitglieder müssen mit Ja abstimmen.",
 	HR_MENU_VOTE_ACTIONS_LEADER_CONFIRM = "Ändere Gruppenleiter zu",
+	HR_MENU_VOTE_COUNTDOWN_DURATION = "Countdown Zeit",
 
 	HR_MENU_EVENTS = "Events",
 	HR_MENU_EVENTS_DESC = "Dieses Modul aktiviert verschiedene Funktionen über das Jahr hinweg.",
 	HR_MENU_EVENTS_DISABLED = "Für dieses Modul muss Hodor Reflexes aktiviert sein!",
 
-	HR_MENU_MISC_DISABLEDEPENDENCYWARNING = "Deaktiviere Inkompatibilitätswarnung",
-	HR_MENU_MISC_DISABLEDEPENDENCYWARNING_TT = "De-/Aktiviere die Warnung für inkompatibilität mit alten versionen von LibAddonMenu2.0",
+	HR_MENU_MISC_TOXIC = "Toxic mode",
+	HR_MENU_MISC_TOXIC_TT = "Verändert deine Todesrückblicke mit toxischen Inhalten.",
 
 	-------------------------
 	-- BINDINGS
 	-------------------------
 
-	HR_BINDING_HORN_SHARE = "De-/aktiviere Kriegshorn teilen",
-	HR_BINDING_COLOS_SHARE = "De-/aktiviere Koloss teilen",
-	HR_BINDING_DPS_SHARE = "De-/aktiviere Schadens teilen",
-	HR_BINDING_MISCULTIMATES_SHARE = "De-/aktiviere andere Ultimates teilen",
-	HR_BINDING_COUNTDOWN = "Countdown",
+	HR_BINDING_PULL_COUNTDOWN = "Pull Countdown",
+	HR_BINDING_EXIT_INSTANCE = "Instanz sofort verlassen",
+	HR_BINDING_SEND_EXIT_INSTANCE = "Gruppe rauswerfen",
 
 	-------------------------
 	-- SHARE MODULE
 	-------------------------
 
+	HR_SEND_EXIT_INSTANCE = "Gruppe rauswerfen",
+	HR_SEND_EXIT_INSTANCE_CONFIRM = "Möchtest du deine Gruppenmitglieder auffordern die Instanz zu verlassen (dich eingeschlossen)?",
+
 	HR_COLOS_COUNTDOWN_DEFAULT_TEXT = "ULT",
-	HR_MAJOR_FORCE = "größere Kraft",
 	HR_HORN = "Kriegshorn",
 	HR_COLOS = "Koloss",
 
@@ -196,12 +201,8 @@ local strings = {
 
 	HR_READY_CHECK = "Bereitschaftsabfrage",
 	HR_READY_CHECK_READY = "Alle sind bereit!",
-	HR_COUNTDOWN = "Countdown",
-	HR_COUNTDOWN_START = "Start in",
-	HR_READY_CHECK_INIT_CHAT = "hat eine Bereitschaftsabfrage gestartet",
-	HR_COUNTDOWN_INIT_CHAT = "hat einen Countdown gestartet",
+	HR_PULL_COUNTDOWN = "Pull Countdown",
 	HR_VOTE_NOT_READY_CHAT = "ist nicht bereit",
-	HR_VOTE_LEADER_CHAT = "möchte den Gruppenleiter ändern",
 
 	-------------------------
 	-- Exit Instance
