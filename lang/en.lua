@@ -111,6 +111,7 @@ local strings = {
 	HR_MENU_ICONS_VISIBILITY_ANIM_TT = "Play animated icons. Note: disabling this feature won't increase your FPS.",
 
 	HR_MENU_ICONS_SECTION_CUSTOM = "Custom names & icons",
+	HR_MENU_ICONS_NOLIBSINSTALLED = "For the full experience of HodorReflexes, please make sure the following libraries are installed:\n\n - |cFFFF00LibCustomIcons|r – Enables personalized icons for players.\n - |cFFFF00LibCustomNames|r – Displays custom names for friends, guildmates, and more.\n\nThese libraries enhance the visual experience and allow for more personalization but are not required for basic functionality. It's your choice if you want to have them installed or not.",
 	HR_MENU_ICONS_README_1 = "Before doing anything, please read this guide carefully! This ensures that you receive exactly what you expect.\n",
 	HR_MENU_ICONS_HEADER_ICONS = "Icons & Animations – Requirements:",
 	HR_MENU_ICONS_README_2 = "Please follow these technical limitations for your files:\n\n- Maximum size: 32×32 pixels\n- Animations: maximum of 50 frames\n- Accepted file formats: .dds, .jpg, .png, .gif, .webp\n",

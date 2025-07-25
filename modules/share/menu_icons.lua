@@ -9,7 +9,18 @@ local strfmt = string.format
 local currentFolder = "misc7"
 local discordURL = "https://discord.gg/8YpvXJhAyz"
 
-
+local function getNoLibsInstalledOptions()
+	return {
+		{
+			type = "header",
+			name = string.format("|cFFFACD%s|r", GetString(HR_MENU_ICONS_SECTION_CUSTOM)),
+		},
+		{
+			type = "description",
+			text = GetString(HR_MENU_ICONS_NOLIBSINSTALLED),
+		},
+	}
+end
 
 local function getVisibilityOptions()
 	return {
@@ -385,20 +396,25 @@ end
 
 
 function M.BuildIconsMenu()
-	if not LCI or not LCN then return end
-
 	local panel = HodorReflexes.GetModulePanelConfig(GetString(HR_MENU_ICONS))
 
 	local options = {}
 
-	local visibilityOptions = getVisibilityOptions()
-	for _, entry in ipairs(visibilityOptions) do
-		table.insert(options, entry)
-	end
+	if not LCI or not LCN then
+		local noLibsInstalledOptions = getNoLibsInstalledOptions()
+		for _, entry in ipairs(noLibsInstalledOptions) do
+			table.insert(options, entry)
+		end
+	else
+		local visibilityOptions = getVisibilityOptions()
+		for _, entry in ipairs(visibilityOptions) do
+			table.insert(options, entry)
+		end
 
-	local customIconsOptions = getCustomIconOptions()
-	for _, entry in ipairs(customIconsOptions) do
-		table.insert(options, entry)
+		local customIconsOptions = getCustomIconOptions()
+		for _, entry in ipairs(customIconsOptions) do
+			table.insert(options, entry)
+		end
 	end
 
     LibAddonMenu2:RegisterAddonPanel(M.name .. "IconsMenu", panel)

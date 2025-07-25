@@ -94,17 +94,6 @@ local strings = {
 	HR_MENU_MISC_DESC = "To show/hide a sample list of players type |c999999/hodor.share test|r in chat.\nYou can also choose which players to show by typing their names:\n|c999999/hodor.share test @andy.s @Alcast|r",
 
 	HR_MENU_ICONS = "Icons",
-	HR_MENU_ICONS_README = "Readme (Click to open)",
-	HR_MENU_ICONS_MY = "My icon",
-	HR_MENU_ICONS_NAME_VAL = "Custom name",
-	HR_MENU_ICONS_NAME_VAL_TT = "By default the addon shows your account name. You can set a custom name here.",
-	HR_MENU_ICONS_GRADIENT = "Gradient",
-	HR_MENU_ICONS_GRADIENT_TT = "Create gradient based on the colors below.",
-	HR_MENU_ICONS_COLOR1 = "Start color",
-	HR_MENU_ICONS_COLOR2 = "End color",
-	HR_MENU_ICONS_PREVIEW = "Preview",
-	HR_MENU_ICONS_LUA = "LUA code:",
-	HR_MENU_ICONS_LUA_TT = "You may need to restart the game (not just /reloadui) when you modify the icon path. Send this code to the addon author alongside your icon file.",
 	HR_MENU_ICONS_VISIBILITY = "Visibility",
 	HR_MENU_ICONS_VISIBILITY_HORN = "War Horn Icons",
 	HR_MENU_ICONS_VISIBILITY_HORN_TT = "Show custom icons for players in the horns list.",
@@ -121,9 +110,29 @@ local strings = {
 	HR_MENU_ICONS_VISIBILITY_ANIM = "Animated Icons",
 	HR_MENU_ICONS_VISIBILITY_ANIM_TT = "Play animated icons. Note: disabling this feature won't increase your FPS.",
 
-	HR_MENU_ICONS_README1 = "Use the settings below to customize your name and icon in the addon. It's only a preview, which means nobody will see your changes until you send the generated LUA code to the addon's author.",
-	HR_MENU_ICONS_README2 = "The game only supports DirectDraw Surface file format for images, and the required dimensions by the addon are 32x32 px. You can skip this part if it sounds complicated, and just send the original file alongside your LUA code.",
-	HR_MENU_ICONS_README3 = "Click \"%s\" at the top of this menu for more detailed instructions on how to contact the author and get a personal icon. Please, only use in-game mails for gold donations. You won't get any replies there!",
+	HR_MENU_ICONS_SECTION_CUSTOM = "Custom names & icons",
+	HR_MENU_ICONS_NOLIBSINSTALLED = "For the full experience of HodorReflexes, please make sure the following libraries are installed:\n\n - |cFFFF00LibCustomIcons|r – Enables personalized icons for players.\n - |cFFFF00LibCustomNames|r – Displays custom names for friends, guildmates, and more.\n\nThese libraries enhance the visual experience and allow for more personalization but are not required for basic functionality. It's your choice if you want to have them installed or not.",
+	HR_MENU_ICONS_README_1 = "Before doing anything, please read this guide carefully! This ensures that you receive exactly what you expect.\n",
+	HR_MENU_ICONS_HEADER_ICONS = "Icons & Animations – Requirements:",
+	HR_MENU_ICONS_README_2 = "Please follow these technical limitations for your files:\n\n- Maximum size: 32×32 pixels\n- Animations: maximum of 50 frames\n- Accepted file formats: .dds, .jpg, .png, .gif, .webp\n",
+	HR_MENU_ICONS_HEADER_TIERS = "Donation Tiers:",
+	HR_MENU_ICONS_README_3 = "there are three donation tiers, each with different rewards:\n\n1. 5M gold – custom name\n2. 7M gold – custom name + static icon\n3. 10M gold – custom name + static icon + animated icon\n\nYou can select the desired tier using the slider below. Simply move it to position 1–3, depending on which tier you want.\n",
+	HR_MENU_ICONS_HEADER_CUSTOMIZE = "Customize your name:",
+	HR_MENU_ICONS_README_4 = "Use the configurator below to customize your name.\n",
+	HR_MENU_ICONS_HEADER_TICKET = "Create Ticket in Discord",
+	HR_MENU_ICONS_README_5 = "1. Click inside the textbox containing the generated LUA code.\n2. Press CTRL+A to select all.\n3. Press CTRL+C to copy the content.",
+	HR_MENU_ICONS_README_6 = "\nNext, open a ticket on our Discord server – choose the tier you selected – and paste the code and the icon into the ticket.",
+	HR_MENU_ICONS_HEADER_DONATION = "Sending a Donation:",
+	HR_MENU_ICONS_README_7 = "Once you’ve created your ticket on Discord:\n\n1. Click the \"%s\" button.\n2. Enter your ticket number in the ticket-XXXXX field.\n3. Send the gold according to your selected donation tier.",
+	HR_MENU_ICONS_HEADER_INFO = "Info:",
+	HR_MENU_ICONS_INFO = "- This is a donation-based service.\n- You are not purchasing icons, nor do you acquire any ownership of them.\n- This is a voluntary donation with cosmetic perks within the scope of addons using LibCustomNames and LibCustomIcons.\n- You need to stay within the ToS of ZoS - Swear words in names or unappropriated icons will be denied!\n- You can always send PRs on github with your icon and name without any donation needed if you know how to code.",
+
+	HR_MENU_ICONS_CONFIGURATOR_DISCORD = "join discord",
+	HR_MENU_ICONS_CONFIGURATOR_DISCORD_TT = "join the HodorReflexes discord to create a request ticket.",
+	HR_MENU_ICONS_README_DONATION_TIER = "Donation tier: ",
+	HR_MENU_ICONS_README_DONATION_TIER_TT = "By changing the donation tier, the LUA Code in the configurator below will generate additional code depending on the tier you choose",
+	HR_MENU_ICONS_CONFIGURATOR_LUA_TT = "click into the textbox and press ctrl+a to highlight the whole code, then press ctrl+c to copy the code to your clipboard.",
+	HR_MENU_ICONS_CONFIGURATOR_DONATE_TT = "opens the mail window and puts in some text.",
 
 	HR_MENU_STYLE = "Style",
 	HR_MENU_STYLE_PINS = "Show map pings",
@@ -185,9 +194,12 @@ local strings = {
 	HR_BINDING_HORN_SHARE = "Toggle War Horn Share",
 	HR_BINDING_COLOS_SHARE = "Toggle Colossus Share",
 	HR_BINDING_DPS_SHARE = "Toggle Damage Share",
+	HR_BINDING_MISCULTIMATES_SHARE = "Toggle Other Ultimates Share",
 	HR_BINDING_COUNTDOWN = "Countdown",
+	HR_BINDING_PULL_COUNTDOWN = "Pull Countdown",
 	HR_BINDING_EXIT_INSTANCE = "Exit Instance Immediately",
 	HR_BINDING_SEND_EXIT_INSTANCE = "Eject Group",
+	HR_BINDING_CLOSE_UPDATE_POPUP = "Close update popup",
 
 	-------------------------
 	-- SHARE MODULE
@@ -195,6 +207,7 @@ local strings = {
 
 	HR_SEND_EXIT_INSTANCE = "Eject Group",
 	HR_SEND_EXIT_INSTANCE_CONFIRM = "Do you want everyone to leave the instance (including yourself)?",
+	HR_BINDING_CLOSE_UPDATE_POPUP = "Close update dialog",
 
 	HR_COLOS_COUNTDOWN_DEFAULT_TEXT = "ULT",
 	HR_MAJOR_FORCE = "Major Force",
@@ -221,11 +234,41 @@ local strings = {
 	HR_READY_CHECK = "Ready Check",
 	HR_READY_CHECK_READY = "Everyone is ready!",
 	HR_COUNTDOWN = "Countdown",
+	HR_PULL_COUNTDOWN = "Pull Countdown",
 	HR_COUNTDOWN_START = "Start in",
 	HR_READY_CHECK_INIT_CHAT = "initiated a ready check",
 	HR_COUNTDOWN_INIT_CHAT = "initiated a countdown",
 	HR_VOTE_NOT_READY_CHAT = "is not ready",
 	HR_VOTE_LEADER_CHAT = "wants to change the group leader",
+
+	-------------------------
+	-- MOCK
+	-------------------------
+
+	HR_MOCK1 = "Imagine dying with all these addons enabled.",
+	HR_MOCK2 = "Try equipping Mighty Chudan, Plague Doctor and Beekeeper's Gear.",
+	HR_MOCK3 = "Are you going to blame the servers again?",
+	HR_MOCK4 = "A bad instance, obviously.",
+	HR_MOCK5 = "Maybe tanking or healing would be a better role for you.",
+	HR_MOCK6 = "Have you missed the addon notification?",
+	HR_MOCK7 = "You are the weakest link, goodbye.",
+	HR_MOCK8 = "Maybe you should consider buying a carry run instead.",
+	HR_MOCK9 = "Maybe you should consider using barrier rotation.",
+	HR_MOCK10 = "We ran out of hints for your deaths.",
+	HR_MOCK11 = "If you want to do something useful, then check Crown Store.",
+	HR_MOCK12 = "The game's performance is bad, but yours is worse.",
+	HR_MOCK13 = "You are doing good at being bad.",
+	HR_MOCK14 = "Try installing more addons to carry you.",
+	HR_MOCK15 = "Your APM is too low for this fight.",
+	HR_MOCK16 = "Don't worry, eventually we'll add this trial's achievements to Crown Store.",
+	HR_MOCK17 = "Insanity is doing the same thing over and over again and expecting different results.",
+	HR_MOCK18 = "In PvE content you are supposed to kill mobs before they kill you.",
+	HR_MOCK19 = "Have you ever considered changing your name to Kenny?",
+	HR_MOCK20 = "I've fought mudcrabs more fearsome than you.",
+	HR_MOCK_AA1 = "Imaging dying in a six years old content.",
+	HR_MOCK_EU1 = "Why do you even play on the EU server?",
+	HR_MOCK_NORMAL1 = "This is not even the veteran mode...",
+	HR_MOCK_VET1 = "Consider switching the trial difficulty to Normal.",
 
 	-------------------------
 	-- Exit Instance
