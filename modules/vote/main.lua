@@ -74,7 +74,6 @@ local function StopElection()
 end
 -- /////////////////////////////////////////////////////////////////////////////
 local function GroupElectionFailed(eventCode, failureReason, descriptor)
-	--d("GroupElectionFailed: failureReason["..failureReason.."] descriptor["..descriptor.."]")
 	if failureReason == GROUP_ELECTION_FAILURE_NONE then return end
 	if failureReason == GROUP_ELECTION_FAILURE_ANOTHER_IN_PROGRESS then return end
 	zo_callLater(function() StopElection() end, 2000)

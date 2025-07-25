@@ -1001,9 +1001,6 @@ do
 		if changeType == EFFECT_RESULT_GAINED or changeType == EFFECT_RESULT_UPDATED and endTime > 0 then
 			-- Convert endTime to time() format
 			endTime = zo_ceil(endTime * 1000)
-			--if abilityId == 61745 then
-			--	d("double check abilityID " .. abilityId)
-			--end
 			-- Prevent registering ColosTick multiple times within a short time span
 
 			if berserkEnd < endTime - 200 then
@@ -1767,22 +1764,5 @@ SLASH_COMMANDS["/hodor.share"] = function(str)
 		end
 	end
 end
-
-
---SLASH_COMMANDS["/hrdbg"] = function()
---	local errorvalue = 164299738086
---	local rawData = encodeData(2, 2, 254, 188, 41) -- 245
---
---	local isSharing, dmgType, ultType, ult, dmg, dps = decodeData(rawData)
---	local isSharing2, dmgType2, ultType2, ult2, dmg2, dps2 = decodeData(errorvalue)
---
---	d("raw " .. rawData .. " " .. errorvalue)
---	d("isSharing " .. tostring(isSharing) .. " " .. tostring(isSharing2))
---	d("dmgType " .. dmgType .. " " .. dmgType2)
---	d("ultType " .. ultType .. " " .. ultType2)
---	d("ult " .. ult .. " " .. ult2)
---	d("dmg " .. dmg .. " " .. dmg2)
---	d("dps " .. dps .. " " .. dps2)
---end
 
 RuESO_doubleNamesNPC = nil -- disable RuESO double names, because it breaks CMX boss detection
