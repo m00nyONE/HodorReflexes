@@ -4,7 +4,7 @@
 - The dependencies for LibCustomIcons and LibCustomNames are now optional!
 - A new reminder will now pop up if you don't have LibCustomIcons and LibCustomNames installed. You can dismiss the popup forever if you wish to not install these libraries.
 - Menu changes slightly when LCI & LCN are not installed to not show icon options.
-- 
+- A lot of text, menu's and components have changed over the years and all language files except en & de are outdated. If you want to help me out with translation, feel free to create a PullRequest on github please or just message me on discord :-)
 
 ## 2025.07.20 - @m00nyONE
 - MAJOR UPDATE !
