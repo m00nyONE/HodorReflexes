@@ -33,7 +33,7 @@ HodorReflexes = {
 	-- Default settings for saved variables
 	default = {
 		confirmExitInstance = true,                -- Show confirmation dialog before exiting instances
-		--toxicMode = false,                          -- Enable "toxic" mock messages in specific zones
+		toxicMode = false,                          -- Enable "toxic" mock messages in specific zones
 	},
 
 	-- Saved variables configuration
