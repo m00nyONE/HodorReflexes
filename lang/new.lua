@@ -6,7 +6,7 @@ local strings = {
 
 	HR_MENU_GENERAL = "General",
 	HR_MENU_GENERAL_ENABLED = "Enabled",
-	HR_MENU_GENERAL_ENABLED_TT = "Enable/disable this addon. When disabled, the addon won't process incoming map pings from other players.",
+	HR_MENU_GENERAL_ENABLED_TT = "Enable/disable this addon.",
 	HR_MENU_GENERAL_UI_LOCKED = "UI Locked",
 	HR_MENU_GENERAL_UI_LOCKED_TT = "Unlock UI to show all enabled controls. If you are not grouped, then you can type\n |cFFFF00/hodor.share test|r in chat to fill controls with test data.",
 	HR_MENU_GENERAL_ACCOUNT_WIDE = "Account Wide Settings",
@@ -23,8 +23,6 @@ local strings = {
 	HR_MENU_DAMAGE_SHOW_ALWAYS = "Always",
 	HR_MENU_DAMAGE_SHOW_OUT = "Out of combat",
 	HR_MENU_DAMAGE_SHOW_NONBOSS = "Non-boss fight",
-	HR_MENU_DAMAGE_SHARE = "Share DPS:",
-	HR_MENU_DAMAGE_SHARE_TT = "Send your damage to group members.",
 
 	HR_MENU_HORN = "War Horn",
 	HR_MENU_HORN_SHOW = "Show War Horns:",
@@ -33,12 +31,6 @@ local strings = {
 	HR_MENU_HORN_SHOW_PERCENT_TT = "Show the calculated percentage of Horn ultimates",
 	HR_MENU_HORN_SHOW_RAW = "Show Ulti points",
 	HR_MENU_HORN_SHOW_RAW_TT = "Show the raw ulti points the player has",
-	HR_MENU_HORN_SHARE = "Share Ultimate:",
-	HR_MENU_HORN_SHARE_TT = "Send your ultimate % to group members. When using Saxhleel options with Saxhleel Champion set equipped, you don't need War Horn slotted. The addon will share either your highest cost ultimate or just 250 ultimate points.",
-	HR_MENU_HORN_SHARE_NONE = "Disabled",
-	HR_MENU_HORN_SHARE_HORN = "War Horn",
-	HR_MENU_HORN_SHARE_SAXHLEEL1 = "Horn or Saxhleel (highest cost)",
-	HR_MENU_HORN_SHARE_SAXHLEEL250 = "Horn or Saxhleel (250 points)",
 	HR_MENU_HORN_SELFISH = "Selfish mode:",
 	HR_MENU_HORN_SELFISH_TT = "When enabled, you will see the remaining horn duration only if you have an active buff from it.",
 	HR_MENU_HORN_ICON = "Show Icon:",
@@ -59,14 +51,6 @@ local strings = {
 	HR_MENU_COLOS_SHOW_PERCENT_TT = "Show the calculated percentage of Colossus ultimates",
 	HR_MENU_COLOS_SHOW_RAW = "Show Ulti points",
 	HR_MENU_COLOS_SHOW_RAW_TT = "Show the raw ulti points the player has",
-	HR_MENU_COLOS_SHARE = "Share Ultimate:",
-	HR_MENU_COLOS_SHARE_TT = "Send your ultimate % to group members (only when Colossus is slotted).",
-	HR_MENU_COLOS_PRIORITY = "Priority:",
-	HR_MENU_COLOS_PRIORITY_TT = "- Default: max ult % is 200.\n- Tank Role: send 201% if your role is tank and you have colossus ready.\n- Always: send 201% when your ult is ready.\n- Never: send 99% or lower.\n|cFFFFFFNOTE: sending 99% or 201% instead of 100% will also affect horn % if you share both ultimates.|r",
-	HR_MENU_COLOS_PRIORITY_DEFAULT = "Default",
-	HR_MENU_COLOS_PRIORITY_TANK = "Tank Role",
-	HR_MENU_COLOS_PRIORITY_ALWAYS = "Always",
-	HR_MENU_COLOS_PRIORITY_NEVER = "Never",
 	HR_MENU_COLOS_SUPPORT_RANGE = "Only show nearby allies:",
 	HR_MENU_COLOS_SUPPORT_RANGE_TT = "Players who are too far from you will be hidden in the list.",
 	HR_MENU_COLOS_COUNTDOWN = "Show Countdown:",
@@ -77,8 +61,6 @@ local strings = {
 	HR_MENU_ATRONACH = "Atronach",
 	HR_MENU_ATRONACH_SHOW = "Show Atronach",
 	HR_MENU_ATRONACH_SHOW_TT =  "Show the list with group ultimates.",
-	HR_MENU_ATRONACH_SHARE = "Share Atronach",
-	HR_MENU_ATRONACH_SHARE_TT = "Send your ultimate to group members (only when Atronach is slotted).",
 	HR_MENU_ATRONACH_SHOW_PERCENT = "Show Percentage",
 	HR_MENU_ATRONACH_SHOW_PERCENT_TT = "Show the calculated percentage of Atronach ultimates",
 	HR_MENU_ATRONACH_SHOW_RAW = "Show Ulti points",
@@ -87,8 +69,6 @@ local strings = {
 	HR_MENU_MISCULTIMATES = "Other Ultimates",
 	HR_MENU_MISCULTIMATES_SHOW = "Show other Ultimates",
 	HR_MENU_MISCULTIMATES_SHOW_TT = "Show other unsupported Ultimates",
-	HR_MENU_MISCULTIMATES_SHARE = "Share other Ultimates",
-	HR_MENU_MISCULTIMATES_SHARE_TT = "Share other unsupported Ultimates",
 
 	HR_MENU_MISC = "Misc",
 	HR_MENU_MISC_DESC = "To show/hide a sample list of players type |c999999/hodor.share test|r in chat.\nYou can also choose which players to show by typing their names:\n|c999999/hodor.share test @andy.s @Alcast|r",
@@ -168,8 +148,6 @@ local strings = {
 	HR_MENU_VOTE_CHAT = "Chat messages",
 	HR_MENU_VOTE_CHAT_TT = "Display vote results and some other information in the game chat.",
 	HR_MENU_VOTE_ACTIONS = "Actions",
-	HR_MENU_VOTE_ACTIONS_RC = "Ready Check",
-	HR_MENU_VOTE_ACTIONS_RC_TT = "Initiate a ready check.",
 	HR_MENU_VOTE_ACTIONS_COUNTDOWN = "Countdown",
 	HR_MENU_VOTE_ACTIONS_COUNTDOWN_TT = "Start a countdown with the duration specified above. You must be a group leader to do it.",
 	HR_MENU_VOTE_ACTIONS_COUNTDOWN_CONFIRM = "You must be a group leader to initiate a countdown!",
@@ -185,21 +163,13 @@ local strings = {
 	HR_MENU_MISC_TOXIC = "Toxic mode",
 	HR_MENU_MISC_TOXIC_TT = "Mocking hints and stuff.",
 
-	HR_MENU_MISC_DISABLEDEPENDENCYWARNING = "Disable dependency warning",
-	HR_MENU_MISC_DISABLEDEPENDENCYWARNING_TT = "enable/disable incompatible dependency warning",
 	-------------------------
 	-- BINDINGS
 	-------------------------
 
-	HR_BINDING_HORN_SHARE = "Toggle War Horn Share",
-	HR_BINDING_COLOS_SHARE = "Toggle Colossus Share",
-	HR_BINDING_DPS_SHARE = "Toggle Damage Share",
-	HR_BINDING_MISCULTIMATES_SHARE = "Toggle Other Ultimates Share",
-	HR_BINDING_COUNTDOWN = "Countdown",
 	HR_BINDING_PULL_COUNTDOWN = "Pull Countdown",
 	HR_BINDING_EXIT_INSTANCE = "Exit Instance Immediately",
 	HR_BINDING_SEND_EXIT_INSTANCE = "Eject Group",
-	HR_BINDING_CLOSE_UPDATE_POPUP = "Close update popup",
 
 	-------------------------
 	-- SHARE MODULE
@@ -207,10 +177,8 @@ local strings = {
 
 	HR_SEND_EXIT_INSTANCE = "Eject Group",
 	HR_SEND_EXIT_INSTANCE_CONFIRM = "Do you want everyone to leave the instance (including yourself)?",
-	HR_BINDING_CLOSE_UPDATE_POPUP = "Close update dialog",
 
 	HR_COLOS_COUNTDOWN_DEFAULT_TEXT = "ULT",
-	HR_MAJOR_FORCE = "Major Force",
 	HR_HORN = "War Horn",
 	HR_COLOS = "Colossus",
 
@@ -233,13 +201,8 @@ local strings = {
 
 	HR_READY_CHECK = "Ready Check",
 	HR_READY_CHECK_READY = "Everyone is ready!",
-	HR_COUNTDOWN = "Countdown",
 	HR_PULL_COUNTDOWN = "Pull Countdown",
-	HR_COUNTDOWN_START = "Start in",
-	HR_READY_CHECK_INIT_CHAT = "initiated a ready check",
-	HR_COUNTDOWN_INIT_CHAT = "initiated a countdown",
 	HR_VOTE_NOT_READY_CHAT = "is not ready",
-	HR_VOTE_LEADER_CHAT = "wants to change the group leader",
 
 	-------------------------
 	-- MOCK
