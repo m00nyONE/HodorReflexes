@@ -48,7 +48,6 @@ HodorReflexes.modules.share = {
 		showAtronachRawValue = 1,
 		-- my icon and name
 		selectedDonationTier = 1,
-		myIconPathFull = '',
 		myIconNameRaw = '',
 		myIconNameFormatted = '',
 		myIconColor1 = {1, 1, 1},
@@ -69,6 +68,8 @@ HodorReflexes.modules.share = {
 		styleBerserkColor = {1, 1, 0},
 		styleZeroTimerOpacity = 0.7,
 		styleTimerBlink = true,
+		-- NoLibsInstalled
+		libraryPopupDisabled = false,
 	},
 
 	sv = nil, -- saved variables
@@ -85,6 +86,8 @@ local SV -- shortcut for M.sv
 local SW -- shortcut for M.sw
 
 local LGCS = LibGroupCombatStats
+local LCI = LibCustomIcons
+local LCN = LibCustomNames
 local EM = EVENT_MANAGER
 
 local controlsVisible = false -- current state of UI controls
@@ -369,6 +372,36 @@ function M.GetDamageNumFont()
 	end
 end
 
+local function ShowMissingLibsPopup()
+	ZO_Dialogs_RegisterCustomDialog("HODORREFLEXES_MISSING_LIBS", {
+		title = {
+			text = GetString(HR_MISSING_LIBS_TITLE),
+		},
+		mainText = {
+			text = GetString(HR_MISSING_LIBS_TEXT),
+		},
+		buttons = {
+			{
+				text = GetString(HR_MISSING_LIBS_OK),
+				keybind = "DIALOG_PRIMARY",
+				callback = function() end,
+			},
+			{
+				text = GetString(HR_MISSING_LIBS_DONTSHOWAGAIN),
+				keybind = "DIALOG_RESET",
+				callback = function()
+					M.sv.libraryPopupDisabled = true
+				end,
+			},
+		},
+		mustChoose = true,
+		canQueue = true,
+		allowShowOnDead = false,
+	}, nil, IsInGamepadPreferredMode())
+
+	ZO_Dialogs_ShowDialog("HODORREFLEXES_MISSING_LIBS")
+end
+
 function M.ApplyStyle()
 	HodorReflexes_Share_Damage_BG:SetAlpha(SW.styleDamageHeaderOpacity)
 
@@ -550,7 +583,6 @@ local function onULTDataReceived(tag, data)
 	end
 end
 
--- This addon checks if someone in the group also has Hodor installed to minimize stress on the ESO API and avoid sending data to players who cannot process it.
 function M.Initialize()
 	lgcs = LGCS.RegisterAddon("HodorReflexes", {"ULT", "DPS"})
 	if not lgcs then
@@ -576,10 +608,11 @@ function M.Initialize()
 	SV = M.sv
 	SW = M.sw
 
-	-- Set default values for custom name and color.
-	if not IsValidString(SW.myIconPathFull) then
-		SW.myIconPathFull = userIcon or 'HodorReflexes/esologo.dds'
+	if (not LCI or not LCN) and not M.sv.libraryPopupDisabled then
+		ShowMissingLibsPopup()
 	end
+
+	-- Set default values for custom name and color.
 	if not IsValidString(SW.myIconNameRaw) then
 		local userId = GetDisplayName()
 		SW.myIconNameRaw = player.GetAliasForUserId(userId)

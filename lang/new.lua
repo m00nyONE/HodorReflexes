@@ -278,13 +278,13 @@ local strings = {
 	HR_EXIT_INSTANCE_CONFIRM = "Do you want to leave the current instance?",
 
 	-------------------------
-	-- Updated window
+	-- Missing Libraries
 	-------------------------
 
-	HR_UPDATED_TEXT = "Hodor Reflexes has been successfully updated, or maybe not? Unfortunately, when updating via Minion, there is a moderate chance for some files to vanish. Usually they are just icons, usually... So here is a little test of five images from different addon folders. If you don't see all of them, then you should close the game and reinstall the addon. Otherwise, just ignore this message, it won't appear again.",
-	HR_UPDATED_DISMISS = "I see five icons!",
-
-	HR_MISSING_ICON = "Couldn't load your Hodor Reflexes icon. Reinstall the addon or download it manually from esoui.com and restart the game.",
+	HR_MISSING_LIBS_TITLE = "Get the Full HodorReflexes Experience!",
+	HR_MISSING_LIBS_TEXT = "|c00FF00You're missing out on the full HodorReflexes experience!|r\n\nInstall |cFFFF00LibCustomIcons|r and |cFFFF00LibCustomNames|r to see custom icons, nicknames, and styles from other Hodor users including your friends and guildmates. Transform the battlefield into something personal and full of character!\n\nThis is entirely optional and not required for HodorReflexes to function.",
+	HR_MISSING_LIBS_OK = "OK",
+	HR_MISSING_LIBS_DONTSHOWAGAIN = "Don't show again",
 
 }
 

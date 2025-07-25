@@ -230,15 +230,6 @@ local strings = {
 
 	HR_EXIT_INSTANCE = "Quitter l'instance",
 	HR_EXIT_INSTANCE_CONFIRM = "Voulez-vous quitter l'instance actuelle ?",
-	
-	-------------------------
-	-- MISE À JOUR
-	-------------------------
-
-	HR_UPDATED_TEXT = "Hodor Reflexes a été mis à jour avec succès, ou peut-être pas ? Malheureusement, lors de la mise à jour via Minion, il y a une chance modérée que certains fichiers disparaissent. Habituellement, ce ne sont que des icônes, généralement... Voici donc un petit test de cinq images provenant de différents dossiers d'extensions. Si vous ne les voyez pas tous, vous devez fermer le jeu et réinstaller l'addon. Sinon, ignorez simplement ce message, il n'apparaîtra plus.",
-	HR_UPDATED_DISMISS = "Je vois cinq icônes !",
-
-	HR_MISSING_ICON = "Impossible de charger votre icône Hodor Reflexes. Réinstallez l'addon ou téléchargez-le manuellement depuis esoui.com et redémarrez le jeu.",
 
 }
 

@@ -224,16 +224,6 @@ local strings = {
 	
 	HR_EXIT_INSTANCE = "Abandonar instancia",
 	HR_EXIT_INSTANCE_CONFIRM = "¿Quieres salir de la instancia actual?",
-	
-	-------------------------
-	-- Updated window
-	-------------------------
-
-	HR_UPDATED_TEXT = "Hodor Reflexes se ha actualizado exitosamente, ¿o quizá no? Lamentablemente al actualizar con Minion, existe la moderada posibilidad de que algunos archivos desaparezcan. Por lo general son sólo iconos... O al menos casi siempre. Aquí te dejamos una pequeña prueba con cinco imágenes de distintas carpetas del addon. Si no ves las cinco imágenes, entonces deberías cerrar el juego y reinstalar el addon. De lo contrario, ignora este mensaje. No volverá a aparecer.",
-	HR_UPDATED_DISMISS = "¡Veo cinco iconos!",
-	
-	HR_MISSING_ICON = "No se pudo cargar tu icono de Hodor Reflexes. Reinstala el addon o descárgalo manualmente desde esoui.com y reinicia el juego.",
-
 }
 
 for id, val in pairs(strings) do

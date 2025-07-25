@@ -209,13 +209,6 @@ local strings = {
 
 	HR_EXIT_INSTANCE = "Lascia l'istanza",
 	HR_EXIT_INSTANCE_CONFIRM = "Vuoi lasciare l'istanza corrente?",
-	
-	-------------------------
-	-- Updated window
-	-------------------------
-
-	HR_UPDATED_TEXT = "Hodor Reflexes è stato aggiornato con successo, o forse no? Sfortunatamente, quando si aggiorna tramite Minion, c'è una moderata possibilità che alcuni file spariscano. Di solito sono solo icone, di solito... Quindi ecco un piccolo test di cinque immagini da diverse cartelle di addon. Se non le vedi tutte, allora dovresti chiudere il gioco e reinstallare l'addon. Altrimenti, ignorate questo messaggio, non apparirà più.",
-	HR_UPDATED_DISMISS = "Vedo cinque icone!",
 
 }
 

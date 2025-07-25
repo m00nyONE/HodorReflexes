@@ -1,4 +1,10 @@
-[SIZE="2"][B]IMPORTANT:[/B] You need LibCustomNames and LibCustomIcons now.[/SIZE]
+[SIZE="2"][B]IMPORTANT:[/B] You need LibCustomNames and LibCustomIcons now if you want to have names and icons displayed.[/SIZE]
+
+## 2025.07.25 - @m00nyONE
+- The dependencies for LibCustomIcons and LibCustomNames are now optional!
+- A new reminder will now pop up if you don't have LibCustomIcons and LibCustomNames installed. You can dismiss the popup forever if you wish to not install these libraries.
+- Menu changes slightly when LCI & LCN are not installed to not show icon options.
+- 
 
 ## 2025.07.20 - @m00nyONE
 - MAJOR UPDATE !
