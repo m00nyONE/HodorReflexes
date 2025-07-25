@@ -581,6 +581,7 @@ function M.Initialize()
 		SW.myIconPathFull = userIcon or 'HodorReflexes/esologo.dds'
 	end
 	if not IsValidString(SW.myIconNameRaw) then
+		local userId = GetDisplayName()
 		SW.myIconNameRaw = player.GetAliasForUserId(userId)
 		if SW.myIconNameRaw == '' then SW.myIconNameRaw = UndecorateDisplayName(userId) end
 	end
