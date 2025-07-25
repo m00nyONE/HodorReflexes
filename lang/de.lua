@@ -71,6 +71,10 @@ local strings = {
 	HR_MENU_MISCULTIMATES = "Andere Ultimates",
 	HR_MENU_MISCULTIMATES_SHOW = "Zeige alle Ultis",
 	HR_MENU_MISCULTIMATES_SHOW_TT = "Zeige alle nicht unterstützten Ultis",
+	HR_MENU_MISCULTIMATES_SHOW_PERCENT = "Zeige Prozent",
+	HR_MENU_MISCULTIMATES_SHOW_PERCENT_TT = "Zeige die errechnete Prozentzahl der teuersten ultimativen Fähigkeit die der Spieler hat.",
+	HR_MENU_MISCULTIMATES_SHOW_RAW = "Zeige Ulti Punkte",
+	HR_MENU_MISCULTIMATES_SHOW_RAW_TT = "Zeige die Ulti Punkte die der Spieler hat",
 
 	HR_MENU_MISC = "Sonstiges",
 	HR_MENU_MISC_DESC = "Um eine Beispielliste mit Spielern anzuzeigen/auszublenden gib |c999999/hodor.share test|r in den Chat ein.\nDu kannst ebenfalls auswählen welche Spieler angezeigt werden sollen, indem du ihre Namen angibst:\n|c999999/hodor.share test @andy.s @Alcast|r",

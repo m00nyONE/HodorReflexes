@@ -41,6 +41,8 @@ HodorReflexes.modules.share = {
 		showColosRawValue = 1,
 		showAtronachPercentValue = 1,
 		showAtronachRawValue = 1,
+		showMiscUltimatesPercentValue = 1,
+		showMiscUltimatesRawValue = 1,
 		-- my icon and name
 		selectedDonationTier = 1,
 		myIconNameRaw = '',
@@ -1258,9 +1260,9 @@ do
 				-- Get horn and colos values based on ultType
 				local horn, colos, atro = 0, 0, 0 -- ult %
 				local misc = 0 -- ult raw for no special ultType
-				local colorHorn, colorColos, colorAtronach = 'FFFFFF', 'FFFFFF', 'FFFFFF'
+				local colorHorn, colorColos, colorAtronach, colorMiscUlt = 'FFFFFF', 'FFFFFF', 'FFFFFF', 'FFFFFF'
 				if not hasHorn and not hasColos and not hasAtro then
-					misc = data.ultValue
+					misc = M.GetUltPercentage(data.ultValue, zo_max(data.ult1Cost, data.ult2Cost))
 				end
 				if hasHorn then
 					horn = M.GetUltPercentage(data.ultValue, hornCost)
@@ -1318,7 +1320,11 @@ do
 				if miscUltRow then
 					--if misc > 0 then
 					if misc > 0 then
+						if misc >= 100 then colorMiscUlt = '00FF00' elseif misc >= 80 then colorMiscUlt = 'FFFF00' end
+						miscUltRow:GetNamedChild('_Value'):SetText(strformat('|c%s%d%%|r', colorMiscUlt, zo_min(200, misc)))
+						miscUltRow:GetNamedChild('_Value'):SetScale(SV.showMiscUltimatesPercentValue)
 						miscUltRow:GetNamedChild('_RawValue'):SetText(strformat('|c%s%d|r', "FFFFFF", zo_min(500, data.ultValue)))
+						miscUltRow:GetNamedChild('_RawValue'):SetScale(SV.showMiscUltimatesRawValue)
 						miscUltRow:GetNamedChild('_UltIconFrontbar'):SetTexture(GetAbilityIcon(data.ult1ID))
 						miscUltRow:GetNamedChild('_UltIconBackbar'):SetTexture(GetAbilityIcon(data.ult2ID))
 						miscUltRow:SetHidden(false)
@@ -1695,25 +1701,35 @@ local function ToggleTest(players)
 	players = players or {'@WarfireX', '@LikoXie', '@andy.s', '@Alcast', '@NefasQS', '@Wheel5', '@PK44', '@LokiClermeil', '@m00nyONE'}
 
 	local randomUltPool = {
-		0,
 		40239,
 		32948,
 		85127,
+		15957, 16536, 17874, 17878, 21752, 21755, 21758, 22138, 22139,
+		22144, 22223, 22226, 22229, 23492, 23495, 23634, 24785, 24804,
+		24806, 25091, 25411, 27706, 28341, 28348, 28988, 29012, 32455,
+		32624, 32715, 32719, 32947, 32958, 33398, 35460, 35508, 35713,
+		36485, 83600, 83619, 83642, 83850, 84434, 85132, 85179, 85187,
+		85257, 85451, 85532, 85804, 85807, 85982, 85986, 85990, 86109,
+		86113, 86117, 103478, 103557, 103564, 115001, 115410,118279,
+		118367, 118379, 118664, 122174, 122388, 122395, 183676, 183709,
+		189791, 189837, 189867, 192372, 192380, 193558,
 	}
 
 
 	local function GetRandomPlayerData(name)
 		local dmg = zo_random(500, 1200)
+		local ult1ID = randomUltPool[zo_random(1, #randomUltPool)]
+		local ult2ID = randomUltPool[zo_random(1, #randomUltPool)]
 		local playerData = {
 			tag = name,
 			name = name,
 			classId = zo_random() < 0.60 and zo_random(1, 7) or 5, -- 40% chance for necro
 			isPlayer = name == GetUnitDisplayName(localPlayer),
 			ultValue = zo_random(1, 500),
-			ult1ID = randomUltPool[zo_random(1, #randomUltPool)],
-			ult2ID = randomUltPool[zo_random(1, #randomUltPool)],
-			ult1Cost = 0,
-			ult2Cost = 0,
+			ult1ID = ult1ID,
+			ult2ID = ult2ID,
+			ult1Cost = GetAbilityCost(ult2ID),
+			ult2Cost = GetAbilityCost(ult2ID),
 			ultTime = time(),
 			dmg = dmg,
 			dps = dmg * 0.15,

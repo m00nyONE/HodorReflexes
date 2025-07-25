@@ -69,6 +69,10 @@ local strings = {
 	HR_MENU_MISCULTIMATES = "Other Ultimates",
 	HR_MENU_MISCULTIMATES_SHOW = "Show other Ultimates",
 	HR_MENU_MISCULTIMATES_SHOW_TT = "Show other unsupported Ultimates",
+	HR_MENU_MISCULTIMATES_SHOW_PERCENT = "Show Percentage",
+	HR_MENU_MISCULTIMATES_SHOW_PERCENT_TT = "Show the calculated percentages of the most expensive ult that the player has",
+	HR_MENU_MISCULTIMATES_SHOW_RAW = "Show Ulti points",
+	HR_MENU_MISCULTIMATES_SHOW_RAW_TT = "Show the raw ulti points the player has",
 
 	HR_MENU_MISC = "Misc",
 	HR_MENU_MISC_DESC = "To show/hide a sample list of players type |c999999/hodor.share test|r in chat.\nYou can also choose which players to show by typing their names:\n|c999999/hodor.share test @andy.s @Alcast|r",

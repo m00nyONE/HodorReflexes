@@ -1,7 +1,7 @@
 <GuiXml>
     <Controls>
         <TopLevelControl name="HodorReflexes_Share_MiscUltimates" mouseEnabled="false" movable="false" resizeToFitDescendents="true" clampedToScreen="true" hidden="true">
-            <Dimensions x="232"/>
+            <Dimensions x="262"/>
             <Anchor point="LEFT" relativeTo="GuiRoot" relativePoint="LEFT" offsetX="750" offsetY="0" />
             <OnMoveStop>HodorReflexes.modules.share.MiscUltimatesOnMoveStop()</OnMoveStop>
             <Controls>
@@ -26,9 +26,13 @@
                     <Dimensions x="24" y="24" />
                     <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="$(parent)_UltIconFrontbar" offsetX="1" offsetY="0" />
                 </Texture>
+                <Label name="$(parent)_Value" horizontalAlignment="RIGHT" font="$(BOLD_FONT)|$(KB_19)|soft-shadow-thick" text="0%">
+                    <Dimensions x="50" y="24" />
+                    <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="$(parent)_UltIconBackbar" offsetX="0" offsetY="0" />
+                </Label>
                 <Label name="$(parent)_RawValue" horizontalAlignment="RIGHT" font="$(MEDIUM_FONT)|$(KB_19)|soft-shadow-thick" text="0">
                     <Dimensions x="30" y="24" />
-                    <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="$(parent)_UltIconBackbar" offsetX="4" offsetY="0" />
+                    <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="$(parent)_Value" offsetX="4" offsetY="0" />
                 </Label>
                 <Texture name="$(parent)_Icon" textureFile="esoui/art/icons/class/class_templar.dds">
                     <Dimensions x="24" y="24" />

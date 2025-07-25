@@ -1,5 +1,9 @@
 [SIZE="2"][B]IMPORTANT:[/B] You need LibCustomNames and LibCustomIcons now if you want to have names and icons displayed.[/SIZE]
 
+## 2025.07.26 - @m00nyONE
+- Add Percentage calculation to "other ultimates"
+- You can now also enable/disable the percentage/rawUlt numbers in the "other ultimates" list, like you can do with colos, horn and atro.
+
 ## 2025.07.25 - @m00nyONE
 - The dependencies for LibCustomIcons and LibCustomNames are now optional!
 - A new reminder will now pop up if you don't have LibCustomIcons and LibCustomNames installed. You can dismiss the popup forever if you wish to not install these libraries.
