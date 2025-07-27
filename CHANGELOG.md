@@ -3,6 +3,7 @@
 ## 2025.07.26 - @m00nyONE
 - Add Percentage calculation to "other ultimates"
 - You can now also enable/disable the percentage/rawUlt numbers in the "other ultimates" list, like you can do with colos, horn and atro.
+- reworked RU localization by @NeBioNik ! Thanks for that!
 
 ## 2025.07.25 - @m00nyONE
 - The dependencies for LibCustomIcons and LibCustomNames are now optional!
