@@ -1,6 +1,7 @@
 [SIZE="2"][B]IMPORTANT:[/B] You need LibCustomNames and LibCustomIcons now if you want to have names and icons displayed.[/SIZE]
 
-## 2025.07.26 - @m00nyONE
+## 2025.08.02 - @m00nyONE
+- remove legacy icon table
 - Add Percentage calculation to "other ultimates"
 - You can now also enable/disable the percentage/rawUlt numbers in the "other ultimates" list, like you can do with colos, horn and atro.
 - reworked RU localization by @NeBioNik ! Thanks for that!

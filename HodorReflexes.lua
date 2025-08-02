@@ -173,29 +173,29 @@ local function Initialize()
 		HR.modules.exitinstance.Initialize()
 	end
 
-	local buildLegacyIconTables = function()
-		local LCI = LibCustomIcons
-		local LCN = LibCustomNames
-
-		HR.users = {}
-		HR.anim.users = {}
-
-		if LCN then
-			HR.users = LCN.GetAllNames()
-		end
-		if LCI then
-			HR.anim.users = LCI.GetAllAnimatedIcons()
-			for name, data in pairs(HR.users) do
-				if #data == 2 then
-					local iconPath = LCI.GetStatic(name)
-					if iconPath then HR.users[name][3] = iconPath end
-				end
-			end
-		end
-
-	end
-
-	buildLegacyIconTables()
+	--local buildLegacyIconTables = function()
+	--	local LCI = LibCustomIcons
+	--	local LCN = LibCustomNames
+	--
+	--	HR.users = {}
+	--	HR.anim.users = {}
+	--
+	--	if LCN then
+	--		HR.users = LCN.GetAll()
+	--	end
+	--	if LCI then
+	--		HR.anim.users = LCI.GetAllAnimated()
+	--		for name, data in pairs(HR.users) do
+	--			if #data == 2 then
+	--				local iconPath = LCI.GetStatic(name)
+	--				if iconPath then HR.users[name][3] = iconPath end
+	--			end
+	--		end
+	--	end
+	--
+	--end
+	--
+	--buildLegacyIconTables()
 
 	HR.BuildMenu()
 end
