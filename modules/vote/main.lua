@@ -114,15 +114,15 @@ function M.Initialize()
 	-- Create scene fragment for main control
 	MAIN_FRAGMENT = HR.hud.AddFadeFragment(HodorReflexes_Vote_Main)
 
-	EVENT_MANAGER:RegisterForEvent(M.name, EVENT_GROUP_ELECTION_REQUESTED, function(_, descriptor)
-		StartElection()
-	end)
-	-- when someone else start vote
-	EVENT_MANAGER:RegisterForEvent(M.name, EVENT_GROUP_ELECTION_NOTIFICATION_ADDED, function(...) StartElection() end)
-	-- when voted ended/finished
-	EVENT_MANAGER:RegisterForEvent(M.name, EVENT_GROUP_ELECTION_RESULT, GroupElectionResult)
-	-- when vote failed for some reason "group dispand" for example
-	EVENT_MANAGER:RegisterForEvent(M.name, EVENT_GROUP_ELECTION_FAILED, GroupElectionFailed)
+	if M.sv.enabled then
+		EVENT_MANAGER:RegisterForEvent(M.name, EVENT_GROUP_ELECTION_REQUESTED, StartElection)
+		-- when someone else start vote
+		EVENT_MANAGER:RegisterForEvent(M.name, EVENT_GROUP_ELECTION_NOTIFICATION_ADDED, StartElection)
+		-- when voted ended/finished
+		EVENT_MANAGER:RegisterForEvent(M.name, EVENT_GROUP_ELECTION_RESULT, GroupElectionResult)
+		-- when vote failed for some reason "group dispand" for example
+		EVENT_MANAGER:RegisterForEvent(M.name, EVENT_GROUP_ELECTION_FAILED, GroupElectionFailed)
+	end
 
 	HR.RegisterCallback(HR_EVENT_PLAYER_ACTIVATED, function() M.RefreshVisibility() end)
 end
