@@ -1,28 +1,27 @@
---[[
-================================================================================
-HodorReflexes Addon for Elder Scrolls Online (ESO)
-================================================================================
-Author: @andy.s, @m00nyONE
-Website: https://www.esoui.com/downloads/info2311-HodorReflexes-DPSampUltimateShare.html
-Version: "dev"
+--[[ doc.lua begin ]]
+--- @class HodorReflexes
+local addon = {
+	name = "HodorReflexes",
+	version = "dev",
+	author = "|cFFFF00@andy.s|r, |c76c3f4@m00nyONE|r"
+}
+local addon_debug = false
+local addon_name = addon.name
+local addon_version = addon.version
+local addon_author = addon.author
+_G[addon_name] = addon
+--[[ doc.lua end ]]
 
-Description:
-This addon enhances group coordination and performance tracking in ESO by
-providing features such as DPS sharing, ultimate sharing, mock messages,
-combat state notifications, and more. It utilizes the ESO API to manage
-group-related data, customize UI elements, and enable communication
-between players.
+-- saved Variables
+local sv = nil
+local svName = "HodorReflexesSV"
+local svVersion = 1
+local svDefault = {
+	confirmExitInstance = true,                -- Show confirmation dialog before exiting instances
+	toxicMode = false,                          -- Enable "toxic" mock messages in specific zones
+}
 
-This file contains the core functionality and initialization logic for the addon.
 
-Dependencies:
-- LibAddonMenu-2.0 > 32
-- LibGroupBroadcast
-- LibGroupCombatStats
-- LibCombat
-- LibStub (optional, checks for outdated versions)
-================================================================================
---]]
 
 
 -- Core Addon Table
@@ -137,67 +136,6 @@ local function GenerateMock()
 		-- Re-register the Death Recap callback to display new mock messages
 		DEATH_RECAP:RegisterCallback("OnDeathRecapAvailableChanged", DeathRecapChanged)
 	end
-end
-
-local function registerLGBHandler()
-	local handler = LGB:RegisterHandler("HodorReflexes")
-	handler:SetDisplayName("Hodor Reflexes")
-	handler:SetDescription("provides various group tools like pull countdowns and exit instance requests")
-
-	_LGBHandler = handler
-end
-
--- Main initialization function for the addon
-local function Initialize()
-	-- Create callback manager
-	HR.cm = HR.cm or ZO_CallbackObject:New()
-
-	-- Retrieve saved variables
-	HR.sv = ZO_SavedVars:NewAccountWide(HR.svName, HR.svVersion, nil, HR.default)
-
-	registerLGBHandler()
-
-	-- Register events
-	EM:RegisterForEvent(HR.name .. "PlayerActivated", EVENT_PLAYER_ACTIVATED, HR.PlayerActivated)
-
-	-- public modules
-	if HR.modules.share then HR.modules.share.Initialize() end
-	if HR.modules.vote then HR.modules.vote.Initialize() end
-	if HR.modules.events then HR.modules.events.Initialize() end
-	if HR.modules.pull then
-		HR.modules.pull.DeclareLGBProtocols(_LGBHandler)
-		HR.modules.pull.Initialize()
-	end
-	if HR.modules.exitinstance then
-		HR.modules.exitinstance.DeclareLGBProtocols(_LGBHandler)
-		HR.modules.exitinstance.Initialize()
-	end
-
-	--local buildLegacyIconTables = function()
-	--	local LCI = LibCustomIcons
-	--	local LCN = LibCustomNames
-	--
-	--	HR.users = {}
-	--	HR.anim.users = {}
-	--
-	--	if LCN then
-	--		HR.users = LCN.GetAll()
-	--	end
-	--	if LCI then
-	--		HR.anim.users = LCI.GetAllAnimated()
-	--		for name, data in pairs(HR.users) do
-	--			if #data == 2 then
-	--				local iconPath = LCI.GetStatic(name)
-	--				if iconPath then HR.users[name][3] = iconPath end
-	--			end
-	--		end
-	--	end
-	--
-	--end
-	--
-	--buildLegacyIconTables()
-
-	HR.BuildMenu()
 end
 
 -- EVENT_PLAYER_ACTIVATED handler
@@ -357,6 +295,80 @@ end
 SLASH_COMMANDS["/hodor"] = function(str)
 	if str == "lock" then HR.LockUI() return end
 	if str == "version" then d(HR.version) return end
+end
+
+local registeredModules = {}
+
+function HR:RegisterModule(moduleName, moduleClass)
+	assert(type(moduleName) == "string", "moduleName must be a string")
+	assert(type(moduleClass) == "table", "moduleClass must be a table")
+	assert(type(moduleClass.Initialize) == "function", "moduleClass does not contain Initialize function")
+	assert(registeredModules[moduleName], "module already registered")
+
+	registeredModules[moduleName] = moduleClass
+end
+
+
+local function buildMenu()
+
+	local panel = HR.GetModulePanelConfig()
+
+	local options = {}
+	-- Add options provided by modules
+	local extraOptions = HR.GetOptionControls()
+	for _, v in ipairs(extraOptions) do
+		options[#options + 1] = v
+	end
+
+	LAM:RegisterAddonPanel(HR.name .. "Options", panel)
+	LAM:RegisterOptionControls(HR.name .. "Options", options)
+
+end
+
+local function initializeModules()
+	for moduleName, moduleClass in pairs(registeredModules) do
+		moduleClass:Initialize()
+	end
+end
+
+local function registerLGBHandler()
+	local handler = LGB:RegisterHandler("HodorReflexes")
+	handler:SetDisplayName("Hodor Reflexes")
+	handler:SetDescription("provides various group tools like pull countdowns and exit instance requests")
+
+	_LGBHandler = handler
+end
+
+-- Main initialization function for the addon
+local function Initialize()
+	-- Create callback manager
+	HR.cm = HR.cm or ZO_CallbackObject:New()
+
+	-- Retrieve saved variables
+	HR.sv = ZO_SavedVars:NewAccountWide(HR.svName, HR.svVersion, nil, HR.default)
+
+	registerLGBHandler()
+
+	-- Register events
+	EM:RegisterForEvent(HR.name .. "PlayerActivated", EVENT_PLAYER_ACTIVATED, HR.PlayerActivated)
+
+	-- initialize registered modules
+	initializeModules()
+
+	-- public modules
+	if HR.modules.share then HR.modules.share.Initialize() end
+	if HR.modules.vote then HR.modules.vote.Initialize() end
+	if HR.modules.events then HR.modules.events.Initialize() end
+	if HR.modules.pull then
+		HR.modules.pull.DeclareLGBProtocols(_LGBHandler)
+		HR.modules.pull.Initialize()
+	end
+	if HR.modules.exitinstance then
+		HR.modules.exitinstance.DeclareLGBProtocols(_LGBHandler)
+		HR.modules.exitinstance.Initialize()
+	end
+
+	buildMenu()
 end
 
 EM:RegisterForEvent(HR.name, EVENT_ADD_ON_LOADED, function(_, name)

@@ -18,8 +18,6 @@ extensions/combat.lua
 extensions/anim.lua
 extensions/hud.lua
 
-HodorReflexesMenu.lua
-
 modules/share/main.lua
 modules/share/menu.lua
 modules/share/menu_icons.lua
