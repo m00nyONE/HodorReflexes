@@ -3,7 +3,9 @@
 local addon = {
 	name = "HodorReflexes",
 	version = "dev",
-	author = "|cFFFF00@andy.s|r, |c76c3f4@m00nyONE|r"
+	author = "|cFFFF00@andy.s|r, |c76c3f4@m00nyONE|r",
+	svName = "HodorReflexesSV",
+	svVersion = 1,
 }
 local addon_debug = false
 local addon_name = addon.name
@@ -14,8 +16,8 @@ _G[addon_name] = addon
 
 -- saved Variables
 local sv = nil
-local svName = "HodorReflexesSV"
-local svVersion = 1
+local svName = addon.svName
+local svVersion = addon.svVersion
 local svDefault = {
 	confirmExitInstance = true,                -- Show confirmation dialog before exiting instances
 	toxicMode = false,                          -- Enable "toxic" mock messages in specific zones
@@ -65,79 +67,6 @@ local _LGBProtocols = {}
 
 local optionControls = {} -- additional addon settings provided by modules
 
--- Toxic mock messages configuration
-local text = {}  -- Stores the currently displayed mock message
-local mockText = {} -- Array of possible mock messages
-local mockZones = {
-	[636] = true,  -- HRC
-	[638] = true,  -- AA
-	[639] = true,  -- SO
-	[725] = true,  -- MoL
-	[975] = true,  -- HoF
-	[1000] = true, -- AS
-	[1051] = true, -- CR
-	[1121] = true, -- SS
-	[1196] = true, -- KA
-	[1263] = true, -- RG
-	[1344] = true, -- DSR
-	[1427] = true, -- SE
-	[1478] = true, -- LC
-}
-
-
--- Function to handle changes in the Death Recap screen
--- Displays mock messages when "toxicMode" is enabled.
-local function DeathRecapChanged(status)
-	if HR.sv.toxicMode and status and ZO_DeathRecapScrollContainerScrollChildHintsContainerHints1Text then
-		text = mockText[math.random(#mockText)]
-		ZO_DeathRecapScrollContainerScrollChildHintsContainerHints1Text:SetText(GetString(text))
-	end
-end
-
--- Function to generate mock messages based on zone, language, and dungeon difficulty.
-local function GenerateMock()
-	-- Unregister the Death Recap callback to reset mock messages
-	DEATH_RECAP:UnregisterCallback("OnDeathRecapAvailableChanged", DeathRecapChanged)
-
-	-- Reset the mockText table
-	mockText = {}
-
-	-- Retrieve the player's current zone ID and language setting
-	local zoneId = GetZoneId(GetUnitZoneIndex('player'))
-	local lang = GetCVar("language.2")
-
-	-- Check if the language and zone are supported for mock messages
-	if (lang == "en" or lang == "ru" or lang == "fr" or lang == "it") and mockZones[zoneId] then
-		-- Populate the mockText table with predefined mock messages
-		mockText = {
-			HR_MOCK1, HR_MOCK2, HR_MOCK3, HR_MOCK4, HR_MOCK5, HR_MOCK6,
-			HR_MOCK7, HR_MOCK8, HR_MOCK9, HR_MOCK10, HR_MOCK11, HR_MOCK12,
-			HR_MOCK13, HR_MOCK14, HR_MOCK15, HR_MOCK16, HR_MOCK17, HR_MOCK18,
-			HR_MOCK19, HR_MOCK20
-		}
-
-		-- Add zone-specific mock messages for zones with ID < 700
-		if zoneId < 700 then
-			text = table.insert(mockText, HR_MOCK_AA1)
-		end
-
-		-- Add region-specific mock messages for the EU Megaserver
-		if GetWorldName() == "EU Megaserver" then
-			table.insert(mockText, HR_MOCK_EU1)
-		end
-
-		-- Add mock messages based on dungeon difficulty
-		if GetCurrentZoneDungeonDifficulty() == DUNGEON_DIFFICULTY_NORMAL then
-			table.insert(mockText, HR_MOCK_NORMAL1)
-		else
-			table.insert(mockText, HR_MOCK_VET1)
-		end
-
-		-- Re-register the Death Recap callback to display new mock messages
-		DEATH_RECAP:RegisterCallback("OnDeathRecapAvailableChanged", DeathRecapChanged)
-	end
-end
-
 -- EVENT_PLAYER_ACTIVATED handler
 -- Automatically fires PlayerCombatState and GroupChanged callbacks.
 function HR.PlayerActivated()
@@ -160,8 +89,6 @@ function HR.PlayerActivated()
 	EM:RegisterForEvent(HR.name, EVENT_GROUP_UPDATE, OnGroupChangeDelayed)
 	EM:RegisterForEvent(HR.name, EVENT_GROUP_MEMBER_CONNECTED_STATUS, OnGroupChangeDelayed)
 	OnGroupChangeDelayed()
-
-	--GenerateMock()
 
 end
 
@@ -328,6 +255,16 @@ end
 local function initializeModules()
 	for moduleName, moduleClass in pairs(registeredModules) do
 		moduleClass:Initialize()
+
+		if moduleClass.DeclareLGBProtocols then
+			moduleClass:DeclareLGBProtocols(_LGBHandler)
+		end
+		if moduleClass.InjectMenu then
+			moduleClass:InjectMenu()
+		end
+		if moduleClass.BuildMenu then
+			moduleClass:BuildMenu()
+		end
 	end
 end
 

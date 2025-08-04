@@ -18,6 +18,13 @@ extensions/combat.lua
 extensions/anim.lua
 extensions/hud.lua
 
+### newModules
+# mock module
+modules/mock/en.lua
+modules/mock/$(language).lua
+modules/mock/main.lua
+#
+
 modules/share/main.lua
 modules/share/menu.lua
 modules/share/menu_icons.lua
