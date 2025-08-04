@@ -1,17 +1,31 @@
-name: LDoc Documentation
+name: Generate Documentation
 on:
   workflow_call:
 jobs:
-  ldoc:
+  docs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Generate docs with LDoc
-        uses: lunarmodules/ldoc@v1
-      - name: Deploy
-        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/release' }}
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs
+      - name: Generate doc.lua file
+        run: |
+          python3 .github/scripts/docs/generate-doc.py HodorReflexes.addon docs-lua
+      - name: Generate docs with emmylua_doc_cli
+        run: |
+          URL=$(curl -s https://api.github.com/repos/EmmyLuaLs/emmylua-analyzer-rust/releases/latest | jq -r '.assets[] | select(.name? | match("emmylua_doc_cli-linux-x64.tar.gz$")) | .browser_download_url')
+          if [ -n "$URL" ]; then
+            curl -L "$URL" -o emmylua_doc_cli-linux-x64.tar.gz
+          else
+            echo "::error:: ❌ File not found in latest release."
+            exit 1
+          fi
+          
+          tar -xzf emmylua_doc_cli-linux-x64.tar.gz
+          chmod +x emmylua_doc_cli-linux-x64.tar.gz
+
+          ./emmylua_doc_cli --output ./docs-md ./docs-lua
+      - name: Deploy docs
+        uses: mhausenblas/mkdocs-deploy-gh-pages@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CONFIG_FILE: docs-md/mkdocs.yml
