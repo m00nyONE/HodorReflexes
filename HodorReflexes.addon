@@ -32,9 +32,9 @@ modules/vote/main.lua
 modules/vote/menu.lua
 modules/vote/ui.xml
 modules/pull/main.lua
-modules/pull/bindings.xml
+modules/pull/Bindings.xml
 modules/exitinstance/main.lua
-modules/exitinstance/bindings.xml
+modules/exitinstance/Bindings.xml
 
 modules/events/main.lua
 modules/events/menu.lua
