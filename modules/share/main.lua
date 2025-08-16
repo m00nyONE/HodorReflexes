@@ -99,6 +99,8 @@ local EVENT_GROUP_ULT_UPDATE = LGCS.EVENT_GROUP_ULT_UPDATE
 local EVENT_PLAYER_ULT_UPDATE = LGCS.EVENT_PLAYER_ULT_UPDATE
 local EVENT_GROUP_DPS_UPDATE = LGCS.EVENT_GROUP_DPS_UPDATE
 local EVENT_PLAYER_DPS_UPDATE = LGCS.EVENT_PLAYER_DPS_UPDATE
+local EVENT_PLAYER_SKILLLINES_UPDATE = LGCS.EVENT_PLAYER_SKILLLINES_UPDATE
+local EVENT_GROUP_SKILLLINES_UPDATE = LGCS.EVENT_GROUP_SKILLLINES_UPDATE
 
 -- Ability costs are only updated when player is activated or enters combat
 -- to avoid calling an expensive function GetAbilityCost() too often.
@@ -580,8 +582,16 @@ local function onULTDataReceived(tag, data)
 	end
 end
 
+local function onSkillLinesDataReceived(tag, data)
+	if not IsUnitGrouped(tag) then return end
+	local dataTime = time()
+	local userId = GetUnitDisplayName(tag)
+
+	--
+end
+
 function M.Initialize()
-	lgcs = LGCS.RegisterAddon("HodorReflexes", {"ULT", "DPS"})
+	lgcs = LGCS.RegisterAddon("HodorReflexes", {"ULT", "DPS", "SKILLLINES"})
 	if not lgcs then
 		d("Failed to register addon with LibGroupCombatStats.")
 		return
@@ -590,6 +600,8 @@ function M.Initialize()
 	lgcs:RegisterForEvent(EVENT_PLAYER_ULT_UPDATE, onULTDataReceived)
 	lgcs:RegisterForEvent(EVENT_GROUP_DPS_UPDATE, onDPSDataReceived)
 	lgcs:RegisterForEvent(EVENT_PLAYER_DPS_UPDATE, onDPSDataReceived)
+	lgcs:RegisterForEvent(EVENT_PLAYER_SKILLLINES_UPDATE, onSkillLinesDataReceived)
+	lgcs:RegisterForEvent(EVENT_GROUP_SKILLLINES_UPDATE, onSkillLinesDataReceived)
 
 	-- Create callback manager
 	M.cm = M.cm or ZO_CallbackObject:New()
