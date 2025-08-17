@@ -1,7 +1,11 @@
 [SIZE="2"][B]IMPORTANT:[/B] You need LibCustomNames and LibCustomIcons now if you want to have names and icons displayed.[/SIZE]
 
-## 2025.08.03 - @m00nyONE
+## 2025.08.16 - @m00nyONE
 - fixed a bug where enabling/disabling of the readycheck module did not work
+- bump API
+- update dependencies to their newest versions
+- removed an old unused texture that was still left from before the LCI & LCN update
+- new documentation workflow
 
 ## 2025.08.02 - @m00nyONE
 - remove legacy icon table
