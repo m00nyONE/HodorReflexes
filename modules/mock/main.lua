@@ -4,7 +4,8 @@ local addon = _G[addon_name]
 local module = {
     name = "mock",
     version = "1.0.0",
-    hasMenu = false,
+    friendlyName = "Toxic Mode",
+    description = "Mocks you when you die",
 }
 
 local module_name = module.name
@@ -95,7 +96,25 @@ local function generateMock()
     end
 end
 
-
+function module:MainMenuOptions()
+    return {
+        {
+            type = "header",
+            name = "Toxic Mode"
+        },
+        {
+            type = "description",
+            text = "Toxic module description"
+        },
+        {
+            type = "checkbox",
+            name = "enabled",
+            tooltip = "enable/disable toxic mode",
+            getFunc = function() return sv.toxicMode end,
+            setFunc = function(value) sv.toxicMode = value end
+        }
+    }
+end
 
 function module:Initialize()
     sv = ZO_SavedVars:NewAccountWide(svName, svVersion, module_name, svDefault)
