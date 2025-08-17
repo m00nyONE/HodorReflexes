@@ -3,6 +3,8 @@ local addon = _G[addon_name]
 
 local module = {
     name = "example",
+    friendlyName = "Example",
+    description = "example_description",
     version = "1.0.0",
 }
 
@@ -18,19 +20,30 @@ local svDefault = {
 }
 
 local EM = EVENT_MANAGER
+local LAM = LibAddonMenu2
 local localPlayer = "player"
+
+local function onPlayerActivated()
+
+end
 
 -- initialization functions
 
-function module:BuildMenu()
+function module:BuildMenu(panelConfig)
+    local options = {
 
+    }
+
+    LAM:RegisterAddonPanel(addon_name .. "IconsMenu", panelConfig)
+    LAM:RegisterOptionControls(addon_name .. "IconsMenu", options)
 end
 
-function module:InjectMenu()
-
+function module:MainMenuOptions()
+    return {
+    }
 end
 
-function module:DeclareLGBProtocols(handler)
+function module:RegisterLGBProtocols(handler)
     assert(handler, "no LGB handler found")
 end
 
@@ -39,7 +52,7 @@ function module:Initialize()
 
     local eventRegisterName = "HodorReflexes_mock_PlayerActivated"
     EM:UnregisterForEvent(eventRegisterName, EVENT_PLAYER_ACTIVATED)
-    EM:RegisterForEvent(eventRegisterName, EVENT_PLAYER_ACTIVATED, generateMock)
+    EM:RegisterForEvent(eventRegisterName, EVENT_PLAYER_ACTIVATED, onPlayerActivated)
 end
 
 addon:RegisterModule(module_name, module)

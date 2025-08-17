@@ -6,11 +6,13 @@ local addon = {
 	author = "|cFFFF00@andy.s|r, |c76c3f4@m00nyONE|r",
 	svName = "HodorReflexesSV",
 	svVersion = 1,
+	modules = {}
 }
 local addon_debug = false
 local addon_name = addon.name
 local addon_version = addon.version
 local addon_author = addon.author
+local addon_modules = addon.modules
 _G[addon_name] = addon
 --[[ doc.lua end ]]
 
@@ -23,9 +25,6 @@ local svDefault = {
 	toxicMode = false,                          -- Enable "toxic" mock messages in specific zones
 }
 
-
-
-
 -- Core Addon Table
 HodorReflexes = {
 	name = "HodorReflexes",
@@ -35,6 +34,15 @@ HodorReflexes = {
 	default = {
 		confirmExitInstance = true,                -- Show confirmation dialog before exiting instances
 		toxicMode = false,                          -- Enable "toxic" mock messages in specific zones
+		modules = {
+			["mock"] = false,
+			["vote"] = true,
+			["pull"] = true,
+			["dps"] = true,
+			["ult"] = true,
+			["events"] = true,
+			["exitinstance"] = true,
+		}
 	},
 
 	-- Saved variables configuration
@@ -66,6 +74,7 @@ local _LGBHandler = {}
 local _LGBProtocols = {}
 
 local optionControls = {} -- additional addon settings provided by modules
+local registeredExtraMainMenuOptionControls = {}
 
 -- EVENT_PLAYER_ACTIVATED handler
 -- Automatically fires PlayerCombatState and GroupChanged callbacks.
@@ -224,27 +233,53 @@ SLASH_COMMANDS["/hodor"] = function(str)
 	if str == "version" then d(HR.version) return end
 end
 
-local registeredModules = {}
-
 function HR:RegisterModule(moduleName, moduleClass)
 	assert(type(moduleName) == "string", "moduleName must be a string")
 	assert(type(moduleClass) == "table", "moduleClass must be a table")
 	assert(type(moduleClass.Initialize) == "function", "moduleClass does not contain Initialize function")
-	assert(registeredModules[moduleName], "module already registered")
+	assert(addon_modules[moduleName] == nil, "module already registered")
 
-	registeredModules[moduleName] = moduleClass
+	addon_modules[moduleName] = moduleClass
 end
 
+local function getMenuOptionControls()
+	local options = {
+		{
+			type = "header",
+			name = string.format("|cFFFACD%s|r", "Modules")
+		},
+		{
+			type = "description",
+			text = "available modules"
+		},
+	}
+	for moduleName, module in pairs(addon_modules) do
+		local checkbox = {
+			type = "checkbox",
+			name = module.friendlyName,
+			tooltip = module.description,
+			getFunc = function() return HR.sv.modules[moduleName] end,
+			setFunc = function(value) HR.sv.modules[moduleName] = value end,
+			requiresReload = true,
+		}
+		table.insert(options, checkbox)
+	end
+
+	return options
+end
 
 local function buildMenu()
 
 	local panel = HR.GetModulePanelConfig()
 
-	local options = {}
+	local options = getMenuOptionControls()
 	-- Add options provided by modules
 	local extraOptions = HR.GetOptionControls()
 	for _, v in ipairs(extraOptions) do
 		options[#options + 1] = v
+	end
+	for _, v in ipairs(registeredExtraMainMenuOptionControls) do
+		table.insert(options, v)
 	end
 
 	LAM:RegisterAddonPanel(HR.name .. "Options", panel)
@@ -253,19 +288,37 @@ local function buildMenu()
 end
 
 local function initializeModules()
-	for moduleName, moduleClass in pairs(registeredModules) do
-		moduleClass:Initialize()
+	if not HR.sv.modules then
+		HR.sv.modules = HR.default.modules
+	end
 
-		if moduleClass.DeclareLGBProtocols then
-			moduleClass:DeclareLGBProtocols(_LGBHandler)
-		end
-		if moduleClass.InjectMenu then
-			moduleClass:InjectMenu()
-		end
-		if moduleClass.BuildMenu then
-			moduleClass:BuildMenu()
+	for moduleName, moduleClass in pairs(addon_modules) do
+		if HR.sv.modules[moduleName] then
+			-- register LibGroupBroadcast Protocols if available
+			if moduleClass.RegisterLGBProtocols then
+				moduleClass:RegisterLGBProtocols(_LGBHandler)
+				moduleClass.RegisterLGBProtocols = nil
+			end
+			-- build Module menu if available
+			if moduleClass.BuildMenu then
+				moduleClass:BuildMenu(HR.GetModulePanelConfig(moduleName))
+				moduleClass.BuildMenu = nil
+			end
+			-- inject menu options into main menu if available
+			if moduleClass.MainMenuOptions then
+				local extraOptionControls = moduleClass:MainMenuOptions()
+				for _, v in ipairs(extraOptionControls) do
+					table.insert(registeredExtraMainMenuOptionControls, v)
+				end
+				moduleClass.MainMenuOptions = nil
+			end
+
+			moduleClass:Initialize()
+			moduleClass.Initialize = nil
 		end
 	end
+
+	addon.RegisterModule = nil
 end
 
 local function registerLGBHandler()
@@ -300,10 +353,10 @@ local function Initialize()
 		HR.modules.pull.DeclareLGBProtocols(_LGBHandler)
 		HR.modules.pull.Initialize()
 	end
-	if HR.modules.exitinstance then
-		HR.modules.exitinstance.DeclareLGBProtocols(_LGBHandler)
-		HR.modules.exitinstance.Initialize()
-	end
+	--if HR.modules.exitinstance then
+	--	HR.modules.exitinstance.DeclareLGBProtocols(_LGBHandler)
+	--	HR.modules.exitinstance.Initialize()
+	--end
 
 	buildMenu()
 end
