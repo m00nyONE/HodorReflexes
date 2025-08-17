@@ -1,18 +1,31 @@
-HodorReflexes.modules.pull = {
-    name = "HodorReflexes_Pull",
+local addon_name = "HodorReflexes"
+local addon = _G[addon_name]
+
+local module = {
+    name = "pull",
+    friendlyName = "Pull Countdown",
+    description = "allows you to send pull countdowns to your group",
     version = "1.0.0",
-
-    default = {
-        enabled = true,
-        countdownDuration = 5,
-    },
-
-    sv = nil, -- saved variables
 }
 
-local HR = HodorReflexes
-local M = HR.modules.pull
+local module_name = module.name
+local module_version = module.version
+
+local sv = nil
+local svName = addon.svName
+local svVersion = addon.svVersion
+local svDefault = {
+    enabled = true,
+    countdownDuration = 5,
+}
+
+local EM = EVENT_MANAGER
+local LAM = LibAddonMenu2
 local LGB = LibGroupBroadcast
+local localPlayer = "player"
+
+local strformat = string.format
+
 local protocolPullCountdown = {}
 local MESSAGE_ID_PULLCOUNTDOWN = 31
 
@@ -20,7 +33,6 @@ local minCountdownDuration = 3
 local maxCountdownDuration = 10
 local isCountdownActive = false
 
-local strformat = string.format
 
 local function renderPullCountdown(durationMS)
     local messageParams = CENTER_SCREEN_ANNOUNCE:CreateMessageParams(CSA_CATEGORY_COUNTDOWN_TEXT, SOUNDS.DUEL_START)
@@ -36,20 +48,19 @@ local function onPullCountdownMessageReceived(unitTag, data)
 
     local duration = data.duration * 1000
 
-    --d(strformat('|c00FFFF%s %s|r', GetUnitDisplayName(name), GetString(HR_COUNTDOWN_INIT_CHAT)))
     isCountdownActive = true
     zo_callLater(function() isCountdownActive = false end, duration)
 
     renderPullCountdown(duration)
 end
 
-function M.SendPullCountdown(duration)
+function module.SendPullCountdown(duration)
     if not IsUnitGroupLeader('player') then
         d(string.format('|cFF0000%s|r', GetString(HR_MENU_VOTE_ACTIONS_COUNTDOWN_CONFIRM)))
         return
     end
 
-    if not duration then duration = M.sv.countdownDuration end
+    if not duration then duration = sv.countdownDuration end
     if duration < minCountdownDuration then duration = minCountdownDuration end
     if duration > maxCountdownDuration then duration = maxCountdownDuration end
 
@@ -61,11 +72,16 @@ end
 local countdownButton = {
     name = GetString(HR_PULL_COUNTDOWN),
     keybind = 'HR_PULL_COUNTDOWN',
-    callback = M.SendPullCountdown,
+    callback = module.SendPullCountdown,
     alignment = KEYBIND_STRIP_ALIGN_CENTER,
 }
 
-function M.DeclareLGBProtocols(handler)
+function module:MainMenuOptions()
+    return {
+    }
+end
+
+function module:RegisterLGBProtocols(handler)
     local CreateNumericField = LGB.CreateNumericField
     local protocolOptions = {
         isRelevantInCombat = false
@@ -80,15 +96,14 @@ function M.DeclareLGBProtocols(handler)
     protocolPullCountdown:Finalize(protocolOptions)
 end
 
-function M.Initialize()
-    -- Retrieve savedVariables
-    M.sv = ZO_SavedVars:NewAccountWide(HR.svName, HR.svVersion, 'pull', M.default)
+function module:Initialize()
+    sv = ZO_SavedVars:NewAccountWide(svName, svVersion, module_name, svDefault)
 
     -- Bindings
     ZO_CreateStringId('SI_BINDING_NAME_HR_PULL_COUNTDOWN', GetString(HR_BINDING_PULL_COUNTDOWN))
 
     local function OnStateChanged(_, newState)
-        if newState == SCENE_FRAGMENT_SHOWING and IsUnitGroupLeader('player') then
+        if newState == SCENE_FRAGMENT_SHOWING and IsUnitGroupLeader(localPlayer) then
             KEYBIND_STRIP:AddKeybindButton(countdownButton)
         elseif newState == SCENE_FRAGMENT_HIDING then
             KEYBIND_STRIP:RemoveKeybindButton(countdownButton)
@@ -99,7 +114,8 @@ function M.Initialize()
     GAMEPAD_GROUP_SCENE:RegisterCallback('StateChange', OnStateChanged)
 end
 
-SLASH_COMMANDS["/pull"] = function(duration)
-    M.SendPullCountdown(tonumber(duration))
-end
+addon:RegisterModule(module_name, module)
 
+SLASH_COMMANDS["/pull"] = function(duration)
+    module.SendPullCountdown(tonumber(duration))
+end
