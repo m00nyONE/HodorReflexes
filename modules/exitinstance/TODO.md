@@ -2,4 +2,3 @@
 
 - allow PreHooks
 - allow PostHooks
-- menu
