@@ -47,3 +47,7 @@ function util.TableUnique(t)
 	return res
 
 end
+
+function util.IsValidString(s)
+	return type(s) == 'string' and s ~= ''
+end
