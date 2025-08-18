@@ -64,8 +64,8 @@ local PRE_DELETION_HOOK = "PRE_DELETION_HOOK"
 local POST_CREATION_HOOK = "POST_CREATION_HOOK"
 
 local group = addon.group
-local groupData = {}
-group.groupData = groupData
+local playersData = {}
+group.playersData = playersData
 
 local localPlayer = "player"
 
@@ -85,18 +85,17 @@ local function onGroupChange(forceDelete)
         if IsUnitPlayer(tag) then
             local userId = GetUnitDisplayName(tag)
             if userId and IsUnitOnline(tag) then
-                local isPlayer = AreUnitsEqual(tag, localPlayer)
-                local characterName = GetUnitName(tag)
 
                 _existingGroupCharacters[userId] = true
 
-                if groupData[userId] then
-                    groupData[userId].tag = tag
+                if playersData[userId] then
+                    playersData[userId].tag = tag
                 else
-                    groupData[userId] = {
+                    playersData[userId] = {
                         tag = tag,
-                        isPlayer = isPlayer,
-                        characterName = characterName,
+                        name = GetUnitName(tag),
+                        isPlayer = AreUnitsEqual(tag, localPlayer),
+                        classId = GetUnitClassId(tag)
                     }
                     CM:FireCallbacks(POST_CREATION_HOOK)
                 end
@@ -104,13 +103,13 @@ local function onGroupChange(forceDelete)
         end
     end
 
-    for userId, _ in pairs(groupData) do
+    for userId, _ in pairs(playersData) do
         if not _existingGroupCharacters[userId] or forceDelete then
             -- allow modules to release objects before deletion
-            CM:FireCallbacks(PRE_DELETION_HOOK, groupData[userId])
+            CM:FireCallbacks(PRE_DELETION_HOOK, playersData[userId])
 
             addon.anim.UnregisterUser(userId)
-            groupData[userId] = nil
+            playersData[userId] = nil
         end
     end
 end

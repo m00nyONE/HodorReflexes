@@ -80,8 +80,8 @@ HR.cm = ZO_CallbackObject:New()
 local localPlayer = "player"
 
 local group = HR.group
-local groupData = {}
-group.groupData = groupData
+local playersData = {}
+group.playersData = playersData
 
 local _LGBHandler = {}
 local _LGBProtocols = {}
@@ -99,32 +99,30 @@ local function onGroupChange(forceDelete)
 		if IsUnitPlayer(tag) then
 			local userId = GetUnitDisplayName(tag)
 			if userId and IsUnitOnline(tag) then
-				local isPlayer = AreUnitsEqual(tag, localPlayer)
-				local characterName = GetUnitName(tag)
-
 				_existingGroupCharacters[userId] = true
 
-				if groupData[userId] then
-					groupData[userId].tag = tag
+				if playersData[userId] then
+                    playersData[userId].tag = tag
 				else
-					groupData[userId] = {
-						tag = tag,
-						isPlayer = isPlayer,
-						characterName = characterName,
-					}
+                    playersData[userId] = {
+                        tag = tag,
+                        name = GetUnitName(tag),
+                        isPlayer = AreUnitsEqual(tag, localPlayer),
+                        classId = GetUnitClassId(tag)
+                    }
 					HR.cm:FireCallbacks(POST_CREATION_HOOK)
 				end
 			end
 		end
 	end
 
-	for userId, _ in pairs(groupData) do
+	for userId, _ in pairs(playersData) do
 		if not _existingGroupCharacters[userId] or forceDelete then
 			-- allow modules to release objects before deletion
-			HR.cm:FireCallbacks(PRE_DELETION_HOOK, groupData[userId])
+			HR.cm:FireCallbacks(PRE_DELETION_HOOK, playersData[userId])
 
 			HR.anim.UnregisterUser(userId)
-			groupData[userId] = nil
+            playersData[userId] = nil
 		end
 	end
 end
@@ -148,8 +146,6 @@ function group.RegisterPostCreationHook(callback)
 	HR.cm:RegisterCallback(POST_CREATION_HOOK, callback)
 end
 --[[ doc.lua end ]]
-
-
 
 -- EVENT_PLAYER_ACTIVATED handler
 -- Automatically fires PlayerCombatState and GroupChanged callbacks.
