@@ -137,8 +137,6 @@ function M.OverwriteClassIcons(ci)
 	classIcons = ci
 end
 
-local hasSaxhleel -- player has Saxhleel set equipped
-
 local isDuel = false -- is player currently dueling
 local isTestRunning = false
 
@@ -162,12 +160,6 @@ local function getRealDisplayName(displayname)
 		if found then return unit end
 	end
 	return nil
-end
-
-local function CheckEquippedSets()
-	local _, _, _, n, _, _, p = GetItemLinkSetInfo("|H0:item:173857:364:50:0:0:0:0:0:0:0:0:0:0:0:1:0:0:1:0:0:0|h|h", true)
-	local num = n + (p or 0)
-	hasSaxhleel = num >= 3 -- we assume player has full set if he wears at least 3 items (2 can be on backbar)
 end
 
 -- Check if variable is a non empty string.
@@ -734,11 +726,6 @@ function M.ToggleEnabled()
 		-- major berserk applied
 		EM:RegisterForEvent(M.name .. "MajorBerserk", EVENT_EFFECT_CHANGED, M.MajorBerserk)
 		EM:AddFilterForEvent(M.name .. "MajorBerserk", EVENT_EFFECT_CHANGED, REGISTER_FILTER_ABILITY_ID, 61745)
-
-		-- Equipped items changed.
-		CheckEquippedSets()
-		EM:RegisterForEvent(M.name, EVENT_INVENTORY_SINGLE_SLOT_UPDATE, CheckEquippedSets)
-		EM:AddFilterForEvent(M.name, EVENT_INVENTORY_SINGLE_SLOT_UPDATE, REGISTER_FILTER_BAG_ID, BAG_WORN)
 
 		-- Register combat extension
 		combat.Register()
