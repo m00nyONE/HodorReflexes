@@ -6,14 +6,15 @@ local addon = {
 	author = "|cFFFF00@andy.s|r, |c76c3f4@m00nyONE|r",
 	svName = "HodorReflexesSV",
 	svVersion = 1,
-	modules = {}
+	modules = {},
+	group = {}
 }
 local addon_debug = false
 local addon_name = addon.name
 local addon_version = addon.version
 local addon_author = addon.author
 local addon_modules = addon.modules
-_G[addon_name] = addon
+--_G[addon_name] = addon
 --[[ doc.lua end ]]
 
 -- saved Variables
@@ -51,6 +52,7 @@ HodorReflexes = {
 	svName = "HodorReflexesSV", -- Saved variables table name
 
 	modules = {},              -- Contains public modules like "share", "vote", etc.
+	group = {},
 }
 
 -- Addon events (to be used with RegisterCallback)
@@ -64,17 +66,90 @@ HR_EVENT_INTERRUPT = "Interrupt"
 HR_EVENT_STUNNED = "Stunned"
 HR_EVENT_GROUP_CHANGED = "GroupChanged"
 
+local PRE_DELETION_HOOK = "PRE_DELETION_HOOK"
+local POST_CREATION_HOOK = "POST_CREATION_HOOK"
+
 -- Import global variables and libraries
 local HR = HodorReflexes
 local EM = EVENT_MANAGER
 local LAM = LibAddonMenu2
 local LGB = LibGroupBroadcast
 
+HR.cm = ZO_CallbackObject:New()
+
+local localPlayer = "player"
+
+local group = HR.group
+local groupData = {}
+group.groupData = groupData
+
 local _LGBHandler = {}
 local _LGBProtocols = {}
 
 local optionControls = {} -- additional addon settings provided by modules
 local registeredExtraMainMenuOptionControls = {}
+
+
+local function onGroupChange(forceDelete)
+	local _existingGroupCharacters = {}
+	local _groupSize = GetGroupSize()
+
+	for i = 1, _groupSize do
+		local tag = GetGroupUnitTagByIndex(i)
+		if IsUnitPlayer(tag) then
+			local userId = GetUnitDisplayName(tag)
+			if userId and IsUnitOnline(tag) then
+				local isPlayer = AreUnitsEqual(tag, localPlayer)
+				local characterName = GetUnitName(tag)
+
+				_existingGroupCharacters[userId] = true
+
+				if groupData[userId] then
+					groupData[userId].tag = tag
+				else
+					groupData[userId] = {
+						tag = tag,
+						isPlayer = isPlayer,
+						characterName = characterName,
+					}
+					HR.cm:FireCallbacks(POST_CREATION_HOOK)
+				end
+			end
+		end
+	end
+
+	for userId, _ in pairs(groupData) do
+		if not _existingGroupCharacters[userId] or forceDelete then
+			-- allow modules to release objects before deletion
+			HR.cm:FireCallbacks(PRE_DELETION_HOOK, groupData[userId])
+
+			HR.anim.UnregisterUser(userId)
+			groupData[userId] = nil
+		end
+	end
+end
+
+--[[ doc.lua begin ]]
+function group.UnregisterPreDeletionHook(callback)
+	assert(type(callback) == "function", "callback is not a function")
+	HR.cm:UnregisterCallback(PRE_DELETION_HOOK, callback)
+end
+function group.RegisterPreDeletionHook(callback)
+	assert(type(callback) == "function", "callback is not a function")
+	HR.cm:RegisterCallback(PRE_DELETION_HOOK, callback)
+end
+
+function group.UnregisterPostCreationHook(callback)
+	assert(type(callback) == "function", "callback is not a function")
+	HR.cm:UnregisterCallback(POST_CREATION_HOOK, callback)
+end
+function group.RegisterPostCreationHook(callback)
+	assert(type(callback) == "function", "callback is not a function")
+	HR.cm:RegisterCallback(POST_CREATION_HOOK, callback)
+end
+--[[ doc.lua end ]]
+
+
 
 -- EVENT_PLAYER_ACTIVATED handler
 -- Automatically fires PlayerCombatState and GroupChanged callbacks.
@@ -331,11 +406,11 @@ end
 
 -- Main initialization function for the addon
 local function Initialize()
-	-- Create callback manager
-	HR.cm = HR.cm or ZO_CallbackObject:New()
 
 	-- Retrieve saved variables
 	HR.sv = ZO_SavedVars:NewAccountWide(HR.svName, HR.svVersion, nil, HR.default)
+
+	HR.RegisterCallback(HR_EVENT_GROUP_CHANGED, onGroupChange)
 
 	registerLGBHandler()
 
