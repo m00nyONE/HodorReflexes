@@ -118,6 +118,13 @@ local function onGroupChange(forceDelete)
 end
 
 --[[ doc.lua begin ]]
+function group.ClearPlayersData()
+    for userId, _ in (playersData) do
+        CM:FireCallbacks(PRE_DELETION_HOOK, userId)
+        playersData[userId] = nil
+    end
+end
+
 function group.UnregisterPreDeletionHook(callback)
     assert(type(callback) == "function", "callback is not a function")
     CM:UnregisterCallback(PRE_DELETION_HOOK, callback)
