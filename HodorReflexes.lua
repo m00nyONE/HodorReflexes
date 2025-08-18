@@ -43,7 +43,9 @@ HodorReflexes = {
 			["ult"] = true,
 			["events"] = true,
 			["exitinstance"] = true,
-		}
+		},
+        -- NoLibsInstalled
+        libraryPopupDisabled = false,
 	},
 
 	-- Saved variables configuration
@@ -74,6 +76,8 @@ local HR = HodorReflexes
 local EM = EVENT_MANAGER
 local LAM = LibAddonMenu2
 local LGB = LibGroupBroadcast
+local LCI = LibCustomIcons
+local LCN = LibCustomNames
 
 HR.cm = ZO_CallbackObject:New()
 
@@ -121,7 +125,6 @@ local function onGroupChange(forceDelete)
 			-- allow modules to release objects before deletion
 			HR.cm:FireCallbacks(PRE_DELETION_HOOK, userId)
 
-			HR.anim.UnregisterUser(userId)
             playersData[userId] = nil
 		end
 	end
@@ -400,6 +403,36 @@ local function registerLGBHandler()
 	_LGBHandler = handler
 end
 
+local function ShowMissingLibsPopup()
+    ZO_Dialogs_RegisterCustomDialog("HODORREFLEXES_MISSING_LIBS", {
+        title = {
+            text = GetString(HR_MISSING_LIBS_TITLE),
+        },
+        mainText = {
+            text = GetString(HR_MISSING_LIBS_TEXT),
+        },
+        buttons = {
+            {
+                text = GetString(HR_MISSING_LIBS_OK),
+                keybind = "DIALOG_PRIMARY",
+                callback = function() end,
+            },
+            {
+                text = GetString(HR_MISSING_LIBS_DONTSHOWAGAIN),
+                keybind = "DIALOG_RESET",
+                callback = function()
+                    sv.libraryPopupDisabled = true
+                end,
+            },
+        },
+        mustChoose = true,
+        canQueue = true,
+        allowShowOnDead = false,
+    }, nil, IsInGamepadPreferredMode())
+
+    ZO_Dialogs_ShowDialog("HODORREFLEXES_MISSING_LIBS")
+end
+
 -- Main initialization function for the addon
 local function Initialize()
 
@@ -430,6 +463,10 @@ local function Initialize()
 	--end
 
 	buildMenu()
+
+    if (not LCI or not LCN) and not sv.libraryPopupDisabled then
+        ShowMissingLibsPopup()
+    end
 end
 
 EM:RegisterForEvent(HR.name, EVENT_ADD_ON_LOADED, function(_, name)

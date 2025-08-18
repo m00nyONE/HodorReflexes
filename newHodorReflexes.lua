@@ -31,13 +31,17 @@ local svDefault = {
       ["ult"] = true,
       ["events"] = true,
       ["exitinstance"] = true,
-    }
+    },
+    -- NoLibsInstalled
+    libraryPopupDisabled = false,
 }
 
 local EM = GetEventManager()
 local CM = ZO_CallbackObject:New()
 local LAM = LibAddonMenu2
 local LGB = LibGroupBroadcast
+local LCI = LibCustomIcons
+local LCN = LibCustomNames
 
 --[[ doc.lua begin ]]
 -- Addon events (to be used with RegisterCallback)
@@ -108,7 +112,6 @@ local function onGroupChange(forceDelete)
             -- allow modules to release objects before deletion
             CM:FireCallbacks(PRE_DELETION_HOOK, userId)
 
-            addon.anim.UnregisterUser(userId)
             playersData[userId] = nil
         end
     end
@@ -347,6 +350,36 @@ local function onPlayerActivated()
     onGroupChangeDelayed()
 end
 
+local function ShowMissingLibsPopup()
+    ZO_Dialogs_RegisterCustomDialog("HODORREFLEXES_MISSING_LIBS", {
+        title = {
+            text = GetString(HR_MISSING_LIBS_TITLE),
+        },
+        mainText = {
+            text = GetString(HR_MISSING_LIBS_TEXT),
+        },
+        buttons = {
+            {
+                text = GetString(HR_MISSING_LIBS_OK),
+                keybind = "DIALOG_PRIMARY",
+                callback = function() end,
+            },
+            {
+                text = GetString(HR_MISSING_LIBS_DONTSHOWAGAIN),
+                keybind = "DIALOG_RESET",
+                callback = function()
+                    sv.libraryPopupDisabled = true
+                end,
+            },
+        },
+        mustChoose = true,
+        canQueue = true,
+        allowShowOnDead = false,
+    }, nil, IsInGamepadPreferredMode())
+
+    ZO_Dialogs_ShowDialog("HODORREFLEXES_MISSING_LIBS")
+end
+
 local function Initialize()
     sv = ZO_SavedVars:NewAccountWide(svName, svVersion, nil, svDefault)
 
@@ -359,6 +392,10 @@ local function Initialize()
     BuildMenu()
 
     EM:RegisterForEvent(addon_name .. "PlayerActivated", EVENT_PLAYER_ACTIVATED, onPlayerActivated)
+
+    if (not LCI or not LCN) and not sv.libraryPopupDisabled then
+        ShowMissingLibsPopup()
+    end
 end
 
 EM:RegisterForEvent(addon_name, EVENT_ADD_ON_LOADED, function(_, name)
