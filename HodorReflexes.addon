@@ -18,8 +18,7 @@ extensions/combat.lua
 extensions/anim.lua
 extensions/hud.lua
 
-### newModules
-# mock module
+### Modules
 modules/mock/en.lua
 modules/mock/$(language).lua
 modules/mock/main.lua
@@ -28,8 +27,14 @@ modules/exitinstance/lang/en.lua
 modules/exitinstance/lang/$(language).lua
 modules/exitinstance/Bindings.xml
 modules/exitinstance/main.lua
-#
 
+modules/pull/lang/en.lua
+modules/pull/lang/$(language).lua
+modules/pull/Bindings.xml
+modules/pull/main.lua
+
+
+### oldModules
 oldModules/share/main.lua
 oldModules/share/menu.lua
 oldModules/share/menu_icons.lua
@@ -43,10 +48,6 @@ oldModules/share/ui/damage.xml
 oldModules/vote/main.lua
 oldModules/vote/menu.lua
 oldModules/vote/ui.xml
-oldModules/pull/main.lua
-oldModules/pull/Bindings.xml
-#oldModules/exitinstance/main.lua
-#oldModules/exitinstance/Bindings.xml
 
 oldModules/events/main.lua
 oldModules/events/menu.lua
