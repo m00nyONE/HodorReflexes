@@ -110,7 +110,7 @@ local function onGroupChange(forceDelete)
                         isPlayer = AreUnitsEqual(tag, localPlayer),
                         classId = GetUnitClassId(tag)
                     }
-					HR.cm:FireCallbacks(POST_CREATION_HOOK)
+					HR.cm:FireCallbacks(POST_CREATION_HOOK, userId)
 				end
 			end
 		end
@@ -119,7 +119,7 @@ local function onGroupChange(forceDelete)
 	for userId, _ in pairs(playersData) do
 		if not _existingGroupCharacters[userId] or forceDelete then
 			-- allow modules to release objects before deletion
-			HR.cm:FireCallbacks(PRE_DELETION_HOOK, playersData[userId])
+			HR.cm:FireCallbacks(PRE_DELETION_HOOK, userId)
 
 			HR.anim.UnregisterUser(userId)
             playersData[userId] = nil
