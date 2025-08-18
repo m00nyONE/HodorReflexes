@@ -65,8 +65,6 @@ HodorReflexes.modules.share = {
 		styleBerserkColor = {1, 1, 0},
 		styleZeroTimerOpacity = 0.7,
 		styleTimerBlink = true,
-		-- NoLibsInstalled
-		libraryPopupDisabled = false,
 	},
 
 	sv = nil, -- saved variables
@@ -83,8 +81,6 @@ local SV -- shortcut for M.sv
 local SW -- shortcut for M.sw
 
 local LGCS = LibGroupCombatStats
-local LCI = LibCustomIcons
-local LCN = LibCustomNames
 local EM = EVENT_MANAGER
 
 local controlsVisible = false -- current state of UI controls
@@ -363,36 +359,6 @@ function M.GetDamageNumFont()
 	end
 end
 
-local function ShowMissingLibsPopup()
-	ZO_Dialogs_RegisterCustomDialog("HODORREFLEXES_MISSING_LIBS", {
-		title = {
-			text = GetString(HR_MISSING_LIBS_TITLE),
-		},
-		mainText = {
-			text = GetString(HR_MISSING_LIBS_TEXT),
-		},
-		buttons = {
-			{
-				text = GetString(HR_MISSING_LIBS_OK),
-				keybind = "DIALOG_PRIMARY",
-				callback = function() end,
-			},
-			{
-				text = GetString(HR_MISSING_LIBS_DONTSHOWAGAIN),
-				keybind = "DIALOG_RESET",
-				callback = function()
-					M.sv.libraryPopupDisabled = true
-				end,
-			},
-		},
-		mustChoose = true,
-		canQueue = true,
-		allowShowOnDead = false,
-	}, nil, IsInGamepadPreferredMode())
-
-	ZO_Dialogs_ShowDialog("HODORREFLEXES_MISSING_LIBS")
-end
-
 function M.ApplyStyle()
 	HodorReflexes_Share_Damage_BG:SetAlpha(SW.styleDamageHeaderOpacity)
 
@@ -608,10 +574,6 @@ function M.Initialize()
 	end
 	SV = M.sv
 	SW = M.sw
-
-	if (not LCI or not LCN) and not M.sv.libraryPopupDisabled then
-		ShowMissingLibsPopup()
-	end
 
 	-- Set default values for custom name and color.
 	if not IsValidString(SW.myIconNameRaw) then
