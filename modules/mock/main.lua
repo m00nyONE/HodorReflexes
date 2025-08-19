@@ -4,8 +4,8 @@ local addon = _G[addon_name]
 local module = {
     name = "mock",
     version = "1.0.0",
-    friendlyName = "Toxic Mode",
-    description = "Mocks you when you die",
+    friendlyName = "Toxic Mode", -- TODO: translation
+    description = "Mocks you when you die", -- TODO: translation
 }
 
 local module_name = module.name
@@ -99,17 +99,9 @@ end
 function module:MainMenuOptions()
     return {
         {
-            type = "header",
-            name = "Toxic Mode"
-        },
-        {
-            type = "description",
-            text = "Toxic module description"
-        },
-        {
             type = "checkbox",
-            name = "enabled",
-            tooltip = "enable/disable toxic mode",
+            name = "enabled", -- TODO: translation
+            tooltip = "enable/disable toxic mode", -- TODO: translation
             getFunc = function() return sv.toxicMode end,
             setFunc = function(value) sv.toxicMode = value end
         }

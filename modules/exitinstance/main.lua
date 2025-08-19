@@ -3,8 +3,8 @@ local addon = _G[addon_name]
 
 local module = {
     name = "exitinstance",
-    friendlyName = "Exit Instance",
-    description = "Allows your group leader to ask you to exit the current instance",
+    friendlyName = "Exit Instance", -- TODO: translation
+    description = "Allows your group leader to ask you to exit the current instance", -- TODO: translation
     version = "1.0.0",
 }
 
@@ -70,25 +70,17 @@ local sendExitInstanceRequestButton = {
 function module:MainMenuOptions()
     return {
         {
-            type = "header",
-            name = string.format("|cFFFACD%s|r", "Exit Instance")
-        },
-        {
-            type = "description",
-            text = "enables exit instance requests"
-        },
-        {
             type = "checkbox",
-            name = "enabled",
-            tooltip = "enable/disable exitinstance requests",
+            name = "enable requests", -- TODO: translation
+            tooltip = "enable/disable exitinstance requests", -- TODO: translation
             default = true,
             getFunc = function() return sv.enabled end,
             setFunc = function(value) sv.enabled = value end
         },
         {
             type = "checkbox",
-            name = "confirm exit",
-            tooltip = "enable/disable the need to confirm if leader requests an exit of the instance",
+            name = "confirm exit", -- TODO: translation
+            tooltip = "enable/disable the need to confirm if leader requests an exit of the instance", -- TODO: translation
             default = true,
             getFunc = function() return sv.confirmExitInstance end,
             setFunc = function(value) sv.confirmExitInstance = value end

@@ -3,8 +3,8 @@ local addon = _G[addon_name]
 
 local module = {
     name = "pull",
-    friendlyName = "Pull Countdown",
-    description = "allows you to send pull countdowns to your group",
+    friendlyName = "Pull Countdown", -- TODO: translation
+    description = "allows you to send pull countdowns to your group", -- TODO: translation
     version = "1.0.0",
 }
 
@@ -78,6 +78,19 @@ local countdownButton = {
 
 function module:MainMenuOptions()
     return {
+        {
+            type = "slider",
+            name = "Default pull duration", -- TODO: translation
+            tooltip = "changes the default pull duration when you use the keybind or use /pull", -- TODO: translation
+            min = 3,
+            max = 10,
+            step = 1,
+            default = 5,
+            decimals = 0,
+            clampInput = true,
+            getFunc = function() return sv.countdownDuration end,
+            setFunc = function(value) sv.countdownDuration = value end,
+        }
     }
 end
 

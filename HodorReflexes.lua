@@ -323,37 +323,34 @@ function HR:RegisterModule(moduleName, moduleClass)
 	addon_modules[moduleName] = moduleClass
 end
 
-local function getMenuOptionControls()
-	local options = {
-		{
-			type = "header",
-			name = string.format("|cFFFACD%s|r", "Modules")
-		},
-		{
-			type = "description",
-			text = "available modules"
-		},
-	}
-	for moduleName, module in pairs(addon_modules) do
-		local checkbox = {
-			type = "checkbox",
-			name = module.friendlyName,
-			tooltip = module.description,
-			getFunc = function() return HR.sv.modules[moduleName] end,
-			setFunc = function(value) HR.sv.modules[moduleName] = value end,
-			requiresReload = true,
-		}
-		table.insert(options, checkbox)
-	end
-
-	return options
+local function getMenuOptionControls(moduleName, moduleClass)
+    return {
+        {
+            type = "header",
+            name = string.format("|cFFFACD%s|r", moduleClass.friendlyName)
+        },
+        {
+            type = "description",
+            text = moduleClass.description
+        },
+        {
+            type = "checkbox",
+            name = function()
+                return string.format(HR.sv.modules[moduleName] and "|c00FF00%s|r" or "|cFF0000%s|r", "Enable Module")
+            end,
+            tooltip = "enables/disables the module",
+            getFunc = function() return HR.sv.modules[moduleName] end,
+            setFunc = function(value) HR.sv.modules[moduleName] = value end,
+            requiresReload = true,
+        },
+    }
 end
 
 local function buildMenu()
 
 	local panel = HR.GetModulePanelConfig()
 
-	local options = getMenuOptionControls()
+	local options = {}
 	-- Add options provided by modules
 	local extraOptions = HR.GetOptionControls()
 	for _, v in ipairs(extraOptions) do
@@ -374,6 +371,12 @@ local function initializeModules()
 	end
 
 	for moduleName, moduleClass in pairs(addon_modules) do
+        -- inject the Module header into settings with the "enable" checkbox
+        local moduleHeaderOptions = getMenuOptionControls(moduleName, moduleClass)
+        for _, v in ipairs(moduleHeaderOptions) do
+            table.insert(registeredExtraMainMenuOptionControls, v)
+        end
+
 		if HR.sv.modules[moduleName] then
 			-- register LibGroupBroadcast Protocols if available
 			if moduleClass.RegisterLGBProtocols then

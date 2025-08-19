@@ -230,30 +230,27 @@ local function getMenuPanelConfig(listName, panelName)
         registerForRefresh = true,
     }
 end
-local function getMenuOptionControls()
-    local options = {
+local function getMenuOptionControls(moduleName, moduleClass)
+    return {
         {
             type = "header",
-            name = string.format("|cFFFACD%s|r", "Modules")
+            name = string.format("|cFFFACD%s|r", moduleClass.friendlyName)
         },
         {
             type = "description",
-            text = "available modules"
+            text = moduleClass.description
         },
-    }
-    for moduleName, module in pairs(addon_modules) do
-        local checkbox = {
+        {
             type = "checkbox",
-            name = module.friendlyName,
-            tooltip = module.description,
+            name = function()
+                return string.format(sv.modules[moduleName] and "|c00FF00%s|r" or "|cFF0000%s|r", "Enable Module")
+            end,
+            tooltip = "enables/disables the module",
             getFunc = function() return sv.modules[moduleName] end,
             setFunc = function(value) sv.modules[moduleName] = value end,
             requiresReload = true,
-        }
-        table.insert(options, checkbox)
-    end
-
-    return options
+        },
+    }
 end
 
 local function InitializeModules()
@@ -262,6 +259,12 @@ local function InitializeModules()
     end
 
     for moduleName, moduleClass in pairs(addon_modules) do
+        -- inject the Module header into settings with the "enable" checkbox
+        local moduleHeaderOptions = getMenuOptionControls(moduleName, moduleClass)
+        for _, v in ipairs(moduleHeaderOptions) do
+            table.insert(registeredExtraMainMenuOptionControls, v)
+        end
+
         if sv.modules[moduleName] then
             -- register LibGroupBroadcast Protocols if available
             if moduleClass.RegisterLGBProtocols then
@@ -302,7 +305,7 @@ end
 local function BuildMenu()
     local panel = getMenuPanelConfig()
 
-    local options = getMenuOptionControls()
+    local options = { } -- main menu settings
     for _, v in ipairs(registeredExtraMainMenuOptionControls) do
         table.insert(options, v)
     end
