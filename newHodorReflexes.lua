@@ -8,7 +8,6 @@ local addon = {
     svVersion = 1,
 
     modules = {},
-    group = {},
 }
 local addon_debug = false
 local addon_name = addon.name
@@ -67,10 +66,6 @@ addon.HR_EVENT_GROUP_CHANGED = HR_EVENT_GROUP_CHANGED
 local PRE_DELETION_HOOK = "PRE_DELETION_HOOK"
 local POST_CREATION_HOOK = "POST_CREATION_HOOK"
 
-local group = addon.group
-local playersData = {}
-group.playersData = playersData
-
 local localPlayer = "player"
 
 local _LGBHandler = {}
@@ -79,70 +74,6 @@ local _LGBProtocols = {}
 local registeredExtraMainMenuOptionControls = {}
 
 local inCombat = false -- previous combat state
-
-local function onGroupChange(forceDelete)
-    local _existingGroupCharacters = {}
-    local _groupSize = GetGroupSize()
-
-    for i = 1, _groupSize do
-        local tag = GetGroupUnitTagByIndex(i)
-        if IsUnitPlayer(tag) then
-            local userId = GetUnitDisplayName(tag)
-            if userId and IsUnitOnline(tag) then
-
-                _existingGroupCharacters[userId] = true
-
-                if playersData[userId] then
-                    playersData[userId].tag = tag
-                else
-                    playersData[userId] = {
-                        tag = tag,
-                        name = GetUnitName(tag),
-                        isPlayer = AreUnitsEqual(tag, localPlayer),
-                        classId = GetUnitClassId(tag)
-                    }
-                    CM:FireCallbacks(POST_CREATION_HOOK, userId)
-                end
-            end
-        end
-    end
-
-    for userId, _ in pairs(playersData) do
-        if not _existingGroupCharacters[userId] or forceDelete then
-            -- allow modules to release objects before deletion
-            CM:FireCallbacks(PRE_DELETION_HOOK, userId)
-
-            playersData[userId] = nil
-        end
-    end
-end
-
---[[ doc.lua begin ]]
-function group.ClearPlayersData()
-    for userId, _ in (playersData) do
-        CM:FireCallbacks(PRE_DELETION_HOOK, userId)
-        playersData[userId] = nil
-    end
-end
-
-function group.UnregisterPreDeletionHook(callback)
-    assert(type(callback) == "function", "callback is not a function")
-    CM:UnregisterCallback(PRE_DELETION_HOOK, callback)
-end
-function group.RegisterPreDeletionHook(callback)
-    assert(type(callback) == "function", "callback is not a function")
-    CM:RegisterCallback(PRE_DELETION_HOOK, callback)
-end
-
-function group.UnregisterPostCreationHook(callback)
-    assert(type(callback) == "function", "callback is not a function")
-    CM:UnregisterCallback(POST_CREATION_HOOK, callback)
-end
-function group.RegisterPostCreationHook(callback)
-    assert(type(callback) == "function", "callback is not a function")
-    CM:RegisterCallback(POST_CREATION_HOOK, callback)
-end
---[[ doc.lua end ]]
 
 --[[ doc.lua begin ]]
 function addon.UnregisterCallback(eventName, callback)
@@ -392,8 +323,6 @@ end
 
 local function Initialize()
     sv = ZO_SavedVars:NewAccountWide(svName, svVersion, nil, svDefault)
-
-    addon.RegisterCallback(HR_EVENT_GROUP_CHANGED, onGroupChange)
 
     RegisterLGBHandler()
     InitializeExtensions()

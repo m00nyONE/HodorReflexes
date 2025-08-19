@@ -7,7 +7,6 @@ local addon = {
 	svName = "HodorReflexesSV",
 	svVersion = 1,
 	modules = {},
-	group = {}
 }
 local addon_debug = false
 local addon_name = addon.name
@@ -83,79 +82,11 @@ HR.cm = ZO_CallbackObject:New()
 
 local localPlayer = "player"
 
-local group = HR.group
-local playersData = {}
-group.playersData = playersData
-
 local _LGBHandler = {}
 local _LGBProtocols = {}
 
 local optionControls = {} -- additional addon settings provided by modules
 local registeredExtraMainMenuOptionControls = {}
-
-
-local function onGroupChange(forceDelete)
-	local _existingGroupCharacters = {}
-	local _groupSize = GetGroupSize()
-
-	for i = 1, _groupSize do
-		local tag = GetGroupUnitTagByIndex(i)
-		if IsUnitPlayer(tag) then
-			local userId = GetUnitDisplayName(tag)
-			if userId and IsUnitOnline(tag) then
-				_existingGroupCharacters[userId] = true
-
-				if playersData[userId] then
-                    playersData[userId].tag = tag
-				else
-                    playersData[userId] = {
-                        tag = tag,
-                        name = GetUnitName(tag),
-                        isPlayer = AreUnitsEqual(tag, localPlayer),
-                        classId = GetUnitClassId(tag)
-                    }
-					HR.cm:FireCallbacks(POST_CREATION_HOOK, userId)
-				end
-			end
-		end
-	end
-
-	for userId, _ in pairs(playersData) do
-		if not _existingGroupCharacters[userId] or forceDelete then
-			-- allow modules to release objects before deletion
-			HR.cm:FireCallbacks(PRE_DELETION_HOOK, userId)
-
-            playersData[userId] = nil
-		end
-	end
-end
-
---[[ doc.lua begin ]]
-function group.ClearPlayersData()
-    for userId, _ in (playersData) do
-        HR.cm:FireCallbacks(PRE_DELETION_HOOK, userId)
-        playersData[userId] = nil
-    end
-end
-
-function group.UnregisterPreDeletionHook(callback)
-	assert(type(callback) == "function", "callback is not a function")
-	HR.cm:UnregisterCallback(PRE_DELETION_HOOK, callback)
-end
-function group.RegisterPreDeletionHook(callback)
-	assert(type(callback) == "function", "callback is not a function")
-	HR.cm:RegisterCallback(PRE_DELETION_HOOK, callback)
-end
-
-function group.UnregisterPostCreationHook(callback)
-	assert(type(callback) == "function", "callback is not a function")
-	HR.cm:UnregisterCallback(POST_CREATION_HOOK, callback)
-end
-function group.RegisterPostCreationHook(callback)
-	assert(type(callback) == "function", "callback is not a function")
-	HR.cm:RegisterCallback(POST_CREATION_HOOK, callback)
-end
---[[ doc.lua end ]]
 
 -- EVENT_PLAYER_ACTIVATED handler
 -- Automatically fires PlayerCombatState and GroupChanged callbacks.
@@ -448,8 +379,6 @@ local function Initialize()
 
 	-- Retrieve saved variables
 	HR.sv = ZO_SavedVars:NewAccountWide(HR.svName, HR.svVersion, nil, HR.default)
-
-	HR.RegisterCallback(HR_EVENT_GROUP_CHANGED, onGroupChange)
 
 	registerLGBHandler()
 
