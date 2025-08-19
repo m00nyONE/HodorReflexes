@@ -25,8 +25,8 @@ modules/mock/main.lua
 
 modules/exitinstance/lang/en.lua
 modules/exitinstance/lang/$(language).lua
-modules/exitinstance/Bindings.xml
 modules/exitinstance/main.lua
+modules/exitinstance/Bindings.xml
 
 modules/pull/lang/en.lua
 modules/pull/lang/$(language).lua
