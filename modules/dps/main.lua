@@ -18,7 +18,18 @@ local svName = addon.svName
 local svVersion = addon.svVersion
 local svDefault = {
     enabled = true,
-    exampleSetting = false,
+    disablePvP = true,
+
+    enableDamageList = 0,
+    enableDamageIcons = true,
+    damageRowColor = {0, 1, 0, 0.36},
+
+    styleDamageHeaderOpacity = 0.8,
+    styleDamageRowEvenOpacity = 0.65,
+    styleDamageRowOddOpacity = 0.45,
+    styleDamageNumFont = 'gamepad',
+    styleBossDamageColor = 'b2ffb2',
+    styleTotalDamageColor = 'faffb2',
 }
 
 local CM = ZO_CallbackObject:New()
