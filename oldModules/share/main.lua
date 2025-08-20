@@ -2,6 +2,8 @@ HodorReflexes.modules.share = {
 	name = "HodorReflexes_Share",
 	version = "1.0.0",
 
+    isOldModule = true,
+
 	uiLocked = true,
 
 	default = {

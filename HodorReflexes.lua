@@ -53,7 +53,6 @@ HodorReflexes = {
 	svName = "HodorReflexesSV", -- Saved variables table name
 
 	modules = {},              -- Contains public modules like "share", "vote", etc.
-	group = {},
 }
 
 -- Addon events (to be used with RegisterCallback)
@@ -77,6 +76,8 @@ local LAM = LibAddonMenu2
 local LGB = LibGroupBroadcast
 local LCI = LibCustomIcons
 local LCN = LibCustomNames
+
+addon_modules = HR.modules
 
 HR.cm = ZO_CallbackObject:New()
 
@@ -302,35 +303,37 @@ local function initializeModules()
 	end
 
 	for moduleName, moduleClass in pairs(addon_modules) do
-        -- inject the Module header into settings with the "enable" checkbox
-        local moduleHeaderOptions = getMenuOptionControls(moduleName, moduleClass)
-        for _, v in ipairs(moduleHeaderOptions) do
-            table.insert(registeredExtraMainMenuOptionControls, v)
+        if not moduleClass.isOldModule then
+            -- inject the Module header into settings with the "enable" checkbox
+            local moduleHeaderOptions = getMenuOptionControls(moduleName, moduleClass)
+            for _, v in ipairs(moduleHeaderOptions) do
+                table.insert(registeredExtraMainMenuOptionControls, v)
+            end
+
+            if HR.sv.modules[moduleName] then
+                -- register LibGroupBroadcast Protocols if available
+                if moduleClass.RegisterLGBProtocols then
+                    moduleClass:RegisterLGBProtocols(_LGBHandler)
+                    moduleClass.RegisterLGBProtocols = nil
+                end
+                -- build Module menu if available
+                if moduleClass.BuildMenu then
+                    moduleClass:BuildMenu(HR.GetModulePanelConfig(moduleName))
+                    moduleClass.BuildMenu = nil
+                end
+                -- inject menu options into main menu if available
+                if moduleClass.MainMenuOptions then
+                    local extraOptionControls = moduleClass:MainMenuOptions()
+                    for _, v in ipairs(extraOptionControls) do
+                        table.insert(registeredExtraMainMenuOptionControls, v)
+                    end
+                    moduleClass.MainMenuOptions = nil
+                end
+
+                moduleClass:Initialize()
+                moduleClass.Initialize = nil
+            end
         end
-
-		if HR.sv.modules[moduleName] then
-			-- register LibGroupBroadcast Protocols if available
-			if moduleClass.RegisterLGBProtocols then
-				moduleClass:RegisterLGBProtocols(_LGBHandler)
-				moduleClass.RegisterLGBProtocols = nil
-			end
-			-- build Module menu if available
-			if moduleClass.BuildMenu then
-				moduleClass:BuildMenu(HR.GetModulePanelConfig(moduleName))
-				moduleClass.BuildMenu = nil
-			end
-			-- inject menu options into main menu if available
-			if moduleClass.MainMenuOptions then
-				local extraOptionControls = moduleClass:MainMenuOptions()
-				for _, v in ipairs(extraOptionControls) do
-					table.insert(registeredExtraMainMenuOptionControls, v)
-				end
-				moduleClass.MainMenuOptions = nil
-			end
-
-			moduleClass:Initialize()
-			moduleClass.Initialize = nil
-		end
 	end
 
 	addon.RegisterModule = nil
@@ -392,10 +395,10 @@ local function Initialize()
 	if HR.modules.share then HR.modules.share.Initialize() end
 	if HR.modules.vote then HR.modules.vote.Initialize() end
 	if HR.modules.events then HR.modules.events.Initialize() end
-	if HR.modules.pull then
-		HR.modules.pull.DeclareLGBProtocols(_LGBHandler)
-		HR.modules.pull.Initialize()
-	end
+	--if HR.modules.pull then
+	--	HR.modules.pull.DeclareLGBProtocols(_LGBHandler)
+	--	HR.modules.pull.Initialize()
+	--end
 	--if HR.modules.exitinstance then
 	--	HR.modules.exitinstance.DeclareLGBProtocols(_LGBHandler)
 	--	HR.modules.exitinstance.Initialize()

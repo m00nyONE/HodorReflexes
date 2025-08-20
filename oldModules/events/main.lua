@@ -2,6 +2,8 @@ HodorReflexes.modules.events = {
     name = "HodorReflexes_Events",
     version = "0.1.0",
 
+    isOldModule = true,
+
     date = os.date("%d%m"),
 
     subModules = {},

@@ -2,7 +2,9 @@ HodorReflexes.modules.vote = {
 	name = "HodorReflexes_Vote",
 	version = "1.0.0",
 
-	uiLocked = true,
+    isOldModule = true,
+
+    uiLocked = true,
 
 	default = {
 		enabled = true,
