@@ -19,9 +19,9 @@ extensions/anim.lua
 extensions/hud.lua
 
 ### Modules
-modules/mock/en.lua
-modules/mock/$(language).lua
-modules/mock/main.lua
+modules/dps/lang/en.lua
+modules/dps/lang/$(language).lua
+modules/dps/main.lua
 
 modules/exitinstance/lang/en.lua
 modules/exitinstance/lang/$(language).lua
@@ -32,6 +32,10 @@ modules/pull/lang/en.lua
 modules/pull/lang/$(language).lua
 modules/pull/Bindings.xml
 modules/pull/main.lua
+
+modules/mock/en.lua
+modules/mock/$(language).lua
+modules/mock/main.lua
 
 
 ### oldModules
