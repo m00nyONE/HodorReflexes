@@ -32,6 +32,7 @@ local svDefault = {
 
     damageListHeaderHeight = 22,
     damageListRowHeight = 22,
+    damageListRowWidth = 227,
 
     damageListPosLeft = 0,
     damageListPosTop = 0,
@@ -119,11 +120,11 @@ local SortByDamage = addon.SortByDamage
 
 local function getDamageTypeName(t)
     local names = {
-        [DAMAGE_UNKNOWN] = strformat('|c%s%s|r', sw.styleBossDamageColor, GetString(HR_DAMAGE)), -- TODO: translation
-        [DAMAGE_TOTAL] = strformat('|c%s%s|r |c%s(DPS)|r', sw.styleBossDamageColor, GetString(HR_TOTAL_DAMAGE), sw.styleTotalDamageColor), -- TODO: translation
-        [DAMAGE_BOSS] = strformat('|c%s%s|r |c%s(%s)|r', sw.styleBossDamageColor, GetString(HR_BOSS_DPS), sw.styleTotalDamageColor, GetString(HR_TOTAL_DPS)), -- TODO: translation
+        [DAMAGE_UNKNOWN] = strformat('|c%s%s|r', sw.styleBossDamageColor, GetString(HR_DAMAGE)),
+        [DAMAGE_TOTAL] = strformat('|c%s%s|r |c%s(DPS)|r', sw.styleBossDamageColor, GetString(HR_TOTAL_DAMAGE), sw.styleTotalDamageColor),
+        [DAMAGE_BOSS] = strformat('|c%s%s|r |c%s(%s)|r', sw.styleBossDamageColor, GetString(HR_BOSS_DPS), sw.styleTotalDamageColor, GetString(HR_TOTAL_DPS)),
     }
-    return names[t] and names[t] or strformat('|c%s%s|r |c%s(DPS)|r', sw.styleBossDamageColor, GetString(HR_MISC_DAMAGE), sw.styleTotalDamageColor) -- TODO: translation
+    return names[t] and names[t] or strformat('|c%s%s|r |c%s(DPS)|r', sw.styleBossDamageColor, GetString(HR_MISC_DAMAGE), sw.styleTotalDamageColor)
 end
 local function getDmgTypeFromPlayer()
     local playerData = playersData[GetUnitName(localPlayer)]
@@ -315,7 +316,8 @@ end
 
 local function createDamageListBody()
     local damageListBody = WM:CreateControlFromVirtual(damageListControlName .. "_Body", damageListControl, "ZO_ScrollList")
-    damageListBody:SetAnchor(TOPLEFT, damageListControl:GetNamedChild("_Summary_BG"), BOTTOMLEFT)
+    damageListBody:SetAnchor(TOPLEFT, damageListControl:GetNamedChild("_Summary_BG"), BOTTOMLEFT, 0, 0, ANCHOR_CONSTRAINS_XY)
+    damageListBody:SetAnchor(TOPRIGHT, damageListControl:GetNamedChild("_Summary_BG"), BOTTOMRIGHT, ZO_SCROLL_BAR_WIDTH, 0, ANCHOR_CONSTRAINS_X)
     damageListBody:SetDimensions(damageListControl:GetWidth() + ZO_SCROLL_BAR_WIDTH, 22 * 12)
     --damageListBody:SetDimensions(damageListControl:GetWidth() + ZO_SCROLL_BAR_WIDTH, sw.damageListRowHeight * 12)
     ZO_ScrollList_SetHideScrollbarOnDisable(damageListBody, true)
@@ -389,11 +391,8 @@ local function createDamageListUI()
     damageListControl:SetClampedToScreen(true)
     damageListControl:SetResizeToFitDescendents(true)
     damageListControl:SetHidden(true)
-    --damageListControl:SetMouseEnabled(true) -- TODO: disable after debugging
-    --damageListControl:SetMovable(true) -- TODO: disable after debugging
     damageListControl:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, sv.damageListPosLeft, sv.damageListPosTop)
-    damageListControl:SetDimensions(227, 22 + (22 * 12))
-    --damageListControl:SetDimensions(227, ((sw.damageListHeaderHeight * 2) + (sw.damageListRowHeight * 12)))
+    damageListControl:SetDimensions(sw.damageListRowWidth, ((sw.damageListHeaderHeight * 2) + (sw.damageListRowHeight * 12)))
     damageListControl:SetHandler( "OnMoveStop", function()
         sv.damageListPosLeft = damageListControl:GetLeft()
         sv.damageListPosTop = damageListControl:GetTop()
