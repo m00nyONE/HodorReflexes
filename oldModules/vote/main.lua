@@ -4,6 +4,8 @@ HodorReflexes.modules.vote = {
 
     isOldModule = true,
 
+    priority = 99,
+
     uiLocked = true,
 
 	default = {

@@ -6,6 +6,7 @@ local module = {
     friendlyName = "Pull Countdown", -- TODO: translation
     description = "allows you to send pull countdowns to your group", -- TODO: translation
     version = "1.0.0",
+    priority = 10,
     enabled = false,
 }
 

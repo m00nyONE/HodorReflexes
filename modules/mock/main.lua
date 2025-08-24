@@ -6,6 +6,7 @@ local module = {
     friendlyName = "Toxic Mode", -- TODO: translation
     description = "Mocks you when you die", -- TODO: translation
     version = "1.0.0",
+    priority = 90,
     enabled = false,
 }
 

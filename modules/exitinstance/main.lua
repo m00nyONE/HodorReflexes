@@ -6,6 +6,7 @@ local module = {
     friendlyName = "Exit Instance", -- TODO: translation
     description = "Allows your group leader to ask you to exit the current instance", -- TODO: translation
     version = "1.0.0",
+    priority = 10,
     enabled = false,
 }
 

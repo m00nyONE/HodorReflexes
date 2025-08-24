@@ -4,6 +4,8 @@ HodorReflexes.modules.share = {
 
     isOldModule = true,
 
+    priority = 99,
+
 	uiLocked = true,
 
 	default = {

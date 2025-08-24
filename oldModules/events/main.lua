@@ -4,6 +4,8 @@ HodorReflexes.modules.events = {
 
     isOldModule = true,
 
+    priority = 99,
+
     date = os.date("%d%m"),
 
     subModules = {},

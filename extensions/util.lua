@@ -51,3 +51,28 @@ end
 function util.IsValidString(s)
 	return type(s) == 'string' and s ~= ''
 end
+
+
+function util.spairs(t, sortFunction) -- thanks @Solinur <3
+
+    -- collect the keys
+    local keys = {}
+    for k in pairs(t) do keys[#keys+1] = k end
+
+    -- if sortFunction given, sort by it by passing the table and keys a, b,
+    -- otherwise just sort the keys
+    if sortFunction then
+        table.sort(keys, function(a,b) return sortFunction(t, a, b) end)
+    else
+        table.sort(keys)
+    end
+
+    -- return the iterator function
+    local i = 0
+    return function()
+        i = i + 1
+        if keys[i] then
+            return keys[i], t[keys[i]]
+        end
+    end
+end

@@ -75,6 +75,31 @@ local registeredExtraMainMenuOptionControls = {}
 
 local inCombat = false -- previous combat state
 
+local function spairs(t, sortFunction) -- thanks @Solinur <3
+
+    -- collect the keys
+    local keys = {}
+    for k in pairs(t) do keys[#keys+1] = k end
+
+    -- if sortFunction given, sort by it by passing the table and keys a, b,
+    -- otherwise just sort the keys
+    if sortFunction then
+        table.sort(keys, function(a,b) return sortFunction(t, a, b) end)
+    else
+        table.sort(keys)
+    end
+
+    -- return the iterator function
+    local i = 0
+    return function()
+        i = i + 1
+        if keys[i] then
+            return keys[i], t[keys[i]]
+        end
+    end
+end
+
+
 --[[ doc.lua begin ]]
 function addon.UnregisterCallback(eventName, callback)
     CM:UnregisterCallback(eventName, callback)
@@ -163,25 +188,35 @@ local function getMenuPanelConfig(listName, panelName)
 end
 local function getMenuOptionControls(moduleName, moduleClass)
     return {
-        {
-            type = "header",
-            name = string.format("|cFFFACD%s|r", moduleClass.friendlyName)
-        },
-        {
-            type = "description",
-            text = moduleClass.description
-        },
-        {
-            type = "checkbox",
-            name = function()
-                return string.format(sv.modules[moduleName] and "|c00FF00%s|r" or "|cFF0000%s|r", "Enable Module")
-            end,
-            tooltip = "enables/disables the module",
-            getFunc = function() return sv.modules[moduleName] end,
-            setFunc = function(value) sv.modules[moduleName] = value end,
-            requiresReload = true,
-        },
+        type = "submenu",
+        name = string.format("|cFFFACD%s|r", moduleClass.friendlyName),
+        controls = {
+            {
+                type = "description",
+                text = moduleClass.description,
+            },
+            {
+                type = "checkbox",
+                name = function()
+                    return string.format(sv.modules[moduleName] and "|c00FF00%s|r" or "|cFF0000%s|r", "Enable Module")
+                end,
+                tooltip = "enables/disables the module",
+                getFunc = function() return sv.modules[moduleName] end,
+                setFunc = function(value) sv.modules[moduleName] = value end,
+                requiresReload = true,
+            },
+            {
+                type = "divider",
+            },
+        }
     }
+end
+
+local function sortByPriority(t, a, b)
+    if t[a].priority == t[b].priority then
+        return a < b
+    end
+    return t[a].priority < t[b].priority
 end
 
 local function InitializeModules()
@@ -189,12 +224,9 @@ local function InitializeModules()
         sv.modules = svDefault.modules
     end
 
-    for moduleName, moduleClass in pairs(addon_modules) do
+    for moduleName, moduleClass in spairs(addon_modules, sortByPriority) do
         -- inject the Module header into settings with the "enable" checkbox
         local moduleHeaderOptions = getMenuOptionControls(moduleName, moduleClass)
-        for _, v in ipairs(moduleHeaderOptions) do
-            table.insert(registeredExtraMainMenuOptionControls, v)
-        end
 
         if sv.modules[moduleName] then
             -- register LibGroupBroadcast Protocols if available
@@ -209,9 +241,9 @@ local function InitializeModules()
             end
             -- inject menu options into main menu if available
             if moduleClass.MainMenuOptions then
-                local optionControls = moduleClass:MainMenuOptions()
-                for _, v in ipairs(optionControls) do
-                    table.insert(registeredExtraMainMenuOptionControls, v)
+                local extraOptionControls = moduleClass:MainMenuOptions()
+                for _, v in ipairs(extraOptionControls) do
+                    table.insert(moduleHeaderOptions.controls, v)
                 end
                 moduleClass.MainMenuOptions = nil
             end
@@ -220,6 +252,8 @@ local function InitializeModules()
             moduleClass.Initialize = nil
             moduleClass.enabled = true
         end
+
+        table.insert(registeredExtraMainMenuOptionControls, moduleHeaderOptions)
     end
 
     addon.RegisterModule = nil

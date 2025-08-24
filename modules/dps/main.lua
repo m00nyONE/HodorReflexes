@@ -6,6 +6,7 @@ local module = {
     friendlyName = "Damage",
     description = "Shows group dps statistics",
     version = "1.0.0",
+    priority = 2,
     enabled = false,
 
     playersData = {}

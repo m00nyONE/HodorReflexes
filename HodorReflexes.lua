@@ -99,6 +99,31 @@ local _LGBProtocols = {}
 local optionControls = {} -- additional addon settings provided by modules
 local registeredExtraMainMenuOptionControls = {}
 
+
+local function spairs(t, sortFunction) -- thanks @Solinur <3
+
+    -- collect the keys
+    local keys = {}
+    for k in pairs(t) do keys[#keys+1] = k end
+
+    -- if sortFunction given, sort by it by passing the table and keys a, b,
+    -- otherwise just sort the keys
+    if sortFunction then
+        table.sort(keys, function(a,b) return sortFunction(t, a, b) end)
+    else
+        table.sort(keys)
+    end
+
+    -- return the iterator function
+    local i = 0
+    return function()
+        i = i + 1
+        if keys[i] then
+            return keys[i], t[keys[i]]
+        end
+    end
+end
+
 -- EVENT_PLAYER_ACTIVATED handler
 -- Automatically fires PlayerCombatState and GroupChanged callbacks.
 function HR.PlayerActivated()
@@ -267,25 +292,28 @@ end
 
 local function getMenuOptionControls(moduleName, moduleClass)
     return {
-        {
-            type = "header",
-            name = string.format("|cFFFACD%s|r", moduleClass.friendlyName)
-        },
-        {
-            type = "description",
-            text = moduleClass.description
-        },
-        {
-            type = "checkbox",
-            name = function()
-                return string.format(HR.sv.modules[moduleName] and "|c00FF00%s|r" or "|cFF0000%s|r", "Enable Module")
-            end,
-            tooltip = "enables/disables the module",
-            getFunc = function() return HR.sv.modules[moduleName] end,
-            setFunc = function(value) HR.sv.modules[moduleName] = value end,
-            requiresReload = true,
-        },
-    }
+            type = "submenu",
+            name = string.format("|cFFFACD%s|r", moduleClass.friendlyName),
+            controls = {
+                {
+                    type = "description",
+                    text = moduleClass.description,
+                },
+                {
+                    type = "checkbox",
+                    name = function()
+                        return string.format(HR.sv.modules[moduleName] and "|c00FF00%s|r" or "|cFF0000%s|r", "Enable Module")
+                    end,
+                    tooltip = "enables/disables the module",
+                    getFunc = function() return HR.sv.modules[moduleName] end,
+                    setFunc = function(value) HR.sv.modules[moduleName] = value end,
+                    requiresReload = true,
+                },
+                {
+                    type = "divider",
+                },
+            }
+        }
 end
 
 local function buildMenu()
@@ -307,18 +335,22 @@ local function buildMenu()
 
 end
 
+local function sortByPriority(t, a, b)
+    if t[a].priority == t[b].priority then
+        return a < b
+    end
+    return t[a].priority < t[b].priority
+end
+
 local function initializeModules()
 	if not HR.sv.modules then
 		HR.sv.modules = HR.default.modules
 	end
 
-	for moduleName, moduleClass in pairs(addon_modules) do
+	for moduleName, moduleClass in spairs(addon_modules, sortByPriority) do
         if not moduleClass.isOldModule then
             -- inject the Module header into settings with the "enable" checkbox
             local moduleHeaderOptions = getMenuOptionControls(moduleName, moduleClass)
-            for _, v in ipairs(moduleHeaderOptions) do
-                table.insert(registeredExtraMainMenuOptionControls, v)
-            end
 
             if HR.sv.modules[moduleName] then
                 -- register LibGroupBroadcast Protocols if available
@@ -335,7 +367,7 @@ local function initializeModules()
                 if moduleClass.MainMenuOptions then
                     local extraOptionControls = moduleClass:MainMenuOptions()
                     for _, v in ipairs(extraOptionControls) do
-                        table.insert(registeredExtraMainMenuOptionControls, v)
+                        table.insert(moduleHeaderOptions.controls, v)
                     end
                     moduleClass.MainMenuOptions = nil
                 end
@@ -344,6 +376,8 @@ local function initializeModules()
                 moduleClass.Initialize = nil
                 moduleClass.enabled = true
             end
+
+            table.insert(registeredExtraMainMenuOptionControls, moduleHeaderOptions)
         end
 	end
 
