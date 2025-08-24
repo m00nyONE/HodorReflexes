@@ -22,6 +22,7 @@ extensions/hud.lua
 modules/dps/lang/en.lua
 modules/dps/lang/$(language).lua
 modules/dps/main.lua
+modules/dps/ui/damage.xml
 
 modules/exitinstance/lang/en.lua
 modules/exitinstance/lang/$(language).lua
