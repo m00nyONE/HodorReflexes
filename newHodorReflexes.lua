@@ -218,6 +218,7 @@ local function InitializeModules()
 
             moduleClass:Initialize()
             moduleClass.Initialize = nil
+            moduleClass.enabled = true
         end
     end
 
