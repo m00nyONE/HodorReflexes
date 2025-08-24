@@ -3,9 +3,10 @@ local addon = _G[addon_name]
 
 local module = {
     name = "mock",
-    version = "1.0.0",
     friendlyName = "Toxic Mode", -- TODO: translation
     description = "Mocks you when you die", -- TODO: translation
+    version = "1.0.0",
+    enabled = false,
 }
 
 local module_name = module.name

@@ -6,6 +6,7 @@ local module = {
     friendlyName = "Example",
     description = "example_description",
     version = "1.0.0",
+    enabled = false,
 }
 
 local module_name = module.name

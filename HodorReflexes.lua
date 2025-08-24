@@ -66,6 +66,7 @@ HR_EVENT_INTERRUPT = "Interrupt"
 HR_EVENT_STUNNED = "Stunned"
 HR_EVENT_GROUP_CHANGED = "GroupChanged"
 
+
 local PRE_DELETION_HOOK = "PRE_DELETION_HOOK"
 local POST_CREATION_HOOK = "POST_CREATION_HOOK"
 
@@ -76,6 +77,15 @@ local LAM = LibAddonMenu2
 local LGB = LibGroupBroadcast
 local LCI = LibCustomIcons
 local LCN = LibCustomNames
+
+HR.HR_EVENT_PLAYER_ACTIVATED = HR_EVENT_PLAYER_ACTIVATED
+HR.HR_EVENT_COMBAT_START = HR_EVENT_COMBAT_START
+HR.HR_EVENT_COMBAT_END = HR_EVENT_COMBAT_END
+HR.HR_EVENT_RETICLE_TARGET_CHANGED = HR_EVENT_RETICLE_TARGET_CHANGED
+HR.HR_EVENT_UNIT_DIED = HR_EVENT_UNIT_DIED
+HR.HR_EVENT_INTERRUPT = HR_EVENT_INTERRUPT
+HR.HR_EVENT_STUNNED = HR_EVENT_STUNNED
+HR.HR_EVENT_GROUP_CHANGED = HR_EVENT_GROUP_CHANGED
 
 addon_modules = HR.modules
 
@@ -332,6 +342,7 @@ local function initializeModules()
 
                 moduleClass:Initialize()
                 moduleClass.Initialize = nil
+                moduleClass.enabled = true
             end
         end
 	end
