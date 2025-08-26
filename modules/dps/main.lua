@@ -86,7 +86,9 @@ local DAMAGE_LIST_GROUPTOTAL_TEMPLATE = "HodorReflexes_Dps_GroupTotal"
 --local DAMAGE_LIST_TIMETOKILL_TEMPLATE = "HodorReflexes_Dps_TimeToKill"
 
 local DPS_FRAGMENT -- HUD Fragment
-local damageListControlName = addon_name .. module_name
+local damageListWindowName = addon_name .. module_name
+local damageListWindow = {}
+local damageListControlName = damageListWindowName .. "_List"
 local damageListControl = {}
 local damageListHeaderTimeControl = nil
 
@@ -115,15 +117,6 @@ function addon.SortByDamage(a, b)
     return a.dmg > b.dmg
 end
 local sortByDamage = addon.SortByDamage
---
---local function sortDamageList(a, b)
---    -- First: header always on top
---    if a.typeId ~= b.typeId then
---        return a.typeId < b.typeId  -- 1 < 2 so header first
---    end
---    -- At this point both are normal rows (typeId == 2)
---    --return sortByDamage(a, b)
---end
 
 local function getDamageTypeName(t)
     local names = {
@@ -167,10 +160,9 @@ local function updateDamageList()
     local overallDmg = 0
     local overallDps = 0
     local dmgType = DAMAGE_UNKNOWN
-    local damageList = damageListControl:GetNamedChild("_List")
 
-    ZO_ScrollList_Clear(damageList)
-    local dataList = ZO_ScrollList_GetDataList(damageList)
+    ZO_ScrollList_Clear(damageListControl)
+    local dataList = ZO_ScrollList_GetDataList(damageListControl)
 
     local playersDataList = {}
     for _, playerData in pairs(playersData) do
@@ -203,7 +195,7 @@ local function updateDamageList()
         }))
     end
 
-    ZO_ScrollList_Commit(damageList)
+    ZO_ScrollList_Commit(damageListControl)
 end
 
 --- creates a player entry inside the playersData table
@@ -256,13 +248,13 @@ end
 local function UnlockUI()
     uiLocked = false
     refreshVisibility()
-    hud.UnlockControls(damageListControl)
+    hud.UnlockControls(damageListWindow)
 end
 
 local function LockUI()
     uiLocked = true
     refreshVisibility()
-    hud.LockControls(damageListControl)
+    hud.LockControls(damageListWindow)
 end
 
 
@@ -309,75 +301,39 @@ local function createSceneFragments()
         return isDamageListVisible() and controlsVisible
     end
 
-    DPS_FRAGMENT = hud.AddSimpleFragment(damageListControl, DPSFragmentCondition)
+    DPS_FRAGMENT = hud.AddSimpleFragment(damageListWindow, DPSFragmentCondition)
     --DPS_FRAGMENT = ZO_HUDFadeSceneFragment:New( controlMainWindow )
     --DPS_FRAGMENT:SetConditional(DPSFragmentCondition)
     --HUD_UI_SCENE:AddFragment( DPS_FRAGMENT )
     --HUD_SCENE:AddFragment( DPS_FRAGMENT )
 end
 
-local function createDamageList()
-    local damageList = WM:CreateControlFromVirtual(damageListControlName .. "_List", damageListControl, "ZO_ScrollList")
-    damageList:SetAnchor(TOPLEFT, damageListControl, TOPLEFT, 0, 0, ANCHOR_CONSTRAINS_XY)
-    damageList:SetAnchor(TOPRIGHT, damageListControl, TOPRIGHT, ZO_SCROLL_BAR_WIDTH, 0, ANCHOR_CONSTRAINS_X)
-    damageList:SetHeight((sw.damageListRowHeight * 12) + (sw.damageListHeaderHeight * 2))
-    damageList:SetMouseEnabled(false)
-    damageList:GetNamedChild("Contents"):SetMouseEnabled(false)
+local function onHeaderRowCreation(rowControl, data, scrollList)
+    damageListHeaderTimeControl = rowControl:GetNamedChild("_Time")
 
-    ZO_ScrollList_SetHideScrollbarOnDisable(damageList, true)
-    ZO_ScrollList_SetUseScrollbar(damageList, false)
-    ZO_ScrollList_SetScrollbarEthereal(damageList, true)
+    rowControl:GetNamedChild("_Title"):SetText(strformat('%s', getDamageTypeName(data.dmgType == nil and 1 or data.dmgType)))
+end
 
-    local function onHeaderRowCreation(rowControl, data, scrollList)
-        damageListHeaderTimeControl = rowControl:GetNamedChild("_Time")
+local function onDamageRowCreation(rowControl, data, scrollList)
+    if data.dmg > 0 and (isTestRunning or IsUnitOnline(data.tag)) then
+        local userId = data.userId
+        local userIcon = player.GetIconForUserId(userId)
+        local userName = player.GetAliasForUserId(userId, sw.enableColoredNames)
 
-        rowControl:GetNamedChild("_Title"):SetText(strformat('%s', getDamageTypeName(data.dmgType == nil and 1 or data.dmgType)))
-    end
+        local classId = data.classId
+        local defaultIcon = classIcons[classId] and classIcons[classId] or 'esoui/art/campaign/campaignbrowser_guestcampaign.dds'
 
-    local function onDamageRowCreation(rowControl, data, scrollList)
-        if data.dmg > 0 and (isTestRunning or IsUnitOnline(data.tag)) then
-            local userId = data.userId
-            local userIcon = player.GetIconForUserId(userId)
-            local userName = player.GetAliasForUserId(userId, sw.enableColoredNames)
+        local nameControl = rowControl:GetNamedChild('_Name')
+        nameControl:SetText(userName)
+        nameControl:SetColor(1, 1, 1)
+        local iconControl = rowControl:GetNamedChild('_Icon')
+        iconControl:SetTextureCoords(0, 1, 0, 1)
+        iconControl:SetTexture(sw.enableDamageIcons and userIcon or defaultIcon)
 
-            local classId = data.classId
-            local defaultIcon = classIcons[classId] and classIcons[classId] or 'esoui/art/campaign/campaignbrowser_guestcampaign.dds'
-
-            local nameControl = rowControl:GetNamedChild('_Name')
-            nameControl:SetText(userName)
-            nameControl:SetColor(1, 1, 1)
-            local iconControl = rowControl:GetNamedChild('_Icon')
-            iconControl:SetTextureCoords(0, 1, 0, 1)
-            iconControl:SetTexture(sw.enableDamageIcons and userIcon or defaultIcon)
-
-            if sw.enableAnimIcons and anim.RegisterUser(userId) then
-                if sw.enableDamageIcons then anim.RegisterUserControl(userId, iconControl) end
-                anim.RunUserAnimations(userId)
-            end
-
-            local dmgStr = ""
-            if data.dmgType == DAMAGE_TOTAL then
-                dmgStr = strformat('|c%s%0.2fM|r |c%s(%dK)|r|u0:2::|u', sw.styleBossDamageColor, data.dmg / 100, sw.styleTotalDamageColor, data.dps)
-            else
-                dmgStr = strformat('|c%s%0.1fK|r |c%s(%dK)|r|u0:2::|u', sw.styleBossDamageColor, data.dmg / 10, sw.styleTotalDamageColor, data.dps)
-            end
-
-            local customColor = false
-            rowControl:GetNamedChild("_Value"):SetText(dmgStr)
-            if data.isPlayer then
-                local r, g, b, o = unpack(sw.damageRowColor)
-                if o ~= 0 then
-                    customColor = true
-                    rowControl:GetNamedChild('_BG'):SetColor(r, g, b, o or 0.5)
-                end
-            end
-            if not customColor then
-                rowControl:GetNamedChild('_BG'):SetColor(0, 0, 0, zo_mod(data.orderIndex, 2) == 0 and sw.styleDamageRowEvenOpacity or sw.styleDamageRowOddOpacity)
-            end
+        if sw.enableAnimIcons and anim.RegisterUser(userId) then
+            if sw.enableDamageIcons then anim.RegisterUserControl(userId, iconControl) end
+            anim.RunUserAnimations(userId)
         end
-    end
-
-    local function onGroupTotalRowCreation(rowControl, data, scrollList)
 
         local dmgStr = ""
         if data.dmgType == DAMAGE_TOTAL then
@@ -386,11 +342,47 @@ local function createDamageList()
             dmgStr = strformat('|c%s%0.1fK|r |c%s(%dK)|r|u0:2::|u', sw.styleBossDamageColor, data.dmg / 10, sw.styleTotalDamageColor, data.dps)
         end
 
+        local customColor = false
         rowControl:GetNamedChild("_Value"):SetText(dmgStr)
+        if data.isPlayer then
+            local r, g, b, o = unpack(sw.damageRowColor)
+            if o ~= 0 then
+                customColor = true
+                rowControl:GetNamedChild('_BG'):SetColor(r, g, b, o or 0.5)
+            end
+        end
+        if not customColor then
+            rowControl:GetNamedChild('_BG'):SetColor(0, 0, 0, zo_mod(data.orderIndex, 2) == 0 and sw.styleDamageRowEvenOpacity or sw.styleDamageRowOddOpacity)
+        end
+    end
+end
+
+local function onGroupTotalRowCreation(rowControl, data, scrollList)
+
+    local dmgStr = ""
+    if data.dmgType == DAMAGE_TOTAL then
+        dmgStr = strformat('|c%s%0.2fM|r |c%s(%dK)|r|u0:2::|u', sw.styleBossDamageColor, data.dmg / 100, sw.styleTotalDamageColor, data.dps)
+    else
+        dmgStr = strformat('|c%s%0.1fK|r |c%s(%dK)|r|u0:2::|u', sw.styleBossDamageColor, data.dmg / 10, sw.styleTotalDamageColor, data.dps)
     end
 
+    rowControl:GetNamedChild("_Value"):SetText(dmgStr)
+end
+
+local function createDamageList()
+    damageListControl = WM:CreateControlFromVirtual(damageListControlName, damageListWindow, "ZO_ScrollList")
+    damageListControl:SetAnchor(TOPLEFT, damageListWindow, TOPLEFT, 0, 0, ANCHOR_CONSTRAINS_XY)
+    damageListControl:SetAnchor(TOPRIGHT, damageListWindow, TOPRIGHT, ZO_SCROLL_BAR_WIDTH, 0, ANCHOR_CONSTRAINS_X)
+    damageListControl:SetHeight((sw.damageListRowHeight * 12) + (sw.damageListHeaderHeight * 2))
+    damageListControl:SetMouseEnabled(false)
+    damageListControl:GetNamedChild("Contents"):SetMouseEnabled(false)
+
+    ZO_ScrollList_SetHideScrollbarOnDisable(damageListControl, true)
+    ZO_ScrollList_SetUseScrollbar(damageListControl, false)
+    ZO_ScrollList_SetScrollbarEthereal(damageListControl, true)
+
     ZO_ScrollList_AddDataType(
-            damageList,
+            damageListControl,
             DAMAGE_LIST_DAMAGEROW_TYPE,
             "HodorReflexes_Dps_DamageRow",
             sw.damageListRowHeight,
@@ -400,7 +392,7 @@ local function createDamageList()
     )
 
     ZO_ScrollList_AddDataType(
-            damageList,
+            damageListControl,
             DAMAGE_LIST_HEADER_TYPE,
             "HodorReflexes_Dps_Header",
             sw.damageListHeaderHeight,
@@ -408,10 +400,10 @@ local function createDamageList()
             nil,
             nil
     )
-    ZO_ScrollList_SetTypeCategoryHeader(damageList, DAMAGE_LIST_HEADER_TYPE, true)
+    ZO_ScrollList_SetTypeCategoryHeader(damageListControl, DAMAGE_LIST_HEADER_TYPE, true)
 
     ZO_ScrollList_AddDataType(
-            damageList,
+            damageListControl,
             DAMAGE_LIST_GROUPTOTAL_TYPE,
             "HodorReflexes_Dps_GroupTotal",
             sw.damageListRowHeight,
@@ -419,20 +411,20 @@ local function createDamageList()
             nil,
             nil
     )
-    ZO_ScrollList_SetTypeCategoryHeader(damageList, DAMAGE_LIST_GROUPTOTAL_TYPE, true)
+    ZO_ScrollList_SetTypeCategoryHeader(damageListControl, DAMAGE_LIST_GROUPTOTAL_TYPE, true)
 end
 
 local function createDamageListWindow()
-    damageListControl = WM:CreateTopLevelWindow(damageListControlName)
-    damageListControl:SetClampedToScreen(true)
-    damageListControl:SetResizeToFitDescendents(true)
-    damageListControl:SetHidden(true)
-    damageListControl:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, sv.damageListPosLeft, sv.damageListPosTop)
-    damageListControl:SetWidth(sw.damageListWidth)
-    damageListControl:SetHeight(sw.damageListHeaderHeight + sw.damageListRowHeight + (sw.damageListRowHeight * 12))
-    damageListControl:SetHandler( "OnMoveStop", function()
-        sv.damageListPosLeft = damageListControl:GetLeft()
-        sv.damageListPosTop = damageListControl:GetTop()
+    damageListWindow = WM:CreateTopLevelWindow(damageListWindowName)
+    damageListWindow:SetClampedToScreen(true)
+    damageListWindow:SetResizeToFitDescendents(true)
+    damageListWindow:SetHidden(true)
+    damageListWindow:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, sv.damageListPosLeft, sv.damageListPosTop)
+    damageListWindow:SetWidth(sw.damageListWidth)
+    damageListWindow:SetHeight(sw.damageListHeaderHeight + sw.damageListRowHeight + (sw.damageListRowHeight * 12))
+    damageListWindow:SetHandler( "OnMoveStop", function()
+        sv.damageListPosLeft = damageListWindow:GetLeft()
+        sv.damageListPosTop = damageListWindow:GetTop()
     end)
 
     createDamageList()
@@ -682,7 +674,7 @@ function module:MainMenuOptions()
             getFunc = function() return sw.damageListWidth end,
             setFunc = function(value)
                 sw.damageListWidth = value
-                damageListControl:SetWidth(sw.damageListWidth)
+                damageListWindow:SetWidth(sw.damageListWidth)
             end,
         },
     }
