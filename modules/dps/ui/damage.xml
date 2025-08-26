@@ -1,6 +1,34 @@
 <GuiXml>
     <Controls>
-        <Control name="HodorReflexes_Dps_DamageRow" virtual="true">
+        <Control name="HodorReflexes_Dps_Header" virtual="true">
+            <Dimensions y="22" />
+            <Controls>
+                <Texture name="$(parent)_BG" color="000000" alpha="0.8" hidden="false">
+                    <AnchorFill />
+                </Texture>
+                <Label name="$(parent)_Title" horizontalAlignment="LEFT" font="$(MEDIUM_FONT)|$(KB_16)|shadow" text="title" wrapMode="TRUNCATE">
+                    <Anchor point="LEFT" relativePoint="LEFT" relativeTo="$(parent)" offsetX="2"/>
+                </Label>
+                <Label name="$(parent)_Time" horizontalAlignment="RIGHT" font="$(MEDIUM_FONT)|$(KB_16)|shadow" text="0:00.0" wrapMode="TRUNCATE">
+                    <Anchor point="RIGHT" relativePoint="RIGHT" relativeTo="$(parent)" offsetX="-2"/>
+                </Label>
+            </Controls>
+        </Control>
+        <Control name="HodorReflexes_Dps_GroupTotal" virtual="true">
+            <Dimensions y="22" />
+            <Controls>
+                <Texture name="$(parent)_BG" color="000000" alpha="0.8" hidden="false">
+                    <AnchorFill />
+                </Texture>
+                <Label name="$(parent)_Title" horizontalAlignment="LEFT" font="$(MEDIUM_FONT)|$(KB_16)|shadow" text="Group total:" wrapMode="TRUNCATE">
+                    <Anchor point="LEFT" relativePoint="LEFT" relativeTo="$(parent)" offsetX="2"/>
+                </Label>
+                <Label name="$(parent)_Value" horizontalAlignment="RIGHT" font="$(MEDIUM_FONT)|$(KB_16)|shadow" text="0:00.0" wrapMode="TRUNCATE">
+                    <Anchor point="RIGHT" relativePoint="RIGHT" relativeTo="$(parent)" offsetX="-2"/>
+                </Label>
+            </Controls>
+        </Control>
+        <Control name="HodorReflexes_Dps_DamageRow" virtual="true" mouseEnabled="false">
             <Dimensions y="22" />
             <Controls>
                 <Texture name="$(parent)_BG" color="000000" hidden="false">

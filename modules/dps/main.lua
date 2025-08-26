@@ -24,18 +24,19 @@ local svDefault = {
     disablePvP = true,
 
     enableDamageList = 0,
-    enableDamageListSummary = true,
+    damageListPosLeft = 0,
+    damageListPosTop = 0,
+    damageListHeaderHeight = 22,
+    damageListRowHeight = 22,
+    damageListWidth = 227,
+
+    selectedTheme = 'default',
+
+    enableGroupTotalRow = true,
     enableColoredNames = true,
     enableDamageIcons = true,
     enableAnimIcons = true,
     damageRowColor = {0, 1, 0, 0.36},
-
-    damageListHeaderHeight = 22,
-    damageListRowHeight = 22,
-    damageListRowWidth = 227,
-
-    damageListPosLeft = 0,
-    damageListPosTop = 0,
 
     styleDamageHeaderOpacity = 0.8,
     styleDamageRowEvenOpacity = 0.65,
@@ -44,7 +45,7 @@ local svDefault = {
     styleBossDamageColor = 'b2ffb2',
     styleTotalDamageColor = 'faffb2',
 
-    damageListHeaderUpdateInterval = 1000,
+    damageListTimerUpdateInterval = 1000,
 }
 
 local CM = ZO_CallbackObject:New()
@@ -74,13 +75,26 @@ local DAMAGE_UNKNOWN = LGCS.DAMAGE_UNKNOWN
 local DAMAGE_TOTAL = LGCS.DAMAGE_TOTAL
 local DAMAGE_BOSS = LGCS.DAMAGE_BOSS
 
+local DAMAGE_LIST_HEADER_TYPE = 1
+local DAMAGE_LIST_DAMAGEROW_TYPE = 2
+local DAMAGE_LIST_GROUPTOTAL_TYPE = 3
+--local DAMAGE_LIST_TIMETOKILL_TYPE = 4
+
+local DAMAGE_LIST_DAMAGEROW_TEMPLATE = "HodorReflexes_Dps_DamageRow"
+local DAMAGE_LIST_HEADER_TEMPLATE = "HodorReflexes_Dps_Header"
+local DAMAGE_LIST_GROUPTOTAL_TEMPLATE = "HodorReflexes_Dps_GroupTotal"
+--local DAMAGE_LIST_TIMETOKILL_TEMPLATE = "HodorReflexes_Dps_TimeToKill"
+
 local DPS_FRAGMENT -- HUD Fragment
 local damageListControlName = addon_name .. module_name
 local damageListControl = {}
+local damageListHeaderTimeControl = nil
 
 local controlsVisible = false
 local uiLocked = true
 local isTestRunning = false
+
+local themes = {}
 
 local classIcons = {}
 for i = 1, GetNumClasses() do
@@ -90,6 +104,34 @@ end
 
 function addon.OverwriteClassIcons(ci)
     classIcons = ci
+end
+
+function addon.SortByDamage(a, b)
+    --sort by dmgType first (TOTAL > BOSS > UNKNOWN)
+    if a.dmgType ~= b.dmgType then
+        return a.dmgType > b.dmgType
+    end
+    -- Sort by damage
+    return a.dmg > b.dmg
+end
+local sortByDamage = addon.SortByDamage
+--
+--local function sortDamageList(a, b)
+--    -- First: header always on top
+--    if a.typeId ~= b.typeId then
+--        return a.typeId < b.typeId  -- 1 < 2 so header first
+--    end
+--    -- At this point both are normal rows (typeId == 2)
+--    --return sortByDamage(a, b)
+--end
+
+local function getDamageTypeName(t)
+    local names = {
+        [DAMAGE_UNKNOWN] = strformat('|c%s%s|r', sw.styleBossDamageColor, GetString(HR_DAMAGE)),
+        [DAMAGE_TOTAL] = strformat('|c%s%s|r |c%s(DPS)|r', sw.styleBossDamageColor, GetString(HR_TOTAL_DAMAGE), sw.styleTotalDamageColor),
+        [DAMAGE_BOSS] = strformat('|c%s%s|r |c%s(%s)|r', sw.styleBossDamageColor, GetString(HR_BOSS_DPS), sw.styleTotalDamageColor, GetString(HR_TOTAL_DPS)),
+    }
+    return names[t] and names[t] or strformat('|c%s%s|r |c%s(DPS)|r', sw.styleBossDamageColor, GetString(HR_MISC_DAMAGE), sw.styleTotalDamageColor)
 end
 
 --- checks if damageList should be enabled at all
@@ -110,66 +152,58 @@ local function isDamageListVisible()
     end
 end
 
-function addon.SortByDamage(a, b)
-    if a.data.dmgType == b.data.dmgType then
-        return a.data.dmg > b.data.dmg
-    end
-    return a.data.dmgType > b.data.dmgType
-end
-local SortByDamage = addon.SortByDamage
-
-local function getDamageTypeName(t)
-    local names = {
-        [DAMAGE_UNKNOWN] = strformat('|c%s%s|r', sw.styleBossDamageColor, GetString(HR_DAMAGE)),
-        [DAMAGE_TOTAL] = strformat('|c%s%s|r |c%s(DPS)|r', sw.styleBossDamageColor, GetString(HR_TOTAL_DAMAGE), sw.styleTotalDamageColor),
-        [DAMAGE_BOSS] = strformat('|c%s%s|r |c%s(%s)|r', sw.styleBossDamageColor, GetString(HR_BOSS_DPS), sw.styleTotalDamageColor, GetString(HR_TOTAL_DPS)),
-    }
-    return names[t] and names[t] or strformat('|c%s%s|r |c%s(DPS)|r', sw.styleBossDamageColor, GetString(HR_MISC_DAMAGE), sw.styleTotalDamageColor)
-end
-local function getDmgTypeFromPlayer()
-    local playerData = playersData[GetUnitName(localPlayer)]
-    if not playerData then return -1 end -- return an invalid dmgType on purpose to set the title back to it's original text
-
-    return playerData.dmgType
-end
-
---- updates the damage list title. This gets triggered when a new message arrives
-local function updateDamageListTitle()
-    local dmgType = getDmgTypeFromPlayer()
-
-    damageListControl:GetNamedChild("_Title"):SetText(strformat('%s', getDamageTypeName(dmgType == nil and 1 or dmgType)))
-end
 --- updates the damage list timer. This gets periodically triggered while being in combat and disabled afterwards
 local function updateDamageListTimer()
+    if damageListHeaderTimeControl == nil then return end
     local t = combat.GetCombatTime()
-    damageListControl:GetNamedChild("_Time"):SetText(t > 0 and strformat('%d:%04.1f|u0:2::|u', t / 60, t % 60) or '')
+    damageListHeaderTimeControl:SetText(t > 0 and strformat('%d:%04.1f|u0:2::|u', t / 60, t % 60) or '')
 end
 
 --- updates the damageList
 local function updateDamageList()
     if not isDamageListVisible then return end
 
-    local damageListBody = damageListControl:GetNamedChild("_Body")
+    --- prepare data ---
+    local overallDmg = 0
+    local overallDps = 0
+    local dmgType = DAMAGE_UNKNOWN
+    local damageList = damageListControl:GetNamedChild("_List")
 
-    ZO_ScrollList_Clear(damageListBody)
-    local dataList = ZO_ScrollList_GetDataList(damageListBody)
+    ZO_ScrollList_Clear(damageList)
+    local dataList = ZO_ScrollList_GetDataList(damageList)
+
+    local playersDataList = {}
     for _, playerData in pairs(playersData) do
         if playerData.dmg > 0 then
-            local entry = ZO_ScrollList_CreateDataEntry(1, playerData)
-            table.insert(dataList, entry)
+            overallDmg = overallDmg + playerData.dmg
+            overallDps = overallDps + playerData.dps
+            dmgType = playerData.dmgType
+            table.insert(playersDataList, playerData)
         end
     end
-    table.sort(dataList, SortByDamage)
+    table.sort(playersDataList, sortByDamage)
 
-    -- inject even/odd
-    for i, entry in ipairs(dataList) do
-        entry.data.orderIndex = i
+    --- fill dataList ---
+    -- insert Header
+    table.insert(dataList, ZO_ScrollList_CreateDataEntry(DAMAGE_LIST_HEADER_TYPE, {
+        dmgType = dmgType,
+    }))
+
+    -- insert damageRows
+    for i, playerData in ipairs(playersDataList) do
+        playerData.orderIndex = i
+        table.insert(dataList, ZO_ScrollList_CreateDataEntry(DAMAGE_LIST_DAMAGEROW_TYPE, playerData))
     end
 
-    ZO_ScrollList_Commit(damageListBody)
+    if sv.enableGroupTotalRow and #dataList > 1 then
+        table.insert(dataList, ZO_ScrollList_CreateDataEntry(DAMAGE_LIST_GROUPTOTAL_TYPE, {
+            dmgType = dmgType,
+            dmg = overallDmg,
+            dps = overallDps,
+        }))
+    end
 
-    updateDamageListTitle()
-    --updateDamageListTimer() -- not really needed. Sure it's more accurate because combat can be longer than the event system thinks but this is a very very rare case. Most likely it's the exact opoosite
+    ZO_ScrollList_Commit(damageList)
 end
 
 --- creates a player entry inside the playersData table
@@ -255,7 +289,6 @@ local function cleanPlayersData(forceDelete)
     end
 
     updateDamageList()
-    --refreshVisibility()
 end
 
 --- triggers when a group member joins/leaves/offlines/updates
@@ -283,48 +316,25 @@ local function createSceneFragments()
     --HUD_SCENE:AddFragment( DPS_FRAGMENT )
 end
 
-local function createDamageListHeader()
-    local damageListHeaderBackGround = WM:CreateControl(damageListControlName .. "_BG", damageListControl, CT_TEXTURE)
-    damageListHeaderBackGround:SetColor(0, 0, 0, 0)
-    damageListHeaderBackGround:SetAlpha(0.8)
-    damageListHeaderBackGround:SetHidden(false)
-    damageListHeaderBackGround:SetDimensions(damageListControl:GetWidth(), sw.damageListHeaderHeight)
-    damageListHeaderBackGround:SetAnchor(TOPLEFT, damageListControl, TOPLEFT)
-    local damageListHeaderTitle = WM:CreateControl(damageListControlName .. "_Title", damageListControl, CT_LABEL)
-    damageListHeaderTitle:SetText("title")
-    damageListHeaderTitle:SetFont("$(MEDIUM_FONT)|$(KB_16)|shadow")
-    --damageListHeaderTitle:SetHidden(true)
-    damageListHeaderTitle:SetAnchor(TOPLEFT, damageListControl, TOPLEFT, 2)
-    local damageListHeaderTime = WM:CreateControl(damageListControlName .. "_Time", damageListControl, CT_LABEL)
-    damageListHeaderTime:SetText("0:00.0")
-    damageListHeaderTime:SetFont("$(MEDIUM_FONT)|$(KB_16)|shadow")
-    --damageListHeaderTime:SetHidden(true)
-    damageListHeaderTime:SetHorizontalAlignment(RIGHT)
-    damageListHeaderTime:SetAnchor(TOPRIGHT, damageListControl, TOPRIGHT)
+local function createDamageList()
+    local damageList = WM:CreateControlFromVirtual(damageListControlName .. "_List", damageListControl, "ZO_ScrollList")
+    damageList:SetAnchor(TOPLEFT, damageListControl, TOPLEFT, 0, 0, ANCHOR_CONSTRAINS_XY)
+    damageList:SetAnchor(TOPRIGHT, damageListControl, TOPRIGHT, ZO_SCROLL_BAR_WIDTH, 0, ANCHOR_CONSTRAINS_X)
+    damageList:SetHeight((sw.damageListRowHeight * 12) + (sw.damageListHeaderHeight * 2))
+    damageList:SetMouseEnabled(false)
+    damageList:GetNamedChild("Contents"):SetMouseEnabled(false)
 
-    -- second row
-    local damageListSummaryHeight = sw.damageListHeaderHeight
-    if not sv.enableDamageListSummary then damageListSummaryHeight = 0 end
-    local damageListHeaderSummaryBackGround = WM:CreateControl(damageListControlName .. "_Summary_BG", damageListControl, CT_TEXTURE)
-    damageListHeaderSummaryBackGround:SetColor(0, 0, 0, 0)
-    damageListHeaderSummaryBackGround:SetAlpha(0.8)
-    damageListHeaderSummaryBackGround:SetHidden(false)
-    damageListHeaderSummaryBackGround:SetDimensions(damageListControl:GetWidth(), damageListSummaryHeight)
-    damageListHeaderSummaryBackGround:SetAnchor(TOPLEFT, damageListHeaderBackGround, BOTTOMLEFT)
+    ZO_ScrollList_SetHideScrollbarOnDisable(damageList, true)
+    ZO_ScrollList_SetUseScrollbar(damageList, false)
+    ZO_ScrollList_SetScrollbarEthereal(damageList, true)
 
-end
+    local function onHeaderRowCreation(rowControl, data, scrollList)
+        damageListHeaderTimeControl = rowControl:GetNamedChild("_Time")
 
-local function createDamageListBody()
-    local damageListBody = WM:CreateControlFromVirtual(damageListControlName .. "_Body", damageListControl, "ZO_ScrollList")
-    damageListBody:SetAnchor(TOPLEFT, damageListControl:GetNamedChild("_Summary_BG"), BOTTOMLEFT, 0, 0, ANCHOR_CONSTRAINS_XY)
-    damageListBody:SetAnchor(TOPRIGHT, damageListControl:GetNamedChild("_Summary_BG"), BOTTOMRIGHT, ZO_SCROLL_BAR_WIDTH, 0, ANCHOR_CONSTRAINS_X)
-    damageListBody:SetDimensions(damageListControl:GetWidth() + ZO_SCROLL_BAR_WIDTH, 22 * 12)
-    --damageListBody:SetDimensions(damageListControl:GetWidth() + ZO_SCROLL_BAR_WIDTH, sw.damageListRowHeight * 12)
-    ZO_ScrollList_SetHideScrollbarOnDisable(damageListBody, true)
-    ZO_ScrollList_SetUseScrollbar(damageListBody, false)
-    ZO_ScrollList_SetScrollbarEthereal(damageListBody, true)
+        rowControl:GetNamedChild("_Title"):SetText(strformat('%s', getDamageTypeName(data.dmgType == nil and 1 or data.dmgType)))
+    end
 
-    local function onRowCreation(rowControl, data, scrollList)
+    local function onDamageRowCreation(rowControl, data, scrollList)
         if data.dmg > 0 and (isTestRunning or IsUnitOnline(data.tag)) then
             local userId = data.userId
             local userIcon = player.GetIconForUserId(userId)
@@ -367,49 +377,102 @@ local function createDamageListBody()
         end
     end
 
-    local function onRowReset(scrollList)
-        --scrollList:GetNamedChild("Contents")
-        --anim.UnregisterUser(userId)
-        -- TODO: Reset animation here?
+    local function onGroupTotalRowCreation(rowControl, data, scrollList)
+
+        local dmgStr = ""
+        if data.dmgType == DAMAGE_TOTAL then
+            dmgStr = strformat('|c%s%0.2fM|r |c%s(%dK)|r|u0:2::|u', sw.styleBossDamageColor, data.dmg / 100, sw.styleTotalDamageColor, data.dps)
+        else
+            dmgStr = strformat('|c%s%0.1fK|r |c%s(%dK)|r|u0:2::|u', sw.styleBossDamageColor, data.dmg / 10, sw.styleTotalDamageColor, data.dps)
+        end
+
+        rowControl:GetNamedChild("_Value"):SetText(dmgStr)
     end
 
     ZO_ScrollList_AddDataType(
-            damageListBody,
-            1,
+            damageList,
+            DAMAGE_LIST_DAMAGEROW_TYPE,
             "HodorReflexes_Dps_DamageRow",
             sw.damageListRowHeight,
-            onRowCreation,
+            onDamageRowCreation,
             nil,
             nil
-            --onRowReset
     )
 
+    ZO_ScrollList_AddDataType(
+            damageList,
+            DAMAGE_LIST_HEADER_TYPE,
+            "HodorReflexes_Dps_Header",
+            sw.damageListHeaderHeight,
+            onHeaderRowCreation,
+            nil,
+            nil
+    )
+    ZO_ScrollList_SetTypeCategoryHeader(damageList, DAMAGE_LIST_HEADER_TYPE, true)
+
+    ZO_ScrollList_AddDataType(
+            damageList,
+            DAMAGE_LIST_GROUPTOTAL_TYPE,
+            "HodorReflexes_Dps_GroupTotal",
+            sw.damageListRowHeight,
+            onGroupTotalRowCreation,
+            nil,
+            nil
+    )
+    ZO_ScrollList_SetTypeCategoryHeader(damageList, DAMAGE_LIST_GROUPTOTAL_TYPE, true)
 end
 
-local function createDamageListUI()
+local function createDamageListWindow()
     damageListControl = WM:CreateTopLevelWindow(damageListControlName)
     damageListControl:SetClampedToScreen(true)
     damageListControl:SetResizeToFitDescendents(true)
     damageListControl:SetHidden(true)
     damageListControl:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, sv.damageListPosLeft, sv.damageListPosTop)
-    damageListControl:SetDimensions(sw.damageListRowWidth, ((sw.damageListHeaderHeight * 2) + (sw.damageListRowHeight * 12)))
+    damageListControl:SetWidth(sw.damageListWidth)
+    damageListControl:SetHeight(sw.damageListHeaderHeight + sw.damageListRowHeight + (sw.damageListRowHeight * 12))
     damageListControl:SetHandler( "OnMoveStop", function()
         sv.damageListPosLeft = damageListControl:GetLeft()
         sv.damageListPosTop = damageListControl:GetTop()
     end)
 
-    createDamageListHeader()
-    createDamageListBody()
+    createDamageList()
 end
 
 local function stopDamageListTimerUpdate()
+    updateDamageListTimer()
     EM:UnregisterForUpdate(addon_name .. module_name .. "DamageListTitleUpdate")
 end
 local function startDamageListTimerUpdate()
     stopDamageListTimerUpdate()
-    EM:RegisterForUpdate(addon_name .. module_name .. "DamageListTitleUpdate", sv.damageListHeaderUpdateInterval, updateDamageListTimer)
+    EM:RegisterForUpdate(addon_name .. module_name .. "DamageListTitleUpdate", sv.damageListTimerUpdateInterval, updateDamageListTimer)
 end
 
+
+function module:RegisterTheme(name, themeTable)
+    -- check parameters
+    assert(type(name) == 'string' and name ~= '', 'invalid theme name')
+    assert(type(themeTable) == 'table', 'invalid theme table')
+    assert(themes[name] == nil, strformat('theme with name "%s" already exists', name))
+
+    -- check basic fields
+    local requiredFields = {
+        author = 'string',
+        version = 'string',
+        description = 'string',
+
+        settings = 'table',
+
+        HeaderTemplate = 'string',
+        onHeaderRowCreation = 'function',
+        DamageRowTemplate = 'string',
+        onDamageRowCreation = 'function',
+        GroupTotalTemplate = 'string',
+        onGroupTotalRowCreation = 'function',
+    }
+
+    -- register Theme
+    themes[name] = themeTable
+end
 
 -- initialization functions
 
@@ -425,9 +488,7 @@ function module:MainMenuOptions()
             tooltip = GetString(HR_MENU_DAMAGE_SHOW_TT),
             default = svDefault.enableDamageList,
             getFunc = function() return sv.enableDamageList end,
-            setFunc = function(value)
-                sv.enableDamageList = value or false
-            end,
+            setFunc = function(value) sv.enableDamageList = value or false end,
             choices = {
                 GetString(HR_MENU_DAMAGE_SHOW_NEVER),
                 GetString(HR_MENU_DAMAGE_SHOW_ALWAYS),
@@ -441,11 +502,25 @@ function module:MainMenuOptions()
         },
         {
             type = "checkbox",
-            name = "show summary in header",
-            tooltip = "show summary in header",
-            default = svDefault.enableDamageListSummary,
-            getFunc = function() return sv.enableDamageListSummary end,
-            setFunc = function(value) sv.enableDamageListSummary = value end,
+            name = "show total group dps", -- TODO: translation
+            tooltip = "show total group dps", -- TODO: translation
+            default = svDefault.enableGroupTotalRow,
+            getFunc = function() return sv.enableGroupTotalRow end,
+            setFunc = function(value) sv.enableGroupTotalRow = value end,
+            width = "full",
+            requiresReload = true,
+        },
+        {
+            type = "slider",
+            name = "Timer update Interval (ms)", -- TODO: translation
+            min = 0,
+            max = 3000,
+            step = 10,
+            decimals = 0,
+            default = svDefault.damageListTimerUpdateInterval,
+            clampInput = true,
+            getFunc = function() return sw.damageListTimerUpdateInterval end,
+            setFunc = function(value) sw.damageListTimerUpdateInterval = value end,
             width = "full",
             requiresReload = true,
         },
@@ -458,9 +533,7 @@ function module:MainMenuOptions()
             tooltip = GetString(HR_MENU_ICONS_VISIBILITY_COLORS_TT),
             default = svDefault.enableColoredNames,
             getFunc = function() return sw.enableColoredNames end,
-            setFunc = function(value)
-                sw.enableColoredNames = value or false
-            end,
+            setFunc = function(value) sw.enableColoredNames = value or false end,
             requiresReload = true,
         },
         {
@@ -469,9 +542,7 @@ function module:MainMenuOptions()
             tooltip = GetString(HR_MENU_ICONS_VISIBILITY_DPS_TT),
             default = svDefault.enableDamageIcons,
             getFunc = function() return sw.enableDamageIcons end,
-            setFunc = function(value)
-                sw.enableDamageIcons = value or false
-            end,
+            setFunc = function(value) sw.enableDamageIcons = value or false end,
             requiresReload = true,
         },
         {
@@ -480,9 +551,7 @@ function module:MainMenuOptions()
             tooltip = GetString(HR_MENU_ICONS_VISIBILITY_ANIM_TT),
             default = svDefault.enableAnimIcons,
             getFunc = function() return sw.enableAnimIcons end,
-            setFunc = function(value)
-                sw.enableAnimIcons = value or false
-            end,
+            setFunc = function(value) sw.enableAnimIcons = value or false end,
             requiresReload = true,
         },
         {
@@ -573,6 +642,49 @@ function module:MainMenuOptions()
                 sw.damageRowColor = {r, g, b, o}
             end,
         },
+        {
+            type = "slider",
+            name = "header height",
+            min = 22,
+            max = 44,
+            step = 1,
+            decimals = 0,
+            default = 22,
+            clampInput = true,
+            getFunc = function() return sw.damageListHeaderHeight end,
+            setFunc = function(value)
+                sw.damageListHeaderHeight = value
+            end,
+        },
+        {
+            type = "slider",
+            name = "row height",
+            min = 22,
+            max = 44,
+            step = 1,
+            decimals = 0,
+            default = 22,
+            clampInput = true,
+            getFunc = function() return sw.damageListRowHeight end,
+            setFunc = function(value)
+                sw.damageListRowHeight = value
+            end,
+        },
+        {
+            type = "slider",
+            name = "row width",
+            min = 227,
+            max = 450,
+            step = 1,
+            decimals = 0,
+            default = 277,
+            clampInput = true,
+            getFunc = function() return sw.damageListWidth end,
+            setFunc = function(value)
+                sw.damageListWidth = value
+                damageListControl:SetWidth(sw.damageListWidth)
+            end,
+        },
     }
 end
 
@@ -599,10 +711,9 @@ function module:Initialize()
         sv = sw
     end
 
-    createDamageListUI()
+    createDamageListWindow()
     createSceneFragments()
     refreshVisibility()
-    updateDamageListTitle()
     updateDamageListTimer()
 
     local eventRegisterName = addon_name .. module_name .. "PlayerActivated"
@@ -649,7 +760,7 @@ local function ToggleTest(players)
             tag = name,
             name = name,
             userId = name,
-            classId = zo_random(1, #classIcons), -- 40% chance for necro
+            classId = zo_random(1, GetNumClasses()),
             isPlayer = name == GetUnitDisplayName(localPlayer),
             dmg = dmg,
             dps = dmg * 0.15,
