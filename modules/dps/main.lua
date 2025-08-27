@@ -30,7 +30,7 @@ local svDefault = {
     damageListRowHeight = 22,
     damageListWidth = 227,
 
-    selectedTheme = 'default',
+    selectedTheme = "default",
 
     enableGroupTotalRow = true,
     enableColoredNames = true,
@@ -41,9 +41,9 @@ local svDefault = {
     styleDamageHeaderOpacity = 0.8,
     styleDamageRowEvenOpacity = 0.65,
     styleDamageRowOddOpacity = 0.45,
-    styleDamageNumFont = 'gamepad',
-    styleBossDamageColor = 'b2ffb2',
-    styleTotalDamageColor = 'faffb2',
+    styleDamageNumFont = "gamepad",
+    styleBossDamageColor = "b2ffb2",
+    styleTotalDamageColor = "faffb2",
 
     damageListTimerUpdateInterval = 1000,
 }
@@ -75,6 +75,7 @@ local DAMAGE_UNKNOWN = LGCS.DAMAGE_UNKNOWN
 local DAMAGE_TOTAL = LGCS.DAMAGE_TOTAL
 local DAMAGE_BOSS = LGCS.DAMAGE_BOSS
 
+local nextTypeId = 1
 local DAMAGE_LIST_HEADER_TYPE = 1
 local DAMAGE_LIST_DAMAGEROW_TYPE = 2
 local DAMAGE_LIST_GROUPTOTAL_TYPE = 3
@@ -118,6 +119,19 @@ function addon.SortByDamage(a, b)
 end
 local sortByDamage = addon.SortByDamage
 
+--- applies the selected theme by updating the data types used in the damage ScrollList
+local function applyTheme(themeName)
+    DAMAGE_LIST_DAMAGEROW_TYPE = themes[themeName].DAMAGE_LIST_DAMAGEROW_TYPE
+    DAMAGE_LIST_HEADER_TYPE = themes[themeName].DAMAGE_LIST_HEADER_TYPE
+    DAMAGE_LIST_GROUPTOTAL_TYPE = themes[themeName].DAMAGE_LIST_GROUPTOTAL_TYPE
+end
+
+--- validates the selected theme and sets it to "default" if not valid
+local function validateSelectedTheme()
+    if sw.selectedTheme == nil then sw.selectedTheme = "default" end
+    if themes[sw.selectedTheme] == nil then sw.selectedTheme = "default" end
+end
+
 local function getDamageTypeName(t)
     local names = {
         [DAMAGE_UNKNOWN] = strformat('|c%s%s|r', sw.styleBossDamageColor, GetString(HR_DAMAGE)),
@@ -160,6 +174,10 @@ local function updateDamageList()
     local overallDmg = 0
     local overallDps = 0
     local dmgType = DAMAGE_UNKNOWN
+    local highestGroupDMG = 0
+    local highestGroupDPS = 0
+    local lowestGroupDMG = 999999
+    local lowestGroupDPS = 999999
 
     ZO_ScrollList_Clear(damageListControl)
     local dataList = ZO_ScrollList_GetDataList(damageListControl)
@@ -170,6 +188,10 @@ local function updateDamageList()
             overallDmg = overallDmg + playerData.dmg
             overallDps = overallDps + playerData.dps
             dmgType = playerData.dmgType
+            if playerData.dmg > highestGroupDMG then highestGroupDMG = playerData.dmg end
+            if playerData.dps > highestGroupDPS then highestGroupDPS = playerData.dps end
+            if playerData.dmg < lowestGroupDMG then lowestGroupDMG = playerData.dmg end
+            if playerData.dps < lowestGroupDPS then lowestGroupDPS = playerData.dps end
             table.insert(playersDataList, playerData)
         end
     end
@@ -184,6 +206,10 @@ local function updateDamageList()
     -- insert damageRows
     for i, playerData in ipairs(playersDataList) do
         playerData.orderIndex = i
+        playerData.highestGroupDMG = highestGroupDMG
+        playerData.highestGroupDPS = highestGroupDPS
+        playerData.lowestGroupDMG = lowestGroupDMG
+        playerData.lowestGroupDPS = lowestGroupDPS
         table.insert(dataList, ZO_ScrollList_CreateDataEntry(DAMAGE_LIST_DAMAGEROW_TYPE, playerData))
     end
 
@@ -308,112 +334,6 @@ local function createSceneFragments()
     --HUD_SCENE:AddFragment( DPS_FRAGMENT )
 end
 
-local function onHeaderRowCreation(rowControl, data, scrollList)
-    damageListHeaderTimeControl = rowControl:GetNamedChild("_Time")
-
-    rowControl:GetNamedChild("_Title"):SetText(strformat('%s', getDamageTypeName(data.dmgType == nil and 1 or data.dmgType)))
-end
-
-local function onDamageRowCreation(rowControl, data, scrollList)
-    if data.dmg > 0 and (isTestRunning or IsUnitOnline(data.tag)) then
-        local userId = data.userId
-        local userIcon = player.GetIconForUserId(userId)
-        local userName = player.GetAliasForUserId(userId, sw.enableColoredNames)
-
-        local classId = data.classId
-        local defaultIcon = classIcons[classId] and classIcons[classId] or 'esoui/art/campaign/campaignbrowser_guestcampaign.dds'
-
-        local nameControl = rowControl:GetNamedChild('_Name')
-        nameControl:SetText(userName)
-        nameControl:SetColor(1, 1, 1)
-        local iconControl = rowControl:GetNamedChild('_Icon')
-        iconControl:SetTextureCoords(0, 1, 0, 1)
-        iconControl:SetTexture(sw.enableDamageIcons and userIcon or defaultIcon)
-
-        if sw.enableAnimIcons and anim.RegisterUser(userId) then
-            if sw.enableDamageIcons then anim.RegisterUserControl(userId, iconControl) end
-            anim.RunUserAnimations(userId)
-        end
-
-        local dmgStr = ""
-        if data.dmgType == DAMAGE_TOTAL then
-            dmgStr = strformat('|c%s%0.2fM|r |c%s(%dK)|r|u0:2::|u', sw.styleBossDamageColor, data.dmg / 100, sw.styleTotalDamageColor, data.dps)
-        else
-            dmgStr = strformat('|c%s%0.1fK|r |c%s(%dK)|r|u0:2::|u', sw.styleBossDamageColor, data.dmg / 10, sw.styleTotalDamageColor, data.dps)
-        end
-
-        local customColor = false
-        rowControl:GetNamedChild("_Value"):SetText(dmgStr)
-        if data.isPlayer then
-            local r, g, b, o = unpack(sw.damageRowColor)
-            if o ~= 0 then
-                customColor = true
-                rowControl:GetNamedChild('_BG'):SetColor(r, g, b, o or 0.5)
-            end
-        end
-        if not customColor then
-            rowControl:GetNamedChild('_BG'):SetColor(0, 0, 0, zo_mod(data.orderIndex, 2) == 0 and sw.styleDamageRowEvenOpacity or sw.styleDamageRowOddOpacity)
-        end
-    end
-end
-
-local function onGroupTotalRowCreation(rowControl, data, scrollList)
-
-    local dmgStr = ""
-    if data.dmgType == DAMAGE_TOTAL then
-        dmgStr = strformat('|c%s%0.2fM|r |c%s(%dK)|r|u0:2::|u', sw.styleBossDamageColor, data.dmg / 100, sw.styleTotalDamageColor, data.dps)
-    else
-        dmgStr = strformat('|c%s%0.1fK|r |c%s(%dK)|r|u0:2::|u', sw.styleBossDamageColor, data.dmg / 10, sw.styleTotalDamageColor, data.dps)
-    end
-
-    rowControl:GetNamedChild("_Value"):SetText(dmgStr)
-end
-
-local function createDamageList()
-    damageListControl = WM:CreateControlFromVirtual(damageListControlName, damageListWindow, "ZO_ScrollList")
-    damageListControl:SetAnchor(TOPLEFT, damageListWindow, TOPLEFT, 0, 0, ANCHOR_CONSTRAINS_XY)
-    damageListControl:SetAnchor(TOPRIGHT, damageListWindow, TOPRIGHT, ZO_SCROLL_BAR_WIDTH, 0, ANCHOR_CONSTRAINS_X)
-    damageListControl:SetHeight((sw.damageListRowHeight * 12) + (sw.damageListHeaderHeight * 2))
-    damageListControl:SetMouseEnabled(false)
-    damageListControl:GetNamedChild("Contents"):SetMouseEnabled(false)
-
-    ZO_ScrollList_SetHideScrollbarOnDisable(damageListControl, true)
-    ZO_ScrollList_SetUseScrollbar(damageListControl, false)
-    ZO_ScrollList_SetScrollbarEthereal(damageListControl, true)
-
-    ZO_ScrollList_AddDataType(
-            damageListControl,
-            DAMAGE_LIST_DAMAGEROW_TYPE,
-            "HodorReflexes_Dps_DamageRow",
-            sw.damageListRowHeight,
-            onDamageRowCreation,
-            nil,
-            nil
-    )
-
-    ZO_ScrollList_AddDataType(
-            damageListControl,
-            DAMAGE_LIST_HEADER_TYPE,
-            "HodorReflexes_Dps_Header",
-            sw.damageListHeaderHeight,
-            onHeaderRowCreation,
-            nil,
-            nil
-    )
-    ZO_ScrollList_SetTypeCategoryHeader(damageListControl, DAMAGE_LIST_HEADER_TYPE, true)
-
-    ZO_ScrollList_AddDataType(
-            damageListControl,
-            DAMAGE_LIST_GROUPTOTAL_TYPE,
-            "HodorReflexes_Dps_GroupTotal",
-            sw.damageListRowHeight,
-            onGroupTotalRowCreation,
-            nil,
-            nil
-    )
-    ZO_ScrollList_SetTypeCategoryHeader(damageListControl, DAMAGE_LIST_GROUPTOTAL_TYPE, true)
-end
-
 local function createDamageListWindow()
     damageListWindow = WM:CreateTopLevelWindow(damageListWindowName)
     damageListWindow:SetClampedToScreen(true)
@@ -427,7 +347,16 @@ local function createDamageListWindow()
         sv.damageListPosTop = damageListWindow:GetTop()
     end)
 
-    createDamageList()
+    damageListControl = WM:CreateControlFromVirtual(damageListControlName, damageListWindow, "ZO_ScrollList")
+    damageListControl:SetAnchor(TOPLEFT, damageListWindow, TOPLEFT, 0, 0, ANCHOR_CONSTRAINS_XY)
+    damageListControl:SetAnchor(TOPRIGHT, damageListWindow, TOPRIGHT, ZO_SCROLL_BAR_WIDTH, 0, ANCHOR_CONSTRAINS_X)
+    damageListControl:SetHeight((sw.damageListRowHeight * 12) + (sw.damageListHeaderHeight * 2))
+    damageListControl:SetMouseEnabled(false)
+    damageListControl:GetNamedChild("Contents"):SetMouseEnabled(false)
+
+    ZO_ScrollList_SetHideScrollbarOnDisable(damageListControl, true)
+    ZO_ScrollList_SetUseScrollbar(damageListControl, false)
+    ZO_ScrollList_SetScrollbarEthereal(damageListControl, true)
 end
 
 local function stopDamageListTimerUpdate()
@@ -440,30 +369,135 @@ local function startDamageListTimerUpdate()
 end
 
 
-function module:RegisterTheme(name, themeTable)
+local function defaultHeaderRowCreationFunc(rowControl, data, scrollList)
+    damageListHeaderTimeControl = rowControl:GetNamedChild("_Time")
+    rowControl:GetNamedChild("_Title"):SetText(strformat('%s', getDamageTypeName(data.dmgType == nil and 1 or data.dmgType)))
+end
+local function defaultDamageRowCreationFunc(rowControl, data, scrollList)
+    local userId = data.userId
+    local userIcon = player.GetIconForUserId(userId)
+    local userName = player.GetAliasForUserId(userId, sw.enableColoredNames)
+
+    local classId = data.classId
+    local defaultIcon = classIcons[classId] and classIcons[classId] or 'esoui/art/campaign/campaignbrowser_guestcampaign.dds'
+
+    local nameControl = rowControl:GetNamedChild('_Name')
+    nameControl:SetText(userName)
+    nameControl:SetColor(1, 1, 1)
+    local iconControl = rowControl:GetNamedChild('_Icon')
+    iconControl:SetTextureCoords(0, 1, 0, 1)
+    iconControl:SetTexture(sw.enableDamageIcons and userIcon or defaultIcon)
+
+    if sw.enableAnimIcons and anim.RegisterUser(userId) then
+        if sw.enableDamageIcons then anim.RegisterUserControl(userId, iconControl) end
+        anim.RunUserAnimations(userId)
+    end
+
+    local dmgStr = ""
+    if data.dmgType == DAMAGE_TOTAL then
+        dmgStr = strformat('|c%s%0.2fM|r |c%s(%dK)|r|u0:2::|u', sw.styleBossDamageColor, data.dmg / 100, sw.styleTotalDamageColor, data.dps)
+    else
+        dmgStr = strformat('|c%s%0.1fK|r |c%s(%dK)|r|u0:2::|u', sw.styleBossDamageColor, data.dmg / 10, sw.styleTotalDamageColor, data.dps)
+    end
+
+    local customColor = false
+    rowControl:GetNamedChild("_Value"):SetText(dmgStr)
+    if data.isPlayer then
+        local r, g, b, o = unpack(sw.damageRowColor)
+        if o ~= 0 then
+            customColor = true
+            rowControl:GetNamedChild('_BG'):SetColor(r, g, b, o or 0.5)
+        end
+    end
+    if not customColor then
+        rowControl:GetNamedChild('_BG'):SetColor(0, 0, 0, zo_mod(data.orderIndex, 2) == 0 and sw.styleDamageRowEvenOpacity or sw.styleDamageRowOddOpacity)
+    end
+end
+local function defaultGroupTotalRowCreationFunc(rowControl, data, scrollList)
+
+    local dmgStr = ""
+    if data.dmgType == DAMAGE_TOTAL then
+        dmgStr = strformat('|c%s%0.2fM|r |c%s(%dK)|r|u0:2::|u', sw.styleBossDamageColor, data.dmg / 100, sw.styleTotalDamageColor, data.dps)
+    else
+        dmgStr = strformat('|c%s%0.1fK|r |c%s(%dK)|r|u0:2::|u', sw.styleBossDamageColor, data.dmg / 10, sw.styleTotalDamageColor, data.dps)
+    end
+
+    rowControl:GetNamedChild("_Value"):SetText(dmgStr)
+end
+local defaultTheme = {
+    author = "@m00nyONE",
+    version = "1.0.0",
+    description = "The Default Theme of HodorReflexes DPS Module",
+
+    HeaderRowTemplate = "HodorReflexes_Dps_Header",
+    HeaderRowCreationFunc = defaultHeaderRowCreationFunc,
+    DamageRowTemplate = "HodorReflexes_Dps_DamageRow",
+    DamageRowCreationFunc = defaultDamageRowCreationFunc,
+    GroupTotalRowTemplate = "HodorReflexes_Dps_GroupTotal",
+    GroupTotalRowCreationFunc = defaultGroupTotalRowCreationFunc,
+
+    settings = {
+
+    },
+}
+
+function module:RegisterTheme(themeName, themeTable)
     -- check parameters
-    assert(type(name) == 'string' and name ~= '', 'invalid theme name')
+    assert(type(themeName) == 'string' and themeName ~= '', 'invalid theme name')
     assert(type(themeTable) == 'table', 'invalid theme table')
-    assert(themes[name] == nil, strformat('theme with name "%s" already exists', name))
+    assert(themes[themeName] == nil, strformat('theme with name "%s" already exists', themeName))
 
-    -- check basic fields
-    local requiredFields = {
-        author = 'string',
-        version = 'string',
-        description = 'string',
+    -- validate meta data
+    assert(type(themeTable.author) == 'string', 'theme is missing required field "author" of type "string"')
+    assert(type(themeTable.version) == 'string', 'theme is missing required field "version" of type "string"')
+    assert(type(themeTable.description) == 'string', 'theme is missing required field "description" of type "string"')
+    assert(type(themeTable.settings) == 'table', 'theme is missing required field "settings" of type "table"')
 
-        settings = 'table',
 
-        HeaderTemplate = 'string',
-        onHeaderRowCreation = 'function',
-        DamageRowTemplate = 'string',
-        onDamageRowCreation = 'function',
-        GroupTotalTemplate = 'string',
-        onGroupTotalRowCreation = 'function',
-    }
+    themeTable.DAMAGE_LIST_HEADER_TYPE = nextTypeId
+    nextTypeId = nextTypeId + 1
+    themeTable.DAMAGE_LIST_DAMAGEROW_TYPE = nextTypeId
+    nextTypeId = nextTypeId + 1
+    themeTable.DAMAGE_LIST_GROUPTOTAL_TYPE = nextTypeId
+    nextTypeId = nextTypeId + 1
+
+
+    local function createDamageRowCreationWrapper(wrappedFunction)
+        return function(rowControl, data, scrollList)
+            if data.dmg > 0 and (isTestRunning or IsUnitOnline(data.tag)) then
+                wrappedFunction(rowControl, data, scrollList)
+            end
+        end
+    end
+
+    ZO_ScrollList_AddDataType(
+            damageListControl,
+            themeTable.DAMAGE_LIST_DAMAGEROW_TYPE,
+            themeTable.DamageRowTemplate or defaultTheme.DamageRowTemplate,
+            sw.damageListRowHeight,
+            createDamageRowCreationWrapper(themeTable.DamageRowCreationFunc or defaultTheme.DamageRowCreationFunc)
+    )
+
+    ZO_ScrollList_AddDataType(
+            damageListControl,
+            themeTable.DAMAGE_LIST_HEADER_TYPE,
+            themeTable.HeaderRowTemplate or defaultTheme.HeaderRowTemplate,
+            sw.damageListHeaderHeight,
+            themeTable.HeaderRowCreationFunc or defaultTheme.HeaderRowCreationFunc
+    )
+    ZO_ScrollList_SetTypeCategoryHeader(damageListControl, DAMAGE_LIST_HEADER_TYPE, true)
+
+    ZO_ScrollList_AddDataType(
+            damageListControl,
+            themeTable.DAMAGE_LIST_GROUPTOTAL_TYPE,
+            themeTable.GroupTotalRowTemplate or defaultTheme.GroupTotalRowTemplate,
+            sw.damageListRowHeight,
+            themeTable.GroupTotalRowCreationFunc or defaultTheme.GroupTotalRowCreationFunc
+    )
+    ZO_ScrollList_SetTypeCategoryHeader(damageListControl, DAMAGE_LIST_GROUPTOTAL_TYPE, true)
 
     -- register Theme
-    themes[name] = themeTable
+    themes[themeName] = themeTable
 end
 
 -- initialization functions
@@ -517,6 +551,69 @@ function module:MainMenuOptions()
             requiresReload = true,
         },
         {
+            type = "slider",
+            name = "header height",
+            min = 22,
+            max = 44,
+            step = 1,
+            decimals = 0,
+            default = 22,
+            clampInput = true,
+            getFunc = function() return sw.damageListHeaderHeight end,
+            setFunc = function(value)
+                sw.damageListHeaderHeight = value
+            end,
+        },
+        {
+            type = "slider",
+            name = "row height",
+            min = 22,
+            max = 44,
+            step = 1,
+            decimals = 0,
+            default = 22,
+            clampInput = true,
+            getFunc = function() return sw.damageListRowHeight end,
+            setFunc = function(value)
+                sw.damageListRowHeight = value
+            end,
+        },
+        {
+            type = "slider",
+            name = "row width",
+            min = 227,
+            max = 450,
+            step = 1,
+            decimals = 0,
+            default = 277,
+            clampInput = true,
+            getFunc = function() return sw.damageListWidth end,
+            setFunc = function(value)
+                sw.damageListWidth = value
+                damageListWindow:SetWidth(sw.damageListWidth)
+            end,
+        },
+        {
+            type = "divider"
+        },
+        {
+            type = "dropdown",
+            name = "Theme",
+            tooltip = "Theme to use for the damage list",
+            default = svDefault.selectedTheme,
+            getFunc = function() return sw.selectedTheme end,
+            setFunc = function(value)
+                sw.selectedTheme = value
+                validateSelectedTheme()
+                applyTheme(sw.selectedTheme)
+            end,
+            choices = {
+                "default",
+                "HodorRestyle"
+            },
+            width = 'full',
+        },
+        {
             type = "divider"
         },
         {
@@ -545,9 +642,6 @@ function module:MainMenuOptions()
             getFunc = function() return sw.enableAnimIcons end,
             setFunc = function(value) sw.enableAnimIcons = value or false end,
             requiresReload = true,
-        },
-        {
-            type = "divider"
         },
         {
             type = "dropdown",
@@ -634,49 +728,6 @@ function module:MainMenuOptions()
                 sw.damageRowColor = {r, g, b, o}
             end,
         },
-        {
-            type = "slider",
-            name = "header height",
-            min = 22,
-            max = 44,
-            step = 1,
-            decimals = 0,
-            default = 22,
-            clampInput = true,
-            getFunc = function() return sw.damageListHeaderHeight end,
-            setFunc = function(value)
-                sw.damageListHeaderHeight = value
-            end,
-        },
-        {
-            type = "slider",
-            name = "row height",
-            min = 22,
-            max = 44,
-            step = 1,
-            decimals = 0,
-            default = 22,
-            clampInput = true,
-            getFunc = function() return sw.damageListRowHeight end,
-            setFunc = function(value)
-                sw.damageListRowHeight = value
-            end,
-        },
-        {
-            type = "slider",
-            name = "row width",
-            min = 227,
-            max = 450,
-            step = 1,
-            decimals = 0,
-            default = 277,
-            clampInput = true,
-            getFunc = function() return sw.damageListWidth end,
-            setFunc = function(value)
-                sw.damageListWidth = value
-                damageListWindow:SetWidth(sw.damageListWidth)
-            end,
-        },
     }
 end
 
@@ -706,6 +757,11 @@ function module:Initialize()
     createDamageListWindow()
     createSceneFragments()
     refreshVisibility()
+
+    module:RegisterTheme("default", defaultTheme)
+    validateSelectedTheme()
+    applyTheme(sw.selectedTheme)
+
     updateDamageListTimer()
 
     local eventRegisterName = addon_name .. module_name .. "PlayerActivated"
