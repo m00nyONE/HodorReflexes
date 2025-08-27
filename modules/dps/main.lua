@@ -98,6 +98,7 @@ local uiLocked = true
 local isTestRunning = false
 
 local themes = {}
+local LAMThemeChoices = {}
 
 local classIcons = {}
 for i = 1, GetNumClasses() do
@@ -498,6 +499,7 @@ function module:RegisterTheme(themeName, themeTable)
 
     -- register Theme
     themes[themeName] = themeTable
+    table.insert(LAMThemeChoices, themeName)
 end
 
 -- initialization functions
@@ -607,10 +609,7 @@ function module:MainMenuOptions()
                 validateSelectedTheme()
                 applyTheme(sw.selectedTheme)
             end,
-            choices = {
-                "default",
-                "HodorRestyle"
-            },
+            choices = LAMThemeChoices,
             width = 'full',
         },
         {
