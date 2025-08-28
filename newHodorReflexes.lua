@@ -105,7 +105,6 @@ function addon.UnregisterCallback(eventName, callback)
     CM:UnregisterCallback(eventName, callback)
 end
 function addon.RegisterCallback(eventName, callback)
-    CM:RegisterCallback(eventName, callback)
 
     if eventName == HR_EVENT_RETICLE_TARGET_CHANGED then
         EM:UnregisterForEvent(addon_name .. "RectileTargetChanged", EVENT_RETICLE_TARGET_CHANGED)
