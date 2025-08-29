@@ -84,9 +84,9 @@ local DAMAGE_LIST_DAMAGEROW_TYPE = 2
 local DAMAGE_LIST_GROUPTOTAL_TYPE = 3
 --local DAMAGE_LIST_TIMETOKILL_TYPE = 4
 
-local DAMAGE_LIST_DEFAULT_DAMAGEROW_TEMPLATE = "HodorReflexes_Dps_DamageRow"
-local DAMAGE_LIST_DEFAULT_HEADER_TEMPLATE = "HodorReflexes_Dps_Header"
-local DAMAGE_LIST_DEFAULT_GROUPTOTAL_TEMPLATE = "HodorReflexes_Dps_GroupTotal"
+local DAMAGE_LIST_DEFAULT_DAMAGEROW_TEMPLATE = "HodorReflexes_Dps_DamageList_DamageRow"
+local DAMAGE_LIST_DEFAULT_HEADER_TEMPLATE = "HodorReflexes_Dps_DamageList_Header"
+local DAMAGE_LIST_DEFAULT_GROUPTOTAL_TEMPLATE = "HodorReflexes_Dps_DamageList_GroupTotal"
 --local DAMAGE_LIST_TIMETOKILL_TEMPLATE = "HodorReflexes_Dps_TimeToKill"
 
 local DPS_FRAGMENT -- HUD Fragment
