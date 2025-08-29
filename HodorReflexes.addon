@@ -17,6 +17,7 @@ extensions/player.lua
 extensions/combat.lua
 extensions/anim.lua
 extensions/hud.lua
+extensions/group.lua
 
 ### Modules
 modules/dps/lang/en.lua

@@ -8,8 +8,6 @@ local module = {
     version = "1.0.0",
     priority = 2,
     enabled = false,
-
-    playersData = {}
 }
 
 local module_name = module.name
@@ -48,21 +46,21 @@ local svDefault = {
     damageListTimerUpdateInterval = 1000,
 }
 
-local CM = ZO_CallbackObject:New()
 local EM = GetEventManager()
 local WM = GetWindowManager()
-local LAM = LibAddonMenu2
 local LGCS = LibGroupCombatStats
 local localPlayer = "player"
 local strformat = string.format
 
 local lgcs = {}
-local playersData = module.playersData
+local group = addon.group
 local hud = addon.hud
 local combat = addon.combat
 local player = addon.player
 local anim = addon.anim
 local util = addon.util
+local CreateOrUpdatePlayerData = group.CreateOrUpdatePlayerData
+local playersData = group.playersData
 
 local EVENT_GROUP_DPS_UPDATE = LGCS.EVENT_GROUP_DPS_UPDATE
 local EVENT_PLAYER_DPS_UPDATE = LGCS.EVENT_PLAYER_DPS_UPDATE
@@ -72,6 +70,9 @@ local HR_EVENT_COMBAT_START = addon.HR_EVENT_COMBAT_START
 local HR_EVENT_COMBAT_END = addon.HR_EVENT_COMBAT_END
 local HR_EVENT_LOCKUI = addon.HR_EVENT_LOCKUI
 local HR_EVENT_UNLOCKUI = addon.HR_EVENT_UNLOCKUI
+local HR_EVENT_TEST_STARTED = addon.HR_EVENT_TEST_STARTED
+local HR_EVENT_TEST_STOPPED = addon.HR_EVENT_TEST_STOPPED
+local HR_EVENT_PLAYERSDATA_CLEANED = addon.HR_EVENT_PLAYERSDATA_CLEANED
 
 local DAMAGE_UNKNOWN = LGCS.DAMAGE_UNKNOWN
 local DAMAGE_TOTAL = LGCS.DAMAGE_TOTAL
@@ -83,9 +84,9 @@ local DAMAGE_LIST_DAMAGEROW_TYPE = 2
 local DAMAGE_LIST_GROUPTOTAL_TYPE = 3
 --local DAMAGE_LIST_TIMETOKILL_TYPE = 4
 
-local DAMAGE_LIST_DAMAGEROW_TEMPLATE = "HodorReflexes_Dps_DamageRow"
-local DAMAGE_LIST_HEADER_TEMPLATE = "HodorReflexes_Dps_Header"
-local DAMAGE_LIST_GROUPTOTAL_TEMPLATE = "HodorReflexes_Dps_GroupTotal"
+local DAMAGE_LIST_DEFAULT_DAMAGEROW_TEMPLATE = "HodorReflexes_Dps_DamageRow"
+local DAMAGE_LIST_DEFAULT_HEADER_TEMPLATE = "HodorReflexes_Dps_Header"
+local DAMAGE_LIST_DEFAULT_GROUPTOTAL_TEMPLATE = "HodorReflexes_Dps_GroupTotal"
 --local DAMAGE_LIST_TIMETOKILL_TEMPLATE = "HodorReflexes_Dps_TimeToKill"
 
 local DPS_FRAGMENT -- HUD Fragment
@@ -227,38 +228,12 @@ local function updateDamageList()
     ZO_ScrollList_Commit(damageListControl)
 end
 
---- creates a player entry inside the playersData table
-local function createOrUpdatePlayer(data)
-    if not data or not data.name then return end
-
-    local playerData = playersData[data.name]
-    if not playerData then
-        playerData = {
-            name     = data.name,
-            userId   = data.userId,
-            classId  = data.classId,
-            isPlayer = data.isPlayer,
-        }
-        playersData[data.name] = playerData
-    end
-
-    -- Update / overwrite fields
-    playerData.tag        = data.tag
-    playerData.dmg        = data.dmg
-    playerData.dps        = data.dps
-    playerData.dmgType    = data.dmgType
-    playerData.lastUpdate = GetGameTimeMilliseconds()
-end
-
 --- processes incoming dps data messages and creates/updates the player's entry inside the playersData table
 local function onDPSDataReceived(tag, data)
     if not IsUnitGrouped(tag) then return end
 
-    createOrUpdatePlayer({
+    CreateOrUpdatePlayerData({
         name     = GetUnitName(tag),
-        userId   = GetUnitDisplayName(tag),
-        classId  = GetUnitClassId(tag),
-        isPlayer = AreUnitsEqual(tag, localPlayer),
         tag      = tag,
         dmg      = data.dmg,
         dps      = data.dps,
@@ -286,42 +261,7 @@ local function LockUI()
     hud.LockControls(damageListWindow)
 end
 
-
---- cleans group data and deletes all players that are not in the group anymore
-local function cleanPlayersData(forceDelete)
-    local _existingGroupCharacters = {}
-    local _groupSize = GetGroupSize()
-
-    for i = 1, _groupSize do
-        local tag = GetGroupUnitTagByIndex(i)
-        if IsUnitPlayer(tag) and IsUnitOnline(tag) then
-            local characterName = GetUnitName(tag)
-            _existingGroupCharacters[characterName] = true
-            if playersData[characterName] then
-                playersData[characterName].tag = tag
-            end
-        end
-    end
-    for name, data in pairs(playersData) do
-        if not _existingGroupCharacters[name] or forceDelete then
-            anim.UnregisterUser(data.userId)
-            playersData[name] = nil
-        end
-    end
-
-    updateDamageList()
-end
-
---- triggers when a group member joins/leaves/offlines/updates
 local function onGroupChange()
-    if isTestRunning then
-        cleanPlayersData(true)
-        isTestRunning = false
-        LockUI()
-    else
-        cleanPlayersData()
-    end
-
     refreshVisibility()
 end
 
@@ -441,11 +381,11 @@ local defaultTheme = {
     version = "1.0.0",
     description = "The Default Theme of HodorReflexes DPS Module",
 
-    HeaderRowTemplate = "HodorReflexes_Dps_Header",
+    HeaderRowTemplate = DAMAGE_LIST_DEFAULT_HEADER_TEMPLATE,
     HeaderRowCreationFunc = defaultHeaderRowCreationFunc,
-    DamageRowTemplate = "HodorReflexes_Dps_DamageRow",
+    DamageRowTemplate = DAMAGE_LIST_DEFAULT_DAMAGEROW_TEMPLATE,
     DamageRowCreationFunc = defaultDamageRowCreationFunc,
-    GroupTotalRowTemplate = "HodorReflexes_Dps_GroupTotal",
+    GroupTotalRowTemplate = DAMAGE_LIST_DEFAULT_GROUPTOTAL_TEMPLATE,
     GroupTotalRowCreationFunc = defaultGroupTotalRowCreationFunc,
 
     settings = {
@@ -511,6 +451,27 @@ function module:RegisterTheme(themeName, themeTable)
     -- register Theme
     themes[themeName] = themeTable
     table.insert(LAMThemeChoices, themeName)
+end
+
+local function startTest()
+    isTestRunning = true
+
+    for name, _ in pairs(playersData) do
+        local dmg = zo_random(500, 1200)
+        CreateOrUpdatePlayerData({
+            name = name, -- required
+            tag = name, -- required
+            dmg = dmg,
+            dps = dmg * 0.15,
+            dmgType = DAMAGE_BOSS,
+        })
+    end
+
+    updateDamageList()
+end
+
+local function stopTest()
+    isTestRunning = false
 end
 
 -- initialization functions
@@ -770,6 +731,16 @@ function module:Initialize()
     addon.RegisterCallback(HR_EVENT_LOCKUI, LockUI)
     addon.RegisterCallback(HR_EVENT_UNLOCKUI, UnlockUI)
 
+    addon.RegisterCallback(HR_EVENT_TEST_STARTED, startTest)
+    addon.RegisterCallback(HR_EVENT_TEST_STOPPED, stopTest)
+    addon.RegisterCallback(HR_EVENT_PLAYERSDATA_CLEANED, updateDamageList)
+
+    group.RegisterPlayersDataFields({
+        dmg = 0,
+        dps = 0,
+        dmgType = DAMAGE_UNKNOWN,
+    })
+
     -- we use a combination of accountWide saved variables and cper character saved variables. This little swappi swappi allows us to switch between them without defining new variables
     sw = ZO_SavedVars:NewAccountWide(svName, svVersion, module_name, svDefault)
     if not sw.accountWide then
@@ -795,71 +766,3 @@ function module:Initialize()
 end
 
 addon:RegisterModule(module_name, module)
-
-
--- Show a random list of players.
-local function ToggleTest(players)
-
-    if isTestRunning then
-        cleanPlayersData(true)
-        isTestRunning = false
-        LockUI()
-        d(strformat('|cFF0000%s|r', GetString(HR_TEST_STOPPED)))
-        return
-    else
-        d(strformat('|c00FF00%s|r', GetString(HR_TEST_STARTED)))
-        isTestRunning = true
-    end
-
-    players = players or {
-        '@WarfireX',
-        '@LikoXie',
-        '@andy.s',
-        '@Alcast',
-        '@NefasQS',
-        '@Wheel5',
-        '@PK44',
-        '@LokiClermeil',
-        '@m00nyONE',
-        '@skinnycheeks',
-        '@seadotarley',
-        '@Solinur'
-    }
-
-
-    local function GetRandomPlayerData(name)
-        local dmg = zo_random(500, 1200)
-        local playerData = {
-            tag = name,
-            name = name,
-            userId = name,
-            classId = zo_random(1, GetNumClasses()),
-            isPlayer = name == GetUnitDisplayName(localPlayer),
-            dmg = dmg,
-            dps = dmg * 0.15,
-            dmgType = DAMAGE_BOSS,
-        }
-        return playerData
-    end
-
-    for _, name in ipairs(players) do
-        createOrUpdatePlayer(GetRandomPlayerData(name))
-    end
-
-
-    updateDamageList()
-
-    UnlockUI()
-
-end
-
-SLASH_COMMANDS["/hodor.dps"] = function(str)
-    local players = zo_strmatch(str, "^test%s*(.*)")
-    if players then
-        if IsUnitGrouped(localPlayer) then
-            d(strformat("|cFF0000%s|r", GetString(HR_TEST_LEAVE_GROUP)))
-        else
-            ToggleTest(util.IsValidString(players) and {zo_strsplit(" ", players)})
-        end
-    end
-end
