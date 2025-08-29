@@ -676,9 +676,9 @@ function module:MainMenuOptions()
             name = GetString(HR_MENU_STYLE_DPS_BOSS_COLOR),
             tooltip = "",
             default = addon.util.Hex2RGB(svDefault.styleBossDamageColor),
-            getFunc = function() return addon.util.Hex2RGB(sw.styleBossDamageColor) end,
+            getFunc = function() return util.Hex2RGB(sw.styleBossDamageColor) end,
             setFunc = function(r, g, b)
-                sw.styleBossDamageColor = addon.util.RGB2Hex(r, g, b)
+                sw.styleBossDamageColor = util.RGB2Hex(r, g, b)
                 updateDamageList()
             end,
         },
@@ -687,9 +687,9 @@ function module:MainMenuOptions()
             name = GetString(HR_MENU_STYLE_DPS_TOTAL_COLOR),
             tooltip = "",
             default = addon.util.Hex2RGB(svDefault.styleTotalDamageColor),
-            getFunc = function() return addon.util.Hex2RGB(sw.styleTotalDamageColor) end,
+            getFunc = function() return util.Hex2RGB(sw.styleTotalDamageColor) end,
             setFunc = function(r, g, b)
-                sw.styleTotalDamageColor = addon.util.RGB2Hex(r, g, b)
+                sw.styleTotalDamageColor = util.RGB2Hex(r, g, b)
                 updateDamageList()
             end,
         },
