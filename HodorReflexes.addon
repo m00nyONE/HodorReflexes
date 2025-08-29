@@ -35,6 +35,10 @@ modules/pull/lang/$(language).lua
 modules/pull/Bindings.xml
 modules/pull/main.lua
 
+modules/readycheck/lang/en.lua
+modules/readycheck/lang/$(language).lua
+modules/readycheck/main.lua
+
 modules/mock/en.lua
 modules/mock/$(language).lua
 modules/mock/main.lua
@@ -50,10 +54,6 @@ oldModules/share/ui/colos.xml
 oldModules/share/ui/atronach.xml
 oldModules/share/ui/miscUltimates.xml
 oldModules/share/ui/damage.xml
-
-oldModules/vote/main.lua
-oldModules/vote/menu.lua
-oldModules/vote/ui.xml
 
 oldModules/events/main.lua
 oldModules/events/menu.lua

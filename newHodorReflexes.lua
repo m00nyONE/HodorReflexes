@@ -30,6 +30,7 @@ local svDefault = {
       ["ult"] = true,
       ["events"] = true,
       ["exitinstance"] = true,
+      ["readycheck"] = true,
     },
     -- NoLibsInstalled
     libraryPopupDisabled = false,

@@ -42,6 +42,7 @@ HodorReflexes = {
 			["ult"] = true,
 			["events"] = true,
 			["exitinstance"] = true,
+            ["readycheck"] = true,
 		},
         -- NoLibsInstalled
         libraryPopupDisabled = false,
@@ -458,7 +459,7 @@ local function Initialize()
 
 	-- public modules
 	if HR.modules.share then HR.modules.share.Initialize() end
-	if HR.modules.vote then HR.modules.vote.Initialize() end
+	--if HR.modules.vote then HR.modules.vote.Initialize() end
 	if HR.modules.events then HR.modules.events.Initialize() end
 	--if HR.modules.pull then
 	--	HR.modules.pull.DeclareLGBProtocols(_LGBHandler)
