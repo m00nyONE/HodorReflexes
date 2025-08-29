@@ -593,6 +593,7 @@ function module:MainMenuOptions()
             name = GetString(HR_MENU_ICONS_VISIBILITY_COLORS),
             tooltip = GetString(HR_MENU_ICONS_VISIBILITY_COLORS_TT),
             default = svDefault.enableColoredNames,
+            disabled = function() return sv.selectedTheme ~= "default" end,
             getFunc = function() return sw.enableColoredNames end,
             setFunc = function(value) sw.enableColoredNames = value or false end,
             requiresReload = true,
@@ -602,6 +603,7 @@ function module:MainMenuOptions()
             name = GetString(HR_MENU_ICONS_VISIBILITY_DPS),
             tooltip = GetString(HR_MENU_ICONS_VISIBILITY_DPS_TT),
             default = svDefault.enableDamageIcons,
+            disabled = function() return sv.selectedTheme ~= "default" end,
             getFunc = function() return sw.enableDamageIcons end,
             setFunc = function(value) sw.enableDamageIcons = value or false end,
             requiresReload = true,
@@ -611,6 +613,7 @@ function module:MainMenuOptions()
             name = GetString(HR_MENU_ICONS_VISIBILITY_ANIM),
             tooltip = GetString(HR_MENU_ICONS_VISIBILITY_ANIM_TT),
             default = svDefault.enableAnimIcons,
+            disabled = function() return sv.selectedTheme ~= "default" end,
             getFunc = function() return sw.enableAnimIcons end,
             setFunc = function(value) sw.enableAnimIcons = value or false end,
             requiresReload = true,
@@ -620,6 +623,7 @@ function module:MainMenuOptions()
             name = GetString(HR_MENU_STYLE_DPS_FONT),
             tooltip = "",
             default = svDefault.styleDamageNumFont,
+            disabled = function() return sv.selectedTheme ~= "default" end,
             getFunc = function() return sw.styleDamageNumFont end,
             setFunc = function(value)
                 sw.styleDamageNumFont = value or 'gamepad'
@@ -637,6 +641,7 @@ function module:MainMenuOptions()
             name = GetString(HR_MENU_STYLE_DPS_BOSS_COLOR),
             tooltip = "",
             default = addon.util.Hex2RGB(svDefault.styleBossDamageColor),
+            disabled = function() return sv.selectedTheme ~= "default" end,
             getFunc = function() return util.Hex2RGB(sw.styleBossDamageColor) end,
             setFunc = function(r, g, b)
                 sw.styleBossDamageColor = util.RGB2Hex(r, g, b)
@@ -648,6 +653,7 @@ function module:MainMenuOptions()
             name = GetString(HR_MENU_STYLE_DPS_TOTAL_COLOR),
             tooltip = "",
             default = addon.util.Hex2RGB(svDefault.styleTotalDamageColor),
+            disabled = function() return sv.selectedTheme ~= "default" end,
             getFunc = function() return util.Hex2RGB(sw.styleTotalDamageColor) end,
             setFunc = function(r, g, b)
                 sw.styleTotalDamageColor = util.RGB2Hex(r, g, b)
@@ -663,6 +669,7 @@ function module:MainMenuOptions()
             decimals = 2,
             clampInput = true,
             default = svDefault.styleDamageHeaderOpacity,
+            disabled = function() return sv.selectedTheme ~= "default" end,
             getFunc = function() return sw.styleDamageHeaderOpacity end,
             setFunc = function(value)
                 sw.styleDamageHeaderOpacity = value
@@ -678,6 +685,7 @@ function module:MainMenuOptions()
             decimals = 2,
             clampInput = true,
             default = svDefault.styleDamageRowEvenOpacity,
+            disabled = function() return sv.selectedTheme ~= "default" end,
             getFunc = function() return sw.styleDamageRowEvenOpacity end,
             setFunc = function(value)
                 sw.styleDamageRowEvenOpacity = value
@@ -693,6 +701,7 @@ function module:MainMenuOptions()
             decimals = 2,
             clampInput = true,
             default = svDefault.styleDamageRowOddOpacity,
+            disabled = function() return sv.selectedTheme ~= "default" end,
             getFunc = function() return sw.styleDamageRowOddOpacity end,
             setFunc = function(value)
                 sw.styleDamageRowOddOpacity = value
@@ -704,6 +713,7 @@ function module:MainMenuOptions()
             name = GetString(HR_MENU_STYLE_DPS_HIGHLIGHT),
             tooltip = GetString(HR_MENU_STYLE_DPS_HIGHLIGHT_TT),
             default = ZO_ColorDef:New(unpack(svDefault.damageRowColor)),
+            disabled = function() return sv.selectedTheme ~= "default" end,
             --default = ZO_ColorDef:New(unpack(M.default.damageRowColor)),
             getFunc = function() return unpack(sw.damageRowColor) end,
             setFunc = function(r, g, b, o)
