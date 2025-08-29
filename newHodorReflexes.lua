@@ -37,6 +37,7 @@ local svDefault = {
 
 local EM = GetEventManager()
 local CM = ZO_CallbackObject:New()
+addon.CM = CM -- make the callback manager public
 local LAM = LibAddonMenu2
 local LGB = LibGroupBroadcast
 local LCI = LibCustomIcons

@@ -94,6 +94,7 @@ HR.HR_EVENT_UNLOCKUI = HR_EVENT_UNLOCKUI
 addon_modules = HR.modules
 
 HR.cm = ZO_CallbackObject:New()
+HR.CM = HR.cm
 
 local localPlayer = "player"
 
