@@ -65,6 +65,8 @@ HR_EVENT_UNIT_DIED = "UnitDied"
 HR_EVENT_INTERRUPT = "Interrupt"
 HR_EVENT_STUNNED = "Stunned"
 HR_EVENT_GROUP_CHANGED = "GroupChanged"
+HR_EVENT_LOCKUI = "LockUI"
+HR_EVENT_UNLOCKUI = "UnlockUI"
 
 
 local PRE_DELETION_HOOK = "PRE_DELETION_HOOK"
@@ -86,6 +88,8 @@ HR.HR_EVENT_UNIT_DIED = HR_EVENT_UNIT_DIED
 HR.HR_EVENT_INTERRUPT = HR_EVENT_INTERRUPT
 HR.HR_EVENT_STUNNED = HR_EVENT_STUNNED
 HR.HR_EVENT_GROUP_CHANGED = HR_EVENT_GROUP_CHANGED
+HR.HR_EVENT_LOCKUI = HR_EVENT_LOCKUI
+HR.HR_EVENT_UNLOCKUI = HR_EVENT_UNLOCKUI
 
 addon_modules = HR.modules
 
@@ -274,10 +278,16 @@ function HR.LockUI()
 
 	if HodorReflexesMenu_LockUI then LAM.util.RequestRefreshIfNeeded(HodorReflexesMenu_LockUI) end
 
+	HR.cm:FireCallbacks(HR_EVENT_LOCKUI)
+end
+
+local function UnlockUI()
+	HR.cm:FireCallbacks(HR_EVENT_UNLOCKUI)
 end
 
 SLASH_COMMANDS["/hodor"] = function(str)
 	if str == "lock" then HR.LockUI() return end
+	if str == "unlock" then UnlockUI() return end
 	if str == "version" then d(HR.version) return end
 end
 

@@ -53,6 +53,8 @@ local HR_EVENT_UNIT_DIED = "UnitDied"
 local HR_EVENT_INTERRUPT = "Interrupt"
 local HR_EVENT_STUNNED = "Stunned"
 local HR_EVENT_GROUP_CHANGED = "GroupChanged"
+local HR_EVENT_LOCKUI = "LockUI"
+local HR_EVENT_UNLOCKUI = "UnlockUI"
 addon.HR_EVENT_PLAYER_ACTIVATED = HR_EVENT_PLAYER_ACTIVATED
 addon.HR_EVENT_COMBAT_START = HR_EVENT_COMBAT_START
 addon.HR_EVENT_COMBAT_END = HR_EVENT_COMBAT_END
@@ -61,6 +63,8 @@ addon.HR_EVENT_UNIT_DIED = HR_EVENT_UNIT_DIED
 addon.HR_EVENT_INTERRUPT = HR_EVENT_INTERRUPT
 addon.HR_EVENT_STUNNED = HR_EVENT_STUNNED
 addon.HR_EVENT_GROUP_CHANGED = HR_EVENT_GROUP_CHANGED
+addon.HR_EVENT_LOCKUI = HR_EVENT_LOCKUI
+addon.HR_EVENT_UNLOCKUI = HR_EVENT_UNLOCKUI
 --[[ doc.lua end ]]
 
 local PRE_DELETION_HOOK = "PRE_DELETION_HOOK"
@@ -105,7 +109,6 @@ function addon.UnregisterCallback(eventName, callback)
     CM:UnregisterCallback(eventName, callback)
 end
 function addon.RegisterCallback(eventName, callback)
-    CM:RegisterCallback(eventName, callback)
 
     if eventName == HR_EVENT_RETICLE_TARGET_CHANGED then
         EM:UnregisterForEvent(addon_name .. "RectileTargetChanged", EVENT_RETICLE_TARGET_CHANGED)
@@ -380,11 +383,16 @@ EM:RegisterForEvent(addon_name, EVENT_ADD_ON_LOADED, function(_, name)
 end)
 
 local function LockUI()
+    CM:FireCallbacks(HR_EVENT_LOCKUI)
+end
 
+local function UnlockUI()
+    CM:FireCallbacks(HR_EVENT_UNLOCKUI)
 end
 
 SLASH_COMMANDS["/hodor"] = function(str)
     if str == "lock" then LockUI() return end
+    if str == "unlock" then UnlockUI() return end
     if str == "version" then d(addon_version) return end
     if str == "donate" then addon.Donation() return end
 end

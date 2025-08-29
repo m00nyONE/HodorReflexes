@@ -70,6 +70,8 @@ local EVENT_PLAYER_DPS_UPDATE = LGCS.EVENT_PLAYER_DPS_UPDATE
 local HR_EVENT_GROUP_CHANGED = addon.HR_EVENT_GROUP_CHANGED
 local HR_EVENT_COMBAT_START = addon.HR_EVENT_COMBAT_START
 local HR_EVENT_COMBAT_END = addon.HR_EVENT_COMBAT_END
+local HR_EVENT_LOCKUI = addon.HR_EVENT_LOCKUI
+local HR_EVENT_UNLOCKUI = addon.HR_EVENT_UNLOCKUI
 
 local DAMAGE_UNKNOWN = LGCS.DAMAGE_UNKNOWN
 local DAMAGE_TOTAL = LGCS.DAMAGE_TOTAL
@@ -764,6 +766,9 @@ function module:Initialize()
     addon.RegisterCallback(HR_EVENT_GROUP_CHANGED, onGroupChange) -- triggers a group cleanup
     addon.RegisterCallback(HR_EVENT_COMBAT_START, startDamageListTimerUpdate) -- start updating the time in the DamageListHeader
     addon.RegisterCallback(HR_EVENT_COMBAT_END, stopDamageListTimerUpdate) -- stop updating the time in the DamageListHeader
+
+    addon.RegisterCallback(HR_EVENT_LOCKUI, LockUI)
+    addon.RegisterCallback(HR_EVENT_UNLOCKUI, UnlockUI)
 
     -- we use a combination of accountWide saved variables and cper character saved variables. This little swappi swappi allows us to switch between them without defining new variables
     sw = ZO_SavedVars:NewAccountWide(svName, svVersion, module_name, svDefault)
