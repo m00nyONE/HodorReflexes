@@ -223,6 +223,13 @@ local function sortByPriority(t, a, b)
     return t[a].priority < t[b].priority
 end
 
+function addon.IsModuleEnabled(name)
+    if addon_modules[name] and addon_modules[name].enabled then
+        return true
+    end
+    return false
+end
+
 local function InitializeModules()
     if not sv.modules then
         sv.modules = svDefault.modules

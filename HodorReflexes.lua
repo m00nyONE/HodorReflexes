@@ -435,6 +435,13 @@ local function ShowMissingLibsPopup()
     ZO_Dialogs_ShowDialog("HODORREFLEXES_MISSING_LIBS")
 end
 
+function HR.IsModuleEnabled(name)
+    if HR.modules[name] and HR.modules[name].enabled then
+        return true
+    end
+    return false
+end
+
 -- Main initialization function for the addon
 local function Initialize()
 
