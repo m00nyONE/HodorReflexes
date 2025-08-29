@@ -280,10 +280,12 @@ function HR.LockUI()
 	if HodorReflexesMenu_LockUI then LAM.util.RequestRefreshIfNeeded(HodorReflexesMenu_LockUI) end
 
 	HR.cm:FireCallbacks(HR_EVENT_LOCKUI)
+    d("HodorReflexes UI Locked")
 end
 
 local function UnlockUI()
 	HR.cm:FireCallbacks(HR_EVENT_UNLOCKUI)
+    d("HodorReflexes UI Unlocked")
 end
 
 SLASH_COMMANDS["/hodor"] = function(str)

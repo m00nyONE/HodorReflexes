@@ -385,10 +385,12 @@ end)
 
 local function LockUI()
     CM:FireCallbacks(HR_EVENT_LOCKUI)
+    d("HodorReflexes UI Locked")
 end
 
 local function UnlockUI()
     CM:FireCallbacks(HR_EVENT_UNLOCKUI)
+    d("HodorReflexes UI Unlocked")
 end
 
 SLASH_COMMANDS["/hodor"] = function(str)
