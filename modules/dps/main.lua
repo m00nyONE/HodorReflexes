@@ -373,6 +373,7 @@ end
 local function defaultHeaderRowCreationFunc(rowControl, data, scrollList)
     damageListHeaderTimeControl = rowControl:GetNamedChild("_Time")
     rowControl:GetNamedChild("_Title"):SetText(strformat('%s', getDamageTypeName(data.dmgType == nil and 1 or data.dmgType)))
+    rowControl:GetNamedChild("_BG"):SetAlpha(sw.styleDamageHeaderOpacity)
 end
 local function defaultDamageRowCreationFunc(rowControl, data, scrollList)
     local userId = data.userId
@@ -394,15 +395,23 @@ local function defaultDamageRowCreationFunc(rowControl, data, scrollList)
         anim.RunUserAnimations(userId)
     end
 
+    local valueControl = rowControl:GetNamedChild("_Value")
+
     local dmgStr = ""
     if data.dmgType == DAMAGE_TOTAL then
         dmgStr = strformat('|c%s%0.2fM|r |c%s(%dK)|r|u0:2::|u', sw.styleBossDamageColor, data.dmg / 100, sw.styleTotalDamageColor, data.dps)
     else
         dmgStr = strformat('|c%s%0.1fK|r |c%s(%dK)|r|u0:2::|u', sw.styleBossDamageColor, data.dmg / 10, sw.styleTotalDamageColor, data.dps)
     end
+    valueControl:SetText(dmgStr)
+
+    local font = "$(MEDIUM_FONT)|$(KB_17)|outline"
+    if sw.styleDamageNumFont == "gamepad" then
+        font = "$(GAMEPAD_MEDIUM_FONT)|$(KB_19)|outline"
+    end
+    valueControl:SetFont(font)
 
     local customColor = false
-    rowControl:GetNamedChild("_Value"):SetText(dmgStr)
     if data.isPlayer then
         local r, g, b, o = unpack(sw.damageRowColor)
         if o ~= 0 then
@@ -541,7 +550,7 @@ function module:MainMenuOptions()
         {
             type = "slider",
             name = "Timer update Interval (ms)", -- TODO: translation
-            min = 0,
+            min = 100,
             max = 3000,
             step = 10,
             decimals = 0,
@@ -559,7 +568,7 @@ function module:MainMenuOptions()
             max = 44,
             step = 1,
             decimals = 0,
-            default = 22,
+            default = svDefault.damageListHeaderHeight,
             clampInput = true,
             getFunc = function() return sw.damageListHeaderHeight end,
             setFunc = function(value)
@@ -573,7 +582,7 @@ function module:MainMenuOptions()
             max = 44,
             step = 1,
             decimals = 0,
-            default = 22,
+            default = svDefault.damageListRowHeight,
             clampInput = true,
             getFunc = function() return sw.damageListRowHeight end,
             setFunc = function(value)
@@ -582,12 +591,12 @@ function module:MainMenuOptions()
         },
         {
             type = "slider",
-            name = "row width",
+            name = "List width",
             min = 227,
             max = 450,
             step = 1,
             decimals = 0,
-            default = 277,
+            default = svDefault.damageListWidth,
             clampInput = true,
             getFunc = function() return sw.damageListWidth end,
             setFunc = function(value)
@@ -608,6 +617,7 @@ function module:MainMenuOptions()
                 sw.selectedTheme = value
                 validateSelectedTheme()
                 applyTheme(sw.selectedTheme)
+                updateDamageList()
             end,
             choices = LAMThemeChoices,
             width = 'full',
@@ -646,11 +656,11 @@ function module:MainMenuOptions()
             type = "dropdown",
             name = GetString(HR_MENU_STYLE_DPS_FONT),
             tooltip = "",
-            --default = M.sw.styleDamageNumFont,
+            default = svDefault.styleDamageNumFont,
             getFunc = function() return sw.styleDamageNumFont end,
             setFunc = function(value)
                 sw.styleDamageNumFont = value or 'gamepad'
-                --ApplyStyle()
+                updateDamageList()
             end,
             choices = {
                 GetString(HR_MENU_STYLE_DPS_FONT_DEFAULT), GetString(HR_MENU_STYLE_DPS_FONT_GAMEPAD),
@@ -663,18 +673,22 @@ function module:MainMenuOptions()
             type = "colorpicker",
             name = GetString(HR_MENU_STYLE_DPS_BOSS_COLOR),
             tooltip = "",
+            default = addon.util.Hex2RGB(svDefault.styleBossDamageColor),
             getFunc = function() return addon.util.Hex2RGB(sw.styleBossDamageColor) end,
             setFunc = function(r, g, b)
                 sw.styleBossDamageColor = addon.util.RGB2Hex(r, g, b)
+                updateDamageList()
             end,
         },
         {
             type = "colorpicker",
             name = GetString(HR_MENU_STYLE_DPS_TOTAL_COLOR),
             tooltip = "",
+            default = addon.util.Hex2RGB(svDefault.styleTotalDamageColor),
             getFunc = function() return addon.util.Hex2RGB(sw.styleTotalDamageColor) end,
             setFunc = function(r, g, b)
                 sw.styleTotalDamageColor = addon.util.RGB2Hex(r, g, b)
+                updateDamageList()
             end,
         },
         {
@@ -685,10 +699,11 @@ function module:MainMenuOptions()
             step = 0.05,
             decimals = 2,
             clampInput = true,
+            default = svDefault.styleDamageHeaderOpacity,
             getFunc = function() return sw.styleDamageHeaderOpacity end,
             setFunc = function(value)
                 sw.styleDamageHeaderOpacity = value
-                --ApplyStyle()
+                updateDamageList()
             end,
         },
         {
@@ -699,9 +714,11 @@ function module:MainMenuOptions()
             step = 0.05,
             decimals = 2,
             clampInput = true,
+            default = svDefault.styleDamageRowEvenOpacity,
             getFunc = function() return sw.styleDamageRowEvenOpacity end,
             setFunc = function(value)
                 sw.styleDamageRowEvenOpacity = value
+                updateDamageList()
             end,
         },
         {
@@ -712,19 +729,23 @@ function module:MainMenuOptions()
             step = 0.05,
             decimals = 2,
             clampInput = true,
+            default = svDefault.styleDamageRowOddOpacity,
             getFunc = function() return sw.styleDamageRowOddOpacity end,
             setFunc = function(value)
                 sw.styleDamageRowOddOpacity = value
+                updateDamageList()
             end,
         },
         {
             type = "colorpicker",
             name = GetString(HR_MENU_STYLE_DPS_HIGHLIGHT),
             tooltip = GetString(HR_MENU_STYLE_DPS_HIGHLIGHT_TT),
+            default = ZO_ColorDef:New(unpack(svDefault.damageRowColor)),
             --default = ZO_ColorDef:New(unpack(M.default.damageRowColor)),
             getFunc = function() return unpack(sw.damageRowColor) end,
             setFunc = function(r, g, b, o)
                 sw.damageRowColor = {r, g, b, o}
+                updateDamageList()
             end,
         },
     }
