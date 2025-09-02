@@ -11,6 +11,7 @@ lang/en.lua
 lang/$(language).lua
 
 HodorReflexes.lua
+diagnostic.lua
 
 extensions/util.lua
 extensions/player.lua
