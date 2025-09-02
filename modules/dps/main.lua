@@ -313,7 +313,6 @@ end
 
 
 local function defaultHeaderRowCreationFunc(rowControl, data, scrollList)
-    damageListHeaderTimeControl = rowControl:GetNamedChild("_Time")
     rowControl:GetNamedChild("_Title"):SetText(strformat('%s', getDamageTypeName(data.dmgType == nil and 1 or data.dmgType)))
     rowControl:GetNamedChild("_BG"):SetAlpha(sw.styleDamageHeaderOpacity)
 end
@@ -420,9 +419,17 @@ function module:RegisterTheme(themeName, themeTable)
 
     local function createDamageRowCreationWrapper(wrappedFunction)
         return function(rowControl, data, scrollList)
+            -- only create rows if conditions are met
             if data.dmg > 0 and (isTestRunning or IsUnitOnline(data.tag)) then
                 wrappedFunction(rowControl, data, scrollList)
             end
+        end
+    end
+    local function createHeaderRowCreationWrapper(wrappedFunction)
+        return function(rowControl, data, scrollList)
+            -- allways set the Control of the Time so we can update it later
+            damageListHeaderTimeControl = rowControl:GetNamedChild("_Time")
+            wrappedFunction(rowControl, data, scrollList)
         end
     end
 
@@ -439,7 +446,7 @@ function module:RegisterTheme(themeName, themeTable)
             themeTable.DAMAGE_LIST_HEADER_TYPE,
             themeTable.HeaderRowTemplate or defaultTheme.HeaderRowTemplate,
             sw.damageListHeaderHeight,
-            themeTable.HeaderRowCreationFunc or defaultTheme.HeaderRowCreationFunc
+            createHeaderRowCreationWrapper(themeTable.HeaderRowCreationFunc or defaultTheme.HeaderRowCreationFunc)
     )
     ZO_ScrollList_SetTypeCategoryHeader(damageListControl, DAMAGE_LIST_HEADER_TYPE, true)
 
