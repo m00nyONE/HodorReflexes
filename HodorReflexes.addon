@@ -26,6 +26,11 @@ modules/dps/lang/$(language).lua
 modules/dps/main.lua
 modules/dps/ui/damage.xml
 
+modules/ult/lang/en.lua
+modules/ult/lang/$(language).lua
+modules/ult/main.lua
+modules/ult/ui/misc.xml
+
 modules/exitinstance/lang/en.lua
 modules/exitinstance/lang/$(language).lua
 modules/exitinstance/main.lua
