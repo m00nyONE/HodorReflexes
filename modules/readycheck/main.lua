@@ -95,8 +95,15 @@ local function createSceneFragment()
     READYCHECK_FRAGMENT = hud.AddFadeFragment(readycheckWindow, readycheckFragmentCondition)
 end
 
+local function stopElection()
+    isPollActive = false
+    refreshVisibility()
+    EM:UnregisterForUpdate("HR_ReadyCheck_Update")
+end
+
 local function updateElection()
-    local _, timeRemainingSeconds, _, _ = GetGroupElectionInfo()
+    local electionType, timeRemainingSeconds, _, _ = GetGroupElectionInfo()
+    if electionType ~= GROUP_ELECTION_TYPE_GENERIC_UNANIMOUS then stopElection() return end
     local title = zo_strformat("<<1>> [<<2>>]", GetString(HR_READY_CHECK), ZO_FormatCountdownTimer(timeRemainingSeconds))
     readycheckTitle:SetText(title)
 
@@ -119,18 +126,13 @@ local function updateElection()
     readycheckList:SetText(tconcat(names, ", "))
 end
 
-local function startElection(descriptor)
-    if descriptor ~= ZO_READY_CHECK then return end
+local function startElection(id, descriptor)
+    d(id, descriptor)
+    --if descriptor ~= ZO_READY_CHECK then return end
     if isPollActive then return end
     isPollActive = true
     refreshVisibility()
-    EM:registerForUpdate("HR_ReadyCheck_Update", 200, updateElection)
-end
-
-local function stopElection()
-    isPollActive = false
-    refreshVisibility()
-    EM:UnregisterForUpdate("HR_ReadyCheck_Update")
+    EM:RegisterForUpdate("HR_ReadyCheck_Update", 200, updateElection)
 end
 
 local function groupElectionResult(_, electionResult, _)
@@ -194,8 +196,10 @@ function module:Initialize()
     createReadyCheckUI()
     createSceneFragment()
 
+    refreshVisibility()
+
     local eventName = addon_name .. module_name
-    EM:RegisterForEvent(eventName, EVENT_GROUP_ELECTION_REQUESTED, startElection) -- when player starts the vote
+    EM:RegisterForEvent(eventName, EVENT_GROUP_ELECTION_REQUESTED, startElection ) -- when player starts the vote
     EM:RegisterForEvent(eventName, EVENT_GROUP_ELECTION_NOTIFICATION_ADDED, startElection) -- when someone else start vote
     EM:RegisterForEvent(eventName, EVENT_GROUP_ELECTION_RESULT, groupElectionResult) -- when vote ended/finished
     EM:RegisterForEvent(eventName, EVENT_GROUP_ELECTION_FAILED, groupElectionFailed) -- when vote failed for some reason "group dispand" for example
