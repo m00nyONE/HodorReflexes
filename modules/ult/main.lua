@@ -35,6 +35,16 @@ local svDefault = {
     showMiscRawValue = 1.0,
     styleMiscHeaderOpacity = 0.0,
 
+    enableHornList = 1,
+    hornListPosLeft = 0,
+    hornListPosTop = 0,
+    hornListHeaderHeight = 28,
+    hornListRowHeight = 24,
+    hornListWidth = 262,
+    showHornPercentValue = 1.0,
+    showHornRawValue = 0.0,
+    styleHornHeaderOpacity = 0.0,
+
     selectedTheme = "default",
 }
 
@@ -67,15 +77,26 @@ local HR_EVENT_PLAYERSDATA_CLEANED = addon.HR_EVENT_PLAYERSDATA_CLEANED
 local nextTypeId = 1
 local MISC_LIST_HEADER_TYPE = 1
 local MISC_LIST_PLAYERROW_TYPE = 2
+local HORN_LIST_HEADER_TYPE = 1
+local HORN_LIST_PLAYERROW_TYPE = 2
 
 local MISC_LIST_DEFAULT_PLAYERROW_TEMPLATE = "HodorReflexes_Ult_MiscList_PlayerRow"
 local MISC_LIST_DEFAULT_HEADER_TEMPLATE = "HodorReflexes_Ult_MiscList_Header"
+local HORN_LIST_DEFAULT_PLAYERROW_TEMPLATE = "HodorReflexes_Ult_HornList_PlayerRow"
+local HORN_LIST_DEFAULT_HEADER_TEMPLATE = "HodorReflexes_Ult_HornList_Header"
 
-local MISC_FRAGMENT -- HUD Fragment
-local miscListWindowName = addon_name .. module_name
+local MISC_FRAGMENT, HORN_FRAGMENT -- HUD Fragment
+
+local miscListWindowName = addon_name .. module_name .. "_Misc"
 local miscListWindow = {}
 local miscListControlName = miscListWindowName .. "_List"
 local miscListControl = {}
+local hornListWindowName = addon_name .. module_name .. "_Horn"
+local hornListWindow = {}
+local hornListControlName = hornListWindowName .. "_List"
+local hornListControl = {}
+local hornListHeaderHornDurationControl = nil
+local hornListHeaderForceDurationControl = nil
 
 local controlsVisible = false
 local uiLocked = true
@@ -98,6 +119,8 @@ end
 local function applyTheme(themeName)
     MISC_LIST_HEADER_TYPE = themes[themeName].MISC_LIST_HEADER_TYPE
     MISC_LIST_PLAYERROW_TYPE = themes[themeName].MISC_LIST_PLAYERROW_TYPE
+    HORN_LIST_HEADER_TYPE = themes[themeName].HORN_LIST_HEADER_TYPE
+    HORN_LIST_PLAYERROW_TYPE = themes[themeName].HORN_LIST_PLAYERROW_TYPE
 end
 
 --- validates the selected theme and sets it to "default" if not valid
@@ -109,6 +132,22 @@ end
 --- checks if damageList should be enabled at all
 local function isEnabled()
     return sw.enabled and (not sw.disablePvP or not IsPlayerInAvAWorld() and not IsActiveWorldBattleground())
+end
+
+-- return the ultimate in percent from 0-100. from 100-200 its scaled acordingly.
+local function getUltPercentage(ultValue, abilityCost)
+    if ultValue <= abilityCost then
+        return zo_floor((ultValue / abilityCost) * 100)
+    end
+
+    return zo_min(200, 100 + zo_floor(100 * (ultValue - abilityCost) / (500 - abilityCost)))
+end
+
+-- return a color code depending on the ult percentage
+local function getUltPercentageColor(percentage, defaultColor)
+    if percentage >= 100 then return '00FF00' end -- green
+    if percentage >= 80 then return 'FFFF00' end -- yellow
+    return defaultColor or 'FFFFFF' -- white
 end
 
 --- Returns true if the damage list should be shown, false otherwise.
@@ -123,6 +162,9 @@ local function isMiscListVisible()
         return false
     end
 end
+local function isHornListVisible()
+    return true
+end
 
 local function sortByUltValue(a, b)
     if a.ultValue == b.ultValue then
@@ -130,32 +172,53 @@ local function sortByUltValue(a, b)
     end
     return a.ultValue > b.ultValue
 end
-
-local function HasUnitHorn(data)
-    local abilityIDs = {40223,	38563, 40220}
-    for _, id in ipairs(abilityIDs) do
-        if data.ult1ID == id then return true, data.ult1Cost end
-        if data.ult2ID == id then return true, data.ult2Cost end
+local function sortByUltPercentage(a, b)
+    a.lowestUltPercentage = zo_min(a.ult1Percentage, a.ult2Percentage)
+    b.lowestUltPercentage = zo_min(b.ult1Percentage, b.ult2Percentage)
+    if a.lowestUltPercentage == b.lowestUltPercentage then
+        return sortByUltValue(a, b)
     end
+    return a.lowestUltPercentage > b.lowestUltPercentage
+end
+
+local function isHorn(abilityId)
+    local abilityIDs = {40223,	38563, 40220}
+    for _, id in pairs(abilityIDs) do
+        if abilityId == id then return true end
+    end
+    return false
+end
+local function isColos(abilityId)
+    local abilityIDs = {122388, 122395, 122174}
+    for _, id in pairs(abilityIDs) do
+        if abilityId == id then return true end
+    end
+    return false
+end
+local function isAtro(abilityId)
+    local abilityIDs = {23492,	23634, 23495}
+    for _, id in pairs(abilityIDs) do
+        if abilityId == id then return true end
+    end
+    return false
+end
+local function HasUnitHorn(data)
+    if isHorn(data.ult1ID) then return true, data.ult1Cost end
+    if isHorn(data.ult2ID) then return true, data.ult2Cost end
+
     if data.ultActivatedSetID == 1 then	return true, 250 end
 
     return false, 0
 end
 local function HasUnitColos(data)
-    local abilityIDs = {122388, 122395, 122174}
-    for _, id in ipairs(abilityIDs) do
-        if data.ult1ID == id then return true, data.ult1Cost end
-        if data.ult2ID == id then return true, data.ult2Cost end
-    end
+    if isColos(data.ult1ID) then return true, data.ult1Cost end
+    if isColos(data.ult2ID) then return true, data.ult2Cost end
 
     return false, 0
 end
 local function HasUnitAtro(data)
-    local abilityIDs = {23492,	23634, 23495}
-    for _, id in ipairs(abilityIDs) do
-        if data.ult1ID == id then return true, data.ult1Cost end
-        if data.ult2ID == id then return true, data.ult2Cost end
-    end
+    if isAtro(data.ult1ID) then return true, data.ult1Cost end
+    if isAtro(data.ult2ID) then return true, data.ult2Cost end
 
     return false, 0
 end
@@ -170,8 +233,7 @@ local function HasUnitBarrier(data)
     return false, 0
 end
 
---- updates the damageList
-local function updateUltimateLists()
+local function updateMiscUltimateList()
     if not isMiscListVisible then return end
 
     ZO_ScrollList_Clear(miscListControl)
@@ -183,7 +245,7 @@ local function updateUltimateLists()
             table.insert(playersDataList, playerData)
         end
     end
-    table.sort(playersDataList, sortByUltValue)
+    table.sort(playersDataList, sortByUltPercentage)
 
     --- fill dataList ---
     -- insert Header
@@ -199,20 +261,48 @@ local function updateUltimateLists()
 
     ZO_ScrollList_Commit(miscListControl)
 end
+local function updateHornUltimateList()
+    if not isHornListVisible() then return end
 
--- return the ultimate in percent from 0-100. from 100-200 its scaled acordingly.
-local function getUltPercentage(ultValue, abilityCost)
-    if ultValue <= abilityCost then
-        return zo_floor((ultValue / abilityCost) * 100)
+    ZO_ScrollList_Clear(hornListControl)
+    local dataList = ZO_ScrollList_GetDataList(hornListControl)
+
+    local playersDataList = {}
+    for _, playerData in pairs(playersData) do
+        if playerData.ultValue > 0 and HasUnitHorn(playerData) then
+            local lowestPossibleHornCost = 0
+            if playerData.ultActivatedSetID == 1 then
+                lowestPossibleHornCost = zo_max(zo_min(playerData.ult1Cost, playerData.ult2Cost))
+                playerData.hasSaxhleel = true
+            else
+                if isHorn(playerData.ult1ID) then lowestPossibleHornCost = playerData.ult1Cost end
+                if isHorn(playerData.ult2ID) then lowestPossibleHornCost = playerData.ult2Cost end
+                playerData.hasSaxhleel = false
+            end
+            playerData.hornPercentage = getUltPercentage(playerData.ultValue, lowestPossibleHornCost)
+            table.insert(playersDataList, playerData)
+        end
+    end
+    table.sort(playersDataList, sortByUltPercentage)
+
+    --- fill dataList ---
+    -- insert Header
+    table.insert(dataList, ZO_ScrollList_CreateDataEntry(HORN_LIST_HEADER_TYPE, {
+    }))
+
+    -- insert playerRows
+    for i, playerData in ipairs(playersDataList) do
+        playerData.orderIndex = i
+        table.insert(dataList, ZO_ScrollList_CreateDataEntry(HORN_LIST_PLAYERROW_TYPE, playerData))
     end
 
-    return zo_min(200, 100 + zo_floor(100 * (ultValue - abilityCost) / (500 - abilityCost)))
+    ZO_ScrollList_Commit(hornListControl)
 end
 
-local function getUltPercentageColor(percentage, defaultColor)
-    if percentage >= 100 then return '00FF00' end -- green
-    if percentage >= 80 then return 'FFFF00' end -- yellow
-    return defaultColor or 'FFFFFF' -- white
+--- updates the damageList
+local function updateUltimateLists()
+    updateMiscUltimateList()
+    updateHornUltimateList()
 end
 
 --- processes incoming dps data messages and creates/updates the player's entry inside the playersData table
@@ -224,6 +314,7 @@ local function onULTDataReceived(tag, data)
     local ult2Cost = data.ult2Cost
     local ult1Percentage = getUltPercentage(ultValue, ult1Cost)
     local ult2Percentage = getUltPercentage(ultValue, ult2Cost)
+    local lowestUltPercentage = zo_min(ult1Percentage, ult2Percentage)
 
     CreateOrUpdatePlayerData({
         name = GetUnitName(tag),
@@ -235,6 +326,7 @@ local function onULTDataReceived(tag, data)
         ult2Cost = ult2Cost,
         ult1Percentage = ult1Percentage,
         ult2Percentage = ult2Percentage,
+        lowestUltPercentage = lowestUltPercentage,
         ultActivatedSetID = data.ultActivatedSetID,
     })
 
@@ -245,18 +337,19 @@ local function refreshVisibility()
     controlsVisible = not uiLocked or isEnabled() and IsUnitGrouped(localPlayer)
 
     MISC_FRAGMENT:Refresh()
+    HORN_FRAGMENT:Refresh()
 end
 
 local function UnlockUI()
     uiLocked = false
     refreshVisibility()
-    hud.UnlockControls(miscListWindow)
+    hud.UnlockControls(miscListWindow, hornListWindow)
 end
 
 local function LockUI()
     uiLocked = true
     refreshVisibility()
-    hud.LockControls(miscListWindow)
+    hud.LockControls(miscListWindow, hornListWindow)
 end
 
 local function onGroupChange()
@@ -264,11 +357,15 @@ local function onGroupChange()
 end
 
 local function createSceneFragments()
-    local function DPSFragmentCondition()
+    local function MiscFragmentCondition()
         return isMiscListVisible() and controlsVisible
     end
+    local function HornFragmentCondition()
+        return isHornListVisible() and controlsVisible
+    end
 
-    MISC_FRAGMENT = hud.AddSimpleFragment(miscListWindow, DPSFragmentCondition)
+    MISC_FRAGMENT = hud.AddSimpleFragment(miscListWindow, MiscFragmentCondition)
+    HORN_FRAGMENT = hud.AddSimpleFragment(hornListWindow, HornFragmentCondition)
 end
 
 local function createMiscListWindow()
@@ -295,6 +392,67 @@ local function createMiscListWindow()
     ZO_ScrollList_SetUseScrollbar(miscListControl, false)
     ZO_ScrollList_SetScrollbarEthereal(miscListControl, true)
 end
+local function createHornListWindow()
+    hornListWindow = WM:CreateTopLevelWindow(hornListWindowName)
+    hornListWindow:SetClampedToScreen(true)
+    hornListWindow:SetResizeToFitDescendents(true)
+    hornListWindow:SetHidden(true)
+    hornListWindow:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, sv.hornListPosLeft, sv.hornListPosTop)
+    hornListWindow:SetWidth(sw.hornListWidth)
+    hornListWindow:SetHeight(sw.hornListHeaderHeight + (sw.hornListRowHeight * 12))
+    hornListWindow:SetHandler( "OnMoveStop", function()
+        sv.hornListPosLeft = hornListWindow:GetLeft()
+        sv.hornListPosTop = hornListWindow:GetTop()
+    end)
+
+    hornListControl = WM:CreateControlFromVirtual(hornListControlName, hornListWindow, "ZO_ScrollList")
+    hornListControl:SetAnchor(TOPLEFT, hornListWindow, TOPLEFT, 0, 0, ANCHOR_CONSTRAINS_XY)
+    hornListControl:SetAnchor(TOPRIGHT, hornListWindow, TOPRIGHT, ZO_SCROLL_BAR_WIDTH, 0, ANCHOR_CONSTRAINS_X)
+    hornListControl:SetHeight(sw.hornListHeaderHeight + (sw.hornListRowHeight * 12))
+    hornListControl:SetMouseEnabled(false)
+    hornListControl:GetNamedChild("Contents"):SetMouseEnabled(false)
+
+    ZO_ScrollList_SetHideScrollbarOnDisable(hornListControl, true)
+    ZO_ScrollList_SetUseScrollbar(hornListControl, false)
+    ZO_ScrollList_SetScrollbarEthereal(hornListControl, true)
+end
+
+local function defaultHornHeaderRowCreationFunc(rowControl, data, scrollList)
+    rowControl:GetNamedChild("_BG"):SetAlpha(sw.styleHornHeaderOpacity)
+end
+local function defaultHornPlayerRowCreationFunc(rowControl, data, scrollList)
+    local userId = data.userId
+    local userIcon = player.GetIconForUserId(userId)
+    local userName = player.GetAliasForUserId(userId, sw.enableColoredNames)
+
+    local classId = data.classId
+    local defaultIcon = classIcons[classId] and classIcons[classId] or 'esoui/art/campaign/campaignbrowser_guestcampaign.dds'
+
+    local nameControl = rowControl:GetNamedChild('_Name')
+    nameControl:SetText(userName)
+    nameControl:SetColor(1, 1, 1)
+    local iconControl = rowControl:GetNamedChild('_Icon')
+    iconControl:SetTextureCoords(0, 1, 0, 1)
+    iconControl:SetTexture(sw.enableIcons and userIcon or defaultIcon)
+
+    if sw.enableAnimIcons and anim.IsValidUser(userId) then
+        if not anim.IsUserRegistered(userId) then
+            anim.RegisterUser(userId)
+        end
+
+        anim.RegisterUserControl(userId, iconControl)
+        anim.RunUserAnimations(userId)
+    end
+
+    local percentageColor = getUltPercentageColor(data.hornPercentage, 'FFFFFF')
+    local percentageControl = rowControl:GetNamedChild("_PctValue")
+    percentageControl:SetText(strformat('|c%s%d%%|r', percentageColor, zo_min(200, data.hornPercentage)))
+    percentageControl:SetScale(sv.showHornPercentValue)
+    local rawValueControl = rowControl:GetNamedChild("_RawValue")
+    rawValueControl:SetText(strformat('%s', data.ultValue))
+    rawValueControl:SetScale(sv.showHornRawValue)
+end
+
 
 local function defaultMiscHeaderRowCreationFunc(rowControl, data, scrollList)
     rowControl:GetNamedChild("_Text"):SetText(data.title)
@@ -325,11 +483,9 @@ local function defaultMiscPlayerRowCreationFunc(rowControl, data, scrollList)
         anim.RunUserAnimations(userId)
     end
 
-    local lowestUltPercentage = zo_min(data.ult1Percentage, data.ult2Percentage)
-
-    local percentageColor = getUltPercentageColor(lowestUltPercentage, 'FFFFFF')
+    local percentageColor = getUltPercentageColor(data.lowestUltPercentage, 'FFFFFF')
     local percentageControl = rowControl:GetNamedChild("_PctValue")
-    percentageControl:SetText(strformat('|c%s%d%%|r', percentageColor, zo_min(200, lowestUltPercentage)))
+    percentageControl:SetText(strformat('|c%s%d%%|r', percentageColor, zo_min(200, data.lowestUltPercentage)))
     percentageControl:SetScale(sv.showMiscPercentValue)
     local rawValueControl = rowControl:GetNamedChild("_RawValue")
     rawValueControl:SetText(strformat('%s', data.ultValue))
@@ -342,10 +498,15 @@ local defaultTheme = {
     version = "1.0.0",
     description = "The Default Theme of HodorReflexes Ultimates Module - Misc Ultimates List",
 
-    HeaderRowTemplate = MISC_LIST_DEFAULT_HEADER_TEMPLATE,
-    HeaderRowCreationFunc = defaultMiscHeaderRowCreationFunc,
-    PlayerRowTemplate = MISC_LIST_DEFAULT_PLAYERROW_TEMPLATE,
-    PlayerRowCreationFunc = defaultMiscPlayerRowCreationFunc,
+    MiscListHeaderRowTemplate = MISC_LIST_DEFAULT_HEADER_TEMPLATE,
+    MiscListHeaderRowCreationFunc = defaultMiscHeaderRowCreationFunc,
+    MiscListPlayerRowTemplate = MISC_LIST_DEFAULT_PLAYERROW_TEMPLATE,
+    MiscListPlayerRowCreationFunc = defaultMiscPlayerRowCreationFunc,
+
+    HornListHeaderRowTemplate = HORN_LIST_DEFAULT_HEADER_TEMPLATE,
+    HornListHeaderRowCreationFunc = defaultHornHeaderRowCreationFunc,
+    HornListPlayerRowTemplate = HORN_LIST_DEFAULT_PLAYERROW_TEMPLATE,
+    HornListPlayerRowCreationFunc = defaultHornPlayerRowCreationFunc,
 
     settings = {
 
@@ -364,13 +525,6 @@ function module:RegisterTheme(themeName, themeTable)
     assert(type(themeTable.description) == 'string', 'theme is missing required field "description" of type "string"')
     assert(type(themeTable.settings) == 'table', 'theme is missing required field "settings" of type "table"')
 
-
-    themeTable.MISC_LIST_HEADER_TYPE = nextTypeId
-    nextTypeId = nextTypeId + 1
-    themeTable.MISC_LIST_PLAYERROW_TYPE = nextTypeId
-    nextTypeId = nextTypeId + 1
-
-
     local function playerRowCreationWrapper(wrappedFunction)
         return function(rowControl, data, scrollList)
             if data.ultValue > 0 and (isTestRunning or IsUnitOnline(data.tag)) then
@@ -379,22 +533,55 @@ function module:RegisterTheme(themeName, themeTable)
         end
     end
 
-    ZO_ScrollList_AddDataType(
-            miscListControl,
-            themeTable.MISC_LIST_PLAYERROW_TYPE,
-            themeTable.PlayerRowTemplate or defaultTheme.PlayerRowTemplate,
-            sw.miscListRowHeight,
-            playerRowCreationWrapper(themeTable.PlayerRowCreationFunc or defaultTheme.PlayerRowCreationFunc)
-    )
+    local function hornListHeaderRowCreationWrapper(wrappedFunction)
+        return function(rowControl, data, scrollList)
+            hornListHeaderHornDurationControl = rowControl:GetNamedChild("_HornDuration")
+            hornListHeaderForceDurationControl = rowControl:GetNamedChild("_ForceDuration")
+            wrappedFunction(rowControl, data, scrollList)
+        end
+    end
+
+    themeTable.MISC_LIST_HEADER_TYPE = nextTypeId
+    themeTable.HORN_LIST_HEADER_TYPE = nextTypeId
+    nextTypeId = nextTypeId + 1
 
     ZO_ScrollList_AddDataType(
             miscListControl,
             themeTable.MISC_LIST_HEADER_TYPE,
-            themeTable.HeaderRowTemplate or defaultTheme.HeaderRowTemplate,
+            themeTable.MiscListHeaderRowTemplate or defaultTheme.MiscListHeaderRowTemplate,
             sw.miscListHeaderHeight,
-            themeTable.HeaderRowCreationFunc or defaultTheme.HeaderRowCreationFunc
+            themeTable.MiscListHeaderRowCreationFunc or defaultTheme.MiscListHeaderRowCreationFunc
     )
-    ZO_ScrollList_SetTypeCategoryHeader(miscListControl, MISC_LIST_HEADER_TYPE, true)
+    ZO_ScrollList_SetTypeCategoryHeader(miscListControl, themeTable.MISC_LIST_HEADER_TYPE, true)
+    ZO_ScrollList_AddDataType(
+            hornListControl,
+            themeTable.HORN_LIST_HEADER_TYPE,
+            themeTable.HornListHeaderRowTemplate or defaultTheme.HornListHeaderRowTemplate,
+            sw.miscListHeaderHeight,
+            hornListHeaderRowCreationWrapper(themeTable.HornListHeaderRowCreationFunc or defaultTheme.HornListHeaderRowCreationFunc)
+    )
+    ZO_ScrollList_SetTypeCategoryHeader(hornListControl, themeTable.HORN_LIST_HEADER_TYPE, true)
+
+
+    themeTable.MISC_LIST_PLAYERROW_TYPE = nextTypeId
+    themeTable.HORN_LIST_PLAYERROW_TYPE = nextTypeId
+    nextTypeId = nextTypeId + 1
+
+    ZO_ScrollList_AddDataType(
+            miscListControl,
+            themeTable.MISC_LIST_PLAYERROW_TYPE,
+            themeTable.MiscListPlayerRowTemplate or defaultTheme.MiscListPlayerRowTemplate,
+            sw.miscListRowHeight,
+            playerRowCreationWrapper(themeTable.MiscListPlayerRowCreationFunc or defaultTheme.MiscListPlayerRowCreationFunc)
+    )
+
+    ZO_ScrollList_AddDataType(
+            hornListControl,
+            themeTable.HORN_LIST_PLAYERROW_TYPE,
+            themeTable.HornListPlayerRowTemplate or defaultTheme.HornListPlayerRowTemplate,
+            sw.miscListRowHeight,
+            playerRowCreationWrapper(themeTable.HornListPlayerRowCreationFunc or defaultTheme.HornListPlayerRowCreationFunc)
+    )
 
     -- register Theme
     themes[themeName] = themeTable
@@ -653,6 +840,7 @@ function module:Initialize()
     end
 
     createMiscListWindow()
+    createHornListWindow()
     createSceneFragments()
     refreshVisibility()
 

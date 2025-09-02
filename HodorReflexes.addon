@@ -30,6 +30,7 @@ modules/ult/lang/en.lua
 modules/ult/lang/$(language).lua
 modules/ult/main.lua
 modules/ult/ui/misc.xml
+modules/ult/ui/horn.xml
 
 modules/exitinstance/lang/en.lua
 modules/exitinstance/lang/$(language).lua

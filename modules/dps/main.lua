@@ -448,7 +448,7 @@ function module:RegisterTheme(themeName, themeTable)
             sw.damageListHeaderHeight,
             createHeaderRowCreationWrapper(themeTable.HeaderRowCreationFunc or defaultTheme.HeaderRowCreationFunc)
     )
-    ZO_ScrollList_SetTypeCategoryHeader(damageListControl, DAMAGE_LIST_HEADER_TYPE, true)
+    ZO_ScrollList_SetTypeCategoryHeader(damageListControl, themeTable.DAMAGE_LIST_HEADER_TYPE, true)
 
     ZO_ScrollList_AddDataType(
             damageListControl,
@@ -457,7 +457,7 @@ function module:RegisterTheme(themeName, themeTable)
             sw.damageListRowHeight,
             themeTable.GroupTotalRowCreationFunc or defaultTheme.GroupTotalRowCreationFunc
     )
-    ZO_ScrollList_SetTypeCategoryHeader(damageListControl, DAMAGE_LIST_GROUPTOTAL_TYPE, true)
+    ZO_ScrollList_SetTypeCategoryHeader(damageListControl, themeTable.DAMAGE_LIST_GROUPTOTAL_TYPE, true)
 
     -- register Theme
     themes[themeName] = themeTable
