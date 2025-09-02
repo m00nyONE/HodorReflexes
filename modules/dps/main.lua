@@ -332,8 +332,12 @@ local function defaultDamageRowCreationFunc(rowControl, data, scrollList)
     iconControl:SetTextureCoords(0, 1, 0, 1)
     iconControl:SetTexture(sw.enableDamageIcons and userIcon or defaultIcon)
 
-    if sw.enableAnimIcons and anim.RegisterUser(userId) then
-        if sw.enableDamageIcons then anim.RegisterUserControl(userId, iconControl) end
+    if sw.enableAnimIcons and anim.IsValidUser(userId) then
+        if not anim.IsUserRegistered(userId) then
+            anim.RegisterUser(userId)
+        end
+
+        anim.RegisterUserControl(userId, iconControl)
         anim.RunUserAnimations(userId)
     end
 

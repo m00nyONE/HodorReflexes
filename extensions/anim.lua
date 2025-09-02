@@ -20,10 +20,15 @@ function M.RegisterUser(user)
 			width = userAnim[2],
 			height = userAnim[3],
 			frameRate = userAnim[4],
+            isRunning = false,
 		}
 		return true
 	end
 	return false
+end
+
+function M.IsUserRegistered(user)
+    return anims[user] ~= nil
 end
 
 -- Delete all user animations.
@@ -66,11 +71,14 @@ end
 -- Start all animations for a user.
 function M.RunUserAnimations(user)
 	local a = anims[user]
-	if a then
+	if a and not a.isRunning then
 		a.timeline:SetEnabled(true)
 		a.timeline:SetPlaybackType(ANIMATION_PLAYBACK_LOOP, LOOP_INDEFINITELY)
 		a.timeline:PlayFromStart()
+        a.isRunning = true
+        return true
 	end
+    return false
 end
 
 -- Stop all animations for a user.
@@ -78,6 +86,7 @@ function M.StopUserAnimations(user)
 	local a = anims[user]
 	if a then
 		a.timeline:SetEnabled(false)
+        a.isRunning = false
 	end
 end
 
