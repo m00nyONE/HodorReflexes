@@ -828,6 +828,7 @@ function module:Initialize()
         ult1Percentage = 0,
         ult2Percentage = 0,
         ultActivatedSetID = 0,
+        lowestUltPercentage = 0,
     })
 
     -- we use a combination of accountWide saved variables and cper character saved variables. This little swappi swappi allows us to switch between them without defining new variables
