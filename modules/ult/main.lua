@@ -42,7 +42,7 @@ local svDefault = {
     hornListRowHeight = 24,
     hornListWidth = 262,
     showHornPercentValue = 1.0,
-    showHornRawValue = 0.0,
+    showHornRawValue = 1.0,
     styleHornHeaderOpacity = 0.0,
 
     selectedTheme = "default",
@@ -163,7 +163,10 @@ local function isMiscListVisible()
     end
 end
 local function isHornListVisible()
-    return true
+    if sw.enableHornList == 1 then
+        return true
+    end
+    return false
 end
 
 local function sortByUltValue(a, b)
@@ -453,7 +456,6 @@ local function defaultHornPlayerRowCreationFunc(rowControl, data, scrollList)
     rawValueControl:SetScale(sv.showHornRawValue)
 end
 
-
 local function defaultMiscHeaderRowCreationFunc(rowControl, data, scrollList)
     rowControl:GetNamedChild("_Text"):SetText(data.title)
     rowControl:GetNamedChild("_BG"):SetAlpha(sw.styleMiscHeaderOpacity)
@@ -493,6 +495,7 @@ local function defaultMiscPlayerRowCreationFunc(rowControl, data, scrollList)
     rowControl:GetNamedChild('_UltIconFrontbar'):SetTexture(GetAbilityIcon(data.ult1ID))
     rowControl:GetNamedChild('_UltIconBackbar'):SetTexture(GetAbilityIcon(data.ult2ID))
 end
+
 local defaultTheme = {
     author = "@m00nyONE",
     version = "1.0.0",
@@ -557,7 +560,7 @@ function module:RegisterTheme(themeName, themeTable)
             hornListControl,
             themeTable.HORN_LIST_HEADER_TYPE,
             themeTable.HornListHeaderRowTemplate or defaultTheme.HornListHeaderRowTemplate,
-            sw.miscListHeaderHeight,
+            sw.hornListHeaderHeight,
             hornListHeaderRowCreationWrapper(themeTable.HornListHeaderRowCreationFunc or defaultTheme.HornListHeaderRowCreationFunc)
     )
     ZO_ScrollList_SetTypeCategoryHeader(hornListControl, themeTable.HORN_LIST_HEADER_TYPE, true)
@@ -574,12 +577,11 @@ function module:RegisterTheme(themeName, themeTable)
             sw.miscListRowHeight,
             playerRowCreationWrapper(themeTable.MiscListPlayerRowCreationFunc or defaultTheme.MiscListPlayerRowCreationFunc)
     )
-
     ZO_ScrollList_AddDataType(
             hornListControl,
             themeTable.HORN_LIST_PLAYERROW_TYPE,
             themeTable.HornListPlayerRowTemplate or defaultTheme.HornListPlayerRowTemplate,
-            sw.miscListRowHeight,
+            sw.hornListRowHeight,
             playerRowCreationWrapper(themeTable.HornListPlayerRowCreationFunc or defaultTheme.HornListPlayerRowCreationFunc)
     )
 
