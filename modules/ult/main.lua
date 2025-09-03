@@ -45,6 +45,26 @@ local svDefault = {
     showHornRawValue = 1.0,
     styleHornHeaderOpacity = 0.0,
 
+    enableColosList = 1,
+    colosListPosLeft = 0,
+    colosListPosTop = 0,
+    colosListHeaderHeight = 28,
+    colosListRowHeight = 24,
+    colosListWidth = 262,
+    showColosPercentValue = 1.0,
+    showColosRawValue = 1.0,
+    styleColosHeaderOpacity = 0.0,
+
+    enableAtroList = 1,
+    atroListPosLeft = 0,
+    atroListPosTop = 0,
+    atroListHeaderHeight = 28,
+    atroListRowHeight = 24,
+    atroListWidth = 262,
+    showAtroPercentValue = 1.0,
+    showAtroRawValue = 1.0,
+    styleAtroHeaderOpacity = 0.0,
+
     selectedTheme = "default",
 }
 
@@ -79,13 +99,21 @@ local MISC_LIST_HEADER_TYPE = 1
 local MISC_LIST_PLAYERROW_TYPE = 2
 local HORN_LIST_HEADER_TYPE = 1
 local HORN_LIST_PLAYERROW_TYPE = 2
+local COLOS_LIST_HEADER_TYPE = 1
+local COLOS_LIST_PLAYERROW_TYPE = 2
+local ATRO_LIST_HEADER_TYPE = 1
+local ATRO_LIST_PLAYERROW_TYPE = 2
 
 local MISC_LIST_DEFAULT_PLAYERROW_TEMPLATE = "HodorReflexes_Ult_MiscList_PlayerRow"
 local MISC_LIST_DEFAULT_HEADER_TEMPLATE = "HodorReflexes_Ult_MiscList_Header"
 local HORN_LIST_DEFAULT_PLAYERROW_TEMPLATE = "HodorReflexes_Ult_HornList_PlayerRow"
 local HORN_LIST_DEFAULT_HEADER_TEMPLATE = "HodorReflexes_Ult_HornList_Header"
+local COLOS_LIST_DEFAULT_PLAYERROW_TEMPLATE = "HodorReflexes_Ult_ColosList_PlayerRow"
+local COLOS_LIST_DEFAULT_HEADER_TEMPLATE = "HodorReflexes_Ult_ColosList_Header"
+local ATRO_LIST_DEFAULT_PLAYERROW_TEMPLATE = "HodorReflexes_Ult_AtroList_PlayerRow"
+local ATRO_LIST_DEFAULT_HEADER_TEMPLATE = "HodorReflexes_Ult_AtroList_Header"
 
-local MISC_FRAGMENT, HORN_FRAGMENT -- HUD Fragment
+local MISC_FRAGMENT, HORN_FRAGMENT, COLOS_FRAGMENT, ATRO_FRAGMENT -- HUD Fragment
 
 local miscListWindowName = addon_name .. module_name .. "_Misc"
 local miscListWindow = {}
@@ -97,6 +125,18 @@ local hornListControlName = hornListWindowName .. "_List"
 local hornListControl = {}
 local hornListHeaderHornDurationControl = nil
 local hornListHeaderForceDurationControl = nil
+local colosListWindowName = addon_name .. module_name .. "_Colos"
+local colosListWindow = {}
+local colosListControlName = colosListWindowName .. "_List"
+local colosListControl = {}
+local colosListHeaderVulnDurationControl = nil
+local atroListWIndowName = addon_name .. module_name .. "_Atro"
+local atroListWindow = {}
+local atroListControlName = atroListWIndowName .. "_List"
+local atroListControl = {}
+local atroListHeaderAtroDurationControl = nil
+local atroListHeaderBerserkDurationControl = nil
+
 
 local controlsVisible = false
 local uiLocked = true
@@ -121,6 +161,10 @@ local function applyTheme(themeName)
     MISC_LIST_PLAYERROW_TYPE = themes[themeName].MISC_LIST_PLAYERROW_TYPE
     HORN_LIST_HEADER_TYPE = themes[themeName].HORN_LIST_HEADER_TYPE
     HORN_LIST_PLAYERROW_TYPE = themes[themeName].HORN_LIST_PLAYERROW_TYPE
+    COLOS_LIST_HEADER_TYPE = themes[themeName].COLOS_LIST_HEADER_TYPE
+    COLOS_LIST_PLAYERROW_TYPE = themes[themeName].COLOS_LIST_PLAYERROW_TYPE
+    ATRO_LIST_HEADER_TYPE = themes[themeName].ATRO_LIST_HEADER_TYPE
+    ATRO_LIST_PLAYERROW_TYPE = themes[themeName].ATRO_LIST_PLAYERROW_TYPE
 end
 
 --- validates the selected theme and sets it to "default" if not valid
@@ -164,6 +208,18 @@ local function isMiscListVisible()
 end
 local function isHornListVisible()
     if sw.enableHornList == 1 then
+        return true
+    end
+    return false
+end
+local function isColosListVisible()
+    if sw.enableColosList == 1 then
+        return true
+    end
+    return false
+end
+local function isAtroListVisible()
+    if sw.enableAtroList == 1 then
         return true
     end
     return false
@@ -301,11 +357,75 @@ local function updateHornUltimateList()
 
     ZO_ScrollList_Commit(hornListControl)
 end
+local function updateColosUltimateList()
+    if not isColosListVisible() then return end
+
+    ZO_ScrollList_Clear(colosListControl)
+    local dataList = ZO_ScrollList_GetDataList(colosListControl)
+
+    local playersDataList = {}
+    for _, playerData in pairs(playersData) do
+        if playerData.ultValue > 0 and HasUnitColos(playerData) then
+            local lowestPossibleColosCost = 0
+            if isColos(playerData.ult1ID) then lowestPossibleColosCost = playerData.ult1Cost end
+            if isColos(playerData.ult2ID) then lowestPossibleColosCost = playerData.ult2Cost end
+            playerData.colosPercentage = getUltPercentage(playerData.ultValue, lowestPossibleColosCost)
+            table.insert(playersDataList, playerData)
+        end
+    end
+    table.sort(playersDataList, sortByUltPercentage)
+
+    --- fill dataList ---
+    -- insert Header
+    table.insert(dataList, ZO_ScrollList_CreateDataEntry(COLOS_LIST_HEADER_TYPE, {
+    }))
+
+    -- insert playerRows
+    for i, playerData in ipairs(playersDataList) do
+        playerData.orderIndex = i
+        table.insert(dataList, ZO_ScrollList_CreateDataEntry(COLOS_LIST_PLAYERROW_TYPE, playerData))
+    end
+
+    ZO_ScrollList_Commit(colosListControl)
+end
+local function updateAtroUltimateList()
+    if not isAtroListVisible() then return end
+
+    ZO_ScrollList_Clear(atroListControl)
+    local dataList = ZO_ScrollList_GetDataList(atroListControl)
+
+    local playersDataList = {}
+    for _, playerData in pairs(playersData) do
+        if playerData.ultValue > 0 and HasUnitAtro(playerData) then
+            local lowestPossibleAtroCost = 0
+            if isAtro(playerData.ult1ID) then lowestPossibleAtroCost = playerData.ult1Cost end
+            if isAtro(playerData.ult2ID) then lowestPossibleAtroCost = playerData.ult2Cost end
+            playerData.atroPercentage = getUltPercentage(playerData.ultValue, lowestPossibleAtroCost)
+            table.insert(playersDataList, playerData)
+        end
+    end
+    table.sort(playersDataList, sortByUltPercentage)
+
+    --- fill dataList ---
+    -- insert Header
+    table.insert(dataList, ZO_ScrollList_CreateDataEntry(ATRO_LIST_HEADER_TYPE, {
+    }))
+
+    -- insert playerRows
+    for i, playerData in ipairs(playersDataList) do
+        playerData.orderIndex = i
+        table.insert(dataList, ZO_ScrollList_CreateDataEntry(ATRO_LIST_PLAYERROW_TYPE, playerData))
+    end
+
+    ZO_ScrollList_Commit(atroListControl)
+end
 
 --- updates the damageList
 local function updateUltimateLists()
     updateMiscUltimateList()
     updateHornUltimateList()
+    updateColosUltimateList()
+    updateAtroUltimateList()
 end
 
 --- processes incoming dps data messages and creates/updates the player's entry inside the playersData table
@@ -341,18 +461,20 @@ local function refreshVisibility()
 
     MISC_FRAGMENT:Refresh()
     HORN_FRAGMENT:Refresh()
+    COLOS_FRAGMENT:Refresh()
+    ATRO_FRAGMENT:Refresh()
 end
 
 local function UnlockUI()
     uiLocked = false
     refreshVisibility()
-    hud.UnlockControls(miscListWindow, hornListWindow)
+    hud.UnlockControls(miscListWindow, hornListWindow, colosListWindow, atroListWindow)
 end
 
 local function LockUI()
     uiLocked = true
     refreshVisibility()
-    hud.LockControls(miscListWindow, hornListWindow)
+    hud.LockControls(miscListWindow, hornListWindow, colosListWindow, atroListWindow)
 end
 
 local function onGroupChange()
@@ -366,9 +488,17 @@ local function createSceneFragments()
     local function HornFragmentCondition()
         return isHornListVisible() and controlsVisible
     end
+    local function ColosFragmentCondition()
+        return isColosListVisible() and controlsVisible
+    end
+    local function AtroFragementCondition()
+        return isAtroListVisible() and controlsVisible
+    end
 
     MISC_FRAGMENT = hud.AddSimpleFragment(miscListWindow, MiscFragmentCondition)
     HORN_FRAGMENT = hud.AddSimpleFragment(hornListWindow, HornFragmentCondition)
+    COLOS_FRAGMENT = hud.AddSimpleFragment(colosListWindow, ColosFragmentCondition)
+    ATRO_FRAGMENT = hud.AddSimpleFragment(atroListWindow, AtroFragementCondition)
 end
 
 local function createMiscListWindow()
@@ -418,6 +548,126 @@ local function createHornListWindow()
     ZO_ScrollList_SetHideScrollbarOnDisable(hornListControl, true)
     ZO_ScrollList_SetUseScrollbar(hornListControl, false)
     ZO_ScrollList_SetScrollbarEthereal(hornListControl, true)
+end
+local function createColosListWindow()
+    colosListWindow = WM:CreateTopLevelWindow(colosListWindowName)
+    colosListWindow:SetClampedToScreen(true)
+    colosListWindow:SetResizeToFitDescendents(true)
+    colosListWindow:SetHidden(true)
+    colosListWindow:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, sv.colosListPosLeft, sv.colosListPosTop)
+    colosListWindow:SetWidth(sw.colosListWidth)
+    colosListWindow:SetHeight(sw.colosListHeaderHeight + (sw.colosListRowHeight * 12))
+    colosListWindow:SetHandler( "OnMoveStop", function()
+        sv.colosListPosLeft = colosListWindow:GetLeft()
+        sv.colosListPosTop = colosListWindow:GetTop()
+    end)
+
+    colosListControl = WM:CreateControlFromVirtual(colosListControlName, colosListWindow, "ZO_ScrollList")
+    colosListControl:SetAnchor(TOPLEFT, colosListWindow, TOPLEFT, 0, 0, ANCHOR_CONSTRAINS_XY)
+    colosListControl:SetAnchor(TOPRIGHT, colosListWindow, TOPRIGHT, ZO_SCROLL_BAR_WIDTH, 0, ANCHOR_CONSTRAINS_X)
+    colosListControl:SetHeight(sw.colosListHeaderHeight + (sw.colosListRowHeight * 12))
+    colosListControl:SetMouseEnabled(false)
+    colosListControl:GetNamedChild("Contents"):SetMouseEnabled(false)
+
+    ZO_ScrollList_SetHideScrollbarOnDisable(colosListControl, true)
+    ZO_ScrollList_SetUseScrollbar(colosListControl, false)
+    ZO_ScrollList_SetScrollbarEthereal(colosListControl, true)
+end
+local function createAtroListWindow()
+    atroListWindow = WM:CreateTopLevelWindow(atroListWIndowName)
+    atroListWindow:SetClampedToScreen(true)
+    atroListWindow:SetResizeToFitDescendents(true)
+    atroListWindow:SetHidden(true)
+    atroListWindow:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, sv.atroListPosLeft, sv.atroListPosTop)
+    atroListWindow:SetWidth(sw.atroListWidth)
+    atroListWindow:SetHeight(sw.atroListHeaderHeight + (sw.atroListRowHeight * 12))
+    atroListWindow:SetHandler( "OnMoveStop", function()
+        sv.atroListPosLeft = atroListWindow:GetLeft()
+        sv.atroListPosTop = atroListWindow:GetTop()
+    end)
+
+    atroListControl = WM:CreateControlFromVirtual(atroListControlName, atroListWindow, "ZO_ScrollList")
+    atroListControl:SetAnchor(TOPLEFT, atroListWindow, TOPLEFT, 0, 0, ANCHOR_CONSTRAINS_XY)
+    atroListControl:SetAnchor(TOPRIGHT, atroListWindow, TOPRIGHT, ZO_SCROLL_BAR_WIDTH, 0, ANCHOR_CONSTRAINS_X)
+    atroListControl:SetHeight(sw.atroListHeaderHeight + (sw.atroListRowHeight * 12))
+    atroListControl:SetMouseEnabled(false)
+    atroListControl:GetNamedChild("Contents"):SetMouseEnabled(false)
+
+    ZO_ScrollList_SetHideScrollbarOnDisable(atroListControl, true)
+    ZO_ScrollList_SetUseScrollbar(atroListControl, false)
+    ZO_ScrollList_SetScrollbarEthereal(atroListControl, true)
+end
+
+local function defaultAtroHeaderRowCreationFunc(rowControl, data, scrollList)
+    rowControl:GetNamedChild("_BG"):SetAlpha(sw.styleAtroHeaderOpacity)
+end
+local function defaultAtroPlayerRowCreationFunc(rowControl, data, scrollList)
+    local userId = data.userId
+    local userIcon = player.GetIconForUserId(userId)
+    local userName = player.GetAliasForUserId(userId, sw.enableColoredNames)
+
+    local classId = data.classId
+    local defaultIcon = classIcons[classId] and classIcons[classId] or 'esoui/art/campaign/campaignbrowser_guestcampaign.dds'
+
+    local nameControl = rowControl:GetNamedChild('_Name')
+    nameControl:SetText(userName)
+    nameControl:SetColor(1, 1, 1)
+    local iconControl = rowControl:GetNamedChild('_Icon')
+    iconControl:SetTextureCoords(0, 1, 0, 1)
+    iconControl:SetTexture(sw.enableIcons and userIcon or defaultIcon)
+
+    if sw.enableAnimIcons and anim.IsValidUser(userId) then
+        if not anim.IsUserRegistered(userId) then
+            anim.RegisterUser(userId)
+        end
+
+        anim.RegisterUserControl(userId, iconControl)
+        anim.RunUserAnimations(userId)
+    end
+
+    local percentageColor = getUltPercentageColor(data.atroPercentage, 'FFFFFF')
+    local percentageControl = rowControl:GetNamedChild("_PctValue")
+    percentageControl:SetText(strformat('|c%s%d%%|r', percentageColor, zo_min(200, data.atroPercentage)))
+    percentageControl:SetScale(sv.showAtroPercentValue)
+    local rawValueControl = rowControl:GetNamedChild("_RawValue")
+    rawValueControl:SetText(strformat('%s', data.ultValue))
+    rawValueControl:SetScale(sv.showAtroRawValue)
+end
+
+local function defaultColosHeaderRowCreationFunc(rowControl, data, scrollList)
+    rowControl:GetNamedChild("_BG"):SetAlpha(sw.styleColosHeaderOpacity)
+end
+local function defaultColosPlayerRowCreationFunc(rowControl, data, scrollList)
+    local userId = data.userId
+    local userIcon = player.GetIconForUserId(userId)
+    local userName = player.GetAliasForUserId(userId, sw.enableColoredNames)
+
+    local classId = data.classId
+    local defaultIcon = classIcons[classId] and classIcons[classId] or 'esoui/art/campaign/campaignbrowser_guestcampaign.dds'
+
+    local nameControl = rowControl:GetNamedChild('_Name')
+    nameControl:SetText(userName)
+    nameControl:SetColor(1, 1, 1)
+    local iconControl = rowControl:GetNamedChild('_Icon')
+    iconControl:SetTextureCoords(0, 1, 0, 1)
+    iconControl:SetTexture(sw.enableIcons and userIcon or defaultIcon)
+
+    if sw.enableAnimIcons and anim.IsValidUser(userId) then
+        if not anim.IsUserRegistered(userId) then
+            anim.RegisterUser(userId)
+        end
+
+        anim.RegisterUserControl(userId, iconControl)
+        anim.RunUserAnimations(userId)
+    end
+
+    local percentageColor = getUltPercentageColor(data.colosPercentage, 'FFFFFF')
+    local percentageControl = rowControl:GetNamedChild("_PctValue")
+    percentageControl:SetText(strformat('|c%s%d%%|r', percentageColor, zo_min(200, data.colosPercentage)))
+    percentageControl:SetScale(sv.showColosPercentValue)
+    local rawValueControl = rowControl:GetNamedChild("_RawValue")
+    rawValueControl:SetText(strformat('%s', data.ultValue))
+    rawValueControl:SetScale(sv.showColosRawValue)
 end
 
 local function defaultHornHeaderRowCreationFunc(rowControl, data, scrollList)
@@ -511,6 +761,16 @@ local defaultTheme = {
     HornListPlayerRowTemplate = HORN_LIST_DEFAULT_PLAYERROW_TEMPLATE,
     HornListPlayerRowCreationFunc = defaultHornPlayerRowCreationFunc,
 
+    ColosListHeaderRowTemplate = COLOS_LIST_DEFAULT_HEADER_TEMPLATE,
+    ColosListHeaderRowCreationFunc = defaultColosHeaderRowCreationFunc,
+    ColosListPlayerRowTemplate = COLOS_LIST_DEFAULT_PLAYERROW_TEMPLATE,
+    ColosListPlayerRowCreationFunc = defaultColosPlayerRowCreationFunc,
+
+    AtroListHeaderRowTemplate = ATRO_LIST_DEFAULT_HEADER_TEMPLATE,
+    AtroListHeaderRowCreationFunc = defaultAtroHeaderRowCreationFunc,
+    AtroListPlayerRowTemplate = ATRO_LIST_DEFAULT_PLAYERROW_TEMPLATE,
+    AtroListPlayerRowCreationFunc = defaultAtroPlayerRowCreationFunc,
+
     settings = {
 
     },
@@ -543,9 +803,24 @@ function module:RegisterTheme(themeName, themeTable)
             wrappedFunction(rowControl, data, scrollList)
         end
     end
+    local function colosListHeaderRowCreationWrapper(wrappedFunction)
+        return function(rowControl, data, scrollList)
+            colosListHeaderVulnDurationControl = rowControl:GetNamedChild("_Duration")
+            wrappedFunction(rowControl, data, scrollList)
+        end
+    end
+    local function atroListHeaderRowCreationWrapper(wrappedFunction)
+        return function(rowControl, data, scrollList)
+            atroListHeaderAtroDurationControl = rowControl:GetNamedChild("_AtroDuration")
+            atroListHeaderBerserkDurationControl = rowControl:GetNamedChild("_BerserkDuration")
+            wrappedFunction(rowControl, data, scrollList)
+        end
+    end
 
     themeTable.MISC_LIST_HEADER_TYPE = nextTypeId
     themeTable.HORN_LIST_HEADER_TYPE = nextTypeId
+    themeTable.COLOS_LIST_HEADER_TYPE = nextTypeId
+    themeTable.ATRO_LIST_HEADER_TYPE = nextTypeId
     nextTypeId = nextTypeId + 1
 
     ZO_ScrollList_AddDataType(
@@ -564,10 +839,28 @@ function module:RegisterTheme(themeName, themeTable)
             hornListHeaderRowCreationWrapper(themeTable.HornListHeaderRowCreationFunc or defaultTheme.HornListHeaderRowCreationFunc)
     )
     ZO_ScrollList_SetTypeCategoryHeader(hornListControl, themeTable.HORN_LIST_HEADER_TYPE, true)
+    ZO_ScrollList_AddDataType(
+            colosListControl,
+            themeTable.COLOS_LIST_HEADER_TYPE,
+            themeTable.ColosListHeaderRowTemplate or defaultTheme.ColosListHeaderRowTemplate,
+            sw.colosListHeaderHeight,
+            colosListHeaderRowCreationWrapper(themeTable.ColosListHeaderRowCreationFunc or defaultTheme.ColosListHeaderRowCreationFunc)
+    )
+    ZO_ScrollList_SetTypeCategoryHeader(colosListControl, themeTable.COLOS_LIST_HEADER_TYPE, true)
+    ZO_ScrollList_AddDataType(
+            atroListControl,
+            themeTable.ATRO_LIST_HEADER_TYPE,
+            themeTable.AtroListHeaderRowTemplate or defaultTheme.AtroListHeaderRowTemplate,
+            sw.atroListHeaderHeight,
+            atroListHeaderRowCreationWrapper(themeTable.AtroListHeaderRowCreationFunc or defaultTheme.AtroListHeaderRowCreationFunc)
+    )
+    ZO_ScrollList_SetTypeCategoryHeader(atroListControl, themeTable.ATRO_LIST_HEADER_TYPE, true)
 
 
     themeTable.MISC_LIST_PLAYERROW_TYPE = nextTypeId
     themeTable.HORN_LIST_PLAYERROW_TYPE = nextTypeId
+    themeTable.COLOS_LIST_PLAYERROW_TYPE = nextTypeId
+    themeTable.ATRO_LIST_PLAYERROW_TYPE = nextTypeId
     nextTypeId = nextTypeId + 1
 
     ZO_ScrollList_AddDataType(
@@ -583,6 +876,20 @@ function module:RegisterTheme(themeName, themeTable)
             themeTable.HornListPlayerRowTemplate or defaultTheme.HornListPlayerRowTemplate,
             sw.hornListRowHeight,
             playerRowCreationWrapper(themeTable.HornListPlayerRowCreationFunc or defaultTheme.HornListPlayerRowCreationFunc)
+    )
+    ZO_ScrollList_AddDataType(
+            colosListControl,
+            themeTable.COLOS_LIST_PLAYERROW_TYPE,
+            themeTable.ColosListPlayerRowTemplate or defaultTheme.ColosListPlayerRowTemplate,
+            sw.colosListRowHeight,
+            playerRowCreationWrapper(themeTable.ColosListPlayerRowCreationFunc or defaultTheme.ColosListPlayerRowCreationFunc)
+    )
+    ZO_ScrollList_AddDataType(
+            atroListControl,
+            themeTable.ATRO_LIST_PLAYERROW_TYPE,
+            themeTable.AtroListPlayerRowTemplate or defaultTheme.AtroListPlayerRowTemplate,
+            sw.atroListRowHeight,
+            playerRowCreationWrapper(themeTable.AtroListPlayerRowCreationFunc or defaultTheme.AtroListPlayerRowCreationFunc)
     )
 
     -- register Theme
@@ -844,6 +1151,8 @@ function module:Initialize()
 
     createMiscListWindow()
     createHornListWindow()
+    createColosListWindow()
+    createAtroListWindow()
     createSceneFragments()
     refreshVisibility()
 

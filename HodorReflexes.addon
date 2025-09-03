@@ -31,6 +31,8 @@ modules/ult/lang/$(language).lua
 modules/ult/main.lua
 modules/ult/ui/misc.xml
 modules/ult/ui/horn.xml
+modules/ult/ui/colos.xml
+modules/ult/ui/atro.xml
 
 modules/exitinstance/lang/en.lua
 modules/exitinstance/lang/$(language).lua
