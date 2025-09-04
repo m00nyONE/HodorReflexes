@@ -930,6 +930,7 @@ local function startTest() -- TODO
         local ult2Cost = GetAbilityCost(ult2ID)
         local ult1Percentage = getUltPercentage(ultValue, ult1Cost)
         local ult2Percentage = getUltPercentage(ultValue, ult2Cost)
+        local lowestUltPercentage = zo_min(ult1Percentage, ult2Percentage)
 
         CreateOrUpdatePlayerData({
             name = name, -- required
@@ -941,6 +942,7 @@ local function startTest() -- TODO
             ult2Cost = ult2Cost,
             ult1Percentage = ult1Percentage,
             ult2Percentage = ult2Percentage,
+            lowestUltPercentage = lowestUltPercentage,
             ultActivatedSetID = zo_random(0, 2),
         })
     end
