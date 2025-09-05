@@ -92,6 +92,7 @@ local HR_EVENT_LOCKUI = addon.HR_EVENT_LOCKUI
 local HR_EVENT_UNLOCKUI = addon.HR_EVENT_UNLOCKUI
 local HR_EVENT_TEST_STARTED = addon.HR_EVENT_TEST_STARTED
 local HR_EVENT_TEST_STOPPED = addon.HR_EVENT_TEST_STOPPED
+local HR_EVENT_TEST_TICK = addon.HR_EVENT_TEST_TICK
 local HR_EVENT_PLAYERSDATA_CLEANED = addon.HR_EVENT_PLAYERSDATA_CLEANED
 
 local nextTypeId = 1
@@ -897,6 +898,29 @@ function module:RegisterTheme(themeName, themeTable)
     table.insert(LAMThemeChoices, themeName)
 end
 
+local function updateTest()
+    if not isTestRunning then return end
+
+    for name, playerData in pairs(playersData) do
+        local ultValue = playerData.ultValue + zo_random(2, 5)
+        if ultValue > 500 then ultValue = 0 end
+        if ultValue < 0 then ultValue = 0 end
+        local ult1Percentage = getUltPercentage(ultValue, playerData.ult1Cost)
+        local ult2Percentage = getUltPercentage(ultValue, playerData.ult2Cost)
+
+        CreateOrUpdatePlayerData({
+            name = name, -- required
+            tag = name, -- required
+            ultValue = ultValue,
+            ult1Percentage = ult1Percentage,
+            ult2Percentage = ult2Percentage,
+            lowestUltPercentage = zo_min(ult1Percentage, ult2Percentage),
+        })
+    end
+
+    updateUltimateLists()
+end
+
 local function startTest() -- TODO
     isTestRunning = true
 
@@ -1128,6 +1152,7 @@ function module:Initialize()
 
     addon.RegisterCallback(HR_EVENT_TEST_STARTED, startTest)
     addon.RegisterCallback(HR_EVENT_TEST_STOPPED, stopTest)
+    addon.RegisterCallback(HR_EVENT_TEST_TICK, updateTest)
     addon.RegisterCallback(HR_EVENT_PLAYERSDATA_CLEANED, updateUltimateLists)
 
     group.RegisterPlayersDataFields({

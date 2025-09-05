@@ -72,6 +72,7 @@ local HR_EVENT_LOCKUI = addon.HR_EVENT_LOCKUI
 local HR_EVENT_UNLOCKUI = addon.HR_EVENT_UNLOCKUI
 local HR_EVENT_TEST_STARTED = addon.HR_EVENT_TEST_STARTED
 local HR_EVENT_TEST_STOPPED = addon.HR_EVENT_TEST_STOPPED
+local HR_EVENT_TEST_TICK = addon.HR_EVENT_TEST_TICK
 local HR_EVENT_PLAYERSDATA_CLEANED = addon.HR_EVENT_PLAYERSDATA_CLEANED
 
 local DAMAGE_UNKNOWN = LGCS.DAMAGE_UNKNOWN
@@ -464,11 +465,32 @@ function module:RegisterTheme(themeName, themeTable)
     table.insert(LAMThemeChoices, themeName)
 end
 
+local function updateTest()
+    if not isTestRunning then return end
+
+    for name, playerData in pairs(playersData) do
+        local dmg = playerData.dmg + zo_random(-15, 15)
+        if dmg > 1200 then dmg = 1200 end
+        if dmg < 500 then dmg = 500 end
+
+        CreateOrUpdatePlayerData({
+            name = name, -- required
+            tag = name, -- required
+            dmg = dmg,
+            dps = dmg * 0.15,
+            dmgType = DAMAGE_BOSS,
+        })
+    end
+
+    updateDamageList()
+end
+
 local function startTest()
     isTestRunning = true
 
     for name, _ in pairs(playersData) do
         local dmg = zo_random(500, 1200)
+
         CreateOrUpdatePlayerData({
             name = name, -- required
             tag = name, -- required
@@ -754,6 +776,7 @@ function module:Initialize()
 
     addon.RegisterCallback(HR_EVENT_TEST_STARTED, startTest)
     addon.RegisterCallback(HR_EVENT_TEST_STOPPED, stopTest)
+    addon.RegisterCallback(HR_EVENT_TEST_TICK, updateTest)
     addon.RegisterCallback(HR_EVENT_PLAYERSDATA_CLEANED, updateDamageList)
 
     group.RegisterPlayersDataFields({
