@@ -904,25 +904,31 @@ end
 local function startTest() -- TODO
     isTestRunning = true
 
-    local randomUltPool = {
-        40239,
-        32948,
-        85127,
-        15957, 16536, 17874, 17878, 21752, 21755, 21758, 22138, 22139,
-        22144, 22223, 22226, 22229, 23492, 23495, 23634, 24785, 24804,
-        24806, 25091, 25411, 27706, 28341, 28348, 28988, 29012, 32455,
-        32624, 32715, 32719, 32947, 32958, 33398, 35460, 35508, 35713,
-        36485, 83600, 83619, 83642, 83850, 84434, 85132, 85179, 85187,
-        85257, 85451, 85532, 85804, 85807, 85982, 85986, 85990, 86109,
-        86113, 86117, 103478, 103557, 103564, 115001, 115410,118279,
-        118367, 118379, 118664, 122174, 122388, 122395, 183676, 183709,
-        189791, 189837, 189867, 192372, 192380, 193558,
-    }
+    local ultPool = {}
+
+    for skillType = 1, GetNumSkillTypes() do
+        for skillLineIndex = 1, GetNumSkillLines(skillType) do
+            for skillIndex = 1, GetNumSkillAbilities(skillType, skillLineIndex) do
+                if IsSkillAbilityUltimate(skillType, skillLineIndex, skillIndex) then
+                    local _tempIds = {} -- create temporary table for all sill Ids of each morph
+                    for morph = 0, 2 do -- there is only 1 base rank and 2 morphs
+                        local abilityId, _ = GetSpecificSkillAbilityInfo(skillType, skillLineIndex, skillIndex, morph, 0)
+                        table.insert(_tempIds, abilityId)
+                        if abilityId == 0 then _tempIds = {} end -- if the ability Id is 0, clear all previously collected Ids from the temporary table because there is no ultimate without 2 morphs
+                    end
+                    -- iterate over temporary Id table and write it to our final destination
+                    for _, _abilityId in ipairs(_tempIds) do
+                        table.insert(ultPool, _abilityId)
+                    end
+                end
+            end
+        end
+    end
 
     for name, playerData in pairs(playersData) do
         local ultValue = zo_random(1, 500)
-        local ult1ID = randomUltPool[zo_random(1, #randomUltPool)]
-        local ult2ID = randomUltPool[zo_random(1, #randomUltPool)]
+        local ult1ID = ultPool[zo_random(1, #ultPool)]
+        local ult2ID = ultPool[zo_random(1, #ultPool)]
         if playerData.classId == 5 then
             ult1ID = 122395
             ult2ID = 40223
