@@ -1,11 +1,18 @@
--- Some shortcuts to create HUD fragments.
-HodorReflexes.hud = {}
+local addon_name = "HodorReflexes"
+local addon = _G[addon_name]
 
-local HR = HodorReflexes
-local hud = HR.hud
+-- Some shortcuts to create HUD fragments.
+local extension = {
+    name = "hud",
+    version = "1.0.0",
+}
+local extension_name = extension.name
+local extension_version = extension.version
+
+addon[extension_name] = extension
 
 -- Disable controls movement.
-function hud.LockControls(...)
+function extension.LockControls(...)
 	for _, control in ipairs({...}) do
 		control:SetMouseEnabled(false)
 		control:SetMovable(false)
@@ -13,7 +20,7 @@ function hud.LockControls(...)
 end
 
 -- Allow controls movement.
-function hud.UnlockControls(...)
+function extension.UnlockControls(...)
 	for _, control in ipairs({...}) do
 		control:SetMouseEnabled(true)
 		control:SetMovable(true)
@@ -21,7 +28,7 @@ function hud.UnlockControls(...)
 end
 
 -- Create a simple HUD_SCENE/HUD_UI_SCENE fragment with a display condition function.
-function hud.AddSimpleFragment(control, condition)
+function extension.AddSimpleFragment(control, condition)
 
 	local f = ZO_SimpleSceneFragment:New(control)
 	if condition then f:SetConditional(condition) end
@@ -32,7 +39,7 @@ function hud.AddSimpleFragment(control, condition)
 end
 
 -- Create a fading HUD_SCENE/HUD_UI_SCENE fragment with a display condition function.
-function hud.AddFadeFragment(control, condition)
+function extension.AddFadeFragment(control, condition)
 
 	local f = ZO_HUDFadeSceneFragment:New(control)
 	if condition then f:SetConditional(condition) end
