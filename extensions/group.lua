@@ -96,7 +96,7 @@ local function cleanPlayersData(forceDelete)
     end
     for characterName, data in pairs(playersData) do
         if not _existingGroupCharacters[characterName] or forceDelete then
-            anim.UnregisterUser(data.userId)
+            anim.UnregisterUserFromAllNamespaces(data.userId)
             playersData[characterName] = nil
         end
     end
