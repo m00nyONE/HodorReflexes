@@ -1,12 +1,17 @@
+local addon_name = "HodorReflexes"
+local addon = _G[addon_name]
+
 -- A lightweight extension to access LibCombat data.
-HodorReflexes.combat = {
-	name = "HodorReflexes_Combat",
+local extension = {
+    name = "combat",
+    version = "1.0.0",
 }
+local extension_name = extension.name
+local extension_version = extension.version
 
-local HR = HodorReflexes
+addon[extension_name] = extension
+
 local LC = LibCombat
-local combat = HR.combat
-
 local combatData
 
 local function InitData()
@@ -21,22 +26,22 @@ local function FightRecapCallback(_, data)
 	combatData.hpstime = data.hpstime
 end
 
-function combat.Register()
+function extension.Register()
 	InitData()
-	LC:RegisterCallbackType(LIBCOMBAT_EVENT_FIGHTRECAP, FightRecapCallback, combat.name)
+	LC:RegisterCallbackType(LIBCOMBAT_EVENT_FIGHTRECAP, FightRecapCallback, addon_name .. extension_name)
 end
 
-function combat.Unregister()
+function extension.Unregister()
 	InitData()
-	LC:UnregisterCallbackType(LIBCOMBAT_EVENT_FIGHTRECAP, FightRecapCallback, combat.name)
+	LC:UnregisterCallbackType(LIBCOMBAT_EVENT_FIGHTRECAP, FightRecapCallback, addon_name .. extension_name)
 end
 
-function combat.Reset()
+function extension.Reset()
 	InitData()
 end
 
 
-function combat.GetCombatTime()
+function extension.GetCombatTime()
 	return zo_roundToNearest(zo_max(combatData.dpstime, combatData.hpstime), 0.1)
 end
 
