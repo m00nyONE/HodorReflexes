@@ -1,8 +1,18 @@
-HodorReflexes.player = {}
+local addon_name = "HodorReflexes"
+local addon = _G[addon_name]
 
-local HR = HodorReflexes
-local player = HR.player
-local util = HR.util
+-- Some shortcuts to create HUD fragments.
+local extension = {
+    name = "player",
+    version = "1.0.0",
+}
+local extension_name = extension.name
+local extension_version = extension.version
+
+addon[extension_name] = extension
+
+local util = addon.util
+local localPlayer = "player"
 
 local LCI = LibCustomIcons
 local LCN = LibCustomNames
@@ -10,28 +20,28 @@ local LCN = LibCustomNames
 local currentZoneId = 0
 local currentHouseId = 0
 
-function player.Initialize()
+function extension.Initialize()
 
-	currentZoneId = GetZoneId(GetUnitZoneIndex('player'))
+	currentZoneId = GetZoneId(GetUnitZoneIndex(localPlayer))
 	currentHouseId = GetCurrentZoneHouseId()
 
 end
 
 -- Returns map distance, not meters
-function player.GetDistanceToPlayer(unitTag)
+function extension.GetDistanceToPlayer(unitTag)
 
 	--local x2, y2, h2, m2 = GetMapPlayerPosition(unitTag)
 	local x2, y2, _, m2 = GetMapPlayerPosition(unitTag)
 	if not m2 then return nil end -- not on the same map
-	local x1, y1 = GetMapPlayerPosition('player')
+	local x1, y1 = GetMapPlayerPosition(localPlayer)
 	return util.GetDistance(x1, y1, x2, y2)
 
 end
 
 -- Returns distance to player in meters or false if players are in different zones.
-function player.GetDistanceToPlayerM(unitTag)
+function extension.GetDistanceToPlayerM(unitTag)
 
-	local zone1, x1, y1, z1 = GetUnitWorldPosition('player')
+	local zone1, x1, y1, z1 = GetUnitWorldPosition(localPlayer)
 	local zone2, x2, y2, z2 = GetUnitWorldPosition(unitTag)
 
 	if zone1 == zone2 then
@@ -40,30 +50,30 @@ function player.GetDistanceToPlayerM(unitTag)
 end
 
 -- Checks map distance, not meters (using "radius" param)
-function player.IsCloseToPlayer(unitTag, radius)
+function extension.IsCloseToPlayer(unitTag, radius)
 
-	local d = player.GetDistanceToPlayer(unitTag)
+	local d = extension.GetDistanceToPlayer(unitTag)
 	return d and radius - d >= 0 or false
 
 end
 
 -- Returns map distance, not meters
-function player.GetDistanceToPoint(x2, y2)
+function extension.GetDistanceToPoint(x2, y2)
 
-	local x1, y1 = GetMapPlayerPosition('player')	
+	local x1, y1 = GetMapPlayerPosition(localPlayer)
 	return util.GetDistance(x1, y1, x2, y2)
 
 end
 
-function player.GetCurrentZoneId()
+function extension.GetCurrentZoneId()
 	return currentZoneId
 end
 
-function player.GetCurrentHouseId()
+function extension.GetCurrentHouseId()
 	return currentHouseId
 end
 
-function player.GetAliasForUserId(id, pretty)
+function extension.GetAliasForUserId(id, pretty)
 	if not LCN then return id and UndecorateDisplayName(id) or '' end
 
 	local user = LCN.Get(id, pretty)
@@ -73,7 +83,7 @@ function player.GetAliasForUserId(id, pretty)
 
 end
 
-function player.GetIconForUserId(id)
+function extension.GetIconForUserId(id)
 	if not LCI then return nil end
 
 	return LCI.GetStatic(id)
