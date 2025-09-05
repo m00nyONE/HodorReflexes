@@ -21,32 +21,23 @@ local sv = nil
 local svName = addon.svName
 local svVersion = addon.svVersion
 local svDefault = {
-	confirmExitInstance = true,                -- Show confirmation dialog before exiting instances
-	toxicMode = false,                          -- Enable "toxic" mock messages in specific zones
+    modules = {
+        ["mock"] = false,
+        ["vote"] = true,
+        ["pull"] = true,
+        ["dps"] = true,
+        ["ult"] = true,
+        ["events"] = true,
+        ["exitinstance"] = true,
+        ["readycheck"] = true,
+    },
+    libraryPopupDisabled = false,
 }
 
 -- Core Addon Table
 HodorReflexes = {
 	name = "HodorReflexes",
 	version = "dev",
-
-	-- Default settings for saved variables
-	default = {
-		confirmExitInstance = true,                -- Show confirmation dialog before exiting instances
-		toxicMode = false,                          -- Enable "toxic" mock messages in specific zones
-		modules = {
-			["mock"] = false,
-			["vote"] = true,
-			["pull"] = true,
-			["dps"] = true,
-			["ult"] = true,
-			["events"] = true,
-			["exitinstance"] = true,
-            ["readycheck"] = true,
-		},
-        -- NoLibsInstalled
-        libraryPopupDisabled = false,
-	},
 
 	-- Saved variables configuration
 	sv = nil,                  -- Saved variables instance
@@ -360,7 +351,7 @@ end
 
 local function initializeModules()
 	if not HR.sv.modules then
-		HR.sv.modules = HR.default.modules
+		HR.sv.modules = svDefault.modules
 	end
 
 	for moduleName, moduleClass in spairs(addon_modules, sortByPriority) do
@@ -449,7 +440,7 @@ end
 local function Initialize()
 
 	-- Retrieve saved variables
-	HR.sv = ZO_SavedVars:NewAccountWide(HR.svName, HR.svVersion, nil, HR.default)
+	HR.sv = ZO_SavedVars:NewAccountWide(HR.svName, HR.svVersion, nil, svDefault)
 
 	registerLGBHandler()
 
