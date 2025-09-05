@@ -24,12 +24,14 @@ local util = addon.util
 local isTestRunning = false
 local localPlayer = "player"
 local strformat = string.format
+local EM = GetEventManager()
 
 local HR_EVENT_LOCKUI = addon.HR_EVENT_LOCKUI
 local HR_EVENT_UNLOCKUI = addon.HR_EVENT_UNLOCKUI
 local HR_EVENT_GROUP_CHANGED = addon.HR_EVENT_GROUP_CHANGED
 local HR_EVENT_TEST_STARTED = addon.HR_EVENT_TEST_STARTED
 local HR_EVENT_TEST_STOPPED = addon.HR_EVENT_TEST_STOPPED
+local HR_EVENT_TEST_TICK = addon.HR_EVENT_TEST_TICK
 local HR_EVENT_PLAYERSDATA_CLEANED = addon.HR_EVENT_PLAYERSDATA_CLEAN
 local HR_EVENT_PLAYERSDATA_UPDATED = addon.HR_EVENT_PLAYERSDATA_UPDATED
 
@@ -108,6 +110,7 @@ local function toggleTest(players)
         isTestRunning = false
         CM:FireCallbacks(HR_EVENT_LOCKUI)
         CM:FireCallbacks(HR_EVENT_TEST_STOPPED)
+        EM:UnregisterForUpdate(addon_name .. "_TestUpdate")
         d(strformat("|cFF0000%s|r", GetString(HR_TEST_STOPPED)))
         return
     end
@@ -144,6 +147,9 @@ local function toggleTest(players)
     isTestRunning = true
     CM:FireCallbacks(HR_EVENT_TEST_STARTED)
     CM:FireCallbacks(HR_EVENT_UNLOCKUI)
+    EM:RegisterForUpdate(addon_name .. "_TestUpdate", 1000, function()
+        CM:FireCallbacks(HR_EVENT_TEST_TICK)
+    end)
     d(strformat("|c00FF00%s|r", GetString(HR_TEST_STARTED)))
 end
 
