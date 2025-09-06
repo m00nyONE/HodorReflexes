@@ -45,16 +45,6 @@ function M.BuildMenu()
 		},
 		{
 			type = "checkbox",
-			name = GetString(HR_MENU_GENERAL_EXIT_INSTANCE),
-			tooltip = GetString(HR_MENU_GENERAL_EXIT_INSTANCE_TT),
-			default = HodorReflexes.default.confirmExitInstance,
-			getFunc = function() return HodorReflexes.sv.confirmExitInstance end,
-			setFunc = function(value)
-				HodorReflexes.sv.confirmExitInstance = value and true
-			end
-		},
-		{
-			type = "checkbox",
 			name = GetString(HR_MENU_GENERAL_DISABLE_PVP),
 			tooltip = GetString(HR_MENU_GENERAL_DISABLE_PVP_TT),
 			default = M.default.disablePvP,
@@ -342,16 +332,6 @@ function M.BuildMenu()
 		{
 			type = "header",
 			name = string.format("|cFFFACD%s|r", GetString(HR_MENU_MISC)),
-		},
-		{
-			type = "checkbox",
-			name = GetString(HR_MENU_MISC_TOXIC),
-			tooltip = GetString(HR_MENU_MISC_TOXIC_TT),
-			default = HodorReflexes.default.toxicMode,
-			getFunc = function() return HodorReflexes.sv.toxicMode end,
-			setFunc = function(value)
-				HodorReflexes.sv.toxicMode = value and true
-			end
 		},
 		{
 			type = "description",

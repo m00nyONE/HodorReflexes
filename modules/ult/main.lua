@@ -44,6 +44,9 @@ local svDefault = {
     showHornPercentValue = 1.0,
     showHornRawValue = 1.0,
     styleHornHeaderOpacity = 0.0,
+    styleHornColor =  {0, 1, 1},
+    styleForceColor = {1, 1, 0},
+    styleSaxhleelBGColor = {0, 1, 0, 0.15},
 
     enableColosList = 1,
     colosListPosLeft = 0,
@@ -54,6 +57,7 @@ local svDefault = {
     showColosPercentValue = 1.0,
     showColosRawValue = 1.0,
     styleColosHeaderOpacity = 0.0,
+    styleColosColor = {1, 1, 0},
 
     enableAtroList = 1,
     atroListPosLeft = 0,
@@ -64,6 +68,11 @@ local svDefault = {
     showAtroPercentValue = 1.0,
     showAtroRawValue = 1.0,
     styleAtroHeaderOpacity = 0.0,
+    styleAtroColor = {0, 1, 1},
+    styleBerserkColor = {1, 1, 0},
+
+    styleZeroTimerOpacity = 0.7,
+    styleTimerBlink = true,
 
     selectedTheme = "default",
 }
@@ -81,6 +90,7 @@ local combat = addon.combat
 local player = addon.player
 local anim = addon.anim
 local util = addon.util
+local timer = addon.timer
 local CreateOrUpdatePlayerData = group.CreateOrUpdatePlayerData
 local playersData = group.playersData
 
@@ -125,18 +135,23 @@ local hornListWindow = {}
 local hornListControlName = hornListWindowName .. "_List"
 local hornListControl = {}
 local hornListHeaderHornDurationControl = nil
+local hornListHornTimer = nil
 local hornListHeaderForceDurationControl = nil
+local hornListForceTimer = nil
 local colosListWindowName = addon_name .. module_name .. "_Colos"
 local colosListWindow = {}
 local colosListControlName = colosListWindowName .. "_List"
 local colosListControl = {}
 local colosListHeaderVulnDurationControl = nil
-local atroListWIndowName = addon_name .. module_name .. "_Atro"
+local colosListVulnTimer = nil
+local atroListWindowName = addon_name .. module_name .. "_Atro"
 local atroListWindow = {}
-local atroListControlName = atroListWIndowName .. "_List"
+local atroListControlName = atroListWindowName .. "_List"
 local atroListControl = {}
 local atroListHeaderAtroDurationControl = nil
+local atroListAtroTimer = nil
 local atroListHeaderBerserkDurationControl = nil
+local atroListBerserkTimer = nil
 
 
 local controlsVisible = false
@@ -575,7 +590,7 @@ local function createColosListWindow()
     ZO_ScrollList_SetScrollbarEthereal(colosListControl, true)
 end
 local function createAtroListWindow()
-    atroListWindow = WM:CreateTopLevelWindow(atroListWIndowName)
+    atroListWindow = WM:CreateTopLevelWindow(atroListWindowName)
     atroListWindow:SetClampedToScreen(true)
     atroListWindow:SetResizeToFitDescendents(true)
     atroListWindow:SetHidden(true)
@@ -601,6 +616,12 @@ end
 
 local function defaultAtroHeaderRowCreationFunc(rowControl, data, scrollList)
     rowControl:GetNamedChild("_BG"):SetAlpha(sw.styleAtroHeaderOpacity)
+    --rowControl:GetNamedChild("_AtroIcon"):SetAlpha(sw.styleZeroTimerOpacity)
+    rowControl:GetNamedChild("_AtroDuration"):SetColor(unpack(sw.styleAtroColor))
+    rowControl:GetNamedChild("_AtroDuration"):SetAlpha(sw.styleZeroTimerOpacity)
+    --rowControl:GetNamedChild("_BerserkIcon"):SetAlpha(sw.styleZeroTimerOpacity)
+    rowControl:GetNamedChild("_BerserkDuration"):SetColor(unpack(sw.styleBerserkColor))
+    rowControl:GetNamedChild("_BerserkDuration"):SetAlpha(sw.styleZeroTimerOpacity)
 end
 local function defaultAtroPlayerRowCreationFunc(rowControl, data, scrollList)
     local userId = data.userId
@@ -632,6 +653,9 @@ end
 
 local function defaultColosHeaderRowCreationFunc(rowControl, data, scrollList)
     rowControl:GetNamedChild("_BG"):SetAlpha(sw.styleColosHeaderOpacity)
+    --rowControl:GetNamedChild("_Icon"):SetAlpha(sw.styleZeroTimerOpacity)
+    rowControl:GetNamedChild("_Duration"):SetColor(unpack(sw.styleColosColor))
+    rowControl:GetNamedChild("_Duration"):SetAlpha(sw.styleZeroTimerOpacity)
 end
 local function defaultColosPlayerRowCreationFunc(rowControl, data, scrollList)
     local userId = data.userId
@@ -663,6 +687,12 @@ end
 
 local function defaultHornHeaderRowCreationFunc(rowControl, data, scrollList)
     rowControl:GetNamedChild("_BG"):SetAlpha(sw.styleHornHeaderOpacity)
+    --rowControl:GetNamedChild("_HornIcon"):SetAlpha(sw.styleZeroTimerOpacity)
+    rowControl:GetNamedChild("_HornDuration"):SetColor(unpack(sw.styleHornColor))
+    rowControl:GetNamedChild("_HornDuration"):SetAlpha(sw.styleZeroTimerOpacity)
+    --rowControl:GetNamedChild("_ForceIcon"):SetAlpha(sw.styleZeroTimerOpacity)
+    rowControl:GetNamedChild("_ForceDuration"):SetColor(unpack(sw.styleForceColor))
+    rowControl:GetNamedChild("_ForceDuration"):SetAlpha(sw.styleZeroTimerOpacity)
 end
 local function defaultHornPlayerRowCreationFunc(rowControl, data, scrollList)
     local userId = data.userId
@@ -681,6 +711,13 @@ local function defaultHornPlayerRowCreationFunc(rowControl, data, scrollList)
 
     if sw.enableAnimIcons then
         anim.AnimateUserIcon("horn_list", userId, iconControl)
+    end
+
+    local _BG = rowControl:GetNamedChild("_BG")
+    if data.hasSaxhleel then
+        _BG:SetColor(unpack(sw.styleSaxhleelBGColor))
+    else
+        _BG:SetColor(1, 1, 1, 0)
     end
 
     local percentageColor = getUltPercentageColor(data.hornPercentage, 'FFFFFF')
@@ -725,6 +762,88 @@ local function defaultMiscPlayerRowCreationFunc(rowControl, data, scrollList)
     rawValueControl:SetScale(sv.showMiscRawValue)
     rowControl:GetNamedChild('_UltIconFrontbar'):SetTexture(GetAbilityIcon(data.ult1ID))
     rowControl:GetNamedChild('_UltIconBackbar'):SetTexture(GetAbilityIcon(data.ult2ID))
+end
+
+local function CreateDurationHandler(getControlFn, blinkConfig)
+    local blinkTimer
+
+    if blinkConfig then
+        -- create a blinker for this control
+        local counter = 0
+
+        local function onTick()
+            local control = getControlFn()
+            if not control then return end
+            control:SetAlpha(counter % 4 < 2 and 0 or sv.styleZeroTimerOpacity)
+            counter = counter + 1
+        end
+
+        local function onStop()
+            local control = getControlFn()
+            if not control then return end
+            counter = 0
+            control:SetAlpha(sv.styleZeroTimerOpacity)
+        end
+
+        blinkTimer = timer.New()
+        blinkTimer:SetTickInterval(blinkConfig.tickInterval or 100)
+        blinkTimer:SetHandler(timer.ON_TICK, onTick)
+        blinkTimer:SetHandler(timer.ON_STOP, onStop)
+
+        function blinkTimer:StartBlink()
+            self:Stop()
+            counter = 0
+            self:StartCountdown(blinkConfig.duration or 2000)
+        end
+    end
+
+    return function(event, startTime, endTime, durationMS, remainingMS)
+        local control = getControlFn()
+        if not control then return nil end
+
+        if event == timer.ON_TICK then
+            if blinkTimer then blinkTimer:Stop() end
+            control:SetAlpha(1)
+            control:SetText(strformat('%5.1f', remainingMS / 1000))
+            return
+        end
+
+        if event == timer.ON_START then
+            if blinkTimer then blinkTimer:Stop() end
+            control:SetAlpha(1)
+            return
+        end
+
+        if event == timer.ON_STOP then
+            control:SetAlpha(sw.styleZeroTimerOpacity)
+            if blinkTimer then blinkTimer:StartBlink() end
+            return
+        end
+    end
+end
+
+local function AttachDurationHandlers(timerObject, getControlFn, blinkConfig)
+    local handler = CreateDurationHandler(getControlFn, blinkConfig)
+    timerObject:SetHandler(timer.ON_START, handler)
+    timerObject:SetHandler(timer.ON_TICK, handler)
+    timerObject:SetHandler(timer.ON_STOP, handler)
+end
+
+local function setupTimers()
+    hornListHornTimer = timer.New()
+    AttachDurationHandlers(hornListHornTimer, function() return hornListHeaderHornDurationControl end, { tickInterval = 100, duration = 2000 })
+
+    hornListForceTimer = timer.New()
+    AttachDurationHandlers(hornListForceTimer, function() return hornListHeaderForceDurationControl end, { tickInterval = 100, duration = 2000 })
+
+    colosListVulnTimer = timer.New()
+    AttachDurationHandlers(colosListVulnTimer, function() return colosListHeaderVulnDurationControl end, { tickInterval = 100, duration = 2000 })
+
+    atroListAtroTimer = timer.New()
+    AttachDurationHandlers(atroListAtroTimer, function() return atroListHeaderAtroDurationControl end, { tickInterval = 100, duration = 2000 })
+
+    atroListBerserkTimer = timer.New()
+    AttachDurationHandlers(atroListBerserkTimer, function() return atroListHeaderBerserkDurationControl end, { tickInterval = 100, duration = 2000 })
 end
 
 local defaultTheme = {
@@ -904,6 +1023,15 @@ end
 local function startTest() -- TODO
     isTestRunning = true
 
+    hornListHornTimer:StartCountdown(30000)
+    hornListForceTimer:StartCountdown(10000)
+
+    colosListVulnTimer:StartCountdown(12000)
+
+    atroListAtroTimer:StartCountdown(15000)
+    atroListBerserkTimer:StartCountdown(10000)
+
+
     local ultPool = {}
 
     for skillType = 1, GetNumSkillTypes() do
@@ -962,6 +1090,14 @@ end
 
 local function stopTest()
     isTestRunning = false
+
+    hornListHornTimer:Stop()
+    hornListForceTimer:Stop()
+
+    colosListVulnTimer:Stop()
+
+    atroListAtroTimer:Stop()
+    atroListBerserkTimer:Stop()
 end
 
 -- initialization functions
@@ -1169,6 +1305,8 @@ function module:Initialize()
     createSceneFragments()
     refreshVisibility()
 
+    setupTimers()
+
     module:RegisterTheme("default", defaultTheme)
     validateSelectedTheme()
     applyTheme(sw.selectedTheme)
@@ -1179,3 +1317,10 @@ function module:Initialize()
 end
 
 addon:RegisterModule(module_name, module)
+
+
+SLASH_COMMANDS["/hodor.test"] = function(str)
+    if str == "cooldown" then
+        hornListForceTimer:StartCountdown(5000)
+    end
+end
