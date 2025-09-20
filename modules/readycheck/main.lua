@@ -27,9 +27,14 @@ local WM = WINDOW_MANAGER
 local localPlayer = "player"
 
 local hud = addon.hud
+local group = addon.group
+
+local playersData = group.playersData
 
 local HR_EVENT_LOCKUI = addon.HR_EVENT_LOCKUI
 local HR_EVENT_UNLOCKUI = addon.HR_EVENT_UNLOCKUI
+local HR_EVENT_TEST_STARTED = addon.HR_EVENT_TEST_STARTED
+local HR_EVENT_TEST_STOPPED = addon.HR_EVENT_TEST_STOPPED
 
 local READYCHECK_FRAGMENT
 local readycheckWindow = {}
@@ -163,6 +168,24 @@ local function groupElectionFailed(_, failureReason, descriptor)
     zo_callLater(function() stopElection() end, 2000)
 end
 
+local function startTest()
+    local names = {}
+
+    for _, data in pairs(playersData) do
+        local color = "00FF00"
+        local vote = zo_random(0, 100)
+        if vote < 20 then
+            color = "FF0000"
+        end
+        tinsert(names, strformat("|c%s%s|r", color, data.userId))
+    end
+
+    readycheckList:SetText(tconcat(names, ", "))
+end
+local function stopTest()
+    readycheckList:SetText("")
+end
+
 -- initialization functions
 
 function module:MainMenuOptions()
@@ -192,6 +215,8 @@ function module:Initialize()
 
     addon.RegisterCallback(HR_EVENT_LOCKUI, lockUI)
     addon.RegisterCallback(HR_EVENT_UNLOCKUI, unlockUI)
+    addon.RegisterCallback(HR_EVENT_TEST_STARTED, startTest)
+    addon.RegisterCallback(HR_EVENT_TEST_STOPPED, stopTest)
 
     createReadyCheckUI()
     createSceneFragment()
