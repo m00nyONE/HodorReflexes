@@ -172,10 +172,12 @@ local function startTest()
     local names = {}
 
     for _, data in pairs(playersData) do
-        local color = "00FF00"
+        local color = "FFFFFF"
         local vote = zo_random(0, 100)
         if vote < 20 then
             color = "FF0000"
+        elseif vote < 80 then
+            color = "00FF00"
         end
         tinsert(names, strformat("|c%s%s|r", color, data.userId))
     end
@@ -183,7 +185,7 @@ local function startTest()
     readycheckList:SetText(tconcat(names, ", "))
 end
 local function stopTest()
-    readycheckList:SetText("")
+    readycheckList:SetText("Player1, Player2, Player3, Player4, Player5, Player6, Player7, Player8, Player9, Player10, Player11, Player12")
 end
 
 -- initialization functions
