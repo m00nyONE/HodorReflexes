@@ -1,3 +1,6 @@
+-- SPDX-FileCopyrightText: 2025 m00nyONE
+-- SPDX-License-Identifier: Artistic-2.0
+
 HodorReflexes.modules.exitinstance = {
     name = "HodorReflexes_ExitInstance",
     version = "1.0.0",

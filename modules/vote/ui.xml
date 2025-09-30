@@ -1,3 +1,8 @@
+<!--
+ SPDX-FileCopyrightText: 2025 andy.s m00nyONE BloodStainChild666
+ SPDX-License-Identifier: Artistic-2.0
+-->
+
 <GuiXml>
     <Controls>
         <TopLevelControl name="HodorReflexes_Vote_Main" mouseEnabled="true" movable="true" resizeToFitDescendents="true" hidden="true">

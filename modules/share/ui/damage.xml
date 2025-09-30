@@ -1,3 +1,8 @@
+<!--
+ SPDX-FileCopyrightText: 2025 andy.s m00nyONE
+ SPDX-License-Identifier: Artistic-2.0
+-->
+
 <GuiXml>
     <Controls>
         <TopLevelControl name="HodorReflexes_Share_Damage" mouseEnabled="false" movable="false" resizeToFitDescendents="true" clampedToScreen="true" hidden="true">

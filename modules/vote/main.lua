@@ -1,3 +1,6 @@
+-- SPDX-FileCopyrightText: 2025 andy.s m00nyONE BloodStainChild666
+-- SPDX-License-Identifier: Artistic-2.0
+
 HodorReflexes.modules.vote = {
 	name = "HodorReflexes_Vote",
 	version = "1.0.0",

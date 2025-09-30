@@ -1,3 +1,6 @@
+-- SPDX-FileCopyrightText: 2025 m00nyONE
+-- SPDX-License-Identifier: Artistic-2.0
+
 HodorReflexes.modules.events = {
     name = "HodorReflexes_Events",
     version = "0.1.0",
