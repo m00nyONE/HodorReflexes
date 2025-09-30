@@ -46,7 +46,8 @@ local svDefault = {
     styleHornHeaderOpacity = 0.0,
     styleHornColor =  {0, 1, 1},
     styleForceColor = {1, 1, 0},
-    styleSaxhleelBGColor = {0, 1, 0, 0.15},
+    styleHighlightSaxhleel = false,
+    styleSaxhleelBGColor = {1, 1, 0, 0.15},
 
     enableColosList = 1,
     colosListPosLeft = 0,
@@ -823,11 +824,13 @@ local function defaultHornPlayerRowCreationFunc(rowControl, data, scrollList)
         anim.AnimateUserIcon("horn_list", userId, iconControl)
     end
 
-    local _BG = rowControl:GetNamedChild("_BG")
-    if data.hasSaxhleel then
-        _BG:SetColor(unpack(sw.styleSaxhleelBGColor))
-    else
-        _BG:SetColor(1, 1, 1, 0)
+    if sw.styleHighlightSaxhleel then
+        local _BG = rowControl:GetNamedChild("_BG")
+        if data.hasSaxhleel then
+            _BG:SetColor(unpack(sw.styleSaxhleelBGColor))
+        else
+            _BG:SetColor(1, 1, 1, 0)
+        end
     end
 
     local percentageColor = getUltPercentageColor(data.hornPercentage, 'FFFFFF')
