@@ -98,6 +98,7 @@ function extension.StopNamespacedUserAnimations(namespace, userId)
     local a = n[userId]
     if a then
         a.timeline:SetEnabled(false)
+        a.animationObject:SetAnimatedControl(nil)
     end
 end
 
