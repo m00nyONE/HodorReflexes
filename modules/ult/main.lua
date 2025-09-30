@@ -124,6 +124,17 @@ local COLOS_LIST_DEFAULT_HEADER_TEMPLATE = "HodorReflexes_Ult_ColosList_Header"
 local ATRO_LIST_DEFAULT_PLAYERROW_TEMPLATE = "HodorReflexes_Ult_AtroList_PlayerRow"
 local ATRO_LIST_DEFAULT_HEADER_TEMPLATE = "HodorReflexes_Ult_AtroList_Header"
 
+local majorForceId = 61747
+local majorVulnerabilityId = 106754
+local majorBerserkId = 61745
+local hornBuffIds = {38564, 40221, 40224} -- horn buffs
+
+local hornAbilityIds = {40223,	38563, 40220}
+local colosAbilityIds = {122388, 122395, 122174}
+local atroAbilityIds = {23634, 23492, 23495} -- atronach cast abilities
+--local colosCastAbilityIds = {122380, 122391, 122398} -- colossus ability cast
+--local hornIds  = {38564, 40221, 40224, majorForceId} -- TODO: remove - it's just here for reference
+
 local MISC_FRAGMENT, HORN_FRAGMENT, COLOS_FRAGMENT, ATRO_FRAGMENT -- HUD Fragment
 
 local miscListWindowName = addon_name .. module_name .. "_Misc"
