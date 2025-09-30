@@ -1,3 +1,6 @@
+-- SPDX-FileCopyrightText: 2025 m00nyONE
+-- SPDX-License-Identifier: Artistic-2.0
+
 local strings = {
     HR_MOCK1 = "Immaginate di morire con tutti questi addon abilitati.",
     HR_MOCK2 = "Prova ad equipaggiare Mighty Chudan, Plague Doctor e Beekeeper's Gear.",

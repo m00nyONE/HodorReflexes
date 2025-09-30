@@ -1,3 +1,6 @@
+-- SPDX-FileCopyrightText: 2025 m00nyONE
+-- SPDX-License-Identifier: Artistic-2.0
+
 local strings = {
 	HR_MOCK1 = "这么多插件装了还会死，呵呵呵。",
     HR_MOCK2 = "你还是去穿强大的楚单，瘟疫医生和养蜂人吧！",

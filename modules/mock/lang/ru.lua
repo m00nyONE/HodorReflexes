@@ -1,3 +1,6 @@
+-- SPDX-FileCopyrightText: 2025 m00nyONE
+-- SPDX-License-Identifier: Artistic-2.0
+
 local strings = {
     HR_MOCK1 = "Столько аддонов, а толку никакого.",
     HR_MOCK2 = "Возможно, вам помогут сеты Могучей Чудан, Чумной Доктор и Снаряжение Пасечника.",

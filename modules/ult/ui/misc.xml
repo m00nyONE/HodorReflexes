@@ -1,3 +1,8 @@
+<!--
+ SPDX-FileCopyrightText: 2025 m00nyONE
+ SPDX-License-Identifier: Artistic-2.0
+-->
+
 <GuiXml>
     <Controls>
         <Control name="HodorReflexes_Ult_MiscList_Header" virtual="true">

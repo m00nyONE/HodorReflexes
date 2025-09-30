@@ -1,3 +1,6 @@
+-- SPDX-FileCopyrightText: 2025 m00nyONE
+-- SPDX-License-Identifier: Artistic-2.0
+
 local strings = {
     HR_MOCK1 = "¿Cómo se siente morir con tantos addons puestos?.",
     HR_MOCK2 = "Intenta equiparte Chudan, Doctor de la plaga y Apicultor.",

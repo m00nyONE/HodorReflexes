@@ -1,3 +1,6 @@
+-- SPDX-FileCopyrightText: 2025 m00nyONE
+-- SPDX-License-Identifier: Artistic-2.0
+
 local strings = {
     HR_MOCK1 = "Imagine mourir avec tous ces addons activés.",
     HR_MOCK2 = "Essaye d'équiper le Gros Chudan, le Médecin de la Peste, et l'Harnachement de l'Apiculteur.",

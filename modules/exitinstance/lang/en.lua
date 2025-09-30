@@ -1,3 +1,6 @@
+-- SPDX-FileCopyrightText: 2025 m00nyONE
+-- SPDX-License-Identifier: Artistic-2.0
+
 local strings = {
     HR_BINDING_EXIT_INSTANCE = "Exit Instance Immediately",
     HR_BINDING_SEND_EXIT_INSTANCE = "Eject Group",
