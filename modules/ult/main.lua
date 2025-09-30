@@ -286,34 +286,31 @@ local function isAtro(abilityId)
     return false
 end
 local function HasUnitHorn(data)
-    if isHorn(data.ult1ID) then return true, data.ult1Cost end
-    if isHorn(data.ult2ID) then return true, data.ult2Cost end
+    if isHorn(data.ult1ID) or isHorn(data.ult2ID) then return true end
 
-    if data.ultActivatedSetID == 1 then	return true, 250 end
+    if data.ultActivatedSetID == 1 then	return true end
 
-    return false, 0
+    return false
 end
 local function HasUnitColos(data)
-    if isColos(data.ult1ID) then return true, data.ult1Cost end
-    if isColos(data.ult2ID) then return true, data.ult2Cost end
+    if isColos(data.ult1ID) or isColos(data.ult2ID) then return true end
 
-    return false, 0
+    return false
 end
 local function HasUnitAtro(data)
-    if isAtro(data.ult1ID) then return true, data.ult1Cost end
-    if isAtro(data.ult2ID) then return true, data.ult2Cost end
+    if isAtro(data.ult1ID) or isAtro(data.ult2ID) then return true end
 
-    return false, 0
+    return false
 end
 
 local function HasUnitBarrier(data)
     local abilityIDs = {40237,	40239, 38573}
     for _, id in ipairs(abilityIDs) do
-        if data.ult1ID == id then return true, data.ult1Cost end
-        if data.ult2ID == id then return true, data.ult2Cost end
+        if data.ult1ID == id then return true end
+        if data.ult2ID == id then return true end
     end
 
-    return false, 0
+    return false
 end
 
 local function updateMiscUltimateList()
