@@ -11,6 +11,7 @@ local addon = {
     svVersion = 1,
 
     modules = {},
+    internal = {},
 }
 local addon_debug = false
 local addon_name = addon.name
@@ -387,6 +388,8 @@ local function Initialize()
     if (not LCI or not LCN) and not sv.libraryPopupDisabled then
         ShowMissingLibsPopup()
     end
+
+    addon.internal = nil
 end
 
 EM:RegisterForEvent(addon_name, EVENT_ADD_ON_LOADED, function(_, name)

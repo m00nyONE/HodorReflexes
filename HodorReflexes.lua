@@ -10,6 +10,7 @@ local addon = {
 	svName = "HodorReflexesSV",
 	svVersion = 1,
 	modules = {},
+    internal = {},
 }
 local addon_debug = false
 local addon_name = addon.name
@@ -48,6 +49,7 @@ HodorReflexes = {
 	svName = "HodorReflexesSV", -- Saved variables table name
 
 	modules = {},              -- Contains public modules like "share", "vote", etc.
+    internal = {},
 }
 
 -- Addon events (to be used with RegisterCallback)
@@ -471,6 +473,9 @@ local function Initialize()
     if (not LCI or not LCN) and not sv.libraryPopupDisabled then
         ShowMissingLibsPopup()
     end
+
+    addon.internal = nil
+    HR.internal = nil
 end
 
 EM:RegisterForEvent(HR.name, EVENT_ADD_ON_LOADED, function(_, name)
