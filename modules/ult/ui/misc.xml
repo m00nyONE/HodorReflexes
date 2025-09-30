@@ -42,7 +42,7 @@
                     <Dimensions x="24" y="24" />
                     <Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$(parent)_RawValue" offsetX="10" offsetY="0" />
                 </Texture>
-                <Label name="$(parent)_Name" horizontalAlignment="LEFT" font="$(BOLD_FONT)|$(KB_19)|soft-shadow-thick" text="@Player" wrapMode="TRUNCATE">
+                <Label name="$(parent)_Name" horizontalAlignment="LEFT" font="$(BOLD_FONT)|$(KB_19)|soft-shadow-thick" text="@Player" wrapMode="TRUNCATE" maxLineCount="1">
                     <Dimensions x="105" y="24" />
                     <Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$(parent)_Icon" offsetX="3" offsetY="0" />
                 </Label>
