@@ -627,6 +627,102 @@ local function createAtroListWindow()
     ZO_ScrollList_SetUseScrollbar(atroListControl, false)
     ZO_ScrollList_SetScrollbarEthereal(atroListControl, true)
 end
+------------------------------------------------------------------------------------------------------------------------
+
+local function onHornBuff(eventId, changeType, effectSlot, effectName, unitTag, beginTime, endTime, stackCount, iconName, deprecatedBuffType, effectType, abilityType, statusEffectType, unitName, unitId, abilityId, sourceType)
+    if changeType == EFFECT_RESULT_GAINED or changeType == EFFECT_RESULT_UPDATED then
+        if hornListHeaderHornDurationControl and hornListHornTimer then
+            if sw.selfishMode and unitTag ~= localPlayer then
+                return
+            end
+            local duration = (endTime - beginTime) * 1000
+            hornListHornTimer:StartCountdown(duration)
+        end
+    end
+end
+local function onForceBuff(eventId, changeType, effectSlot, effectName, unitTag, beginTime, endTime, stackCount, iconName, deprecatedBuffType, effectType, abilityType, statusEffectType, unitName, unitId, abilityId, sourceType)
+    if changeType == EFFECT_RESULT_GAINED or changeType == EFFECT_RESULT_UPDATED then
+        if hornListHeaderForceDurationControl and hornListForceTimer then
+            if sw.selfishMode and unitTag ~= localPlayer then
+                return
+            end
+            local duration = (endTime - beginTime) * 1000
+            hornListForceTimer:StartCountdown(duration)
+        end
+    end
+end
+local function onMajorVulnerabilityDebuff(eventId, changeType, effectSlot, effectName, unitTag, beginTime, endTime, stackCount, iconName, deprecatedBuffType, effectType, abilityType, statusEffectType, unitName, unitId, abilityId, sourceType)
+    if changeType == EFFECT_RESULT_GAINED or changeType == EFFECT_RESULT_UPDATED then
+        if colosListHeaderVulnDurationControl and colosListVulnTimer then
+            local duration = (endTime - beginTime) * 1000
+            colosListVulnTimer:StartCountdown(duration)
+        end
+    end
+end
+local function onMajorBerserkBuff(eventId, changeType, effectSlot, effectName, unitTag, beginTime, endTime, stackCount, iconName, deprecatedBuffType, effectType, abilityType, statusEffectType, unitName, unitId, abilityId, sourceType)
+    if changeType == EFFECT_RESULT_GAINED or changeType == EFFECT_RESULT_UPDATED then
+        if atroListHeaderBerserkDurationControl and atroListBerserkTimer then
+            if sw.selfishMode and unitTag ~= localPlayer then
+                return
+            end
+            local duration = (endTime - beginTime) * 1000
+            atroListBerserkTimer:StartCountdown(duration)
+        end
+    end
+end
+
+local function onAtroCast(_, _, _, _, _, _, displayName, sourceType, _, _, _, _, _, _, _, _)
+    if atroListHeaderAtroDurationControl and atroListAtroTimer then
+        if sourceType == COMBAT_UNIT_TYPE_GROUP then
+            local duration = 15000 -- TODO: read duration from ability?
+            atroListAtroTimer:StartCountdown(duration)
+        end
+    end
+end
+
+
+local function registerHornBuffTracker()
+    local eventName = addon_name .. module_name .. "_HornBuff"
+    for i, hornId in ipairs(hornBuffIds) do
+        EM:UnregisterForEvent(eventName .. i, EVENT_EFFECT_CHANGED)
+        EM:RegisterForEvent(eventName .. i, EVENT_EFFECT_CHANGED, onHornBuff)
+        EM:AddFilterForEvent(eventName .. i, EVENT_EFFECT_CHANGED, REGISTER_FILTER_ABILITY_ID, hornId)
+        EM:AddFilterForEvent(eventName .. i, EVENT_EFFECT_CHANGED, REGISTER_FILTER_TARGET_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_GROUP)
+    end
+end
+local function registerMajorForceBuffTracker()
+    local eventName = addon_name .. module_name .. "_MajorForceBuff"
+    EM:UnregisterForEvent(eventName, EVENT_EFFECT_CHANGED)
+    EM:RegisterForEvent(eventName, EVENT_EFFECT_CHANGED, onForceBuff)
+    EM:AddFilterForEvent(eventName, EVENT_EFFECT_CHANGED, REGISTER_FILTER_ABILITY_ID, majorForceId)
+    EM:AddFilterForEvent(eventName, EVENT_EFFECT_CHANGED, REGISTER_FILTER_TARGET_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_GROUP)
+end
+local function registerMajorVulnerabilityDebuffTracker()
+    local eventName = addon_name .. module_name .. "_MajorVulnerabilityDebuff"
+    EM:UnregisterForEvent(eventName, EVENT_EFFECT_CHANGED)
+    EM:RegisterForEvent(eventName, EVENT_EFFECT_CHANGED, onMajorVulnerabilityDebuff)
+    EM:AddFilterForEvent(eventName, EVENT_EFFECT_CHANGED, REGISTER_FILTER_ABILITY_ID, majorVulnerabilityId)
+    EM:AddFilterForEvent(eventName, EVENT_EFFECT_CHANGED, REGISTER_FILTER_TARGET_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_OTHER) -- only on enemies
+    EM:AddFilterForEvent(eventName, EVENT_EFFECT_CHANGED, REGISTER_FILTER_TARGET_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_TARGET_DUMMY) -- only on targetDummies
+end
+local function registerMajorBerserkBuffTracker()
+    local eventName = addon_name .. module_name .. "_MajorBerserkBuff"
+    EM:UnregisterForEvent(eventName, EVENT_EFFECT_CHANGED)
+    EM:RegisterForEvent(eventName, EVENT_EFFECT_CHANGED, onMajorBerserkBuff)
+    EM:AddFilterForEvent(eventName, EVENT_EFFECT_CHANGED, REGISTER_FILTER_ABILITY_ID, majorBerserkId)
+    EM:AddFilterForEvent(eventName, EVENT_EFFECT_CHANGED, REGISTER_FILTER_TARGET_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_GROUP)
+end
+local function registerAtroCastTracker()
+    local eventName = addon_name .. module_name .. "_AtroCast"
+    for i, atroId in ipairs(atroAbilityIds) do
+        EM:UnregisterForEvent(eventName .. i, EVENT_COMBAT_EVENT)
+        EM:RegisterForEvent(eventName .. i, EVENT_COMBAT_EVENT, onAtroCast)
+        EM:AddFilterForEvent(eventName .. i, EVENT_COMBAT_EVENT, REGISTER_FILTER_ABILITY_ID, atroId)
+        EM:AddFilterForEvent(eventName .. i, EVENT_COMBAT_EVENT, REGISTER_FILTER_COMBAT_RESULT, ACTION_RESULT_EFFECT_GAINED)
+    end
+end
+
+---------------------------------------------------------------------------------------------------------------------------
 
 local function defaultAtroHeaderRowCreationFunc(rowControl, data, scrollList)
     rowControl:GetNamedChild("_BG"):SetAlpha(sw.styleAtroHeaderOpacity)
@@ -1320,6 +1416,12 @@ function module:Initialize()
     refreshVisibility()
 
     setupTimers()
+
+    registerHornBuffTracker()
+    registerMajorForceBuffTracker()
+    registerMajorVulnerabilityDebuffTracker()
+    registerMajorBerserkBuffTracker()
+    registerAtroCastTracker()
 
     module:RegisterTheme("default", defaultTheme)
     validateSelectedTheme()
