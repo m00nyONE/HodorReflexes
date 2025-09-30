@@ -334,6 +334,8 @@ local function updateMiscUltimateList()
         table.insert(dataList, ZO_ScrollList_CreateDataEntry(MISC_LIST_PLAYERROW_TYPE, playerData))
     end
 
+    miscListWindow:SetHeight((sw.miscListRowHeight * (#dataList - 1)) + sw.miscListHeaderHeight) -- TODO: temporary height adjustments
+
     ZO_ScrollList_Commit(miscListControl)
 end
 local function updateHornUltimateList()
@@ -371,6 +373,8 @@ local function updateHornUltimateList()
         table.insert(dataList, ZO_ScrollList_CreateDataEntry(HORN_LIST_PLAYERROW_TYPE, playerData))
     end
 
+    hornListWindow:SetHeight((sw.hornListRowHeight * (#dataList - 1)) + sw.hornListHeaderHeight) -- TODO: temporary height adjustments
+
     ZO_ScrollList_Commit(hornListControl)
 end
 local function updateColosUltimateList()
@@ -402,6 +406,9 @@ local function updateColosUltimateList()
         table.insert(dataList, ZO_ScrollList_CreateDataEntry(COLOS_LIST_PLAYERROW_TYPE, playerData))
     end
 
+    colosListWindow:SetHeight((sw.colosListRowHeight * (#dataList - 1)) + sw.colosListHeaderHeight) -- TODO: temporary height adjustments
+
+
     ZO_ScrollList_Commit(colosListControl)
 end
 local function updateAtroUltimateList()
@@ -432,6 +439,8 @@ local function updateAtroUltimateList()
         playerData.orderIndex = i
         table.insert(dataList, ZO_ScrollList_CreateDataEntry(ATRO_LIST_PLAYERROW_TYPE, playerData))
     end
+
+    atroListWindow:SetHeight((sw.atroListRowHeight * (#dataList - 1)) + sw.atroListHeaderHeight) -- TODO: temporary height adjustments
 
     ZO_ScrollList_Commit(atroListControl)
 end
