@@ -347,7 +347,7 @@ local function updateHornUltimateList()
         if playerData.ultValue > 0 and HasUnitHorn(playerData) then
             local lowestPossibleHornCost = 0
             if playerData.ultActivatedSetID == 1 then
-                lowestPossibleHornCost = zo_max(zo_min(playerData.ult1Cost, playerData.ult2Cost))
+                lowestPossibleHornCost = zo_max(zo_min(playerData.ult1Cost, playerData.ult2Cost), 250)
                 playerData.hasSaxhleel = true
             else
                 if isHorn(playerData.ult1ID) then lowestPossibleHornCost = playerData.ult1Cost end
