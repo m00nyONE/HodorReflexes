@@ -268,22 +268,19 @@ local function sortByUltPercentage(a, b)
 end
 
 local function isHorn(abilityId)
-    local abilityIDs = {40223,	38563, 40220}
-    for _, id in pairs(abilityIDs) do
+    for _, id in pairs(hornAbilityIds) do
         if abilityId == id then return true end
     end
     return false
 end
 local function isColos(abilityId)
-    local abilityIDs = {122388, 122395, 122174}
-    for _, id in pairs(abilityIDs) do
+    for _, id in pairs(colosAbilityIds) do
         if abilityId == id then return true end
     end
     return false
 end
 local function isAtro(abilityId)
-    local abilityIDs = {23492,	23634, 23495}
-    for _, id in pairs(abilityIDs) do
+    for _, id in pairs(atroAbilityIds) do
         if abilityId == id then return true end
     end
     return false
