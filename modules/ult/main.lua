@@ -928,8 +928,8 @@ local function CreateDurationHandler(getControlFn, blinkConfig)
         end
 
         if event == timer.ON_STOP then
-            control:SetAlpha(sw.styleZeroTimerOpacity)
             if blinkTimer then blinkTimer:StartBlink() end
+            control:SetAlpha(sw.styleZeroTimerOpacity)
             return
         end
     end
