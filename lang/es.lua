@@ -1,3 +1,6 @@
+-- SPDX-FileCopyrightText: 2025 andy.s m00nyONE
+-- SPDX-License-Identifier: Artistic-2.0
+
 -- Spanish translation by @MuscleGeek502, corrected by Inval1d (@loneloba)
 
 local strings = {

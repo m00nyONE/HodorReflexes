@@ -1,3 +1,6 @@
+-- SPDX-FileCopyrightText: 2025 andy.s m00nyONE
+-- SPDX-License-Identifier: Artistic-2.0
+
 HodorReflexes.modules.share = {
 	name = "HodorReflexes_Share",
 	version = "1.0.0",

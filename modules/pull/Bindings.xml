@@ -1,3 +1,8 @@
+<!--
+ SPDX-FileCopyrightText: 2025 andy.s
+ SPDX-License-Identifier: Artistic-2.0
+-->
+
 <Bindings>
     <Layer name="SI_KEYBINDINGS_LAYER_GENERAL">
         <Category name="|cFFFF00Hodor Reflexes|r">

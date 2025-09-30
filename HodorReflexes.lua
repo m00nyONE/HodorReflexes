@@ -1,3 +1,6 @@
+-- SPDX-FileCopyrightText: 2025 andy.s m00nyONE
+-- SPDX-License-Identifier: Artistic-2.0
+
 --[[ doc.lua begin ]]
 --- @class HodorReflexes
 local addon = {

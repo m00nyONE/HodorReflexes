@@ -1,3 +1,6 @@
+-- SPDX-FileCopyrightText: 2025 andy.s
+-- SPDX-License-Identifier: Artistic-2.0
+
 local strings = {
 
     -------------------------
