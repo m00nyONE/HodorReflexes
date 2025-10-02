@@ -11,7 +11,9 @@ on:
 jobs:
   generate-docs:
     if: github.repository_owner == 'm00nyONE'
-    uses: ./.github/workflows/_generate_docs.yml
+    uses: ./.github/workflows/_generate-docs.yml
+    permissions:
+      contents: write
   release:
     if: github.repository_owner == 'm00nyONE'
     name: "release"
