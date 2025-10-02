@@ -268,6 +268,7 @@ end
 
 local function onGroupChange()
     refreshVisibility()
+    updateDamageList()
 end
 
 local function createSceneFragments()

@@ -513,6 +513,8 @@ end
 
 local function onGroupChange()
     refreshVisibility()
+
+    updateUltimateLists()
 end
 
 local function createSceneFragments()
