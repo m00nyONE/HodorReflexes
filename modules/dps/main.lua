@@ -3,6 +3,7 @@
 
 local addon_name = "HodorReflexes"
 local addon = _G[addon_name]
+local internal = addon.internal
 
 local module = {
     name = "dps",
