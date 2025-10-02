@@ -1,0 +1,46 @@
+; SPDX-FileCopyrightText: 2025 andy.s m00nyONE
+; SPDX-License-Identifier: Artistic-2.0
+
+## Title: HodorReflexes2
+## Version: dev
+## Author: |cFFFF00@andy.s|r, |c76c3f4@m00nyONE|r
+## APIVersion: 101046 101047
+## AddOnVersion: 99999999
+## SavedVariables: HodorReflexesSavedVars
+## DependsOn: LibCombat>=79 LibGroupCombatStats>=20250816 LibGroupBroadcast>=91
+## PCDependsOn: LibAddonMenu-2.0>=40
+## ConsoleDependsOn: LibHarvensAddonSettings>=20004
+## OptionalDependsOn: LibCustomNames LibCustomIcons
+
+; This Add-on is not created by, affiliated with or sponsored by ZeniMax Media Inc. or its affiliates.
+; The Elder Scrolls® and related logos are registered trademarks or trademarks of ZeniMax Media Inc. in the United States and/or other countries.
+; All rights reserved
+;
+; You can read the full terms at https://account.elderscrollsonline.com/add-on-terms
+
+; lang
+lang/en.lua
+lang/$(language).lua
+
+; core
+HodorReflexes.lua
+core/commands.lua
+core/LGBHandler.lua
+core/diagnostic.lua
+core/extensions.lua
+core/modules.lua
+core/menu.lua
+core/donate.lua
+core/LibCheck.lua
+core/PC/menu.lua
+core/PC/donate.lua
+core/PC/LibCheck.lua
+core/Console/menu.lua
+core/Console/donate.lua
+core/Console/LibCheck.lua
+
+
+
+; extensions
+
+; modules
