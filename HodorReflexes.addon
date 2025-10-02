@@ -7,8 +7,10 @@
 ## APIVersion: 101046 101047
 ## AddOnVersion: 99999999
 ## SavedVariables: HodorReflexesSV
-## DependsOn: LibAddonMenu-2.0>=40 LibCombat>=79 LibGroupCombatStats>=20250816 LibGroupBroadcast>=91
-## OptionalDependsOn: RuESO LibCustomNames LibCustomIcons
+## DependsOn: LibCombat>=79 LibGroupCombatStats>=20250816 LibGroupBroadcast>=91
+## PCDependsOn: LibAddonMenu-2.0>=40
+## ConsoleDependsOn: LibHarvensAddonSettings>=20004
+## OptionalDependsOn: LibCustomNames LibCustomIcons
 
 ; This Add-on is not created by, affiliated with or sponsored by ZeniMax Media Inc. or its affiliates.
 ; The Elder Scrolls® and related logos are registered trademarks or trademarks of ZeniMax Media Inc. in the United States and/or other countries.
