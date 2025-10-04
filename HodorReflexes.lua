@@ -11,34 +11,39 @@ local addon = {
 
     modules = {},
     internal = {
-        sv = nil, -- saved variables
+        core = {
+            sv = nil, -- saved variables
+        },
     },
 }
 local addon_debug = false
 local addon_name = addon.name
 local internal = addon.internal
+local core = internal.core
 _G[addon_name] = addon
 
 local svName = "HodorReflexesSavedVars"
 local svVersion =  1
-local svDefault = {}
+local svDefault = {
+    libraryPopupDisabled = false,
+}
 
 local EM = GetEventManager()
 local CM = ZO_CallbackObject:New()
-internal.CM = CM -- make the callback manager available to other modules
+core.CM = CM -- make the callback manager available to other parts of the addon
 
 
 -- initialize addon
 local function initialize()
-    internal.sv = ZO_SavedVars:NewAccountWide(svName, svVersion, nil, svDefault)
+    core.sv = ZO_SavedVars:NewAccountWide(svName, svVersion, nil, svDefault)
 
-    internal.RegisterLGBHandler()
-    internal.RegisterBaseCommands()
-    internal.InitializeExtensions()
-    internal.InitializeModules()
-    internal.BuildMenu()
+    core.RegisterLGBHandler()
+    core.RegisterBaseCommands()
+    core.InitializeExtensions()
+    core.InitializeModules()
+    core.BuildMenu()
 
-    internal.OptionalLibrariesCheck()
+    core.OptionalLibrariesCheck()
 
     addon.internal = nil
 end

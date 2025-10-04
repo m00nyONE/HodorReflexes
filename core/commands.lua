@@ -2,7 +2,8 @@ local addon_name = "HodorReflexes2"
 local addon = _G[addon_name]
 local addon_version = addon.version
 local internal = addon.internal
-local CM = internal.CM
+local core = internal.core
+local CM = core.CM
 
 -- Events
 local HR_EVENT_LOCKUI = "LockUI"
@@ -13,18 +14,18 @@ addon.HR_EVENT_UNLOCKUI = HR_EVENT_UNLOCKUI
 
 
 -- for initializing basic commands from HR Core
-function internal.RegisterBaseCommands()
-    internal.RegisterSubCommand("version", "Show addon version", function()
+function core.RegisterBaseCommands()
+    core.RegisterSubCommand("version", "Show addon version", function()
         d(string.format("|cFFFF00%s|r version |c76c3f4%s|r", addon_name, addon_version))
     end)
-    internal.RegisterSubCommand("donate", "Donate to the author", function()
+    core.RegisterSubCommand("donate", "Donate to the author", function()
         addon.Donate()
     end)
-    internal.RegisterSubCommand("lock", "Lock the addon UI", function()
+    core.RegisterSubCommand("lock", "Lock the addon UI", function()
         CM:FireCallbacks(HR_EVENT_LOCKUI)
         d(string.format("|cFFFF00%s|r UI locked", addon_name))
     end)
-    internal.RegisterSubCommand("unlock", "Unlock the addon UI", function()
+    core.RegisterSubCommand("unlock", "Unlock the addon UI", function()
         CM:FireCallbacks(HR_EVENT_UNLOCKUI)
         d(string.format("|cFFFF00%s|r UI unlocked", addon_name))
     end)
@@ -34,7 +35,7 @@ end
 -- registering commands
 local commands = {}
 
-function internal.RegisterSubCommand(command, help, func)
+function core.RegisterSubCommand(command, help, func)
     assert(type(command) == "string", "command must be a string")
     assert(type(help) == "string", "help must be a string")
     assert(type(func) == "function", "func must be a function")

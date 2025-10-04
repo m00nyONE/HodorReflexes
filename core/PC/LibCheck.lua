@@ -1,21 +1,17 @@
 local addon_name = "HodorReflexes2"
 local addon = _G[addon_name]
 local internal = addon.internal
+local core = internal.core
 
 local LCN = LibCustomNames
 local LCI = LibCustomIcons
 
--- TODO: move into language files
-local HR_MISSING_LIBS_TITLE = "Get the Full HodorReflexes Experience!"
-local HR_MISSING_LIBS_TEXT = "|c00FF00You're missing out on the full HodorReflexes experience!|r\n\nInstall |cFFFF00LibCustomIcons|r and |cFFFF00LibCustomNames|r to see custom icons, nicknames, and styles from other Hodor users including your friends and guildmates. Transform the battlefield into something personal and full of character!\n\nThis is entirely optional and not required for HodorReflexes to function."
-local HR_MISSING_LIBS_OK = "OK"
-local HR_MISSING_LIBS_DONTSHOWAGAIN = "Don't show again"
-
-function internal.OptionalLibrariesCheck()
-    local sv = internal.sv
+function core.OptionalLibrariesCheck()
+    local sv = core.sv
+    local dialogName = string.format("%s_MISSING_LIBS", addon_name)
 
     if (not LCI or not LCN) and not sv.libraryPopupDisabled then
-        ZO_Dialogs_RegisterCustomDialog("HODORREFLEXES_MISSING_LIBS", {
+        ZO_Dialogs_RegisterCustomDialog(dialogName, {
             title = {
                 text = GetString(HR_MISSING_LIBS_TITLE),
             },
@@ -41,7 +37,7 @@ function internal.OptionalLibrariesCheck()
             allowShowOnDead = false,
         }, nil, IsInGamepadPreferredMode())
 
-        ZO_Dialogs_ShowDialog("HODORREFLEXES_MISSING_LIBS")
+        ZO_Dialogs_ShowDialog(dialogName)
     end
 
 end
