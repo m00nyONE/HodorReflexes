@@ -10,7 +10,7 @@ local LCN = LibCustomNames
 local LCI = LibCustomIcons
 
 function core.OptionalLibrariesCheck()
-    local sv = core.sv
+    local sw = core.sw
     local dialogName = string.format("%s_MISSING_LIBS", addon_name)
 
     if (not LCI or not LCN) and not sv.libraryPopupDisabled then
@@ -31,7 +31,7 @@ function core.OptionalLibrariesCheck()
                     text = GetString(HR_MISSING_LIBS_DONTSHOWAGAIN),
                     keybind = "DIALOG_RESET",
                     callback = function()
-                        sv.libraryPopupDisabled = true
+                        sw.libraryPopupDisabled = true
                     end,
                 },
             },
