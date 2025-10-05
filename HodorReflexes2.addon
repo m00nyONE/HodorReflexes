@@ -40,7 +40,8 @@ core/Console/menu.lua
 core/Console/donate.lua
 core/Console/LibCheck.lua
 
-
+core/extensions.lua
+core/modules.lua
 
 ; extensions
 
