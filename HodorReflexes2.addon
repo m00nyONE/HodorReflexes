@@ -43,3 +43,7 @@ core/Console/LibCheck.lua
 ; extensions
 
 ; modules
+modules/pull/lang/en.lua
+modules/pull/lang/$(language).lua
+modules/pull/Bindings.xml
+modules/pull/main.lua

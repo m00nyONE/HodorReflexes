@@ -18,6 +18,9 @@ local addon = {
             svVersion = 1,
             sw = nil, -- global accountwide saved variables
             svDefault = {
+                modules = {
+                    ["pull"] = true,
+                },
                 libraryPopupDisabled = false,
             }
         },
