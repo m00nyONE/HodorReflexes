@@ -15,25 +15,6 @@ local function sortByPriority(t, a, b)
     end
     return t[a].priority < t[b].priority
 end
-local function spairs(t, sortFunction) -- thanks @Solinur <3
-    local keys = {}
-    for k in pairs(t) do keys[#keys+1] = k end
-
-    if sortFunction then
-        table.sort(keys, function(a,b) return sortFunction(t, a, b) end)
-    else
-        table.sort(keys)
-    end
-
-    local i = 0
-    return function()
-        i = i + 1
-        if keys[i] then
-            return keys[i], t[keys[i]]
-        end
-    end
-end
-
 
 -- module loader and manager
 function core.InitializeModules()
@@ -45,7 +26,7 @@ function core.InitializeModules()
         core.sw.modules = core.svDefault.modules
     end
 
-    for moduleName, module in spairs(addon.modules, sortByPriority) do
+    for moduleName, module in core.spairs(addon.modules, sortByPriority) do
         logger:Debug("Initializing module: %s", moduleName)
         if core.sw.modules[moduleName] then
             -- create saved variables for the module
