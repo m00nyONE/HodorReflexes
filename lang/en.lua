@@ -3,6 +3,11 @@
 
 local strings = {
 
+    HR_CORE_HUD_COMMAND_LOCK_HELP = "Lock the addon UI",
+    HR_CORE_HUD_COMMAND_UNLOCK_HELP = "Unlock the addon UI",
+    HR_CORE_HUD_COMMAND_LOCK_ACTION = "UI locked",
+    HR_CORE_HUD_COMMAND_UNLOCK_ACTION = "UI unlock",
+
 	-------------------------
 	-- Missing Libraries
 	-------------------------
