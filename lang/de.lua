@@ -3,6 +3,15 @@
 
 local strings = {
 
+    HR_CORE_HUD_COMMAND_LOCK_HELP = "Sperre das UI",
+    HR_CORE_HUD_COMMAND_UNLOCK_HELP = "Entsperre das UI",
+    HR_CORE_HUD_COMMAND_LOCK_ACTION = "UI gesperrt",
+    HR_CORE_HUD_COMMAND_UNLOCK_ACTION = "UI entsperrt",
+    HR_CORE_GROUP_COMMAND_TEST_HELP = "Test starten/stoppen",
+    HR_CORE_GROUP_COMMAND_TEST_ACTION_START = "Test gestartet",
+    HR_CORE_GROUP_COMMAND_TEST_ACTION_STOP = "Test gestoppt",
+    HR_CORE_GROUP_COMMAND_TEST_LEAVE_GROUP = "Du musst die Gruppe verlassen, um einen Test zu starten",
+
 	-------------------------
 	-- Missing Libraries
 	-------------------------

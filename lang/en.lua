@@ -7,6 +7,10 @@ local strings = {
     HR_CORE_HUD_COMMAND_UNLOCK_HELP = "Unlock the addon UI",
     HR_CORE_HUD_COMMAND_LOCK_ACTION = "UI locked",
     HR_CORE_HUD_COMMAND_UNLOCK_ACTION = "UI unlock",
+    HR_CORE_GROUP_COMMAND_TEST_HELP = "Start/stop a test",
+    HR_CORE_GROUP_COMMAND_TEST_ACTION_START = "Test started",
+    HR_CORE_GROUP_COMMAND_TEST_ACTION_STOP = "Test stopped",
+    HR_CORE_GROUP_COMMAND_TEST_LEAVE_GROUP = "You must leave the group to start a test",
 
 	-------------------------
 	-- Missing Libraries
