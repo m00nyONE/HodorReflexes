@@ -7,6 +7,8 @@ local internal = addon.internal
 local core = internal.core
 local logger = core.logger.main
 
+local hud = {}
+core.hud = hud
 local CM = core.CM
 
 local HR_EVENT_LOCKUI = "LockUI"
@@ -15,7 +17,7 @@ addon.HR_EVENT_LOCKUI = HR_EVENT_LOCKUI
 addon.HR_EVENT_UNLOCKUI = HR_EVENT_UNLOCKUI
 
 -- Disable controls movement.
-function core.LockControls(...)
+function hud.LockControls(...)
     for _, control in ipairs({...}) do
         logger:Debug("Locking control: %s", control:GetName())
         control:SetMouseEnabled(false)
@@ -24,7 +26,7 @@ function core.LockControls(...)
 end
 
 -- Allow controls movement.
-function core.UnlockControls(...)
+function hud.UnlockControls(...)
     for _, control in ipairs({...}) do
         logger:Debug("Unlocking control: %s", control:GetName())
         control:SetMouseEnabled(true)
@@ -33,7 +35,7 @@ function core.UnlockControls(...)
 end
 
 -- Create a simple HUD_SCENE/HUD_UI_SCENE fragment with a display condition function.
-function core.AddSimpleFragment(control, condition)
+function hud.AddSimpleFragment(control, condition)
     local f = ZO_SimpleSceneFragment:New(control)
     if condition then f:SetConditional(condition) end
     HUD_SCENE:AddFragment(f)
@@ -42,7 +44,7 @@ function core.AddSimpleFragment(control, condition)
 end
 
 -- Create a fading HUD_SCENE/HUD_UI_SCENE fragment with a display condition function.
-function core.AddFadeFragment(control, condition)
+function hud.AddFadeFragment(control, condition)
     local f = ZO_HUDFadeSceneFragment:New(control)
     if condition then f:SetConditional(condition) end
     HUD_SCENE:AddFragment(f)
