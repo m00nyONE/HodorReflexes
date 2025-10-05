@@ -23,7 +23,7 @@ lang/en.lua
 lang/$(language).lua
 HodorReflexes.lua
 core/logging.lua
-core/commands.lua
+core/cmd.lua
 core/LGBHandler.lua
 core/diagnostic.lua
 core/extensions.lua

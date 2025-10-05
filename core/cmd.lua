@@ -59,9 +59,9 @@ end
 -- create slash command
 SLASH_COMMANDS[string.format("/%s", addon.slashCmd)] = function(str)
     if str == nil or str == "" then
-        d(string.format("%s commands:", addon_name))
+        df("%s commands:", addon_name)
         for name, cmd in pairs(commands) do
-            d(string.format("/%s %s - %s", addon.slashCmd, name, cmd.help))
+            df("/%s %s - %s", addon.slashCmd, name, cmd.help)
         end
         return
     end
