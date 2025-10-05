@@ -7,29 +7,32 @@ local internal = addon.internal
 local core = internal.core
 local logger = core.logger.main
 
-function core.GetDistance(x1, y1, x2, y2)
+local util = {}
+core.util = util
+
+function util.GetDistance(x1, y1, x2, y2)
     return zo_sqrt((x2 - x1) ^ 2 + (y2 - y1) ^ 2)
 end
 
 -- Convert FFFFFF to 1, 1, 1
-function core.Hex2RGB(hex)
+function util.Hex2RGB(hex)
     hex = hex:gsub("#", "")
     return tonumber("0x" .. hex:sub(1, 2)) / 255, tonumber("0x" .. hex:sub(3, 4)) / 255, tonumber("0x" .. hex:sub(5, 6)) / 255
 end
 
 -- Convert 1, 1, 1 to FFFFFF
-function core.RGB2Hex(r, g, b)
+function util.RGB2Hex(r, g, b)
     return string.format("%.2x%.2x%.2x", zo_round(r * 255), zo_round(g * 255), zo_round(b * 255))
 end
 
 -- color code string
-function core.ColorCode(hex, str)
+function util.ColorCode(hex, str)
     return "|c" .. hex .. str .. "|r"
 end
 
 -- Remove duplicate values from a table.
 -- Only works for simple tables like: 1=>'a', 2=>'b', 3=>'b'
-function core.TableUnique(t)
+function util.TableUnique(t)
     local hash = {}
     local res = {}
     for _, v in ipairs(t) do
@@ -42,7 +45,7 @@ function core.TableUnique(t)
 end
 
 -- Check if a string is valid (not nil and not empty).
-function core.IsValidString(s)
+function util.IsValidString(s)
     return type(s) == 'string' and s ~= ''
 end
 
@@ -51,7 +54,7 @@ end
 -- for k, v in core.spairs(t, function(t, a, b) return t[a] > t[b] end) do
 --     print(k, v)
 -- end
-function core.spairs(t, sortFunction)
+function util.spairs(t, sortFunction)
     local keys = {}
     for k in pairs(t) do keys[#keys+1] = k end
     if sortFunction then
