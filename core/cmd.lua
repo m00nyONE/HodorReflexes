@@ -8,14 +8,7 @@ local core = internal.core
 local logger = core.logger.main
 
 local addon_version = addon.version
-local CM = core.CM
-
--- Events
-local HR_EVENT_LOCKUI = "LockUI"
-local HR_EVENT_UNLOCKUI = "UnlockUI"
-addon.HR_EVENT_LOCKUI = HR_EVENT_LOCKUI
-addon.HR_EVENT_UNLOCKUI = HR_EVENT_UNLOCKUI
-
+local CM = core.CM-- Events
 
 -- for initializing basic commands from HR Core
 function core.RegisterBaseCommands()
@@ -25,14 +18,6 @@ function core.RegisterBaseCommands()
     end)
     core.RegisterSubCommand("donate", "Donate to the author", function()
         addon.Donate()
-    end)
-    core.RegisterSubCommand("lock", "Lock the addon UI", function()
-        CM:FireCallbacks(HR_EVENT_LOCKUI)
-        d(string.format("|cFFFF00%s|r UI locked", addon_name))
-    end)
-    core.RegisterSubCommand("unlock", "Unlock the addon UI", function()
-        CM:FireCallbacks(HR_EVENT_UNLOCKUI)
-        d(string.format("|cFFFF00%s|r UI unlocked", addon_name))
     end)
     core.RegisterSubCommand("debug", "Toggle debug mode", function()
         addon.debug = not addon.debug
