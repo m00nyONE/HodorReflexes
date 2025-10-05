@@ -11,6 +11,7 @@ local addon = {
 
     debug = false,
 
+    extensions = {},
     modules = {},
     internal = {
         core = {
