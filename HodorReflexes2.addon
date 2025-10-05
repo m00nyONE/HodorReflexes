@@ -27,6 +27,7 @@ core/util.lua
 core/cmd.lua
 core/LGBHandler.lua
 core/diagnostic.lua
+core/hud.lua
 core/extensions.lua
 core/modules.lua
 core/menu.lua
