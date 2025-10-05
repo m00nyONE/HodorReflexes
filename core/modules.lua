@@ -7,6 +7,8 @@ local internal = addon.internal
 local core = internal.core
 local logger = core.logger.main
 
+local util = core.util
+
 
 -- utility functions
 local function sortByPriority(t, a, b)
@@ -26,7 +28,7 @@ function core.InitializeModules()
         core.sw.modules = core.svDefault.modules
     end
 
-    for moduleName, module in core.spairs(addon.modules, sortByPriority) do
+    for moduleName, module in util.spairs(addon.modules, sortByPriority) do
         logger:Debug("Initializing module: %s", moduleName)
         if core.sw.modules[moduleName] then
             -- create saved variables for the module
