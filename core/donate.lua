@@ -9,5 +9,5 @@ local logger = core.logger.main
 
 -- function needs to be implemented platform specific
 function addon.Donation()
-    logger:Debug("Donation function not implemented for this platform")
+    logger:Warn("Donation function not implemented for this platform")
 end
