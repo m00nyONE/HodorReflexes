@@ -13,7 +13,7 @@ function core.OptionalLibrariesCheck()
     local sw = core.sw
     local dialogName = string.format("%s_MISSING_LIBS", addon_name)
 
-    if (not LCI or not LCN) and not sv.libraryPopupDisabled then
+    if (not LCI or not LCN) and not sw.libraryPopupDisabled then
         ZO_Dialogs_RegisterCustomDialog(dialogName, {
             title = {
                 text = GetString(HR_MISSING_LIBS_TITLE),
