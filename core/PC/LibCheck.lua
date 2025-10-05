@@ -15,7 +15,7 @@ function core.OptionalLibrariesCheck()
     local dialogName = string.format("%s_MISSING_LIBS", addon_name)
 
     if (not LCI or not LCN) and not sw.libraryPopupDisabled then
-        logger:Warn("LibCustomNames is missing. Some features will be disabled.")
+        logger:Warn("LibCustomNames and/or LibCustomIcons are missing. Some features will be disabled.")
         ZO_Dialogs_RegisterCustomDialog(dialogName, {
             title = {
                 text = GetString(HR_MISSING_LIBS_TITLE),
