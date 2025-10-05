@@ -21,6 +21,7 @@ function core.RegisterBaseCommands()
     end)
     core.RegisterSubCommand("debug", "Toggle debug mode", function()
         addon.debug = not addon.debug
+        addon.internal = internal
         d(string.format("|cFFFF00%s|r debug mode %s", addon_name, addon.debug and "|c00FF00enabled|r" or "|cFF0000disabled|r"))
     end)
 end
