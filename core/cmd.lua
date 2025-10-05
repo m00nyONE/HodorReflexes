@@ -74,6 +74,6 @@ SLASH_COMMANDS[string.format("/%s", addon.slashCmd)] = function(str)
         end
     end
 
-    logger:Info("Command not found: /%s %s", addon.slashCmd, str)
-    logger:Info("Use /%s to see available commands", addon.slashCmd)
+    df("Command not found: /%s %s", addon.slashCmd, str)
+    df("Use /%s to see available commands", addon.slashCmd)
 end
