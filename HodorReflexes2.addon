@@ -25,6 +25,7 @@ HodorReflexes.lua
 core/logging.lua
 core/util.lua
 core/cmd.lua
+core/events.lua
 core/LGBHandler.lua
 core/diagnostic.lua
 core/hud.lua
