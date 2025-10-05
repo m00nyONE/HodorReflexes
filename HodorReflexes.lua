@@ -9,6 +9,8 @@ local addon = {
     version = "dev",
     author = "|cFFFF00@andy.s|r, |c76c3f4@m00nyONE|r",
 
+    debug = false,
+
     modules = {},
     internal = {
         core = {
@@ -21,7 +23,6 @@ local addon = {
         },
     },
 }
-local addon_debug = false
 local addon_name = addon.name
 local internal = addon.internal
 local core = internal.core

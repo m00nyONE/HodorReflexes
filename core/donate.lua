@@ -5,6 +5,9 @@ local addon_name = "HodorReflexes2"
 local addon = _G[addon_name]
 local internal = addon.internal
 local core = internal.core
+local logger = core.logger.main
 
 -- function needs to be implemented platform specific
-function addon.Donation() end
+function addon.Donation()
+    logger:Debug("Donation function not implemented for this platform")
+end

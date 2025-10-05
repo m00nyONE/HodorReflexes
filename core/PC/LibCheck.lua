@@ -5,6 +5,7 @@ local addon_name = "HodorReflexes2"
 local addon = _G[addon_name]
 local internal = addon.internal
 local core = internal.core
+local logger = core.logger.main
 
 local LCN = LibCustomNames
 local LCI = LibCustomIcons
@@ -14,6 +15,7 @@ function core.OptionalLibrariesCheck()
     local dialogName = string.format("%s_MISSING_LIBS", addon_name)
 
     if (not LCI or not LCN) and not sw.libraryPopupDisabled then
+        logger:Warn("LibCustomNames is missing. Some features will be disabled.")
         ZO_Dialogs_RegisterCustomDialog(dialogName, {
             title = {
                 text = GetString(HR_MISSING_LIBS_TITLE),

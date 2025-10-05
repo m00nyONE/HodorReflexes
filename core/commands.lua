@@ -5,6 +5,7 @@ local addon_name = "HodorReflexes2"
 local addon = _G[addon_name]
 local internal = addon.internal
 local core = internal.core
+local logger = core.logger.main
 
 local addon_version = addon.version
 local CM = core.CM
@@ -16,9 +17,9 @@ addon.HR_EVENT_LOCKUI = HR_EVENT_LOCKUI
 addon.HR_EVENT_UNLOCKUI = HR_EVENT_UNLOCKUI
 
 
-
 -- for initializing basic commands from HR Core
 function core.RegisterBaseCommands()
+    logger:Debug("Registering base commands")
     core.RegisterSubCommand("version", "Show addon version", function()
         d(string.format("|cFFFF00%s|r version |c76c3f4%s|r", addon_name, addon_version))
     end)
@@ -33,6 +34,10 @@ function core.RegisterBaseCommands()
         CM:FireCallbacks(HR_EVENT_UNLOCKUI)
         d(string.format("|cFFFF00%s|r UI unlocked", addon_name))
     end)
+    core.RegisterSubCommand("debug", "Toggle debug mode", function()
+        addon.debug = not addon.debug
+        d(string.format("|cFFFF00%s|r debug mode %s", addon_name, addon.debug and "|c00FF00enabled|r" or "|cFF0000disabled|r"))
+    end)
 end
 
 
@@ -43,6 +48,7 @@ function core.RegisterSubCommand(command, help, func)
     assert(type(command) == "string", "command must be a string")
     assert(type(help) == "string", "help must be a string")
     assert(type(func) == "function", "func must be a function")
+    logger:Debug("Registering command: /%s %s", addon.slashCmd, command)
 
     commands[command] = {
         help = help,
@@ -53,12 +59,10 @@ end
 -- create slash command
 SLASH_COMMANDS[string.format("/%s", addon.slashCmd)] = function(str)
     if str == nil or str == "" then
-        d("")
         d(string.format("%s commands:", addon_name))
         for name, cmd in pairs(commands) do
             d(string.format("/%s %s - %s", addon.slashCmd, name, cmd.help))
         end
-        d("")
         return
     end
 
@@ -70,5 +74,6 @@ SLASH_COMMANDS[string.format("/%s", addon.slashCmd)] = function(str)
         end
     end
 
-    d("command not found")
+    logger:Info("Command not found: /%s %s", addon.slashCmd, str)
+    logger:Info("Use /%s to see available commands", addon.slashCmd)
 end
