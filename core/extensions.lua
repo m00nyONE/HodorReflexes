@@ -13,6 +13,12 @@ local extensionClass = internal.extensionClass
 
 function core.InitializeExtensions()
     logger:Debug("Initializing extensions...")
+
+    for name, extension in pairs(addon.extensions) do
+        extension:RunOnce("CreateSavedVariables")
+
+        extension:RunOnce("Activate")
+    end
 end
 
 function core.RegisterExtension(extension)
