@@ -10,7 +10,6 @@ local addon_modules = addon.modules
 local internal_modules = internal.modules
 
 local localPlayer = "player"
-local EM = GetEventManager()
 local LGB = LibGroupBroadcast
 
 local protocolPullCountdown = {}
@@ -36,7 +35,7 @@ local moduleDefinition = {
 local module = internal.moduleClass:New(moduleDefinition)
 
 function module:Activate()
-    d("activated pull module")
+    self.logger:Debug("activated pull module")
 
     -- Bindings
     ZO_CreateStringId('SI_BINDING_NAME_HR_MODULES_PULL_BINDING_COUNTDOWN', GetString(HR_MODULES_PULL_BINDING_COUNTDOWN))
@@ -93,9 +92,10 @@ function module:GetMainMenuOptions()
 end
 
 function module:RenderPullCountdown(durationMS)
+    local texturePath = "EsoUI/Art/HUD/HUD_Countdown_Badge_Dueling.dds"
     local messageParams = CENTER_SCREEN_ANNOUNCE:CreateMessageParams(CSA_CATEGORY_COUNTDOWN_TEXT, SOUNDS.DUEL_START)
     messageParams:SetLifespanMS(durationMS)
-    messageParams:SetIconData("EsoUI/Art/HUD/HUD_Countdown_Badge_Dueling.dds")
+    messageParams:SetIconData(texturePath)
     messageParams:SetCSAType(CENTER_SCREEN_ANNOUNCE_TYPE_COUNTDOWN)
 
     CENTER_SCREEN_ANNOUNCE:AddMessageWithParams(messageParams)
@@ -131,6 +131,7 @@ function module:SendPullCountdown(duration)
     })
 end
 
+-- Register additional slash command
 SLASH_COMMANDS["/pull"] = function(duration)
     module:SendPullCountdown(tonumber(duration))
 end
