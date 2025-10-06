@@ -11,7 +11,7 @@ local addon_version = addon.version
 local CM = core.CM-- Events
 
 -- for initializing basic commands from HR Core
-function core.RegisterBaseCommands()
+function core.RegisterCoreCommands()
     logger:Debug("Registering base commands")
     core.RegisterSubCommand("version", "Show addon version", function()
         d(string.format("|cFFFF00%s|r version |c76c3f4%s|r", addon_name, addon_version))
