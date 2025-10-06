@@ -19,7 +19,7 @@ local moduleDefinition = {
     name = "pull",
     friendlyName = GetString(HR_MODULES_PULL_FRIENDLYNAME),
     description = GetString(HR_MODULES_PULL_DESCRIPTION),
-    version = "0.1.2",
+    version = "0.9.0",
     priority = 10,
     enabled = false,
     svDefault = {
@@ -78,16 +78,18 @@ end
 
 function module:GetMainMenuOptions()
     return {
-        type = "slider",
-        name = GetString(HR_MODULES_PULL_COUNTDOWN_DURATION),
-        tooltip = GetString(HR_MODULES_PULL_COUNTDOWN_DURATION_TT),
-        min = self.minCountdownDuration,
-        max = self.maxCountdownDuration,
-        step = 1,
-        default = 5,
-        decimals = 0,
-        getFunc = function() return self.sv.countdownDuration end,
-        setFunc = function(value) self.sv.countdownDuration = value end,
+        {
+            type = "slider",
+            name = GetString(HR_MODULES_PULL_COUNTDOWN_DURATION),
+            tooltip = GetString(HR_MODULES_PULL_COUNTDOWN_DURATION_TT),
+            min = self.minCountdownDuration,
+            max = self.maxCountdownDuration,
+            step = 1,
+            default = self.svDefault.countdownDuration,
+            decimals = 0,
+            getFunc = function() return self.sv.countdownDuration end,
+            setFunc = function(value) self.sv.countdownDuration = value end,
+        },
     }
 end
 
