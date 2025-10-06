@@ -135,8 +135,6 @@ local function updateElection()
 end
 
 local function startElection(id, descriptor)
-    d(id, descriptor)
-    --if descriptor ~= ZO_READY_CHECK then return end
     if isPollActive then return end
     isPollActive = true
     refreshVisibility()
