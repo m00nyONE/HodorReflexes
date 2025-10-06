@@ -4,7 +4,7 @@
 local strings = {
 
     -------------------------
-    -- Missing Libraries
+    -- LibCheck
     -------------------------
     HR_MISSING_LIBS_TITLE = "Получите полный опыт HodorReflexes!",
     HR_MISSING_LIBS_TEXT = "|c00FF00Вы упускаете полный функционал HodorReflexes!|r\n\nУстановите |cFFFF00LibCustomIcons|r и |cFFFF00LibCustomNames|r, чтобы видеть кастомные иконки, ники и стили от других пользователей Hodor, включая ваших друзей и членов гильдии. Превратите поле боя во что-то персональное и полное характера!\n\nЭто полностью опционально и не требуется для работы HodorReflexes.",
