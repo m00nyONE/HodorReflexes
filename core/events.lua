@@ -14,18 +14,40 @@ local localPlayer = "player"
 local inCombat = false
 
 --[[ doc.lua begin ]]
+local HR_EVENT_PLAYER_ACTIVATED = "HR_EVENT_PLAYER_ACTIVATED"
 local HR_EVENT_GROUP_CHANGED = "HR_EVENT_GROUP_CHANGED"
 local HR_EVENT_COMBAT_START = "HR_EVENT_COMBAT_START"
 local HR_EVENT_COMBAT_END = "HR_EVENT_COMBAT_END"
+addon.HR_EVENT_PLAYER_ACTIVATED = HR_EVENT_PLAYER_ACTIVATED
 addon.HR_EVENT_GROUP_CHANGED = HR_EVENT_GROUP_CHANGED
 addon.HR_EVENT_COMBAT_START = HR_EVENT_COMBAT_START
 addon.HR_EVENT_COMBAT_END = HR_EVENT_COMBAT_END
 --[[ doc.lua end ]]
 
 
-local function onGroupChanged()
-    CM:FireCallbacks(HR_EVENT_GROUP_CHANGED)
+--[[ doc.lua begin ]]
+function addon.UnregisterCallback(eventName, callback)
+    CM:UnregisterCallback(eventName, callback)
 end
+function addon.RegisterCallback(eventName, callback)
+    assert(type(eventName) == "string", "eventName must be a string")
+    assert(type(callback) == "function", "callback must be a function")
+
+    -- only register events when they are actually used somewhere
+    if eventName == HR_EVENT_RETICLE_TARGET_CHANGED then
+        EM:UnregisterForEvent(addon_name, EVENT_RETICLE_TARGET_CHANGED)
+        EM:RegisterForEvent(addon_name, EVENT_RETICLE_TARGET_CHANGED, function()
+            CM:FireCallbacks(HR_EVENT_RETICLE_TARGET_CHANGED)
+        end)
+    end
+
+    CM:RegisterCallback(eventName, callback) -- no need to unregister first as ZO_CallbackObject does that internally
+    logger:Debug("RegisterCallback: eventName=%s, callback=%s", eventName, tostring(callback))
+end
+
+--- core events ---
+
+-- Player combat state change event handler
 local function onPlayerCombatState(_, c)
     if inCombat ~= c then
         if c then
@@ -44,27 +66,41 @@ local function onPlayerCombatState(_, c)
         end
     end
 end
-
---[[ doc.lua begin ]]
-function addon.UnregisterCallback(eventName, callback)
-    CM:UnregisterCallback(eventName, callback)
+-- group change event handler (with delay to avoid spam)
+local UPDATE_GROUP_CHANGED_NAMESPACE = addon_name .. "_EVENT_GROUP_CHANGED"
+local function onGroupChanged()
+    EM:UnregisterForUpdate(UPDATE_GROUP_CHANGED_NAMESPACE)
+    CM:FireCallbacks(HR_EVENT_GROUP_CHANGED)
 end
-function addon.RegisterCallback(eventName, callback)
-    assert(type(eventName) == "string", "eventName must be a string")
-    assert(type(callback) == "function", "callback must be a function")
+local function onGroupChangedDelayed()
+    EM:UnregisterForUpdate(UPDATE_GROUP_CHANGED_NAMESPACE)
+    EM:RegisterForUpdate(UPDATE_GROUP_CHANGED_NAMESPACE, 100, onGroupChanged)
+end
+-- player activated event handler
+local function onPlayerActivated()
+    -- fire HR_EVENT_PLAYER_ACTIVATED
+    CM:FireCallbacks(HR_EVENT_PLAYER_ACTIVATED)
 
-    if eventName == HR_EVENT_GROUP_CHANGED then
-        EM:UnregisterForEvent(addon_name, EVENT_GROUP_MEMBER_JOINED)
-        EM:UnregisterForEvent(addon_name, EVENT_GROUP_MEMBER_LEFT)
-        EM:UnregisterForEvent(addon_name, EVENT_GROUP_UPDATE)
-        EM:UnregisterForEvent(addon_name, EVENT_GROUP_MEMBER_CONNECTED_STATUS)
-        EM:RegisterForEvent(addon_name, EVENT_GROUP_MEMBER_JOINED, onGroupChanged)
-        EM:RegisterForEvent(addon_name, EVENT_GROUP_MEMBER_LEFT, onGroupChanged)
-        EM:RegisterForEvent(addon_name, EVENT_GROUP_UPDATE, onGroupChanged)
-        EM:RegisterForEvent(addon_name, EVENT_GROUP_MEMBER_CONNECTED_STATUS, onGroupChanged)
-    end
+    -- Player can be in combat after reloadui
+    EM:UnregisterForEvent(addon_name, EVENT_PLAYER_COMBAT_STATE)
+    EM:RegisterForEvent(addon_name, EVENT_PLAYER_COMBAT_STATE, onPlayerCombatState)
+    onPlayerCombatState(nil, IsUnitInCombat(localPlayer))
 
-    logger:Debug("RegisterCallback: eventName=%s, callback=%s", eventName, tostring(callback))
-    CM:RegisterCallback(eventName, callback)
+    -- Group event handling (with delay to avoid spam)
+    EM:UnregisterForEvent(addon_name, EVENT_GROUP_MEMBER_JOINED)
+    EM:UnregisterForEvent(addon_name, EVENT_GROUP_MEMBER_LEFT)
+    EM:UnregisterForEvent(addon_name, EVENT_GROUP_UPDATE)
+    EM:UnregisterForEvent(addon_name, EVENT_GROUP_MEMBER_CONNECTED_STATUS)
+    EM:RegisterForEvent(addon_name, EVENT_GROUP_MEMBER_JOINED, onGroupChangedDelayed)
+    EM:RegisterForEvent(addon_name, EVENT_GROUP_MEMBER_LEFT, onGroupChangedDelayed)
+    EM:RegisterForEvent(addon_name, EVENT_GROUP_UPDATE, onGroupChangedDelayed)
+    EM:RegisterForEvent(addon_name, EVENT_GROUP_MEMBER_CONNECTED_STATUS, onGroupChangedDelayed)
+    onGroupChangedDelayed()
+end
+
+-- Register core events
+function core.RegisterCoreEvents()
+    EM:UnregisterForEvent(addon_name, EVENT_PLAYER_ACTIVATED)
+    EM:RegisterForEvent(addon_name, EVENT_PLAYER_ACTIVATED, onPlayerActivated)
 end
 --[[ doc.lua end ]]

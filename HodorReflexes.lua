@@ -42,6 +42,7 @@ local function initialize()
     core.sw = ZO_SavedVars:NewAccountWide(core.svName, core.svVersion, nil, core.svDefault)
 
     core.RegisterLGBHandler()
+    core.RegisterCoreEvents()
     core.RegisterCoreCommands()
     core.InitializeExtensions()
     core.InitializeModules()
