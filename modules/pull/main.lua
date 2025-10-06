@@ -76,23 +76,6 @@ function module:RegisterLGBProtocols(handler)
     protocolPullCountdown:Finalize(protocolOptions)
 end
 
-function module:GetMainMenuOptions()
-    return {
-        {
-            type = "slider",
-            name = GetString(HR_MODULES_PULL_COUNTDOWN_DURATION),
-            tooltip = GetString(HR_MODULES_PULL_COUNTDOWN_DURATION_TT),
-            min = self.minCountdownDuration,
-            max = self.maxCountdownDuration,
-            step = 1,
-            default = self.svDefault.countdownDuration,
-            decimals = 0,
-            getFunc = function() return self.sv.countdownDuration end,
-            setFunc = function(value) self.sv.countdownDuration = value end,
-        },
-    }
-end
-
 function module:RenderPullCountdown(durationMS)
     local texturePath = "EsoUI/Art/HUD/HUD_Countdown_Badge_Dueling.dds"
     local messageParams = CENTER_SCREEN_ANNOUNCE:CreateMessageParams(CSA_CATEGORY_COUNTDOWN_TEXT, SOUNDS.DUEL_START)
