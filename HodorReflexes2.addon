@@ -51,3 +51,7 @@ modules/pull/lang/$(language).lua
 modules/pull/Bindings.xml
 modules/pull/main.lua
 modules/pull/menu.lua
+
+modules/skilllines/lang/en.lua
+modules/skilllines/lang/$(language).lua
+modules/skilllines/main.lua
