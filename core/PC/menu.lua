@@ -5,7 +5,8 @@ local addon_name = "HodorReflexes2"
 local addon = _G[addon_name]
 local internal = addon.internal
 local core = internal.core
+local logger = core.logger.main
 
 function core.BuildMenu()
-    d("Building menu for PC")
+    logger:Info("Building menu for PC")
 end

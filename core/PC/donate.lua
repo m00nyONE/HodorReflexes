@@ -5,8 +5,10 @@ local addon_name = "HodorReflexes2"
 local addon = _G[addon_name]
 local internal = addon.internal
 local core = internal.core
+local logger = core.logger.main
 
 function addon.Donation()
+    logger:Debug("Donation function called")
     SCENE_MANAGER:Show('mailSend')
     zo_callLater(function()
         ZO_MailSendToField:SetText("@m00nyONE")
