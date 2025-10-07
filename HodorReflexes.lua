@@ -21,6 +21,7 @@ local addon = {
             svDefault = {
                 modules = {
                     ["pull"] = true,
+                    ["readycheck"] = true,
                     ["skilllines"] = true,
                 },
                 libraryPopupDisabled = false,
