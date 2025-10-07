@@ -23,7 +23,6 @@ local moduleDefinition = {
     priority = 10,
     enabled = false,
     svDefault = {
-        accountWide = true,
         countdownDuration = 5,
     },
 

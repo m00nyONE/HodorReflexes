@@ -17,8 +17,10 @@ local addon = {
         core = {
             svName = "HodorReflexesSavedVars",
             svVersion = 1,
+            sv = nil, -- per character saved variables
             sw = nil, -- global accountwide saved variables
             svDefault = {
+                accountwide = true,
                 modules = {
                     ["pull"] = true,
                     ["readycheck"] = true,
@@ -41,7 +43,14 @@ core.CM = CM -- make the callback manager available to other parts of the addon
 
 -- initialize addon
 local function initialize()
+    -- we use a combination of accountWide saved variables and per character saved variables. This little swappi swappi allows us to switch between them without defining new variables
     core.sw = ZO_SavedVars:NewAccountWide(core.svName, core.svVersion, nil, core.svDefault)
+    if not core.sw.accountWide then
+        core.sv = ZO_SavedVars:NewCharacterIdSettings(core.svName, core.svVersion, nil, core.svDefault)
+        core.sw.accountWide = false
+    else
+        core.sv = core.sw
+    end
 
     core.RegisterLGBHandler()
     core.RegisterCoreEvents()

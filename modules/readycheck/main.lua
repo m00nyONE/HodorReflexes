@@ -34,7 +34,6 @@ local moduleDefinition = {
     priority = 99,
     enabled = false,
     svDefault = {
-        accountWide = true,
         enableChatMessages = true,
         readycheckWindowPosLeft = 0,
         readycheckWindowPosTop = 200,
