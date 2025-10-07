@@ -14,7 +14,7 @@ local CM = core.CM-- Events
 function core.RegisterCoreCommands()
     logger:Debug("Registering base commands")
     core.RegisterSubCommand("version", "Show addon version", function()
-        d(string.format("|cFFFF00%s|r version |c76c3f4%s|r", addon_name, addon_version))
+        df("|cFFFF00%s|r version |c76c3f4%s|r", addon_name, addon_version)
     end)
     core.RegisterSubCommand("donate", "Donate to the author", function()
         addon.Donate()
@@ -22,7 +22,7 @@ function core.RegisterCoreCommands()
     core.RegisterSubCommand("debug", "Toggle debug mode", function()
         addon.debug = not addon.debug
         addon.internal = internal
-        d(string.format("|cFFFF00%s|r debug mode %s", addon_name, addon.debug and "|c00FF00enabled|r" or "|cFF0000disabled|r"))
+        df("|cFFFF00%s|r debug mode %s", addon_name, addon.debug and "|c00FF00enabled|r" or "|cFF0000disabled|r")
     end)
 end
 

@@ -28,6 +28,7 @@ addon.HR_EVENT_COMBAT_END = HR_EVENT_COMBAT_END
 --[[ doc.lua begin ]]
 function addon.UnregisterCallback(eventName, callback)
     CM:UnregisterCallback(eventName, callback)
+    logger:Debug("UnregisterCallback: eventName=%s, callback=%s", eventName, tostring(callback))
 end
 function addon.RegisterCallback(eventName, callback)
     assert(type(eventName) == "string", "eventName must be a string")

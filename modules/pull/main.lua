@@ -103,7 +103,7 @@ function module:SendPullCountdown(duration)
     self.logger:Debug("SendPullCountdown called with duration: %s", tostring(duration))
 
     if not IsUnitGroupLeader(localPlayer) then
-        self.logger:Info('|cFF0000%s|r', GetString(HR_MODULES_PULL_NOT_LEADER))
+        df('|cFF0000%s|r', GetString(HR_MODULES_PULL_NOT_LEADER))
         return
     end
 

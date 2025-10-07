@@ -18,11 +18,9 @@ else
             df(...)
         end
     end
-    function internalLogger:Info(...)
-        df(...)
-    end
-    internalLogger.Warn = internalLogger.Debug
     internalLogger.Error = internalLogger.Debug
+    internalLogger.Warn = internalLogger.Debug
+    internalLogger.Info = internalLogger.Debug
     internalLogger.Verbose = internalLogger.Debug
     core.logger.main = internalLogger
 end
@@ -32,7 +30,7 @@ function core.initSublogger(name)
     local mainlogger = core.logger.main
     if mainlogger.Create == nil or name == nil or name == "" then return mainlogger end
     if core.logger[name] ~= nil then
-        core.logger.main:Warn("Sublogger %s already exists!", name)
+        mainlogger:Warn("Sublogger %s already exists!", name)
         return core.logger[name]
     end
 
