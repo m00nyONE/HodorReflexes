@@ -50,3 +50,4 @@ modules/pull/lang/en.lua
 modules/pull/lang/$(language).lua
 modules/pull/Bindings.xml
 modules/pull/main.lua
+modules/pull/menu.lua
