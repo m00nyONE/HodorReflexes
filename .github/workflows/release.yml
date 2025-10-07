@@ -9,6 +9,8 @@ on:
       - release # to be changed to main with schedule
 
 jobs:
+  test:
+    uses: ./.github/workflows/_tests.yml
   generate-docs:
     if: github.repository_owner == 'm00nyONE'
     uses: ./.github/workflows/_generate-docs.yml
