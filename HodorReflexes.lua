@@ -22,8 +22,9 @@ local addon = {
             svDefault = {
                 accountwide = true,
                 modules = {
-                    ["pull"] = true,
                     ["readycheck"] = true,
+                    ["exitinstance"] = true,
+                    ["pull"] = true,
                     ["skilllines"] = true,
                 },
                 libraryPopupDisabled = false,
