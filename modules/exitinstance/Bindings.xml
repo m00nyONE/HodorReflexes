@@ -1,0 +1,17 @@
+<!--
+ SPDX-FileCopyrightText: 2025 andy.s m00nyONE
+ SPDX-License-Identifier: Artistic-2.0
+-->
+
+<Bindings>
+<Layer name="SI_KEYBINDINGS_LAYER_GENERAL">
+    <Category name="|cFFFF00Hodor Reflexes|r">
+        <Action name="HR_MODULES_EXITINSTANCE_BINDING_SENDEXITINSTANCEREQUEST">
+            <Down>HodorReflexes.modules.exitinstance:SendExitInstanceRequest()</Down>
+        </Action>
+        <Action name="HR_MODULES_EXITINSTANCE_BINDING_EXITINSTANCE">
+            <Down>HodorReflexes.modules.exitinstance:ExitInstance()</Down>
+        </Action>
+    </Category>
+</Layer>
+</Bindings>
