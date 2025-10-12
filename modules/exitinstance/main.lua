@@ -28,7 +28,8 @@ local moduleDefinition = {
         confirmExitInstance = true,
     },
 
-    exitInstanceDialogName = string.format("%s_ExitInstanceDialog", addon_name)
+    dialogExitInstance = string.format("%s_ExitInstance", addon_name),
+    dialogSendExitInstance = string.format("%s_SendExitInstance", addon_name),
 }
 
 local module = internal.moduleClass:New(moduleDefinition)
@@ -37,12 +38,12 @@ function module:Activate()
     self.logger:Debug("activated exitInstance module")
 
     -- Bindings
-    ZO_CreateStringId('SI_BINDING_NAME_HR_MODULES_EXITINSTANCE_BINDING_SENDEXITINSTANCEREQUEST', GetString(HR_MODULES_EXITINSTANCE_BINDING_SENDEXITINSTANCEREQUEST))
+    ZO_CreateStringId('SI_BINDING_NAME_HR_MODULES_EXITINSTANCE_BINDING_SENDEJECT', GetString(HR_MODULES_EXITINSTANCE_BINDING_SENDEJECT))
     ZO_CreateStringId('SI_BINDING_NAME_HR_MODULES_EXITINSTANCE_BINDING_EXITINSTANCE', GetString(HR_MODULES_EXITINSTANCE_BINDING_EXITINSTANCE))
 
     local exitInstanceRequestButton = {
-        name = GetString(HR_MODULES_EXITINSTANCE_BINDING_SENDEXITINSTANCEREQUEST),
-        keybind = 'HR_MODULES_EXITINSTANCE_BINDING_SENDEXITINSTANCEREQUEST',
+        name = GetString(HR_MODULES_EXITINSTANCE_BINDING_SENDEJECT),
+        keybind = 'HR_MODULES_EXITINSTANCE_BINDING_SENDEJECT',
         callback = function(...) self:SendExitInstanceRequest(...) end,
         alignment = KEYBIND_STRIP_ALIGN_CENTER,
     }
@@ -75,13 +76,28 @@ function module:RegisterLGBProtocols(handler)
     end
 end
 
+function module:SendExitInstanceRequest()
+    if not IsUnitGroupLeader(localPlayer) then
+        df('|cFF0000%s|r', GetString(HR_MODULES_EXITINSTANCE_NOT_LEADER))
+        return
+    end
+
+    if not ZO_Dialogs_IsShowingDialog() then
+        ZO_Dialogs_ShowDialog(self.dialogSendExitInstance, nil, nil, IsInGamepadPreferredMode())
+        return
+    end
+end
+
 function module:ExitInstance()
-    if CanExitInstanceImmediately() then
-        if self.sv.confirmExitInstance and not ZO_Dialogs_IsShowingDialog() then
-            ZO_Dialogs_ShowDialog(self.exitInstanceDialogName, nil, nil, IsInGamepadPreferredMode())
-        else
-            ExitInstanceImmediately()
-        end
+    if not CanExitInstanceImmediately() then return end
+
+    if not self.sv.confirmExitInstance then
+        ExitInstanceImmediately()
+        return
+    end
+    if not ZO_Dialogs_IsShowingDialog() then
+        ZO_Dialogs_ShowDialog(self.dialogExitInstance, nil, nil, IsInGamepadPreferredMode())
+        return
     end
 end
 
@@ -92,28 +108,42 @@ function module:onExitInstanceRequestEventReceived(unitTag, data)
     self:ExitInstance()
 end
 
-function module:SendExitInstanceRequest()
-    if not IsUnitGroupLeader(localPlayer) then
-        df('|cFF0000%s|r', GetString(HR_MODULES_EXITINSTANCE_NOT_LEADER))
-        return
-    end
-
-    _sendExitInstanceRequest()
-end
-
-
 function module:registerExitInstanceRequestDialog()
-    ZO_Dialogs_RegisterCustomDialog(self.exitInstanceDialogName, {
+    ZO_Dialogs_RegisterCustomDialog(self.dialogExitInstance, {
         title = {
-            text = GetString(HR_MODULES_EXITINSTANCE_DIALOG_TITLE),
+            text = GetString(HR_MODULES_EXITINSTANCE_EXITINSTANCE_DIALOG_TITLE),
         },
         mainText = {
-            text = GetString(HR_MODULES_EXITINSTANCE_DIALOG_MAIN_TEXT),
+            text = GetString(HR_MODULES_EXITINSTANCE_EXITINSTANCE_DIALOG_TEXT),
         },
         buttons = {
             {
                 text = SI_DIALOG_YES,
                 callback = function() ExitInstanceImmediately() end,
+            },
+            {
+                text = SI_DIALOG_NO,
+                callback = function() end, -- do nothing on escape or no button
+            },
+        },
+        noChoiceCallback = function() end, -- do nothing on escape or no button
+        canQueue = false,
+        allowShowOnDead = true,
+        gamepadInfo = {
+            dialogType = GAMEPAD_DIALOGS.BASIC,
+        },
+    })
+    ZO_Dialogs_RegisterCustomDialog(self.dialogSendExitInstance, {
+        title = {
+            text = GetString(HR_MODULES_EXITINSTANCE_SENDEXITINSTANCE_DIALOG_TITLE),
+        },
+        mainText = {
+            text = GetString(HR_MODULES_EXITINSTANCE_SENDEXITINSTANCE_DIALOG_TEXT),
+        },
+        buttons = {
+            {
+                text = SI_DIALOG_YES,
+                callback = function() _sendExitInstanceRequest() end,
             },
             {
                 text = SI_DIALOG_NO,

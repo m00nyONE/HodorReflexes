@@ -46,9 +46,9 @@ core/modules.lua
 ; extensions
 
 ; modules
+modules/pull/Bindings.xml
 modules/pull/lang/en.lua
 modules/pull/lang/$(language).lua
-modules/pull/Bindings.xml
 modules/pull/main.lua
 modules/pull/menu.lua
 
@@ -57,9 +57,9 @@ modules/readycheck/lang/$(language).lua
 modules/readycheck/main.lua
 modules/readycheck/menu.lua
 
+modules/exitinstance/Bindings.xml
 modules/exitinstance/lang/en.lua
 modules/exitinstance/lang/$(language).lua
-modules/exitinstance/Bindings.xml
 modules/exitinstance/main.lua
 modules/exitinstance/menu.lua
 
