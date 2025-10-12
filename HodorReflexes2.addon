@@ -57,6 +57,12 @@ modules/readycheck/lang/$(language).lua
 modules/readycheck/main.lua
 modules/readycheck/menu.lua
 
+modules/exitinstance/lang/en.lua
+modules/exitinstance/lang/$(language).lua
+modules/exitinstance/Bindings.xml
+modules/exitinstance/main.lua
+modules/exitinstance/menu.lua
+
 modules/skilllines/lang/en.lua
 modules/skilllines/lang/$(language).lua
 modules/skilllines/main.lua
