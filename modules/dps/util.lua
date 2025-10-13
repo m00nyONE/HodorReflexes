@@ -38,16 +38,26 @@ function module:sortByDamageType(a, b)
 end
 
 -- formatting functions
-function module:getDamageFormat(dmgType)
-    local formats = {
-        [DAMAGE_UNKNOWN] = string.format('|c%s%s|r', self.sw.colorDamageBoss, GetString(HR_MODULES_DPS_DAMAGE)),
-        [DAMAGE_TOTAL] = string.format('|c%s%s|r |c%s(DPS)|r', self.sw.colorDamageBoss, GetString(HR_MODULES_DPS_DAMAGE_TOTAL), self.sw.colorDamageTotal),
-        [DAMAGE_BOSS] = string.format('|c%s%s|r |c%s(%s)|r', self.sw.colorDamageBoss, GetString(HR_MODULES_DPS_DPS_BOSS), self.sw.colorDamageTotal, GetString(HR_MODULES_DPS_DPS_TOTAL)),
-    }
-    return formats[dmgType] and formats[dmgType] or string.format('|c%s%s|r |c%s(DPS)|r', self.sw.colorDamageBoss, GetString(HR_MODULES_DPS_DAMAGE_MISC), self.sw.colorDamageTotal)
+function module:getDamageHeaderFormat(dmgType)
+    if dmgType == DAMAGE_TOTAL then
+        return string.format('|c%s%s|r |c%s(DPS)|r', self.sw.colorDamageBoss, GetString(HR_MODULES_DPS_DAMAGE_TOTAL), self.sw.colorDamageTotal)
+    elseif dmgType == DAMAGE_BOSS then
+        return string.format('|c%s%s|r |c%s(%s)|r', self.sw.colorDamageBoss, GetString(HR_MODULES_DPS_DPS_BOSS), self.sw.colorDamageTotal, GetString(HR_MODULES_DPS_DPS_TOTAL))
+    elseif dmgType == DAMAGE_UNKNOWN then
+        return string.format('|c%s%s|r', self.sw.colorDamageBoss, GetString(HR_MODULES_DPS_DAMAGE))
+    end
+
+    return string.format('|c%s%s|r |c%s(DPS)|r', self.sw.colorDamageBoss, GetString(HR_MODULES_DPS_DAMAGE_MISC), self.sw.colorDamageTotal)
+end
+function module:getDamageRowFormat(dmgType, dmg, dps)
+    if dmgType == DAMAGE_TOTAL then
+        return string.format('|c%s%0.2fM|r |c%s(%dK)|r|u0:2::|u', self.sw.colorDamageBoss, dmg / 100, self.sw.colorDamageTotal, dps)
+    end
+
+    return string.format('|c%s%0.1fK|r |c%s(%dK)|r|u0:2::|u', self.sw.colorDamageBoss, dmg / 10, self.sw.colorDamageTotal, dps)
 end
 
---
+-- visibility checks
 function module:isDamageListVisible()
     if self.sw.damageListEnabled == 1 then -- always show
         return true
