@@ -16,6 +16,7 @@ local group = core.group
 
 local ultPool = nil
 local function genUltPool()
+    ultPool = {}
     for skillType = 1, GetNumSkillTypes() do
         for skillLineIndex = 1, GetNumSkillLines(skillType) do
             for skillIndex = 1, GetNumSkillAbilities(skillType, skillLineIndex) do
