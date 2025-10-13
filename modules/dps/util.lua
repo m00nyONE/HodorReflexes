@@ -41,10 +41,10 @@ end
 function module:getDamageFormat(dmgType)
     local formats = {
         [DAMAGE_UNKNOWN] = string.format('|c%s%s|r', self.sw.colorDamageBoss, GetString(HR_MODULES_DPS_DAMAGE)),
-        [DAMAGE_TOTAL] = string.format('|c%s%s|r |c%s(DPS)|r', self.sw.colorDamageBoss, GetString(HR_MODULES_DPS_TOTAL_DAMAGE), self.sw.colorDamageTotal),
-        [DAMAGE_BOSS] = string.format('|c%s%s|r |c%s(%s)|r', self.sw.colorDamageBoss, GetString(HR_MODULES_DPS_BOSS_DPS), self.sw.colorDamageTotal, GetString(HR_MODULES_DPS_TOTAL_DPS)),
+        [DAMAGE_TOTAL] = string.format('|c%s%s|r |c%s(DPS)|r', self.sw.colorDamageBoss, GetString(HR_MODULES_DPS_DAMAGE_TOTAL), self.sw.colorDamageTotal),
+        [DAMAGE_BOSS] = string.format('|c%s%s|r |c%s(%s)|r', self.sw.colorDamageBoss, GetString(HR_MODULES_DPS_DPS_BOSS), self.sw.colorDamageTotal, GetString(HR_MODULES_DPS_DPS_TOTAL)),
     }
-    return formats[dmgType] and formats[dmgType] or string.format('|c%s%s|r |c%s(DPS)|r', self.sw.colorDamageBoss, GetString(HR_MODULES_DPS_MISC_DAMAGE), self.sw.colorDamageTotal)
+    return formats[dmgType] and formats[dmgType] or string.format('|c%s%s|r |c%s(DPS)|r', self.sw.colorDamageBoss, GetString(HR_MODULES_DPS_DAMAGE_MISC), self.sw.colorDamageTotal)
 end
 
 --
