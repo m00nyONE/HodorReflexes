@@ -6,3 +6,5 @@ local addon = _G[addon_name]
 local internal = addon.internal
 local core = internal.core
 local logger = core.logger.main
+
+-- TODO: add diagnostic loader for modules and extensions

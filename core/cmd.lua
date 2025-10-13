@@ -8,7 +8,7 @@ local core = internal.core
 local logger = core.logger.main
 
 local addon_version = addon.version
-local CM = core.CM-- Events
+local CM = core.CM
 
 -- for initializing basic commands from HR Core
 function core.RegisterCoreCommands()
