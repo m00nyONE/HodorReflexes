@@ -42,6 +42,7 @@ local moduleDefinition = {
     },
 
     uiLocked = true,
+    isTestRunning = false,
 
     --damageList = internal.ListClass:New(addon_name .. "dps" .. "_DamageList"),
 }
@@ -59,50 +60,9 @@ function module:onDPSDataReceived(tag, data)
         dmgType  = data.dmgType,
     })
 
-    --updateLists()
+    --self:updateLists()
 end
 
-function module:startTest()
-    isTestRunning = true
-
-    for name, _ in pairs(addon.playersData) do
-        local dmg = zo_random(500, 1200)
-
-        group.CreateOrUpdatePlayerData({
-            name = name, -- required
-            tag = name, -- required
-            dmg = dmg,
-            dps = dmg * 0.15,
-            dmgType = DAMAGE_BOSS,
-        })
-    end
-
-    --updateLists()
-end
-function module:stopTest()
-    isTestRunning = false
-
-    --updateLists()
-end
-function module:updateTest()
-    if not isTestRunning then return end
-
-    for name, data in pairs(addon.playersData) do
-        local dmg = data.dmg + zo_random(-15, 15)
-        if dmg > 1200 then dmg = 1200 end
-        if dmg < 500 then dmg = 500 end
-
-        group.CreateOrUpdatePlayerData({
-            name = name, -- required
-            tag = name, -- required
-            dmg = dmg,
-            dps = dmg * 0.15,
-            dmgType = DAMAGE_BOSS,
-        })
-    end
-
-    --updateLists()
-end
 
 function module:Activate()
     self.logger:Debug("activated dps module")
