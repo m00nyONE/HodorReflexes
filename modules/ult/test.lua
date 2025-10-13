@@ -57,6 +57,14 @@ function module:startTest()
         local ult1Percentage = self:getUltPercentage(ultValue, ult1Cost)
         local ult2Percentage = self:getUltPercentage(ultValue, ult2Cost)
 
+        local ultActivatedSetID = zo_random(0, 5)
+
+        local mockData = {
+            ult1ID = ult1ID,
+            ult2ID = ult2ID,
+            ultActivatedSetID = ultActivatedSetID,
+        }
+
         group.CreateOrUpdatePlayerData({
             name = name, -- required
             tag = name, -- required
@@ -68,7 +76,17 @@ function module:startTest()
             ult1Percentage = ult1Percentage,
             ult2Percentage = ult2Percentage,
             lowestUltPercentage = zo_min(ult1Percentage, ult2Percentage),
-            ultActivatedSetID = zo_random(0, 2),
+            -- special ults
+            hasHorn = self:hasUnitHorn(mockData),
+            hasColos = self:hasUnitColos(mockData),
+            hasAtro = self:hasUnitAtro(mockData),
+            hasBarrier = self:hasUnitBarrier(mockData),
+            hasCryptCannon = self:hasUnitCryptCannon(mockData),
+            -- ult activated sets
+            hasSaxhleel = self:hasUnitSaxhleel(mockData),
+            hasMAorWM = self:hasUnitMAorWM(mockData),
+            hasPillager = self:hasUnitPillager(mockData),
+            ultActivatedSetID = ultActivatedSetID,
         })
     end
 

@@ -37,28 +37,53 @@ local moduleDefinition = {
 
     uiLocked = true,
     isTestRunning = false,
+
+    majorForceId = 61747,
+    majorVulnerabilityId = 106754,
+    majorBerserkId = 61745,
+    hornBuffIds = {38564, 40221, 40224},
+
+    hornAbilityIds = {40223, 38563, 40220},
+    colosAbilityIds = {122388, 122395, 122174},
+    atroAbilityIds = {23634, 23492, 23495},
+    barrierAbilityIds = {40237,	40239, 38573},
+    cryptCannonAbilityIds = {195031},
 }
 
 local module = internal.moduleClass:New(moduleDefinition)
 
--- return the ultimate in percent from 0-100. from 100-200 its scaled acordingly.
-function module:getUltPercentage(ultValue, ultCost)
-    if ultValue <= ultCost then
-        return zo_floor((ultValue / ultCost) * 100)
-    end
-
-    return zo_min(200, 100 + zo_floor(100 * (ultValue - ultCost) / (500 - ultCost)))
-end
-
 function module:onULTDataReceived(tag, data)
     if not IsUnitGrouped(tag) then return end
 
+    local ultValue = data.ultValue
+    local ult1Cost = data.ult1Cost
+    local ult2Cost = data.ult2Cost
+    local ult1Percentage = self:getUltPercentage(ultValue, ult1Cost)
+    local ult2Percentage = self:getUltPercentage(ultValue, ult2Cost)
+    local lowestUltPercentage = zo_min(ult1Percentage, ult2Percentage)
+
     group.CreateOrUpdatePlayerData({
-        name     = GetUnitName(tag),
-        tag      = tag,
-        dmg      = data.dmg,
-        dps      = data.dps,
-        dmgType  = data.dmgType,
+        name = GetUnitName(tag),
+        tag  = tag,
+        ultValue = ultValue,
+        ult1ID = data.ult1ID,
+        ult2ID = data.ult2ID,
+        ult1Cost = ult1Cost,
+        ult2Cost = ult2Cost,
+        ult1Percentage = ult1Percentage,
+        ult2Percentage = ult2Percentage,
+        lowestUltPercentage = lowestUltPercentage,
+        -- special ults
+        hasHorn = self:hasUnitHorn(data),
+        hasColos = self:hasUnitColos(data),
+        hasAtro = self:hasUnitAtro(data),
+        hasBarrier = self:hasUnitBarrier(data),
+        hasCryptCannon = self:hasUnitCryptCannon(data),
+        -- ult activated sets
+        hasSaxhleel = self:hasUnitSaxhleel(data),
+        hasMAorWM = self:hasUnitMAorWM(data),
+        hasPillager = self:hasUnitPillager(data),
+        ultActivatedSetID = data.ultActivatedSetID, -- TODO: remove after reworking LGCS
     })
 
     --updateLists()
@@ -94,10 +119,17 @@ function module:Activate()
         ult1Percentage = 0,
         ult2Percentage = 0,
         lowestUltPercentage = 0,
-        ultActivatedSetID = 0, -- TODO: remove later
-        --hasSaxhleel = false,
-        --hasMAorWM = false,
-        --hasPillager = false,
+        -- special ults
+        hasHorn = false,
+        hasColos = false,
+        hasAtro = false,
+        hasBarrier = false,
+        hasCryptCannon = false,
+        -- ult activated sets
+        hasSaxhleel = false,
+        hasMAorWM = false,
+        hasPillager = false,
+        ultActivatedSetID = 0, -- TODO: remove after reworking LGCS later
     })
 end
 
