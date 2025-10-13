@@ -13,6 +13,7 @@ local module_name = "pull"
 local module = addon_modules[module_name]
 
 local LGB = LibGroupBroadcast
+local localPlayer = "player"
 
 local protocolPullCountdown = {}
 local MESSAGE_ID_PULLCOUNTDOWN = 31
