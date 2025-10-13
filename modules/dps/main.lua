@@ -37,11 +37,17 @@ local moduleDefinition = {
     enabled = false,
     svDefault = {
         accountWide = true,
+        disableInPvP = true,
 
         damageListEnabled = 0, -- 0=off, 1=always, 2=out of combat, 3=non bossfights
         damageListWidth = 227,
         damageListPosLeft = 0,
         damageListPosTop = 50,
+
+        damageListHeaderOpacity = 0.8,
+        damageListRowEvenOpacity = 0.65,
+        damageListRowOddOpacity = 0.45,
+        damageListPlayerHighlightColor = {0, 1, 0, 0.36}, -- green
 
         colorDamageTotal = "faffb2", -- light yellow
         colorDamageBoss = "b2ffb2", -- light green
