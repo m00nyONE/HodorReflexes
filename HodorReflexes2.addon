@@ -50,6 +50,7 @@ modules/pull/Bindings.xml
 modules/pull/lang/en.lua
 modules/pull/lang/$(language).lua
 modules/pull/main.lua
+modules/pull/protocol.lua
 modules/pull/menu.lua
 
 modules/readycheck/lang/en.lua
@@ -61,6 +62,7 @@ modules/exitinstance/Bindings.xml
 modules/exitinstance/lang/en.lua
 modules/exitinstance/lang/$(language).lua
 modules/exitinstance/main.lua
+modules/exitinstance/protocol.lua
 modules/exitinstance/menu.lua
 
 modules/skilllines/lang/en.lua

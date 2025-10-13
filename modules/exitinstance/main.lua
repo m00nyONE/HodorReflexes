@@ -10,11 +10,6 @@ local addon_modules = addon.modules
 local internal_modules = internal.modules
 
 local localPlayer = "player"
-local LGB = LibGroupBroadcast
-
-local _sendExitInstanceRequest = {}
-local EVENT_EXIT_INSTANCE_REQUEST_NAME = "ExitInstanceRequest"
-local EVENT_ID_EXITINSTANCEREQUEST = 3
 
 local moduleDefinition = {
     name = "exitinstance",
@@ -68,26 +63,6 @@ function module:Activate()
     core.RegisterSubCommand("eject", GetString(HR_MODULES_EXITINSTANCE_COMMAND_HELP), function(...) self:SendExitInstanceRequest(...) end)
 end
 
-function module:RegisterLGBProtocols(handler)
-    _sendExitInstanceRequest = handler:DeclareCustomEvent(EVENT_ID_EXITINSTANCEREQUEST, EVENT_EXIT_INSTANCE_REQUEST_NAME)
-    local success = LGB:RegisterForCustomEvent(EVENT_EXIT_INSTANCE_REQUEST_NAME, function(...) self:onExitInstanceRequestEventReceived(...) end)
-    if not success then
-        self.logger.Error("error registering for EXIT_INSTANCE_EVENT")
-    end
-end
-
-function module:SendExitInstanceRequest()
-    if not IsUnitGroupLeader(localPlayer) then
-        df('|cFF0000%s|r', GetString(HR_MODULES_EXITINSTANCE_NOT_LEADER))
-        return
-    end
-
-    if not ZO_Dialogs_IsShowingDialog() then
-        ZO_Dialogs_ShowDialog(self.dialogSendExitInstance, nil, nil, IsInGamepadPreferredMode())
-        return
-    end
-end
-
 function module:ExitInstance()
     if not CanExitInstanceImmediately() then return end
 
@@ -99,13 +74,6 @@ function module:ExitInstance()
         ZO_Dialogs_ShowDialog(self.dialogExitInstance, nil, nil, IsInGamepadPreferredMode())
         return
     end
-end
-
-function module:onExitInstanceRequestEventReceived(unitTag, data)
-    if not IsUnitGroupLeader(unitTag) then return end
-    if self.sv.ignoreExitInstanceRequests then return end
-
-    self:ExitInstance()
 end
 
 function module:registerExitInstanceRequestDialog()
@@ -143,7 +111,7 @@ function module:registerExitInstanceRequestDialog()
         buttons = {
             {
                 text = SI_DIALOG_YES,
-                callback = function() _sendExitInstanceRequest() end,
+                callback = function() self:_sendExitInstanceRequestEvent() end,
             },
             {
                 text = SI_DIALOG_NO,
