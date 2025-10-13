@@ -11,8 +11,8 @@ local hud = {}
 core.hud = hud
 local CM = core.CM
 
-local HR_EVENT_LOCKUI = "LockUI"
-local HR_EVENT_UNLOCKUI = "UnlockUI"
+local HR_EVENT_LOCKUI = "HR_EVENT_LOCKUI"
+local HR_EVENT_UNLOCKUI = "HR_EVENT_UNLOCKUI"
 addon.HR_EVENT_LOCKUI = HR_EVENT_LOCKUI
 addon.HR_EVENT_UNLOCKUI = HR_EVENT_UNLOCKUI
 
