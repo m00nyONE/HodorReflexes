@@ -43,8 +43,8 @@ function extensionClass:Initialize(t)
         end
     end
 
-    -- create a new sublogger for the module
-    self.logger = core.initSublogger(self.name)
+    -- create a new subLogger for the module
+    self.logger = core.initSubLogger(self.name)
 
     -- register the module to the core
     core.RegisterExtension(self)
