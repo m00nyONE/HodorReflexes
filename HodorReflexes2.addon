@@ -68,3 +68,4 @@ modules/exitinstance/menu.lua
 modules/skilllines/lang/en.lua
 modules/skilllines/lang/$(language).lua
 modules/skilllines/main.lua
+modules/skilllines/menu.lua
