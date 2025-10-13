@@ -88,7 +88,6 @@ function module:registerAtroCastTracker()
         EM:AddFilterForEvent(eventName .. i, EVENT_COMBAT_EVENT, REGISTER_FILTER_SOURCE_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_GROUP)
     end
 end
-
 -- onEvent handlers
 -- TODO: pillager, barrier, crypt cannon
 function module:onHornBuff(eventId, changeType, effectSlot, effectName, unitTag, beginTime, endTime, stackCount, iconName, deprecatedBuffType, effectType, abilityType, statusEffectType, unitName, unitId, abilityId, sourceType)

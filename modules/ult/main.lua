@@ -41,7 +41,7 @@ local moduleDefinition = {
     majorForceId = 61747,
     majorVulnerabilityId = 106754,
     majorBerserkId = 61745,
-    majorSlayerId = 0, -- TODO: find out major slayer ID
+    majorSlayerId = 93109,
     hornBuffIds = {38564, 40221, 40224},
 
     hornAbilityIds = {40223, 38563, 40220},
