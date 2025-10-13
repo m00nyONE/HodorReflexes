@@ -27,6 +27,7 @@ local addon = {
                     ["pull"] = true,
                     ["skilllines"] = true,
                     ["dps"] = true,
+                    ["ult"] = true,
                 },
                 libraryPopupDisabled = false,
             }
