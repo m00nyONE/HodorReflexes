@@ -26,6 +26,7 @@ local addon = {
                     ["exitinstance"] = true,
                     ["pull"] = true,
                     ["skilllines"] = true,
+                    ["dps"] = true,
                 },
                 libraryPopupDisabled = false,
             }

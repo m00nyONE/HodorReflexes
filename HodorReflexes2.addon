@@ -69,3 +69,8 @@ modules/skilllines/lang/en.lua
 modules/skilllines/lang/$(language).lua
 modules/skilllines/main.lua
 modules/skilllines/menu.lua
+
+modules/dps/lang/en.lua
+modules/dps/lang/$(language).lua
+modules/dps/main.lua
+modules/dps/menu.lua
