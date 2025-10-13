@@ -18,28 +18,31 @@ local CM = core.CM
 local HR_EVENT_MAJOR_FORCE_BUFF_GAINED = "HR_EVENT_MAJOR_FORCE_BUFF_GAINED"
 local HR_EVENT_MAJOR_BERSERK_BUFF_GAINED = "HR_EVENT_MAJOR_BERSERK_BUFF_GAINED"
 local HR_EVENT_MAJOR_SLAYER_BUFF_GAINED = "HR_EVENT_MAJOR_SLAYER_BUFF_GAINED"
+local HR_EVENT_PILLAGER_BUFF_GAINED = "HR_EVENT_PILLAGER_BUFF_GAINED"
 local HR_EVENT_MAJOR_VULNERABILITY_DEBUFF_GAINED = "HR_EVENT_MAJOR_VULNERABILITY_DEBUFF_GAINED"
 local HR_EVENT_HORN_BUFF_GAINED = "HR_EVENT_HORN_BUFF_GAINED"
 local HR_EVENT_ATRO_CAST_STARTED = "HR_EVENT_ATRO_CAST_STARTED"
 addon.HR_EVENT_MAJOR_FORCE_BUFF_GAINED = HR_EVENT_MAJOR_FORCE_BUFF_GAINED
 addon.HR_EVENT_MAJOR_BERSERK_BUFF_GAINED = HR_EVENT_MAJOR_BERSERK_BUFF_GAINED
 addon.HR_EVENT_MAJOR_SLAYER_BUFF_GAINED = HR_EVENT_MAJOR_SLAYER_BUFF_GAINED
+addon.HR_EVENT_PILLAGER_BUFF_GAINED = HR_EVENT_PILLAGER_BUFF_GAINED
 addon.HR_EVENT_MAJOR_VULNERABILITY_DEBUFF_GAINED = HR_EVENT_MAJOR_VULNERABILITY_DEBUFF_GAINED
 addon.HR_EVENT_HORN_BUFF_GAINED = HR_EVENT_HORN_BUFF_GAINED
 addon.HR_EVENT_ATRO_CAST_STARTED = HR_EVENT_ATRO_CAST_STARTED
--- TODO: pillager, barrier, crypt cannon
+-- TODO: barrier
 
 function module:registerBuffTrackers()
     self:registerHornBuffTracker()
     self:registerMajorForceBuffTracker()
     self:registerMajorBerserkBuffTracker()
     self:registerMajorSlayerBuffTracker()
+    self:registerPillagerBuffTracker()
     self:registerMajorVulnerabilityDebuffTracker()
     self:registerAtroCastTracker()
 end
 
 -- buff/debuff/cast trackers
--- TODO: pillager, barrier, crypt cannon
+-- TODO: barrier
 function module:registerHornBuffTracker()
     local eventName = addon_name .. module_name .. "_HornBuff"
     for i, hornId in ipairs(self.hornBuffIds) do
@@ -70,6 +73,13 @@ function module:registerMajorSlayerBuffTracker()
     EM:AddFilterForEvent(eventName, EVENT_EFFECT_CHANGED, REGISTER_FILTER_ABILITY_ID, self.majorSlayerId)
     EM:AddFilterForEvent(eventName, EVENT_EFFECT_CHANGED, REGISTER_FILTER_TARGET_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_GROUP)
 end
+function module:registerPillagerBuffTracker()
+    local eventName = addon_name .. module_name .. "_PillagerBuff"
+    EM:UnregisterForEvent(eventName, EVENT_EFFECT_CHANGED)
+    EM:RegisterForEvent(eventName, EVENT_EFFECT_CHANGED, function(...) self:onPillagerBuff(...) end)
+    EM:AddFilterForEvent(eventName, EVENT_EFFECT_CHANGED, REGISTER_FILTER_ABILITY_ID, self.pillagerBuffId)
+    EM:AddFilterForEvent(eventName, EVENT_EFFECT_CHANGED, REGISTER_FILTER_TARGET_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_GROUP)
+end
 function module:registerMajorVulnerabilityDebuffTracker()
     local eventName = addon_name .. module_name .. "_MajorVulnerabilityDebuff"
     EM:UnregisterForEvent(eventName, EVENT_EFFECT_CHANGED)
@@ -88,7 +98,7 @@ function module:registerAtroCastTracker()
     end
 end
 -- onEvent handlers
--- TODO: pillager, barrier, crypt cannon
+-- TODO: barrier
 function module:onHornBuff(eventId, changeType, effectSlot, effectName, unitTag, beginTime, endTime, stackCount, iconName, deprecatedBuffType, effectType, abilityType, statusEffectType, unitName, unitId, abilityId, sourceType)
     if changeType == EFFECT_RESULT_GAINED or changeType == EFFECT_RESULT_UPDATED then
         local duration = (endTime - beginTime) * 1000
@@ -111,6 +121,12 @@ function module:onMajorSlayerBuff(eventId, changeType, effectSlot, effectName, u
     if changeType == EFFECT_RESULT_GAINED or changeType == EFFECT_RESULT_UPDATED then
         local duration = (endTime - beginTime) * 1000
         CM:FireCallbacks(HR_EVENT_MAJOR_SLAYER_BUFF_GAINED, unitTag, duration)
+    end
+end
+function module:onPillagerBuff(eventId, changeType, effectSlot, effectName, unitTag, beginTime, endTime, stackCount, iconName, deprecatedBuffType, effectType, abilityType, statusEffectType, unitName, unitId, abilityId, sourceType)
+    if changeType == EFFECT_RESULT_GAINED or changeType == EFFECT_RESULT_UPDATED then
+        local duration = (endTime - beginTime) * 1000
+        CM:FireCallbacks(HR_EVENT_PILLAGER_BUFF_GAINED, unitTag, duration)
     end
 end
 function module:onMajorVulnerabilityDebuff(eventId, changeType, effectSlot, effectName, unitTag, beginTime, endTime, stackCount, iconName, deprecatedBuffType, effectType, abilityType, statusEffectType, unitName, unitId, abilityId, sourceType)
