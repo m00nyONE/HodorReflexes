@@ -41,6 +41,7 @@ local moduleDefinition = {
     majorForceId = 61747,
     majorVulnerabilityId = 106754,
     majorBerserkId = 61745,
+    majorSlayerId = 0, -- TODO: find out major slayer ID
     hornBuffIds = {38564, 40221, 40224},
 
     hornAbilityIds = {40223, 38563, 40220},
@@ -131,6 +132,8 @@ function module:Activate()
         hasPillager = false,
         ultActivatedSetID = 0, -- TODO: remove after reworking LGCS later
     })
+
+    self:registerBuffTrackers()
 end
 
 function module:lockUI()

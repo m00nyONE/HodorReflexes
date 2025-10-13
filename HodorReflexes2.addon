@@ -50,6 +50,7 @@ modules/ult/lang/en.lua
 modules/ult/lang/$(language).lua
 modules/ult/main.lua
 modules/ult/util.lua
+modules/ult/buffs.lua
 modules/ult/test.lua
 modules/ult/menu.lua
 
