@@ -28,8 +28,6 @@ local DAMAGE_UNKNOWN = LGCS.DAMAGE_UNKNOWN
 local DAMAGE_TOTAL = LGCS.DAMAGE_TOTAL
 local DAMAGE_BOSS = LGCS.DAMAGE_BOSS
 
-local isTestRunning = false
-
 local moduleDefinition = {
     name = "dps",
     friendlyName = GetString(HR_MODULES_DPS_FRIENDLYNAME),
