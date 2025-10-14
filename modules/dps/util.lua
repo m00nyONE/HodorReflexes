@@ -23,15 +23,28 @@ local DAMAGE_BOSS = LGCS.DAMAGE_BOSS
 local localPlayer = "player"
 
 -- sorting functions
+
+--- sort by name descending
+--- @param a table
+--- @param b table
+--- @return boolean
 function module:sortByName(a, b)
     return a.name > b.name
 end
+--- sort by damage descending
+--- @param a table
+--- @param b table
+--- @return boolean
 function module:sortByDamage(a, b)
     if a.dmg == b.dmg then
         return self:sortByName(a, b)
     end
     return a.dmg > b.dmg
 end
+--- sort by damageType descending
+--- @param a table
+--- @param b table
+--- @return boolean
 function module:sortByDamageType(a, b)
     if a.dmgType == b.dmgType then
         return self:sortByDamage(a, b)
@@ -39,7 +52,11 @@ function module:sortByDamageType(a, b)
     return a.dmgType > b.dmgType
 end
 
+
 -- formatting functions
+
+--- get header format for damage list.
+--- @return string
 function module:getDamageHeaderFormat(dmgType)
     if dmgType == DAMAGE_TOTAL then
         return string.format('|c%s%s|r |c%s(DPS)|r', self.sw.colorDamageBoss, GetString(HR_MODULES_DPS_DAMAGE_TOTAL), self.sw.colorDamageTotal)
@@ -51,6 +68,8 @@ function module:getDamageHeaderFormat(dmgType)
 
     return string.format('|c%s%s|r |c%s(DPS)|r', self.sw.colorDamageBoss, GetString(HR_MODULES_DPS_DAMAGE_MISC), self.sw.colorDamageTotal)
 end
+--- get row format for damage list.
+--- @return string
 function module:getDamageRowFormat(dmgType, dmg, dps)
     if dmgType == DAMAGE_TOTAL then
         return string.format('|c%s%0.2fM|r |c%s(%dK)|r|u0:2::|u', self.sw.colorDamageBoss, dmg / 100, self.sw.colorDamageTotal, dps)
@@ -60,6 +79,9 @@ function module:getDamageRowFormat(dmgType, dmg, dps)
 end
 
 -- visibility checks
+
+--- returns true if damage list should be visible based on settings
+--- @return boolean
 function module:isDamageListVisible()
     return util.IsListVisible(self.sw.damageListEnabled)
 end
