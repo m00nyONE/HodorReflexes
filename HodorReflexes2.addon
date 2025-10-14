@@ -62,6 +62,7 @@ modules/ult/menu.lua
 
 modules/dps/lang/en.lua
 modules/dps/lang/$(language).lua
+modules/dps/ui/damage.xml
 modules/dps/main.lua
 modules/dps/util.lua
 modules/dps/test.lua
