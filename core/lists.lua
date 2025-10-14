@@ -20,15 +20,18 @@ local HR_EVENT_UNLOCKUI = addon.HR_EVENT_UNLOCKUI
 local HR_EVENT_GROUP_CHANGED = addon.HR_EVENT_GROUP_CHANGED
 
 --- @class: listClass
-internal.listClass = ZO_InitializingObject:Subclass()
-local listClass = internal.listClass
+local listClass = ZO_InitializingObject:Subclass()
+internal.listClass = listClass
+
+listClass.uiLocked = true
+listClass.windowName = ""
+listClass.window = {}
+listClass.windowFragment = {}
+listClass.listControlName = ""
+listClass.listControl = {}
 
 -- must implement fields
-listClass:MUST_IMPLEMENT("name") -- unique name of the list
-listClass:MUST_IMPLEMENT("svDefault") -- default saved variables table
-listClass:MUST_IMPLEMENT("update") -- function to update the list
-listClass:MUST_IMPLEMENT("isEnabled") -- function to check if the list is enabled
-listClass:MUST_IMPLEMENT("listEnabledSV") -- saved variable to check if the list should be shown
+listClass:MUST_IMPLEMENT("Update") -- function to update the list
 
 function listClass:RunOnce(funcName, ...)
     if type(self[funcName]) == "function" then
