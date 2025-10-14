@@ -77,11 +77,3 @@ function module:getDamageRowFormat(dmgType, dmg, dps)
 
     return string.format('|c%s%0.1fK|r |c%s(%dK)|r|u0:2::|u', self.sw.colorDamageBoss, dmg / 10, self.sw.colorDamageTotal, dps)
 end
-
--- visibility checks
-
---- returns true if damage list should be visible based on settings
---- @return boolean
-function module:isDamageListVisible()
-    return util.IsListVisible(self.sw.damageListEnabled)
-end

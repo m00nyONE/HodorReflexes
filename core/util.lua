@@ -101,20 +101,4 @@ function util.spairs(t, sortFunction)
     end
 end
 
--- TODO: move to ListClass later
---- returns true if a list should be visible based on settings
---- @param listEnabledSV number setting value
---- @return boolean
-function util.IsListVisible(listEnabledSV)
-    if listEnabledSV == 1 then -- always show
-        return true
-    elseif listEnabledSV == 2 then -- show out of combat
-        return not IsUnitInCombat(localPlayer)
-    elseif listEnabledSV == 3 then -- show non bossfights
-        return not IsUnitInCombat(localPlayer) or not DoesUnitExist(localBoss1) and not DoesUnitExist(localBoss2)
-    else -- off
-        return false
-    end
-end
-
 --[[ doc.lua end ]]

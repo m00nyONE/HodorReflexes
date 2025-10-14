@@ -167,11 +167,3 @@ function module:hasUnitPillager(playerData)
     if playerData.ultActivatedSetID == 2 then return true end
     return false
 end
-
--- visibility checks
-
---- returns true if the horn list should be visible based on settings
---- @return boolean
-function module:IsHornListVisible()
-    return util.IsListVisible(self.sv.hornListEnabled)
-end
