@@ -29,6 +29,7 @@ core/events.lua
 core/LGBHandler.lua
 core/diagnostic.lua
 core/hud.lua
+core/lists.lua
 core/group.lua
 core/menu.lua
 core/donate.lua
