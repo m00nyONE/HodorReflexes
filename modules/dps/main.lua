@@ -44,12 +44,6 @@ local moduleDefinition = {
         colorDamageTotal = "faffb2", -- light yellow
         colorDamageBoss = "b2ffb2", -- light green
     },
-    svDefaultDamageList = {
-        damageListEnabled = 1, -- 0=off, 1=always, 2=out of combat, 3=non bossfights
-        damageListWidth = 227,
-        damageListPosLeft = 10,
-        damageListPosTop = 50,
-    },
 
     isTestRunning = false,
 
@@ -69,7 +63,6 @@ function module:onDPSDataReceived(tag, data)
         dmgType  = data.dmgType,
     })
 end
-
 
 function module:Activate()
     self.logger:Debug("activated dps module")
@@ -98,15 +91,3 @@ function module:Activate()
     self:RunOnce("CreateLists")
 end
 
-function module:CreateLists()
-    local damageListDefinition = {
-        name = "damage",
-        svDefault = self.svDefaultDamageList,
-        Update = function() self:Update() end,
-    }
-    self.damageList = internal.listClass:New(damageListDefinition)
-end
-
-function module:Update()
-    d(self.name)
-end
