@@ -12,7 +12,12 @@ local internal_modules = internal.modules
 local module_name = "ult"
 local module = addon_modules[module_name]
 
--- return the ultimate in percent from 0-100. from 100-200 its scaled acordingly.
+local util = core.util
+
+--- get the ultimate in percent from 0-100. from 100-200 its scaled acordingly.
+--- @param ultValue number current ult value
+--- @param ultCost number ult cost of the ability
+--- @return number percentage from 0-200
 function module:getUltPercentage(ultValue, ultCost)
     if ultValue <= ultCost then
         return zo_floor((ultValue / ultCost) * 100)
@@ -100,4 +105,12 @@ end
 function module:hasUnitPillager(playerData)
     if playerData.ultActivatedSetID == 2 then return true end
     return false
+end
+
+-- visibility checks
+
+--- returns true if the horn list should be visible based on settings
+--- @return boolean
+function module:IsHornListVisible()
+    return util.IsListVisible(self.sv.hornListEnabled)
 end

@@ -12,6 +12,8 @@ local internal_modules = internal.modules
 local module_name = "dps"
 local module = addon_modules[module_name]
 
+local util = core.util
+
 local LGCS = LibGroupCombatStats
 
 local DAMAGE_UNKNOWN = LGCS.DAMAGE_UNKNOWN
@@ -59,13 +61,5 @@ end
 
 -- visibility checks
 function module:isDamageListVisible()
-    if self.sw.damageListEnabled == 1 then -- always show
-        return true
-    elseif self.sw.damageListEnabled == 2 then -- show out of combat
-        return not IsUnitInCombat(localPlayer)
-    elseif self.sw.damageListEnabled == 3 then -- show non bossfights
-        return not IsUnitInCombat(localPlayer) or not DoesUnitExist('boss1') and not DoesUnitExist('boss2')
-    else -- off
-        return false
-    end
+    return util.IsListVisible(self.sw.damageListEnabled)
 end
