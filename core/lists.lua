@@ -84,9 +84,13 @@ function listClass:Initialize(listDefinition)
     addon.RegisterCallback(HR_EVENT_GROUP_CHANGED, onGroupChanged)
 end
 
-function listClass:IsListVisible()
-    local listEnabledSV = self.listEnabledSV
-    if listEnabledSV == 1 then -- always show
+function listClass:IsEnabled()
+    if self.sv.disableInPvP and (IsPlayerInAvAWorld() or IsActiveWorldBattleground()) then
+        return false
+    end
+
+    local enabled = self.sv.enabled
+    if enabled == 1 then -- always show
         return true
     elseif enabled == 2 then -- show out of combat
         return not IsUnitInCombat(localPlayer)
