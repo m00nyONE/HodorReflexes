@@ -71,6 +71,7 @@ function util.spairs(t, sortFunction)
     end
 end
 
+-- TODO: move to ListClass later
 --- returns true if a list should be visible based on settings
 --- @param listEnabledSV number setting value
 --- @return boolean
