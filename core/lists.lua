@@ -130,14 +130,9 @@ function listClass:CreateSavedVariables()
         self.sv = self.sw
     end
 end
-
-function listClass:createControls()
-    if not self.sv.windowPosLeft then self.sv.windowPosLeft = 0 end
-    if not self.sv.windowPosTop then self.sv.windowPosTop = 0 end
-    if not self.sv.windowWidth then self.sv.windowWidth = 220 end
-    if not self.sv.listHeaderHeight then self.sv.listHeaderHeight = 22 end
-    if not self.sv.listRowHeight then self.sv.listRowHeight = 22 end
-
+--- creates the window and controls for the list
+function listClass:CreateControls()
+    -- create the main window
     local windowName = addon_name .. "_List_" .. self.name
     local window = WM:CreateTopLevelWindow(windowName)
     window:SetClampedToScreen(true)
@@ -153,6 +148,7 @@ function listClass:createControls()
     self.windowName = windowName
     self.window = window
 
+    -- create the list control
     local listControlName = windowName .. "_List"
     local listControl = WM:CreateControlFromVirtual(listControlName, window, "ZO_ScrollList")
     listControl:SetAnchor(TOPLEFT, window, TOPLEFT, 0, 0, ANCHOR_CONSTRAINS_XY)
