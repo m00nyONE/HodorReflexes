@@ -91,3 +91,7 @@ function module:Activate()
     self:RunOnce("CreateLists")
 end
 
+function module:CreateLists()
+    module:RunOnce("CreateDamageList")
+end
+

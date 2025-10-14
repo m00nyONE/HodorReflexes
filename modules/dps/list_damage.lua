@@ -19,7 +19,7 @@ local svDefault = {
     damageListPosTop = 50,
 }
 
-function module:CreateLists()
+function module:CreateDamageList()
     local damageListDefinition = {
         name = "damage",
         svDefault = svDefault,
