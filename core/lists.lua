@@ -91,16 +91,26 @@ function listClass:IsListVisible()
     local listEnabledSV = self.listEnabledSV
     if listEnabledSV == 1 then -- always show
         return true
-    elseif listEnabledSV == 2 then -- show out of combat
+    elseif enabled == 2 then -- show out of combat
         return not IsUnitInCombat(localPlayer)
-    elseif listEnabledSV == 3 then -- show non bossfights
+    elseif enabled == 3 then -- show non bossfights
         return not IsUnitInCombat(localPlayer) or not DoesUnitExist(localBoss1) and not DoesUnitExist(localBoss2)
     else -- off
         return false
     end
 end
 
-function listClass:createSavedVariables()
+--- Create saved variables for the list.
+--- sets default values if they are not provided during initialization.
+function listClass:CreateSavedVariables()
+    self.svDefault.enabled = self.svDefault.enabled or 1 -- 1=always, 2=out of combat, 3=non bossfights, 0=off
+    self.svDefault.disableInPvP = self.svDefault.disableInPvP or true
+    self.svDefault.windowPosLeft = self.svDefault.windowPosLeft or 0
+    self.svDefault.windowPosTop = self.svDefault.windowPosTop or 0
+    self.svDefault.windowWidth = self.svDefault.windowWidth or 220
+    self.svDefault.listHeaderHeight = self.svDefault.listHeaderHeight or 22
+    self.svDefault.listRowHeight = self.svDefault.listRowHeight or 22
+
     local svNamespace = self.name .. "List"
     -- we use a combination of accountWide saved variables and per character saved variables. This little swappi swappi allows us to switch between them without defining new variables
     self.sw = ZO_SavedVars:NewAccountWide(core.svName, core.svVersion, svNamespace, self.svDefault)
