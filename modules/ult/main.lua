@@ -127,5 +127,5 @@ function module:Activate()
         ultActivatedSetID = 0, -- TODO: remove after reworking LGCS later
     })
 
-    self:registerBuffTrackers()
+    self:RunOnce("registerBuffTrackers")
 end

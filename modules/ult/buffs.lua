@@ -120,6 +120,4 @@ function module:registerBuffTrackers()
             EM:AddFilterForEvent(eventName .. i, EVENT_COMBAT_EVENT, REGISTER_FILTER_SOURCE_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_GROUP)
         end
     end
-
-    self.registerBuffTrackers = nil -- remove function after first run
 end
