@@ -11,6 +11,11 @@ local util = core.util
 
 
 -- utility functions
+--- sorts a table of modules by their priority field, and by name if priorities are equal
+--- @param t table table of modules
+--- @param a string key of the first module to compare
+--- @param b string key of the second module to compare
+--- @return boolean true if a should come before b, false otherwise
 local function sortByPriority(t, a, b)
     if t[a].priority == t[b].priority then
         return a < b
@@ -18,7 +23,13 @@ local function sortByPriority(t, a, b)
     return t[a].priority < t[b].priority
 end
 
--- module loader and manager
+--- initializes all registered modules if they are enabled in the saved variables.
+--- creates saved variables for each module.
+--- registers LibGroupBroadcast protocols if available.
+--- registers mainMenu options if available.
+--- registers submenu if available.
+--- runs the module's initialization function.
+--- @return void
 function core.InitializeModules()
     logger:Debug("Initializing modules...")
 
@@ -51,6 +62,9 @@ function core.InitializeModules()
     end
 end
 
+--- registers a module to the core
+--- @param module moduleClass the module to register
+--- @return void
 function core.RegisterModule(module)
     assert(addon.modules[module.name] == nil, "module already registered")
 
@@ -59,7 +73,7 @@ function core.RegisterModule(module)
 end
 
 
--- class: moduleClass
+--- @class: moduleClass
 internal.moduleClass = ZO_InitializingObject:Subclass()
 local moduleClass = internal.moduleClass
 
@@ -88,6 +102,10 @@ function moduleClass:GetDiagnostic()
     self.GetDiagnosticInfo = nil
 end
 
+--- runs a function only once and then removes it from the object
+--- @param funcName string the name of the function to run
+--- @param ... any the arguments to pass to the function
+--- @return any the return value of the function, or nil if the function does not exist
 function moduleClass:RunOnce(funcName, ...)
     if type(self[funcName]) == "function" then
         local result = self[funcName](self, ...)
@@ -97,6 +115,9 @@ function moduleClass:RunOnce(funcName, ...)
     return nil
 end
 
+--- initializes the moduleClass
+--- @param t table a table containing the properties to set on the moduleClass
+--- @return void
 function moduleClass:Initialize(t)
     -- Initialization code for the moduleClass
     if t then
@@ -112,6 +133,8 @@ function moduleClass:Initialize(t)
     core.RegisterModule(self)
 end
 
+--- creates the saved variables for the module
+--- @return void
 function moduleClass:CreateSavedVariables()
     -- we use a combination of accountWide saved variables and per character saved variables. This little swappi swappi allows us to switch between them without defining new variables
     self.sw = ZO_SavedVars:NewAccountWide(core.svName, core.svVersion, self.name, self.svDefault)

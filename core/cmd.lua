@@ -11,6 +11,8 @@ local addon_version = addon.version
 local CM = core.CM
 
 -- for initializing basic commands from HR Core
+--- registers base commands: version, donate, debug
+--- @return void
 function core.RegisterCoreCommands()
     logger:Debug("Registering base commands")
     core.RegisterSubCommand("version", "Show addon version", function()
@@ -28,8 +30,14 @@ end
 
 
 -- registering commands
+--- @type table<string, {help: string, func: function}>
 local commands = {}
 
+--- allow other modules to register sub commands.
+--- @param command string the command name
+--- @param help string the help text for the command
+--- @param func function the function to execute when the command is called
+--- @return void
 function core.RegisterSubCommand(command, help, func)
     assert(type(command) == "string", "command must be a string")
     assert(type(help) == "string", "help must be a string")

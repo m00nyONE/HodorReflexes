@@ -7,7 +7,6 @@ local internal = addon.internal
 local core = internal.core
 local logger = core.logger.main
 
--- function needs to be implemented platform specific
+-- functions needs to be implemented platform specific
 function core.BuildMenu() end
-
 function core.RegisterSubMenu(name, menuTable) end

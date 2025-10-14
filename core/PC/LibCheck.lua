@@ -10,6 +10,8 @@ local logger = core.logger.main
 local LCN = LibCustomNames
 local LCI = LibCustomIcons
 
+--- checks if optional libraries are loaded, if not show a reminder dialog
+--- @return void
 function core.OptionalLibrariesCheck()
     local sw = core.sw
     local dialogName = string.format("%s_MISSING_LIBS", addon_name)

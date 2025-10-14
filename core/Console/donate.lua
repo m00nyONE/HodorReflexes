@@ -7,4 +7,6 @@ local internal = addon.internal
 local core = internal.core
 local logger = core.logger.main
 
+--- mock function that does nothing on Console
+--- @return void
 function addon.Donation() end

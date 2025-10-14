@@ -9,6 +9,9 @@ local core = internal.core
 core.logger = {}
 core.logger.main = LibDebugLogger.Create(addon_name)
 
+--- Initialize a sub logger
+--- @param name string the name of the sub logger
+--- @return table the sub logger
 function core.initSubLogger(name)
     local mainLogger = core.logger.main
     if name == nil or name == "" then

@@ -7,6 +7,8 @@ local internal = addon.internal
 local core = internal.core
 local logger = core.logger.main
 
+--- build the menu for PC platform
+--- @return void
 function core.BuildMenu()
     logger:Info("Building menu for PC")
 end

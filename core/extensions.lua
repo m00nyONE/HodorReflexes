@@ -7,10 +7,12 @@ local internal = addon.internal
 local core = internal.core
 local logger = core.logger.main
 
--- class: extensionClass
+--- @class: extensionClass
 internal.extensionClass = ZO_InitializingObject:Subclass()
 local extensionClass = internal.extensionClass
 
+--- initializes all registered extensions
+--- @return void
 function core.InitializeExtensions()
     logger:Debug("Initializing extensions...")
 
@@ -21,11 +23,18 @@ function core.InitializeExtensions()
     end
 end
 
+--- registers an extension to the core
+--- @param extension extensionClass the extension to register
+--- @return void
 function core.RegisterExtension(extension)
     assert(addon.extensions[extension.name] == nil, "extension already registered")
     addon.extension[extension.name] = extension -- add extension to the addon.extension table
 end
 
+--- runs a function only once and then removes it from the object
+--- @param funcName string the name of the function to run
+--- @param ... any the arguments to pass to the function
+--- @return any the return value of the function, or nil if the function does not exist
 function extensionClass:RunOnce(funcName, ...)
     if type(self[funcName]) == "function" then
         local result = self[funcName](self, ...)
@@ -35,6 +44,9 @@ function extensionClass:RunOnce(funcName, ...)
     return nil
 end
 
+--- initializes the extensionClass
+--- @param t table a table containing the properties to set on the extensionClass
+--- @return void
 function extensionClass:Initialize(t)
     -- Initialization code for the moduleClass
     if t then
@@ -50,6 +62,8 @@ function extensionClass:Initialize(t)
     core.RegisterExtension(self)
 end
 
+--- creates the saved variables for the extension
+--- @return void
 function extensionClass:CreateSavedVariables()
     -- we use a combination of accountWide saved variables and per character saved variables. This little swappi swappi allows us to switch between them without defining new variables
     self.sw = ZO_SavedVars:NewAccountWide(core.svName, core.svVersion, self.name, self.svDefault)

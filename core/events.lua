@@ -26,10 +26,18 @@ addon.HR_EVENT_COMBAT_END = HR_EVENT_COMBAT_END
 
 
 --[[ doc.lua begin ]]
+--- unregisters callbacks from events
+--- @param eventName string the event name
+--- @param callback function the callback function
+--- @return void
 function addon.UnregisterCallback(eventName, callback)
     CM:UnregisterCallback(eventName, callback)
     logger:Debug("UnregisterCallback: eventName=%s, callback=%s", eventName, tostring(callback))
 end
+--- registers callbacks to events
+--- @param eventName string the event name
+--- @param callback function the callback function
+--- @return void
 function addon.RegisterCallback(eventName, callback)
     assert(type(eventName) == "string", "eventName must be a string")
     assert(type(callback) == "function", "callback must be a function")
@@ -48,7 +56,10 @@ end
 
 --- core events ---
 
--- Player combat state change event handler
+--- Player combat state change event handler
+--- @param _ any unused
+--- @param c boolean true if in combat, false otherwise
+--- @return void
 local function onPlayerCombatState(_, c)
     if inCombat ~= c then
         if c then
@@ -77,7 +88,8 @@ local function onGroupChangedDelayed()
     EM:UnregisterForUpdate(UPDATE_GROUP_CHANGED_NAMESPACE)
     EM:RegisterForUpdate(UPDATE_GROUP_CHANGED_NAMESPACE, 100, onGroupChanged)
 end
--- player activated event handler
+--- player activated event handler
+--- @return void
 local function onPlayerActivated()
     -- fire HR_EVENT_PLAYER_ACTIVATED
     CM:FireCallbacks(HR_EVENT_PLAYER_ACTIVATED)
@@ -99,7 +111,8 @@ local function onPlayerActivated()
     onGroupChangedDelayed()
 end
 
--- Register core events
+--- Register core events
+--- @return void
 function core.RegisterCoreEvents()
     EM:UnregisterForEvent(addon_name, EVENT_PLAYER_ACTIVATED)
     EM:RegisterForEvent(addon_name, EVENT_PLAYER_ACTIVATED, onPlayerActivated)

@@ -7,6 +7,8 @@ local internal = addon.internal
 local core = internal.core
 local logger = core.logger.main
 
+--- opens the mail interface with prefilled data for donation
+--- @return void
 function addon.Donation()
     logger:Debug("Donation function called")
     SCENE_MANAGER:Show('mailSend')

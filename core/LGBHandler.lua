@@ -9,6 +9,8 @@ local logger = core.logger.main
 
 local LGB = LibGroupBroadcast
 
+--- registers the LGB handler for the addon
+--- @return void
 function core.RegisterLGBHandler()
     logger:Debug("Registering LGB Handler")
     local handler = LGB:RegisterHandler(addon_name)

@@ -16,7 +16,9 @@ local HR_EVENT_UNLOCKUI = "HR_EVENT_UNLOCKUI"
 addon.HR_EVENT_LOCKUI = HR_EVENT_LOCKUI
 addon.HR_EVENT_UNLOCKUI = HR_EVENT_UNLOCKUI
 
--- Disable controls movement.
+--- Disable controls movement.
+--- @param ... table List of controls to lock
+--- @return void
 function hud.LockControls(...)
     for _, control in ipairs({...}) do
         logger:Debug("Locking control: %s", control:GetName())
@@ -25,7 +27,9 @@ function hud.LockControls(...)
     end
 end
 
--- Allow controls movement.
+--- Allow controls movement.
+--- @param ... table List of controls to unlock
+--- @return void
 function hud.UnlockControls(...)
     for _, control in ipairs({...}) do
         logger:Debug("Unlocking control: %s", control:GetName())
@@ -34,7 +38,10 @@ function hud.UnlockControls(...)
     end
 end
 
--- Create a simple HUD_SCENE/HUD_UI_SCENE fragment with a display condition function.
+--- Creates a simple HUD_SCENE/HUD_UI_SCENE fragment with a display condition function.
+--- @param control table The control to attach the fragment to
+--- @param condition function A function that returns true/false to show/hide the fragment
+--- @return table The created fragment
 function hud.AddSimpleFragment(control, condition)
     local f = ZO_SimpleSceneFragment:New(control)
     if condition then f:SetConditional(condition) end
@@ -43,7 +50,10 @@ function hud.AddSimpleFragment(control, condition)
     return f
 end
 
--- Create a fading HUD_SCENE/HUD_UI_SCENE fragment with a display condition function.
+--- Creates a fading HUD_SCENE/HUD_UI_SCENE fragment with a display condition function.
+--- @param control table The control to attach the fragment to
+--- @param condition function A function that returns true/false to show/hide the fragment
+--- @return table The created fragment
 function hud.AddFadeFragment(control, condition)
     local f = ZO_HUDFadeSceneFragment:New(control)
     if condition then f:SetConditional(condition) end
@@ -52,6 +62,7 @@ function hud.AddFadeFragment(control, condition)
     return f
 end
 
+--- registers subcommands to lock/unlock the UI
 core.RegisterSubCommand("lock", GetString(HR_CORE_HUD_COMMAND_LOCK_HELP), function()
     CM:FireCallbacks(HR_EVENT_LOCKUI)
     logger:Info("|cFFFF00%s|r %s", addon_name, GetString(HR_CORE_HUD_COMMAND_LOCK_ACTION))

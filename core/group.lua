@@ -15,9 +15,11 @@ local localPlayer = "player"
 local group = {}
 core.group = group
 
+--[[ doc.lua begin ]]
+--- @type table<string, table> playersData
 local playersData = {}
 addon.playersData = playersData
---[[ doc.lua begin ]]
+
 local HR_EVENT_GROUP_CHANGED = addon.HR_EVENT_GROUP_CHANGED
 local HR_EVENT_LOCKUI = addon.HR_EVENT_LOCKUI
 local HR_EVENT_UNLOCKUI = addon.HR_EVENT_UNLOCKUI
@@ -36,6 +38,8 @@ addon.HR_EVENT_PLAYERSDATA_CHARACTER_REMOVED = HR_EVENT_PLAYERSDATA_CHARACTER_RE
 addon.HR_EVENT_TEST_TICK = HR_EVENT_TEST_TICK
 --[[ doc.lua end ]]
 
+--- default list of players used for the test mode
+--- @type table<string> defaultPlayers
 local defaultPlayers = {
     '@WarfireX',
     '@LikoXie',
@@ -51,6 +55,7 @@ local defaultPlayers = {
     '@Solinur'
 }
 
+--- @type table<string, any> playersDataDefaultFields
 local playersDataDefaultFields = {
     --name = "",
     --userId = "",
@@ -59,13 +64,19 @@ local playersDataDefaultFields = {
     --tag = "",
 }
 
+--- registers additional default fields for player data
+--- @param fields table<string, any> a table of key-value pairs to be added to the default fields
+--- @return void
 function group.RegisterPlayersDataFields(fields)
     for key, defaultValue in pairs(fields) do
         playersDataDefaultFields[key] = defaultValue
     end
 end
 
--- requires at least data.name and data.tag
+--- creates or updates player data.
+--- requires at least data.name and data.tag
+--- @param data table<string, any> a table of key-value pairs to be added/updated to the player data
+--- @return void
 function group.CreateOrUpdatePlayerData(data)
     if not data or not data.name or not data.tag then return end
 
@@ -96,6 +107,9 @@ function group.CreateOrUpdatePlayerData(data)
     CM:FireCallbacks(HR_EVENT_PLAYERSDATA_UPDATED, playerData)
 end
 
+--- cleans up playersData by removing entries for players no longer in the group
+--- @param forceDelete boolean if true, all player data will be removed
+--- @return void
 local function cleanPlayersData(forceDelete)
     local _existingGroupCharacters = {}
 
@@ -121,6 +135,9 @@ local function cleanPlayersData(forceDelete)
     CM:FireCallbacks(HR_EVENT_PLAYERSDATA_CLEANED)
 end
 
+--- toggles the test mode
+--- @param players table<string>? optional list of player names to use for the test mode, defaults to `defaultPlayers`
+--- @return void
 local function toggleTest(players)
     if isTestRunning then
         cleanPlayersData(true)
@@ -157,6 +174,8 @@ local function toggleTest(players)
     df("%s |c00FF00%s|r", addon_name, GetString(HR_CORE_GROUP_COMMAND_TEST_ACTION_START))
 end
 
+--- event handler for group changes
+--- @return void
 local function onGroupChanged()
     if isTestRunning then
         cleanPlayersData(true)
@@ -169,7 +188,7 @@ local function onGroupChanged()
     cleanPlayersData(false)
 end
 
--- register subcommand to test group functionality
+--- registers subcommand to test group functionality
 core.RegisterSubCommand("group test", GetString(HR_CORE_GROUP_COMMAND_TEST_HELP), function(str)
     local players = zo_strmatch(str, "^%s*(.*)")
     logger:Debug("group test command received: '%s'", tostring(players))
@@ -182,4 +201,5 @@ core.RegisterSubCommand("group test", GetString(HR_CORE_GROUP_COMMAND_TEST_HELP)
     end
 end)
 
+--- register callback for group changes
 addon.RegisterCallback(HR_EVENT_GROUP_CHANGED, onGroupChanged)
