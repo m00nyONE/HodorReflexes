@@ -66,6 +66,8 @@ function module:sortByUltPercentage(a, b)
     return a.lowestUltPercentage > b.lowestUltPercentage
 end
 
+-- ability checks
+
 --- checks if an abilityId is in a list of abilityIds
 --- @param abilityId number
 --- @param abilityList table
@@ -108,34 +110,59 @@ function module:isCryptCannon(abilityId)
 end
 
 -- hasUnitX checks
+
+--- checks if the player has a horn ult ability
+--- @param playerData table
+--- @return boolean
 function module:hasUnitHorn(playerData)
     if self:isHorn(playerData.ult1ID) or self:isHorn(playerData.ult2ID) then return true end
     return false
 end
+--- checks if the player has a colos ult ability
+--- @param playerData table
+--- @return boolean
 function module:hasUnitColos(playerData)
     if self:isColos(playerData.ult1ID) or self:isColos(playerData.ult2ID) then return true end
     return false
 end
+--- checks if the player has an atro ult ability
+--- @param playerData table
+--- @return boolean
 function module:hasUnitAtro(playerData)
     if self:isAtro(playerData.ult1ID) or self:isAtro(playerData.ult2ID) then return true end
     return false
 end
+--- checks if the player has a barrier ult ability
+--- @param playerData table
+--- @return boolean
 function module:hasUnitBarrier(playerData)
     if self:isBarrier(playerData.ult1ID) or self:isBarrier(playerData.ult2ID) then return true end
     return false
 end
+--- checks if the player has a crypt cannon ult ability
+--- @param playerData table
+--- @return boolean
 function module:hasUnitCryptCannon(playerData)
     if self:isCryptCannon(playerData.ult1ID) or self:isCryptCannon(playerData.ult2ID) then return true end
     return false
 end
+--- checks if the player has the saxhleel ult activated set
+--- @param playerData table
+--- @return boolean
 function module:hasUnitSaxhleel(playerData)
     if playerData.ultActivatedSetID == 1 then return true end
     return false
 end
+--- checks if the player has the MasterArchitect or WarMachine ult activated set
+--- @param playerData table
+--- @return boolean
 function module:hasUnitMAorWM(playerData)
     if playerData.ultActivatedSetID == 4 or playerData.ultActivatedSetID == 5 then return true end
     return false
 end
+--- checks if the player has the Pillager ult activated set
+--- @param playerData table
+--- @return boolean
 function module:hasUnitPillager(playerData)
     if playerData.ultActivatedSetID == 2 then return true end
     return false
