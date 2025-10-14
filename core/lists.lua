@@ -42,17 +42,14 @@ function listClass:RunOnce(funcName, ...)
     return nil
 end
 
-function listClass:Initialize(t)
-    assert(type(t.name) == "string" and t.name ~= "", "list must have a valid name")
-    assert(type(t.svDefault) == "table", "list must have a valid svDefault table")
-    assert(type(t.update) == "function", "list must have a valid update function")
-    assert(type(t.isEnabled) == "function", "list must have a valid isEnabled function")
-    assert(type(t.listEnabledSV) == "number", "list must have a valid listEnabledSV reference")
+function listClass:Initialize(listDefinition)
+    assert(type(listDefinition) == "table", "listDefinition must be a table")
+    assert(type(listDefinition.name) == "string" and listDefinition.name ~= "", "list must have a valid name")
+    assert(type(listDefinition.svDefault) == "table", "list must have a valid svDefault table")
+    assert(type(listDefinition.Update) == "function", "list must have a valid update function")
 
-    if t then
-        for k, v in pairs(t) do
-            self[k] = v
-        end
+    for k, v in pairs(listDefinition) do
+        self[k] = v
     end
 
     self.uiLocked = true
