@@ -56,6 +56,8 @@ function listClass:Initialize(listDefinition)
         self[k] = v
     end
 
+    self._eventId = string.match(tostring(self), "0%x+")
+
     self:RunOnce("CreateSavedVariables")
     self:RunOnce("CreateControls")
     self:RunOnce("CreateFragment")
@@ -85,8 +87,8 @@ end
 
 function listClass:UpdateDebounced()
     if not self:WindowFragmentCondition() then return end
-    EVENT_MANAGER:RegisterForUpdate(self.windowName, debounceDelayMS, function()
-        EVENT_MANAGER:UnregisterForUpdate(self.windowName)
+    EVENT_MANAGER:RegisterForUpdate(self._eventId, debounceDelayMS, function()
+        EVENT_MANAGER:UnregisterForUpdate(self._eventId)
         self:Update()
     end)
 end
