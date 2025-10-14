@@ -52,30 +52,23 @@ function listClass:Initialize(listDefinition)
         self[k] = v
     end
 
-    self.uiLocked = true
-
-    self:RunOnce("createSavedVariables")
-    self:RunOnce("createControls")
-    self:RunOnce("createFragment")
-
-    local function refreshVisibility()
-        self.controlsVisible = not self.uiLocked or self:isEnabled() and IsUnitGrouped(localPlayer)
-        self.fragment:Refresh()
-    end
+    self:RunOnce("CreateSavedVariables")
+    self:RunOnce("CreateControls")
+    self:RunOnce("CreateFragment")
 
     local function onGroupChanged()
-        refreshVisibility()
-        self:update()
+        self:RefreshVisibility()
+        self:Update()
     end
 
     local function lockUI()
         self.uiLocked = true
-        refreshVisibility()
+        self:RefreshVisibility()
         hud.LockControls(self.window)
     end
     local function unlockUI()
         self.uiLocked = false
-        refreshVisibility()
+        self:RefreshVisibility()
         hud.UnlockControls(self.window)
     end
 
@@ -99,6 +92,21 @@ function listClass:IsEnabled()
     else -- off
         return false
     end
+end
+
+function listClass:RefreshVisibility()
+    self.windowFragment:Refresh()
+end
+
+function listClass:WindowFragmentCondition()
+    if not self.uiLocked then
+        return true -- always show when ui is unlocked
+    end
+    if not IsUnitGrouped(localPlayer) then
+        return false -- never show when not in a group
+    end
+
+    return self:IsEnabled()
 end
 
 --- Create saved variables for the list.
@@ -155,17 +163,16 @@ function listClass:createControls()
     self.listControlName = listControlName
     self.listControl = listControl
 
-
     ZO_ScrollList_SetHideScrollbarOnDisable(listControl, true)
     ZO_ScrollList_SetUseScrollbar(listControl, false)
     ZO_ScrollList_SetScrollbarEthereal(listControl, true)
-
 end
 
-function listClass:createFragment()
-    local function listFragmentCondition()
-        return self:IsListVisible(self.listEnabledSV) and self.controlsVisible
+--- creates the window fragment for the list
+function listClass:CreateFragment()
+    local function windowFragmentConditionWrapper()
+        return self:WindowFragmentCondition()
     end
 
-    self.fragment = hud.AddFadeFragment(window, listFragmentCondition)
+    self.windowFragment = hud.AddFadeFragment(self.window, windowFragmentConditionWrapper)
 end
