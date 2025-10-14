@@ -71,8 +71,12 @@ EM:RegisterForEvent(addon_name, EVENT_ADD_ON_LOADED, function(_, name)
     if name ~= addon_name then return end
 
     EM:UnregisterForEvent(addon_name, EVENT_ADD_ON_LOADED)
-    initialize()
 
+    local beginTime = GetGameTimeMilliseconds()
+    initialize()
+    local endTime = GetGameTimeMilliseconds()
+
+    core.logger.main:Debug("%s initialized in %d ms", addon_name, endTime - beginTime)
 end)
 
 --[[ doc.lua end ]]
