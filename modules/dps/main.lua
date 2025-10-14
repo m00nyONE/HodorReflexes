@@ -94,4 +94,19 @@ function module:Activate()
         dps = 0,
         dmgType = DAMAGE_UNKNOWN,
     })
+
+    self:RunOnce("CreateLists")
+end
+
+function module:CreateLists()
+    local damageListDefinition = {
+        name = "damage",
+        svDefault = self.svDefaultDamageList,
+        Update = function() self:Update() end,
+    }
+    self.damageList = internal.listClass:New(damageListDefinition)
+end
+
+function module:Update()
+    d(self.name)
 end
