@@ -10,7 +10,6 @@ local addon_modules = addon.modules
 local internal_modules = internal.modules
 
 local group = core.group
-local hud = core.hud
 local LGCS = LibGroupCombatStats
 
 local localPlayer = "player"
@@ -18,8 +17,6 @@ local localPlayer = "player"
 local EVENT_GROUP_ULT_UPDATE = LGCS.EVENT_GROUP_ULT_UPDATE
 local EVENT_PLAYER_ULT_UPDATE = LGCS.EVENT_PLAYER_ULT_UPDATE
 
-local HR_EVENT_LOCKUI = addon.HR_EVENT_LOCKUI
-local HR_EVENT_UNLOCKUI = addon.HR_EVENT_UNLOCKUI
 local HR_EVENT_TEST_STARTED = addon.HR_EVENT_TEST_STARTED
 local HR_EVENT_TEST_STOPPED = addon.HR_EVENT_TEST_STOPPED
 local HR_EVENT_TEST_TICK = addon.HR_EVENT_TEST_TICK
@@ -35,7 +32,6 @@ local moduleDefinition = {
         accountWide = true,
     },
 
-    uiLocked = true,
     isTestRunning = false,
 
     majorForceId = 61747,
@@ -109,9 +105,6 @@ function module:Activate()
     addon.RegisterCallback(HR_EVENT_TEST_STOPPED, function(...) self:stopTest(...) end)
     addon.RegisterCallback(HR_EVENT_TEST_TICK, function(...) self:updateTest(...) end)
 
-    addon.RegisterCallback(HR_EVENT_LOCKUI, function(...) self:lockUI(...) end)
-    addon.RegisterCallback(HR_EVENT_UNLOCKUI, function(...) self:unlockUI(...) end)
-
     group.RegisterPlayersDataFields({
         ultValue = 0,
         ult1ID = 0,
@@ -135,16 +128,4 @@ function module:Activate()
     })
 
     self:registerBuffTrackers()
-end
-
-function module:lockUI()
-    self.uiLocked = true
-    --refreshVisibility()
-    --hud.LockControls(damageListWindow)
-end
-
-function module:unlockUI()
-    self.uiLocked = false
-    --refreshVisibility()
-    --hud.UnlockControls(damageListWindow)
 end
