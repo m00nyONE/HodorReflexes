@@ -32,5 +32,5 @@ function module:CreateColosList()
 end
 
 function module:UpdateColosList()
-    d(self.name)
+    --ZO_ScrollList_Commit(self.colosList.listControl)
 end

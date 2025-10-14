@@ -32,5 +32,5 @@ function module:CreateAtroList()
 end
 
 function module:UpdateAtroList()
-    d(self.name)
+    --ZO_ScrollList_Commit(self.atroList.listControl)
 end

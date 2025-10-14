@@ -32,5 +32,5 @@ function module:CreateHornList()
 end
 
 function module:UpdateHornList()
-    d(self.name)
+    --ZO_ScrollList_Commit(self.hornList.listControl)
 end

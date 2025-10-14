@@ -32,5 +32,5 @@ function module:CreateMiscList()
 end
 
 function module:UpdateMiscList()
-    d(self.name)
+    --ZO_ScrollList_Commit(self.miscList.listControl)
 end
