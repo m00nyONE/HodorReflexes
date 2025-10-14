@@ -13,19 +13,22 @@ local module_name = "dps"
 local module = addon_modules[module_name]
 
 local svDefault = {
-    damageListEnabled = 1, -- 0=off, 1=always, 2=out of combat, 3=non bossfights
-    damageListWidth = 227,
-    damageListPosLeft = 10,
-    damageListPosTop = 50,
+    enabled =  1, -- 1=always, 2=out of combat, 3=non bossfights, 0=off
+    disableInPvP = true,
+    windowPosLeft = 10,
+    windowPosTop = 50,
+    windowWidth = 227,
+    listHeaderHeight = 22,
+    listRowHeight = 22,
 }
 
 function module:CreateDamageList()
-    local damageListDefinition = {
+    local listDefinition = {
         name = "damage",
         svDefault = svDefault,
         Update = function() self:UpdateDamageList() end,
     }
-    self.damageList = internal.listClass:New(damageListDefinition)
+    self.damageList = internal.listClass:New(listDefinition)
 end
 
 function module:UpdateDamageList()

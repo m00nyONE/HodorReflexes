@@ -53,6 +53,10 @@ modules/ult/lang/$(language).lua
 modules/ult/main.lua
 modules/ult/util.lua
 modules/ult/buffs.lua
+modules/ult/list_horn.lua
+modules/ult/list_colos.lua
+modules/ult/list_atro.lua
+modules/ult/list_misc.lua
 modules/ult/test.lua
 modules/ult/menu.lua
 

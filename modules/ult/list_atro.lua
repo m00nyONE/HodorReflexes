@@ -1,4 +1,3 @@
-
 -- SPDX-FileCopyrightText: 2025 m00nyONE
 -- SPDX-License-Identifier: Artistic-2.0
 
@@ -13,6 +12,25 @@ local internal_modules = internal.modules
 local module_name = "ult"
 local module = addon_modules[module_name]
 
-function module:CreateAtroList()
+local svDefault = {
+    enabled =  1, -- 1=always, 2=out of combat, 3=non bossfights, 0=off
+    disableInPvP = true,
+    windowPosLeft = 240,
+    windowPosTop = 300,
+    windowWidth = 262,
+    listHeaderHeight = 22,
+    listRowHeight = 22,
+}
 
+function module:CreateAtroList()
+    local listDefinition = {
+        name = "atro",
+        svDefault = svDefault,
+        Update = function() self:UpdateAtroList() end,
+    }
+    self.atroList = internal.listClass:New(listDefinition)
+end
+
+function module:UpdateAtroList()
+    d(self.name)
 end
