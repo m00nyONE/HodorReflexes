@@ -30,87 +30,96 @@ addon.HR_EVENT_MAJOR_VULNERABILITY_DEBUFF_GAINED = HR_EVENT_MAJOR_VULNERABILITY_
 addon.HR_EVENT_HORN_BUFF_GAINED = HR_EVENT_HORN_BUFF_GAINED
 addon.HR_EVENT_ATRO_CAST_STARTED = HR_EVENT_ATRO_CAST_STARTED
 
+
+--- when registering for effect changes, we only use the UPDATED result, as this is also fired when an effect is applied.
+--- This avoids double triggers when an effect is applied (GAINED and UPDATED are fired in sequence).
+--- The register parts are scoped in do ... end blocks to avoid name clashes.
+--- The Handlers are generic functions returning the actual handler functions to avoid code duplication.
+--- @return void
 function module:registerBuffTrackers()
-    self:registerHornBuffTracker()
-    self:registerMajorForceBuffTracker()
-    self:registerMajorBerserkBuffTracker()
-    self:registerMajorSlayerBuffTracker()
-    self:registerPillagerBuffTracker()
-    self:registerMajorVulnerabilityDebuffTracker()
-    self:registerAtroCastTracker()
-end
-
--- onEvent handlers
-function module:onEffectChangedHandler(eventToFire, eventId, changeType, effectSlot, effectName, unitTag, beginTime, endTime, stackCount, iconName, deprecatedBuffType, effectType, abilityType, statusEffectType, unitName, unitId, abilityId, sourceType)
-    if GetGameTimeSeconds() >= endTime then return end -- effect already expired
-
-    local duration = (endTime - beginTime) * 1000
-    CM:FireCallbacks(eventToFire, unitTag, duration)
-    self.logger.Debug("fired %s for %s with duration %s", eventToFire, unitTag, tostring(duration))
-end
-function module:onCombatEventHandler(eventToFire, _, _, _, _, _, _, sourceName, _, _, _, _, _, _, _, _, _, abilityId, _)
-    local duration = GetAbilityDuration(abilityId)
-    CM:FireCallbacks(eventToFire, sourceName, duration)
-    self.logger.Debug("fired %s for %s with duration %s", eventToFire, sourceName, tostring(duration))
-end
-
--- buff/debuff/cast trackers
-function module:registerHornBuffTracker()
-    local eventName = addon_name .. module_name .. "_HornBuff"
-    for i, hornId in ipairs(self.hornBuffIds) do
-        EM:UnregisterForEvent(eventName .. i, EVENT_EFFECT_CHANGED)
-        EM:RegisterForEvent(eventName .. i, EVENT_EFFECT_CHANGED, function(...) self:onEffectChangedHandler(HR_EVENT_HORN_BUFF_GAINED, ...) end)
-        EM:AddFilterForEvent(eventName .. i, EVENT_EFFECT_CHANGED, REGISTER_FILTER_ABILITY_ID, hornId)
-        EM:AddFilterForEvent(eventName .. i, EVENT_EFFECT_CHANGED, REGISTER_FILTER_COMBAT_RESULT, EFFECT_RESULT_UPDATED)
-        EM:AddFilterForEvent(eventName .. i, EVENT_EFFECT_CHANGED, REGISTER_FILTER_TARGET_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_GROUP)
+    -- handlers
+    local function getEffectChangedHandler(eventToFire)
+        return function(eventId, changeType, effectSlot, effectName, unitTag, beginTime, endTime, stackCount, iconName, buffType, effectType, abilityType, statusEffectType, unitName, unitId, abilityId, sourceType)
+            if GetGameTimeSeconds() >= endTime then return end -- effect already expired
+            local duration = (endTime - beginTime) * 1000
+            CM:FireCallbacks(eventToFire, unitTag, duration)
+            self.logger.Debug("fired %s for %s with duration %s", eventToFire, unitTag, tostring(duration))
+        end
     end
-end
-function module:registerMajorForceBuffTracker()
-    local eventName = addon_name .. module_name .. "_MajorForceBuff"
-    EM:UnregisterForEvent(eventName, EVENT_EFFECT_CHANGED)
-    EM:RegisterForEvent(eventName, EVENT_EFFECT_CHANGED, function(...) self:onEffectChangedHandler(HR_EVENT_MAJOR_FORCE_BUFF_GAINED, ...) end)
-    EM:AddFilterForEvent(eventName, EVENT_EFFECT_CHANGED, REGISTER_FILTER_ABILITY_ID, self.majorForceId)
-    EM:AddFilterForEvent(eventName, EVENT_EFFECT_CHANGED, REGISTER_FILTER_COMBAT_RESULT, EFFECT_RESULT_UPDATED)
-    EM:AddFilterForEvent(eventName, EVENT_EFFECT_CHANGED, REGISTER_FILTER_TARGET_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_GROUP)
-end
-function module:registerMajorBerserkBuffTracker()
-    local eventName = addon_name .. module_name .. "_MajorBerserkBuff"
-    EM:UnregisterForEvent(eventName, EVENT_EFFECT_CHANGED)
-    EM:RegisterForEvent(eventName, EVENT_EFFECT_CHANGED, function(...) self:onEffectChangedHandler(HR_EVENT_MAJOR_BERSERK_BUFF_GAINED, ...) end)
-    EM:AddFilterForEvent(eventName, EVENT_EFFECT_CHANGED, REGISTER_FILTER_ABILITY_ID, self.majorBerserkId)
-    EM:AddFilterForEvent(eventName, EVENT_EFFECT_CHANGED, REGISTER_FILTER_COMBAT_RESULT, EFFECT_RESULT_UPDATED)
-    EM:AddFilterForEvent(eventName, EVENT_EFFECT_CHANGED, REGISTER_FILTER_TARGET_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_GROUP)
-end
-function module:registerMajorSlayerBuffTracker()
-    local eventName = addon_name .. module_name .. "_MajorSlayerBuff"
-    EM:UnregisterForEvent(eventName, EVENT_EFFECT_CHANGED)
-    EM:RegisterForEvent(eventName, EVENT_EFFECT_CHANGED, function(...) self:onEffectChangedHandler(HR_EVENT_MAJOR_SLAYER_BUFF_GAINED, ...) end)
-    EM:AddFilterForEvent(eventName, EVENT_EFFECT_CHANGED, REGISTER_FILTER_ABILITY_ID, self.majorSlayerId)
-    EM:AddFilterForEvent(eventName, EVENT_EFFECT_CHANGED, REGISTER_FILTER_COMBAT_RESULT, EFFECT_RESULT_UPDATED)
-    EM:AddFilterForEvent(eventName, EVENT_EFFECT_CHANGED, REGISTER_FILTER_TARGET_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_GROUP)
-end
-function module:registerPillagerBuffTracker()
-    local eventName = addon_name .. module_name .. "_PillagerBuff"
-    EM:UnregisterForEvent(eventName, EVENT_EFFECT_CHANGED)
-    EM:RegisterForEvent(eventName, EVENT_EFFECT_CHANGED, function(...) self:onEffectChangedHandler(HR_EVENT_PILLAGER_BUFF_GAINED, ...) end)
-    EM:AddFilterForEvent(eventName, EVENT_EFFECT_CHANGED, REGISTER_FILTER_ABILITY_ID, self.pillagerBuffId)
-    EM:AddFilterForEvent(eventName, EVENT_EFFECT_CHANGED, REGISTER_FILTER_COMBAT_RESULT, EFFECT_RESULT_UPDATED)
-    EM:AddFilterForEvent(eventName, EVENT_EFFECT_CHANGED, REGISTER_FILTER_TARGET_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_GROUP)
-end
-function module:registerMajorVulnerabilityDebuffTracker()
-    local eventName = addon_name .. module_name .. "_MajorVulnerabilityDebuff"
-    EM:UnregisterForEvent(eventName, EVENT_EFFECT_CHANGED)
-    EM:RegisterForEvent(eventName, EVENT_EFFECT_CHANGED, function(...) self:onEffectChangedHandler(HR_EVENT_MAJOR_VULNERABILITY_DEBUFF_GAINED, ...) end)
-    EM:AddFilterForEvent(eventName, EVENT_EFFECT_CHANGED, REGISTER_FILTER_ABILITY_ID, self.majorVulnerabilityId)
-    EM:AddFilterForEvent(eventName, EVENT_EFFECT_CHANGED, REGISTER_FILTER_COMBAT_RESULT, EFFECT_RESULT_UPDATED)
-    EM:AddFilterForEvent(eventName, EVENT_EFFECT_CHANGED, REGISTER_FILTER_TARGET_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_OTHER, COMBAT_UNIT_TYPE_TARGET_DUMMY) -- only on enemies & target dummies
-end
-function module:registerAtroCastTracker()
-    local eventName = addon_name .. module_name .. "_AtroCast"
-    for i, atroId in ipairs(self.atroAbilityIds) do
-        EM:UnregisterForEvent(eventName .. i, EVENT_COMBAT_EVENT)
-        EM:RegisterForEvent(eventName .. i, EVENT_COMBAT_EVENT, function(...) self:onCombatEventHandler(HR_EVENT_ATRO_CAST_STARTED, ...) end)
-        EM:AddFilterForEvent(eventName .. i, EVENT_COMBAT_EVENT, REGISTER_FILTER_ABILITY_ID, atroId)
-        EM:AddFilterForEvent(eventName .. i, EVENT_COMBAT_EVENT, REGISTER_FILTER_SOURCE_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_GROUP)
+    local function getCombatEventHandler(eventToFire)
+        return function(eventId, result, isError, abilityName, abilityGraphic, abilityActionSlotType, sourceName, sourceType, targetName, targetType, hitValue, powerType, damageType, log, sourceUnitId, targetUnitId, abilityId, overflow)
+            local duration = GetAbilityDuration(abilityId)
+            CM:FireCallbacks(eventToFire, sourceName, duration)
+            self.logger.Debug("fired %s for %s with duration %s", eventToFire, sourceName, tostring(duration))
+        end
     end
+
+    -- define trackers ( scoped by do ... end to avoid name clashes )
+    do -- horn buff tracker
+        local eventName = addon_name .. module_name .. "HornBuff"
+        for i, hornId in ipairs(self.hornBuffIds) do
+            EM:UnregisterForEvent(eventName .. i, EVENT_EFFECT_CHANGED)
+            EM:RegisterForEvent(eventName .. i, EVENT_EFFECT_CHANGED, getEffectChangedHandler(HR_EVENT_HORN_BUFF_GAINED))
+            EM:AddFilterForEvent(eventName .. i, EVENT_EFFECT_CHANGED, REGISTER_FILTER_ABILITY_ID, hornId)
+            EM:AddFilterForEvent(eventName .. i, EVENT_EFFECT_CHANGED, REGISTER_FILTER_COMBAT_RESULT, EFFECT_RESULT_UPDATED)
+            EM:AddFilterForEvent(eventName .. i, EVENT_EFFECT_CHANGED, REGISTER_FILTER_TARGET_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_GROUP)
+        end
+    end
+
+    do -- major force buff tracker
+        local eventName = addon_name .. module_name .. "MajorForceBuff"
+        EM:UnregisterForEvent(eventName, EVENT_EFFECT_CHANGED)
+        EM:RegisterForEvent(eventName, EVENT_EFFECT_CHANGED, getEffectChangedHandler(HR_EVENT_MAJOR_FORCE_BUFF_GAINED))
+        EM:AddFilterForEvent(eventName, EVENT_EFFECT_CHANGED, REGISTER_FILTER_ABILITY_ID, self.majorForceId)
+        EM:AddFilterForEvent(eventName, EVENT_EFFECT_CHANGED, REGISTER_FILTER_COMBAT_RESULT, EFFECT_RESULT_UPDATED)
+        EM:AddFilterForEvent(eventName, EVENT_EFFECT_CHANGED, REGISTER_FILTER_TARGET_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_GROUP)
+    end
+
+    do -- major berserk buff tracker
+        local eventName = addon_name .. module_name .. "MajorBerserkBuff"
+        EM:UnregisterForEvent(eventName, EVENT_EFFECT_CHANGED)
+        EM:RegisterForEvent(eventName, EVENT_EFFECT_CHANGED, getEffectChangedHandler(HR_EVENT_MAJOR_BERSERK_BUFF_GAINED))
+        EM:AddFilterForEvent(eventName, EVENT_EFFECT_CHANGED, REGISTER_FILTER_ABILITY_ID, self.majorBerserkId)
+        EM:AddFilterForEvent(eventName, EVENT_EFFECT_CHANGED, REGISTER_FILTER_COMBAT_RESULT, EFFECT_RESULT_UPDATED)
+        EM:AddFilterForEvent(eventName, EVENT_EFFECT_CHANGED, REGISTER_FILTER_TARGET_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_GROUP)
+    end
+
+    do -- major slayer buff tracker
+        local eventName = addon_name .. module_name .. "MajorSlayerBuff"
+        EM:UnregisterForEvent(eventName, EVENT_EFFECT_CHANGED)
+        EM:RegisterForEvent(eventName, EVENT_EFFECT_CHANGED, getEffectChangedHandler(HR_EVENT_MAJOR_SLAYER_BUFF_GAINED))
+        EM:AddFilterForEvent(eventName, EVENT_EFFECT_CHANGED, REGISTER_FILTER_ABILITY_ID, self.majorSlayerId)
+        EM:AddFilterForEvent(eventName, EVENT_EFFECT_CHANGED, REGISTER_FILTER_COMBAT_RESULT, EFFECT_RESULT_UPDATED)
+        EM:AddFilterForEvent(eventName, EVENT_EFFECT_CHANGED, REGISTER_FILTER_TARGET_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_GROUP)
+    end
+
+    do -- pillager buff tracker
+        local eventName = addon_name .. module_name .. "PillagerBuff"
+        EM:UnregisterForEvent(eventName, EVENT_EFFECT_CHANGED)
+        EM:RegisterForEvent(eventName, EVENT_EFFECT_CHANGED, getEffectChangedHandler(HR_EVENT_PILLAGER_BUFF_GAINED))
+        EM:AddFilterForEvent(eventName, EVENT_EFFECT_CHANGED, REGISTER_FILTER_ABILITY_ID, self.pillagerBuffId)
+        EM:AddFilterForEvent(eventName, EVENT_EFFECT_CHANGED, REGISTER_FILTER_COMBAT_RESULT, EFFECT_RESULT_UPDATED)
+        EM:AddFilterForEvent(eventName, EVENT_EFFECT_CHANGED, REGISTER_FILTER_TARGET_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_GROUP)
+    end
+
+    do -- major vulnerability debuff tracker
+        local eventName = addon_name .. module_name .. "MajorVulnerabilityDebuff"
+        EM:UnregisterForEvent(eventName, EVENT_EFFECT_CHANGED)
+        EM:RegisterForEvent(eventName, EVENT_EFFECT_CHANGED, getEffectChangedHandler(HR_EVENT_MAJOR_VULNERABILITY_DEBUFF_GAINED))
+        EM:AddFilterForEvent(eventName, EVENT_EFFECT_CHANGED, REGISTER_FILTER_ABILITY_ID, self.majorVulnerabilityId)
+        EM:AddFilterForEvent(eventName, EVENT_EFFECT_CHANGED, REGISTER_FILTER_COMBAT_RESULT, EFFECT_RESULT_UPDATED)
+        EM:AddFilterForEvent(eventName, EVENT_EFFECT_CHANGED, REGISTER_FILTER_TARGET_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_OTHER, COMBAT_UNIT_TYPE_TARGET_DUMMY) -- only on enemies & target dummies
+    end
+
+    do -- atro cast start trackers
+        local eventName = addon_name .. module_name .. "AtroCast"
+        for i, atroId in ipairs(self.atroAbilityIds) do
+            EM:UnregisterForEvent(eventName .. i, EVENT_COMBAT_EVENT)
+            EM:RegisterForEvent(eventName .. i, EVENT_COMBAT_EVENT, getCombatEventHandler(HR_EVENT_ATRO_CAST_STARTED))
+            EM:AddFilterForEvent(eventName .. i, EVENT_COMBAT_EVENT, REGISTER_FILTER_ABILITY_ID, atroId)
+            EM:AddFilterForEvent(eventName .. i, EVENT_COMBAT_EVENT, REGISTER_FILTER_SOURCE_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_GROUP)
+        end
+    end
+
+    self.registerBuffTrackers = nil -- remove function after first run
 end
