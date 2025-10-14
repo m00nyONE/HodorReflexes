@@ -10,28 +10,53 @@ local logger = core.logger.main
 local util = {}
 core.util = util
 
+local localPlayer = "player"
+local localBoss1 = 'boss1'
+local localBoss2 = 'boss2'
+
+--[[ doc.lua begin ]]
+
+--- calculate the distance between two points
+--- @param x1 number x coordinate of point 1
+--- @param y1 number y coordinate of point 1
+--- @param x2 number x coordinate of point 2
+--- @param y2 number y coordinate of point 2
+--- @return number distance between point 1 and point 2
 function util.GetDistance(x1, y1, x2, y2)
     return zo_sqrt((x2 - x1) ^ 2 + (y2 - y1) ^ 2)
 end
 
--- Convert FFFFFF to 1, 1, 1
+--- Convert FFFFFF to 1, 1, 1
+--- @param hex string hex color code without #, e.g. FFFFFF
+--- @return number r red value between 0 and 1
+--- @return number g green value between 0 and 1
+--- @return number b blue value between 0 and 1
 function util.Hex2RGB(hex)
     hex = hex:gsub("#", "")
     return tonumber("0x" .. hex:sub(1, 2)) / 255, tonumber("0x" .. hex:sub(3, 4)) / 255, tonumber("0x" .. hex:sub(5, 6)) / 255
 end
 
--- Convert 1, 1, 1 to FFFFFF
+--- Convert 1, 1, 1 to FFFFFF
+--- @param r number red value between 0 and 1
+--- @param g number green value between 0 and 1
+--- @param b number blue value between 0 and 1
+--- @return string hex color code without #, e.g. FFFFFF
 function util.RGB2Hex(r, g, b)
     return string.format("%.2x%.2x%.2x", zo_round(r * 255), zo_round(g * 255), zo_round(b * 255))
 end
 
--- color code string
+--- color code string
+--- @param hex string hex color code without #, e.g. FFFFFF
+--- @param str string string to color code
+--- @return string color coded string
 function util.ColorCode(hex, str)
     return "|c" .. hex .. str .. "|r"
 end
 
--- Remove duplicate values from a table.
--- Only works for simple tables like: 1=>'a', 2=>'b', 3=>'b'
+--- Remove duplicate values from a table.
+--- Only works for simple tables like: 1=>'a', 2=>'b', 3=>'b'
+--- @param t table
+--- @return table
 function util.TableUnique(t)
     local hash = {}
     local res = {}
@@ -44,16 +69,21 @@ function util.TableUnique(t)
     return res
 end
 
--- Check if a string is valid (not nil and not empty).
+--- Check if the input is a string is valid (not nil and not empty).
+--- @param s any
+--- @return boolean
 function util.IsValidString(s)
     return type(s) == 'string' and s ~= ''
 end
 
--- Sorted pairs iterator for tables.
--- Usage:
--- for k, v in core.spairs(t, function(t, a, b) return t[a] > t[b] end) do
---     print(k, v)
--- end
+--- Sorted pairs iterator for tables.
+--- Usage:
+--- for k, v in core.spairs(t, function(t, a, b) return t[a] > t[b] end) do
+---     print(k, v)
+--- end
+--- @param t table
+--- @param sortFunction function|nil optional sorting function
+--- @return function iterator
 function util.spairs(t, sortFunction)
     local keys = {}
     for k in pairs(t) do keys[#keys+1] = k end
@@ -86,3 +116,5 @@ function util.IsListVisible(listEnabledSV)
         return false
     end
 end
+
+--[[ doc.lua end ]]
