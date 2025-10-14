@@ -18,6 +18,10 @@ local localBoss2 = "boss2"
 local HR_EVENT_LOCKUI = addon.HR_EVENT_LOCKUI
 local HR_EVENT_UNLOCKUI = addon.HR_EVENT_UNLOCKUI
 local HR_EVENT_GROUP_CHANGED = addon.HR_EVENT_GROUP_CHANGED
+local HR_EVENT_PLAYERSDATA_CLEANED = addon.HR_EVENT_PLAYERSDATA_CLEANED
+local HR_EVENT_PLAYERSDATA_UPDATED = addon.HR_EVENT_PLAYERSDATA_UPDATED
+
+local debounceDelayMS = 15
 
 --- @class: listClass
 local listClass = ZO_InitializingObject:Subclass()
@@ -58,7 +62,7 @@ function listClass:Initialize(listDefinition)
 
     local function onGroupChanged()
         self:RefreshVisibility()
-        self:Update()
+        self:UpdateDebounced()
     end
 
     local function lockUI()
@@ -75,6 +79,16 @@ function listClass:Initialize(listDefinition)
     addon.RegisterCallback(HR_EVENT_LOCKUI, lockUI)
     addon.RegisterCallback(HR_EVENT_UNLOCKUI, unlockUI)
     addon.RegisterCallback(HR_EVENT_GROUP_CHANGED, onGroupChanged)
+    addon.RegisterCallback(HR_EVENT_PLAYERSDATA_UPDATED, function(...) self:UpdateDebounced(...) end)
+    addon.RegisterCallback(HR_EVENT_PLAYERSDATA_CLEANED, function(...) self:UpdateDebounced(...) end)
+end
+
+function listClass:UpdateDebounced()
+    if not self:WindowFragmentCondition() then return end
+    EVENT_MANAGER:RegisterForUpdate(self.windowName, debounceDelayMS, function()
+        EVENT_MANAGER:UnregisterForUpdate(self.windowName)
+        self:Update()
+    end)
 end
 
 function listClass:IsEnabled()
