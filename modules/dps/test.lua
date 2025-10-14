@@ -34,13 +34,9 @@ function module:startTest()
             dmgType = DAMAGE_BOSS,
         })
     end
-
-    --self:updateLists()
 end
 function module:stopTest()
     self.isTestRunning = false
-
-    --self:updateLists()
 end
 function module:updateTest()
     if not self.isTestRunning then return end
@@ -58,6 +54,4 @@ function module:updateTest()
             dmgType = DAMAGE_BOSS,
         })
     end
-
-    --self:updateLists()
 end

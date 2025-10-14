@@ -83,8 +83,6 @@ function module:onULTDataReceived(tag, data)
         hasPillager = self:hasUnitPillager(data),
         ultActivatedSetID = data.ultActivatedSetID, -- TODO: remove after reworking LGCS
     })
-
-    --updateLists()
 end
 
 function module:Activate()

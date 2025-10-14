@@ -90,13 +90,9 @@ function module:startTest()
             ultActivatedSetID = ultActivatedSetID,
         })
     end
-
-    --self:updateLists()
 end
 function module:stopTest()
     self.isTestRunning = false
-
-    --self:updateLists()
 end
 function module:updateTest()
     if not self.isTestRunning then return end
@@ -116,6 +112,4 @@ function module:updateTest()
             lowestUltPercentage = zo_min(ult1Percentage, ult2Percentage),
         })
     end
-
-    --self:updateLists()
 end

@@ -68,8 +68,6 @@ function module:onDPSDataReceived(tag, data)
         dps      = data.dps,
         dmgType  = data.dmgType,
     })
-
-    --self:updateLists()
 end
 
 
