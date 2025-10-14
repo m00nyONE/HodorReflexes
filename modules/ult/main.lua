@@ -126,4 +126,13 @@ function module:Activate()
     })
 
     self:RunOnce("registerBuffTrackers")
+    self:RunOnce("CreateLists")
 end
+
+function module:CreateLists()
+    self:RunOnce("CreateHornList")
+    self:RunOnce("CreateColosList")
+    self:RunOnce("CreateAtroList")
+    self:RunOnce("CreateMiscList")
+end
+
