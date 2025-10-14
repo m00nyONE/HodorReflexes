@@ -28,7 +28,7 @@ end
 --- @return void
 function core.RegisterExtension(extension)
     assert(addon.extensions[extension.name] == nil, "extension already registered")
-    addon.extension[extension.name] = extension -- add extension to the addon.extension table
+    addon.extensions[extension.name] = extension -- add extension to the addon.extensions table
 end
 
 --- runs a function only once and then removes it from the object
