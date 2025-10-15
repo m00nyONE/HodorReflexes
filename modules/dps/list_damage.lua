@@ -108,6 +108,18 @@ function module:damageRowCreationFunction(rowControl, data, scrollList)
     local valueControl = rowControl:GetNamedChild("_Value")
     valueControl:SetText(self.getDamageRowFormat(data.dmgType, data.dmg, data.dps, self.damageList.sw.colorDamageBoss, self.damageList.sw.colorDamageTotal))
     valueControl:SetFont("$(GAMEPAD_MEDIUM_FONT)|$(KB_19)|outline")
+
+    local customColor = false
+    if data.isPlayer then
+        local r, g, b, o = unpack(self.damageList.sw.listPlayerHighlightColor)
+        if o ~= 0 then
+            customColor = true
+            rowControl:GetNamedChild('_BG'):SetColor(r, g, b, o or 0.5)
+        end
+    end
+    if not customColor then
+        rowControl:GetNamedChild('_BG'):SetColor(0, 0, 0, zo_mod(data.orderIndex, 2) == 0 and self.damageList.sw.listRowEvenOpacity or self.damageList.sw.listRowOddOpacity)
+    end
 end
 
 function module:UpdateDamageList()
