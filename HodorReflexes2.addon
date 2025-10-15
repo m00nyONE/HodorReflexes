@@ -54,6 +54,7 @@ modules/ult/lang/$(language).lua
 modules/ult/ui/horn.xml
 modules/ult/ui/colos.xml
 modules/ult/ui/atro.xml
+modules/ult/ui/misc.xml
 modules/ult/main.lua
 modules/ult/util.lua
 modules/ult/buffs.lua
