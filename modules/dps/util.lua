@@ -28,16 +28,16 @@ local localPlayer = "player"
 --- @param a table
 --- @param b table
 --- @return boolean
-function module:sortByName(a, b)
+function module.sortByName(a, b)
     return a.name > b.name
 end
 --- sort by damage descending
 --- @param a table
 --- @param b table
 --- @return boolean
-function module:sortByDamage(a, b)
+function module.sortByDamage(a, b)
     if a.dmg == b.dmg then
-        return self:sortByName(a, b)
+        return module.sortByName(a, b)
     end
     return a.dmg > b.dmg
 end
@@ -45,9 +45,9 @@ end
 --- @param a table
 --- @param b table
 --- @return boolean
-function module:sortByDamageType(a, b)
+function module.sortByDamageType(a, b)
     if a.dmgType == b.dmgType then
-        return self:sortByDamage(a, b)
+        return module.sortByDamage(a, b)
     end
     return a.dmgType > b.dmgType
 end

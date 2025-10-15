@@ -42,16 +42,16 @@ end
 --- @param a table
 --- @param b table
 --- @return boolean
-function module:sortByName(a, b)
+function module.sortByName(a, b)
     return a.name > b.name
 end
 --- sort by ultValue descending
 --- @param a table
 --- @param b table
 --- @return boolean
-function module:sortByUltValue(a, b)
+function module.sortByUltValue(a, b)
     if a.ultValue == b.ultValue then
-        return self:sortByName(a, b)
+        return module.sortByName(a, b)
     end
     return a.ultValue > b.ultValue
 end
@@ -59,9 +59,9 @@ end
 --- @param a table
 --- @param b table
 --- @return boolean
-function module:sortByUltPercentage(a, b)
+function module.sortByUltPercentage(a, b)
     if a.lowestUltPercentage == b.lowestUltPercentage then
-        return self:sortByUltValue(a, b)
+        return module.sortByUltValue(a, b)
     end
     return a.lowestUltPercentage > b.lowestUltPercentage
 end

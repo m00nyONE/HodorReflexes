@@ -89,7 +89,7 @@ function module:UpdateDamageList()
             table.insert(playersDataList, playerData)
         end
     end
-    table.sort(playersDataList, function(...) self:sortByDamageType(...) end)
+    table.sort(playersDataList, self.sortByDamageType)
 
     -- insert damageRows
     for i, playerData in ipairs(playersDataList) do
