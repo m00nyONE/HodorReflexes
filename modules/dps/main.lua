@@ -34,15 +34,6 @@ local moduleDefinition = {
     enabled = false,
     svDefault = {
         accountWide = true,
-        disableInPvP = true,
-
-        damageListHeaderOpacity = 0.8,
-        damageListRowEvenOpacity = 0.65,
-        damageListRowOddOpacity = 0.45,
-        damageListPlayerHighlightColor = {0, 1, 0, 0.36}, -- green
-
-        colorDamageTotal = "faffb2", -- light yellow
-        colorDamageBoss = "b2ffb2", -- light green
     },
 
     isTestRunning = false,

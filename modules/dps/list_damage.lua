@@ -18,11 +18,21 @@ local DAMAGE_UNKNOWN = LGCS.DAMAGE_UNKNOWN
 local svDefault = {
     enabled =  1, -- 1=always, 2=out of combat, 3=non bossfights, 0=off
     disableInPvP = true,
+
     windowPosLeft = 10,
     windowPosTop = 50,
     windowWidth = 227,
+
     listHeaderHeight = 22,
     listRowHeight = 22,
+
+    listHeaderOpacity = 0.8,
+    listRowEvenOpacity = 0.65,
+    listRowOddOpacity = 0.45,
+    listPlayerHighlightColor = {0, 1, 0, 0.36}, -- green
+
+    colorDamageTotal = "faffb2", -- light yellow
+    colorDamageBoss = "b2ffb2", -- light green
 }
 
 function module:CreateDamageList()
