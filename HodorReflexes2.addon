@@ -45,6 +45,7 @@ core/extensions.lua
 core/modules.lua
 
 ; extensions
+extensions/custom.lua
 extensions/combat.lua
 
 ; modules
