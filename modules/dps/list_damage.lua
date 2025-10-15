@@ -47,6 +47,18 @@ function module:CreateDamageList()
 end
 
 function module:SetupDamageList()
+    self.damageList.HEADER_TYPE = 1 -- type id for header
+    self.damageList.ROW_TYPE = 2    -- type id for rows
+    self.damageList.HEADER_TEMPLATE = "HodorReflexes_Dps_DamageList_Header"
+    self.damageList.ROW_TEMPLATE = "HodorReflexes_Dps_DamageList_DamageRow"
+
+    local function createHeaderRowCreationWrapper(wrappedFunction)
+        return function(rowControl, data, scrollList)
+            -- allways set the Control of the Time so we can update it later
+            self.damageList.HeaderTimeControl = rowControl:GetNamedChild("_Time")
+            wrappedFunction(self, rowControl, data, scrollList)
+        end
+    end
 
     local function createDamageRowCreationWrapper(wrappedFunction)
         return function(rowControl, data, scrollList)
@@ -59,11 +71,25 @@ function module:SetupDamageList()
 
     ZO_ScrollList_AddDataType(
             self.damageList.listControl,
-            1,
-            "HodorReflexes_Dps_DamageList_DamageRow",
-            self.damageList.sv.listRowHeight,
+            self.damageList.HEADER_TYPE,
+            self.damageList.HEADER_TEMPLATE,
+            self.damageList.sw.listHeaderHeight,
+            createHeaderRowCreationWrapper(self.headerRowCreationFunction)
+    )
+    ZO_ScrollList_SetTypeCategoryHeader(self.damageList.listControl, self.damageList.HEADER_TYPE, true)
+
+    ZO_ScrollList_AddDataType(
+            self.damageList.listControl,
+            self.damageList.ROW_TYPE,
+            self.damageList.ROW_TEMPLATE,
+            self.damageList.sw.listRowHeight,
             createDamageRowCreationWrapper(self.damageRowCreationFunction)
     )
+end
+
+function module:headerRowCreationFunction(rowControl, data, scrollList)
+    rowControl:GetNamedChild("_Title"):SetText(self.getDamageHeaderFormat(data.dmgType, self.damageList.sw.colorDamageBoss, self.damageList.sw.colorDamageTotal))
+    rowControl:GetNamedChild("_BG"):SetAlpha(self.damageList.sw.listHeaderOpacity)
 end
 
 function module:damageRowCreationFunction(rowControl, data, scrollList)
@@ -104,8 +130,12 @@ function module:UpdateDamageList()
     -- insert damageRows
     for i, playerData in ipairs(playersDataList) do
         playerData.orderIndex = i
-        table.insert(dataList, ZO_ScrollList_CreateDataEntry(1, playerData))
+        table.insert(dataList, ZO_ScrollList_CreateDataEntry(self.damageList.ROW_TYPE, playerData))
     end
+
+    table.insert(dataList, ZO_ScrollList_CreateDataEntry(self.damageList.HEADER_TYPE, {
+        dmgType = dmgType,
+    }))
 
     ZO_ScrollList_Commit(listControl)
 end
