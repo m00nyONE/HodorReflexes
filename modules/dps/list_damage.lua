@@ -42,6 +42,8 @@ local svDefault = {
 
     colorDamageTotal = "faffb2", -- light yellow
     colorDamageBoss = "b2ffb2", -- light green
+
+    timerUpdateInterval = 100, -- ms
 }
 
 function module:CreateDamageList()
@@ -109,7 +111,7 @@ function module:headerRowCreationFunction(rowControl, data, scrollList)
     end
     local function onCombatStart()
         onCombatStop()
-        EM:RegisterForUpdate(self.damageList._eventId .. "TimerUpdate", 100, function() self.RenderFightTimeToControl(timeControl) end)
+        EM:RegisterForUpdate(self.damageList._eventId .. "TimerUpdate", self.damageList.sv.timerUpdateInterval, function() self.RenderFightTimeToControl(timeControl) end)
     end
 
     addon.RegisterCallback(HR_EVENT_COMBAT_START, onCombatStart)
