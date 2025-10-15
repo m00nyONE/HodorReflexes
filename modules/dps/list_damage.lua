@@ -56,7 +56,7 @@ function module:SetupDamageList()
     self.damageList.HEADER_TEMPLATE = "HodorReflexes_Dps_DamageList_Header"
     self.damageList.ROW_TEMPLATE = "HodorReflexes_Dps_DamageList_DamageRow"
 
-    local function createHeaderRowCreationWrapper(wrappedFunction)
+    local function headerRowCreationWrapper(wrappedFunction)
         return function(rowControl, data, scrollList)
             -- allways set the Control of the Time so we can update it later
             self.damageList.HeaderTimeControl = rowControl:GetNamedChild("_Time")
@@ -64,7 +64,7 @@ function module:SetupDamageList()
         end
     end
 
-    local function createDamageRowCreationWrapper(wrappedFunction)
+    local function damageRowCreationWrapper(wrappedFunction)
         return function(rowControl, data, scrollList)
             -- only create rows if conditions are met
             if data.dmg > 0 and (self.isTestRunning or IsUnitOnline(data.tag)) then
@@ -78,7 +78,7 @@ function module:SetupDamageList()
             self.damageList.HEADER_TYPE,
             self.damageList.HEADER_TEMPLATE,
             self.damageList.sw.listHeaderHeight,
-            createHeaderRowCreationWrapper(self.headerRowCreationFunction)
+            headerRowCreationWrapper(self.headerRowCreationFunction)
     )
     ZO_ScrollList_SetTypeCategoryHeader(self.damageList.listControl, self.damageList.HEADER_TYPE, true)
 
@@ -87,7 +87,7 @@ function module:SetupDamageList()
             self.damageList.ROW_TYPE,
             self.damageList.ROW_TEMPLATE,
             self.damageList.sw.listRowHeight,
-            createDamageRowCreationWrapper(self.damageRowCreationFunction)
+            damageRowCreationWrapper(self.damageRowCreationFunction)
     )
 end
 
