@@ -28,7 +28,7 @@ local extension = internal.extensionClass:New(extensionDefinition)
 
 function extension:Activate()
     self:Reset()
-    LC:UnregisterCallbackType(LIBCOMBAT_EVENT_FIGHTRECAP, function(...) self:FightRecapCallback(...) end, addon_name .. self.name)
+    LC:RegisterCallbackType(LIBCOMBAT_EVENT_FIGHTRECAP, function(...) self:FightRecapCallback(...) end, addon_name .. self.name)
 
     addon.RegisterCallback(HR_EVENT_COMBAT_START, function() self:Reset() end)
     --addon.RegisterCallback(HR_EVENT_COMBAT_END, function() self:Reset() end)
