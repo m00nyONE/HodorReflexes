@@ -156,7 +156,7 @@ function listClass:CreateControls()
     window:SetHidden(true)
     window:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, self.sv.windowPosLeft, self.sv.windowPosTop)
     window:SetWidth(self.sv.windowWidth)
-    window:SetHeight(self.sv.listHeaderHeight + (self.sv.listRowHeight * GROUP_SIZE_MAX))
+    window:SetHeight(self.sv.listHeaderHeight + (self.sv.listRowHeight * GROUP_SIZE_MAX) + self.sv.listRowHeight) -- header + rows + extraRow for padding
     window:SetHandler( "OnMoveStop", function()
         self.sv.windowPosLeft = window:GetLeft()
         self.sv.windowPosTop = window:GetTop()
@@ -169,7 +169,7 @@ function listClass:CreateControls()
     local listControl = WM:CreateControlFromVirtual(listControlName, window, "ZO_ScrollList")
     listControl:SetAnchor(TOPLEFT, window, TOPLEFT, 0, 0, ANCHOR_CONSTRAINS_XY)
     listControl:SetAnchor(TOPRIGHT, window, TOPRIGHT, ZO_SCROLL_BAR_WIDTH, 0, ANCHOR_CONSTRAINS_X)
-    listControl:SetHeight(self.sv.listHeaderHeight + (self.sv.listRowHeight * GROUP_SIZE_MAX))
+    listControl:SetHeight(self.sv.listHeaderHeight + (self.sv.listRowHeight * GROUP_SIZE_MAX) + self.sv.listRowHeight) -- header + rows + extraRow for padding
     listControl:SetMouseEnabled(false)
     listControl:GetNamedChild("Contents"):SetMouseEnabled(false)
     self.listControlName = listControlName
