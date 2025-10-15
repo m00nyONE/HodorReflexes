@@ -14,7 +14,10 @@ local module = addon_modules[module_name]
 
 local group = core.group
 
+--- @type table<number> a pool of all ultimates in the game
 local ultPool = nil
+--- generate a pool of all ultimates in the game
+--- @return void
 local function genUltPool()
     ultPool = {}
     for skillType = 1, GetNumSkillTypes() do
@@ -37,6 +40,8 @@ local function genUltPool()
     end
 end
 
+--- callback function that gets called on test start
+--- @return void
 function module:startTest()
     self.isTestRunning = true
 
@@ -91,9 +96,13 @@ function module:startTest()
         })
     end
 end
+--- callback function that gets called on test stop
+--- @return void
 function module:stopTest()
     self.isTestRunning = false
 end
+--- callback function that gets called on test tick
+--- @return void
 function module:updateTest()
     if not self.isTestRunning then return end
 

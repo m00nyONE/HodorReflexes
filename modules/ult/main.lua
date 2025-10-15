@@ -50,6 +50,10 @@ local moduleDefinition = {
 
 local module = internal.moduleClass:New(moduleDefinition)
 
+--- handle ULT data received from LGCS
+--- @param tag string
+--- @param data table
+--- @return void
 function module:onULTDataReceived(tag, data)
     if not IsUnitGrouped(tag) then return end
 
@@ -85,6 +89,8 @@ function module:onULTDataReceived(tag, data)
     })
 end
 
+--- module activation function
+--- @return void
 function module:Activate()
     self.logger:Debug("activated ult module")
 
@@ -129,6 +135,7 @@ function module:Activate()
     self:RunOnce("CreateLists")
 end
 
+--- create scrollLists for the module
 function module:CreateLists()
     self:RunOnce("CreateHornList")
     self:RunOnce("CreateColosList")

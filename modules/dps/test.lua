@@ -20,6 +20,8 @@ local DAMAGE_UNKNOWN = LGCS.DAMAGE_UNKNOWN
 local DAMAGE_TOTAL = LGCS.DAMAGE_TOTAL
 local DAMAGE_BOSS = LGCS.DAMAGE_BOSS
 
+--- callback function that gets called on test start
+--- @return void
 function module:startTest()
     self.isTestRunning = true
 
@@ -35,9 +37,13 @@ function module:startTest()
         })
     end
 end
+--- callback function that gets called on test stop
+--- @return void
 function module:stopTest()
     self.isTestRunning = false
 end
+--- callback function that gets called on test tick
+--- @return void
 function module:updateTest()
     if not self.isTestRunning then return end
 

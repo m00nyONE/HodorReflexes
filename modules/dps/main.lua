@@ -52,6 +52,10 @@ local moduleDefinition = {
 
 local module = internal.moduleClass:New(moduleDefinition)
 
+--- handle DPS data received from LGCS
+--- @param tag string
+--- @param data table
+--- @return void
 function module:onDPSDataReceived(tag, data)
     if not IsUnitGrouped(tag) then return end
 
@@ -64,6 +68,8 @@ function module:onDPSDataReceived(tag, data)
     })
 end
 
+--- module activation function
+--- @return void
 function module:Activate()
     self.logger:Debug("activated dps module")
 
@@ -91,6 +97,7 @@ function module:Activate()
     self:RunOnce("CreateLists")
 end
 
+--- create scrollLists for the module
 function module:CreateLists()
     module:RunOnce("CreateDamageList")
 end
