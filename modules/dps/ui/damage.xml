@@ -19,7 +19,7 @@
                 </Label>
             </Controls>
         </Control>
-        <Control name="HodorReflexes_Dps_DamageList_GroupTotal" virtual="true">
+        <Control name="HodorReflexes_Dps_DamageList_Summary" virtual="true">
             <Dimensions y="22" />
             <Controls>
                 <Texture name="$(parent)_BG" color="000000" alpha="0.8" hidden="false">
@@ -28,7 +28,7 @@
                 <Label name="$(parent)_Title" horizontalAlignment="LEFT" font="$(MEDIUM_FONT)|$(KB_16)|shadow" text="Group total:" wrapMode="TRUNCATE">
                     <Anchor point="LEFT" relativePoint="LEFT" relativeTo="$(parent)" offsetX="2"/>
                 </Label>
-                <Label name="$(parent)_Value" horizontalAlignment="RIGHT" font="$(MEDIUM_FONT)|$(KB_16)|shadow" text="0:00.0" wrapMode="TRUNCATE">
+                <Label name="$(parent)_Value" horizontalAlignment="RIGHT" font="$(MEDIUM_FONT)|$(KB_16)|shadow" text="0.0K (0.0K/10sec)" wrapMode="TRUNCATE">
                     <Anchor point="RIGHT" relativePoint="RIGHT" relativeTo="$(parent)" offsetX="-2"/>
                 </Label>
             </Controls>
