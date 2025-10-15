@@ -80,7 +80,7 @@ function module:damageRowCreationFunction(rowControl, data, scrollList)
     iconControl:SetTexture(defaultIcon)
 
     local valueControl = rowControl:GetNamedChild("_Value")
-    valueControl:SetText(self:getDamageRowFormat(data.dmgType, data.dmg, data.dps))
+    valueControl:SetText(self.getDamageRowFormat(data.dmgType, data.dmg, data.dps, self.damageList.sw.colorDamageBoss, self.damageList.sw.colorDamageTotal))
     valueControl:SetFont("$(GAMEPAD_MEDIUM_FONT)|$(KB_19)|outline")
 end
 

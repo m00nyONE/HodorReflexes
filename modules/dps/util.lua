@@ -57,23 +57,23 @@ end
 
 --- get header format for damage list.
 --- @return string
-function module:getDamageHeaderFormat(dmgType)
+function module.getDamageHeaderFormat(dmgType, colorDamageBoss, colorDamageTotal)
     if dmgType == DAMAGE_TOTAL then
-        return string.format('|c%s%s|r |c%s(DPS)|r', self.sw.colorDamageBoss, GetString(HR_MODULES_DPS_DAMAGE_TOTAL), self.sw.colorDamageTotal)
+        return string.format('|c%s%s|r |c%s(DPS)|r', colorDamageBoss, GetString(HR_MODULES_DPS_DAMAGE_TOTAL), colorDamageTotal)
     elseif dmgType == DAMAGE_BOSS then
-        return string.format('|c%s%s|r |c%s(%s)|r', self.sw.colorDamageBoss, GetString(HR_MODULES_DPS_DPS_BOSS), self.sw.colorDamageTotal, GetString(HR_MODULES_DPS_DPS_TOTAL))
+        return string.format('|c%s%s|r |c%s(%s)|r', colorDamageBoss, GetString(HR_MODULES_DPS_DPS_BOSS), colorDamageTotal, GetString(HR_MODULES_DPS_DPS_TOTAL))
     elseif dmgType == DAMAGE_UNKNOWN then
-        return string.format('|c%s%s|r', self.sw.colorDamageBoss, GetString(HR_MODULES_DPS_DAMAGE))
+        return string.format('|c%s%s|r', colorDamageBoss, GetString(HR_MODULES_DPS_DAMAGE))
     end
 
-    return string.format('|c%s%s|r |c%s(DPS)|r', self.sw.colorDamageBoss, GetString(HR_MODULES_DPS_DAMAGE_MISC), self.sw.colorDamageTotal)
+    return string.format('|c%s%s|r |c%s(DPS)|r', colorDamageBoss, GetString(HR_MODULES_DPS_DAMAGE_MISC), colorDamageTotal)
 end
 --- get row format for damage list.
 --- @return string
-function module:getDamageRowFormat(dmgType, dmg, dps)
+function module.getDamageRowFormat(dmgType, dmg, dps, colorDamageBoss, colorDamageTotal)
     if dmgType == DAMAGE_TOTAL then
-        return string.format('|c%s%0.2fM|r |c%s(%dK)|r|u0:2::|u', self.sw.colorDamageBoss, dmg / 100, self.sw.colorDamageTotal, dps)
+        return string.format('|c%s%0.2fM|r |c%s(%dK)|r|u0:2::|u', colorDamageBoss, dmg / 100, colorDamageTotal, dps)
     end
 
-    return string.format('|c%s%0.1fK|r |c%s(%dK)|r|u0:2::|u', self.sw.colorDamageBoss, dmg / 10, self.sw.colorDamageTotal, dps)
+    return string.format('|c%s%0.1fK|r |c%s(%dK)|r|u0:2::|u', colorDamageBoss, dmg / 10, colorDamageTotal, dps)
 end
