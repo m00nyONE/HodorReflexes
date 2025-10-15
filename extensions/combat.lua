@@ -62,7 +62,7 @@ function extension:FightRecapCallback(_, data)
     self.data.damageOutTotalGroup = data.damageOutTotalGroup or 0
 
     -- save history
-    table.insert(self.data.damageHistory, {
+    table.insert(self.damageHistory, {
         timestamp = GetGameTimeMilliseconds(),
         damage = data.damageOutTotalGroup
     })
