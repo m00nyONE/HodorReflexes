@@ -59,7 +59,7 @@ end
 --- @param classId number
 --- @return string texturePath
 function extension.GetClassIcon(classId)
-    return self.classIcons[classId]
+    return extension.classIcons[classId]
 end
 
 --- overwrite class icons with new ones.
@@ -68,14 +68,14 @@ end
 --- @return void
 function extension.overwriteClassIcons(newClassIcons)
     for classId, icon in pairs(newClassIcons) do
-        self.classIcons[classId] = icon
+        extension.classIcons[classId] = icon
     end
 end
 
 function extension:Activate()
-    for classId = 1, GetNumClasses() do
-        local id, _, _, _, _, _, icon, _, _, _ = GetClassInfo(classId)
-        self.classIcons[id] = icon
+    for i = 1, GetNumClasses() do
+        local classId, _, _, _, _, _, icon, _, _, _ = GetClassInfo(i)
+        self.classIcons[classId] = icon
     end
 
     if LCI then
