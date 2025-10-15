@@ -19,6 +19,11 @@ local custom = addon_extensions.custom
 local LGCS = LibGroupCombatStats
 local DAMAGE_UNKNOWN = LGCS.DAMAGE_UNKNOWN
 
+local HR_EVENT_COMBAT_START = addon.HR_EVENT_COMBAT_START
+local HR_EVENT_COMBAT_END = addon.HR_EVENT_COMBAT_END
+
+local EM = GetEventManager()
+
 local svDefault = {
     enabled =  1, -- 1=always, 2=out of combat, 3=non bossfights, 0=off
     disableInPvP = true,
@@ -58,8 +63,6 @@ function module:SetupDamageList()
 
     local function headerRowCreationWrapper(wrappedFunction)
         return function(rowControl, data, scrollList)
-            -- allways set the Control of the Time so we can update it later
-            self.damageList.HeaderTimeControl = rowControl:GetNamedChild("_Time")
             wrappedFunction(self, rowControl, data, scrollList)
         end
     end
@@ -99,6 +102,18 @@ end
 function module:headerRowCreationFunction(rowControl, data, scrollList)
     rowControl:GetNamedChild("_Title"):SetText(self.getDamageHeaderFormat(data.dmgType, self.damageList.sw.colorDamageBoss, self.damageList.sw.colorDamageTotal))
     rowControl:GetNamedChild("_BG"):SetAlpha(self.damageList.sw.listHeaderOpacity)
+    local timeControl = rowControl:GetNamedChild("_Time")
+    local function onCombatStop()
+        self.RenderFightTimeToControl(timeControl)
+        EM:UnregisterForUpdate(self.damageList._eventId .. "TimerUpdate")
+    end
+    local function onCombatStart()
+        onCombatStop()
+        EM:RegisterForUpdate(self.damageList._eventId .. "TimerUpdate", 100, function() self.RenderFightTimeToControl(timeControl) end)
+    end
+
+    addon.RegisterCallback(HR_EVENT_COMBAT_START, onCombatStart)
+    addon.RegisterCallback(HR_EVENT_COMBAT_END, onCombatStop)
 end
 
 function module:damageRowCreationFunction(rowControl, data, scrollList)
