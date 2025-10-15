@@ -15,7 +15,7 @@ local module = addon_modules[module_name]
 local group = core.group
 
 --- @type table<number> a pool of all ultimates in the game
-local ultPool = nil
+local ultPool
 --- generate a pool of all ultimates in the game
 --- @return void
 local function genUltPool()

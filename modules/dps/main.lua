@@ -12,8 +12,6 @@ local internal_modules = internal.modules
 local group = core.group
 local LGCS = LibGroupCombatStats
 
-local localPlayer = "player"
-
 local EVENT_PLAYER_DPS_UPDATE = LGCS.EVENT_PLAYER_DPS_UPDATE
 local EVENT_GROUP_DPS_UPDATE = LGCS.EVENT_GROUP_DPS_UPDATE
 
@@ -22,8 +20,6 @@ local HR_EVENT_TEST_STOPPED = addon.HR_EVENT_TEST_STOPPED
 local HR_EVENT_TEST_TICK = addon.HR_EVENT_TEST_TICK
 
 local DAMAGE_UNKNOWN = LGCS.DAMAGE_UNKNOWN
-local DAMAGE_TOTAL = LGCS.DAMAGE_TOTAL
-local DAMAGE_BOSS = LGCS.DAMAGE_BOSS
 
 local moduleDefinition = {
     name = "dps",

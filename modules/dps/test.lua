@@ -16,8 +16,6 @@ local group = core.group
 
 local LGCS = LibGroupCombatStats
 
-local DAMAGE_UNKNOWN = LGCS.DAMAGE_UNKNOWN
-local DAMAGE_TOTAL = LGCS.DAMAGE_TOTAL
 local DAMAGE_BOSS = LGCS.DAMAGE_BOSS
 
 --- callback function that gets called on test start

@@ -12,15 +12,11 @@ local internal_modules = internal.modules
 local module_name = "dps"
 local module = addon_modules[module_name]
 
-local util = core.util
-
 local LGCS = LibGroupCombatStats
 
 local DAMAGE_UNKNOWN = LGCS.DAMAGE_UNKNOWN
 local DAMAGE_TOTAL = LGCS.DAMAGE_TOTAL
 local DAMAGE_BOSS = LGCS.DAMAGE_BOSS
-
-local localPlayer = "player"
 
 -- sorting functions
 

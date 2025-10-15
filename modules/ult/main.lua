@@ -12,8 +12,6 @@ local internal_modules = internal.modules
 local group = core.group
 local LGCS = LibGroupCombatStats
 
-local localPlayer = "player"
-
 local EVENT_GROUP_ULT_UPDATE = LGCS.EVENT_GROUP_ULT_UPDATE
 local EVENT_PLAYER_ULT_UPDATE = LGCS.EVENT_PLAYER_ULT_UPDATE
 
