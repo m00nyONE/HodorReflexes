@@ -96,8 +96,8 @@ end
 --- @param control LabelControl
 --- @return void
 function module.RenderFightTimeToControl(control)
-    local t = combat.GetCombatTime()
-    control:SetText(t > 0 and string.format("%d:%04f|u0:2::|u", t / 60, t % 60) or "")
+    local t = combat:GetCombatTime()
+    control:SetText(t > 0 and string.format("%d:%04.1f|u0:2::|u", t / 60, t % 60) or "")
 end
 
 function module:headerRowCreationFunction(rowControl, data, scrollList)
