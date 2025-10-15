@@ -8,9 +8,13 @@ local core = internal.core
 
 local addon_modules = addon.modules
 local internal_modules = internal.modules
+local addon_extensions = addon.extensions
 
 local module_name = "dps"
 local module = addon_modules[module_name]
+
+local combat = addon_extensions.combat
+local custom = addon_extensions.custom
 
 local LGCS = LibGroupCombatStats
 local DAMAGE_UNKNOWN = LGCS.DAMAGE_UNKNOWN
@@ -93,10 +97,9 @@ function module:headerRowCreationFunction(rowControl, data, scrollList)
 end
 
 function module:damageRowCreationFunction(rowControl, data, scrollList)
-    local userId = data.userId
-    local userName = userId
-    local classId = data.classId
-    local defaultIcon = GetClassIcon(classId)
+    local userName = custom.GetAliasForUserId(data.userId, true)
+    local userIcon = custom.GetIconForUserId(data.userId)
+    local defaultIcon = custom.GetClassIcon(data.classId)
 
     local nameControl = rowControl:GetNamedChild('_Name')
     nameControl:SetText(userName)
