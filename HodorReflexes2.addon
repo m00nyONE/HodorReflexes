@@ -51,6 +51,7 @@ extensions/combat.lua
 ; modules
 modules/ult/lang/en.lua
 modules/ult/lang/$(language).lua
+modules/ult/ui/horn.xml
 modules/ult/main.lua
 modules/ult/util.lua
 modules/ult/buffs.lua
