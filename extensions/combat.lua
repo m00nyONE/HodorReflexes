@@ -48,19 +48,13 @@ function extension:Reset()
     self.data.hpstime = 0
     self.data.groupDPSOut = 0
     self.data.damageOutTotalGroup = 0
-    self.damageHistory = {
-        {
-            timeStamp = 0,
-            damageDone = 0,
-        },
-    }
+    self.damageHistory = {}
 end
 function extension:FightRecapCallback(_, data)
     self.data.dpstime = data.dpstime or 0
     self.data.hpstime = data.hpstime or 0
     self.data.groupDPSOut = data.groupDPSOut or 0
     self.data.damageOutTotalGroup = data.damageOutTotalGroup or 0
-
     -- save history
     table.insert(self.damageHistory, {
         timestamp = GetGameTimeMilliseconds(),
@@ -79,12 +73,12 @@ function extension:GetDamageOutTotalGroup()
 end
 function extension:GetGroupDPSOverTime(seconds)
     local now = GetGameTimeMilliseconds()
-    local cutoff = now - seconds * 1000
+    local cutoff = now - (seconds * 1000) -- convert to milliseconds
     local oldest, newest
 
     -- Finde ältesten und neuesten Wert im Zeitraum
-    for i = #self.data.damageHistory, 1, -1 do
-        local entry = self.data.damageHistory[i]
+    for i = #self.damageHistory, 1, -1 do
+        local entry = self.damageHistory[i]
         if not newest and entry.timestamp <= now then
             newest = entry
         end
@@ -97,7 +91,7 @@ function extension:GetGroupDPSOverTime(seconds)
     if oldest and newest and newest.timestamp > oldest.timestamp then
         local damageDiff = newest.damage - oldest.damage
         local timeDiff = newest.timestamp - oldest.timestamp
-        return damageDiff / timeDiff
+        return zo_round(damageDiff / (timeDiff / 1000)) -- convert to seconds
     end
-    return 0
+    return self:GetGroupDPSOut()
 end
