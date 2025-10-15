@@ -56,10 +56,10 @@ function extension:Reset()
     }
 end
 function extension:FightRecapCallback(_, data)
-    self.data.dpstime = data.dpstime
-    self.data.hpstime = data.hpstime
-    self.data.groupDPSOut = data.groupDPSOut
-    self.data.damageOutTotalGroup = data.damageOutTotalGroup
+    self.data.dpstime = data.dpstime or 0
+    self.data.hpstime = data.hpstime or 0
+    self.data.groupDPSOut = data.groupDPSOut or 0
+    self.data.damageOutTotalGroup = data.damageOutTotalGroup or 0
 
     -- save history
     table.insert(self.data.damageHistory, {
