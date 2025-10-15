@@ -54,10 +54,6 @@ function module:CreateDamageList()
     }
     self.damageList = internal.listClass:New(listDefinition)
 
-    self:RunOnce("SetupDamageList")
-end
-
-function module:SetupDamageList()
     self.damageList.HEADER_TYPE = 1 -- type id for header
     self.damageList.ROW_TYPE = 2    -- type id for rows
     self.damageList.HEADER_TEMPLATE = "HodorReflexes_Dps_DamageList_Header"
