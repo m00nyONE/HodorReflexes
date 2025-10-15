@@ -56,8 +56,10 @@ function module:CreateDamageList()
 
     self.damageList.HEADER_TYPE = 1 -- type id for header
     self.damageList.ROW_TYPE = 2    -- type id for rows
+    self.damageList.SUMMARY_TYPE = 3 -- type id for summary
     self.damageList.HEADER_TEMPLATE = "HodorReflexes_Dps_DamageList_Header"
     self.damageList.ROW_TEMPLATE = "HodorReflexes_Dps_DamageList_DamageRow"
+    self.damageList.SUMMARY_TEMPLATE = "HodorReflexes_Dps_DamageList_Summary"
 
     local function headerRowCreationWrapper(wrappedFunction)
         return function(rowControl, data, scrollList)
@@ -69,6 +71,14 @@ function module:CreateDamageList()
         return function(rowControl, data, scrollList)
             -- only create rows if conditions are met
             if data.dmg > 0 and (self.isTestRunning or IsUnitOnline(data.tag)) then
+                wrappedFunction(self, rowControl, data, scrollList)
+            end
+        end
+    end
+
+    local function summaryRowCreationWrapper(wrappedFunction)
+        return function(rowControl, data, scrollList)
+            if data.groupDPS > 0 then
                 wrappedFunction(self, rowControl, data, scrollList)
             end
         end
@@ -90,6 +100,15 @@ function module:CreateDamageList()
             self.damageList.sw.listRowHeight,
             damageRowCreationWrapper(self.damageRowCreationFunction)
     )
+
+    ZO_ScrollList_AddDataType(
+            self.damageList.listControl,
+            self.damageList.SUMMARY_TYPE,
+            self.damageList.SUMMARY_TEMPLATE,
+            self.damageList.sw.listRowHeight,
+            summaryRowCreationWrapper(self.summaryRowCreationFunction)
+    )
+    ZO_ScrollList_SetTypeCategoryHeader(self.damageList.listControl, self.damageList.SUMMARY_TYPE, true)
 end
 
 --- renders the current fight time to the control passed as argument.
@@ -146,6 +165,12 @@ function module:damageRowCreationFunction(rowControl, data, scrollList)
     end
 end
 
+function module:summaryRowCreationFunction(rowControl, data, scrollList)
+    rowControl:GetNamedChild("_Title"):SetText("Group Total:")
+    local str = string.format("%0.1fK (%0.1fK/10s)", data.groupDPS / 1000, data.groupDPS10sec / 1000)
+    rowControl:GetNamedChild("_Value"):SetText(str)
+end
+
 function module:UpdateDamageList()
     local listControl = self.damageList.listControl
 
@@ -172,6 +197,13 @@ function module:UpdateDamageList()
     for i, playerData in ipairs(playersDataList) do
         playerData.orderIndex = i
         table.insert(dataList, ZO_ScrollList_CreateDataEntry(self.damageList.ROW_TYPE, playerData))
+    end
+
+    if #playersDataList > 0 then
+        table.insert(dataList, ZO_ScrollList_CreateDataEntry(self.damageList.SUMMARY_TYPE, {
+            groupDPS = combat:GetGroupDPSOut(),
+            groupDPS10sec = combat:GetGroupDPSOverTime(10),
+        }))
     end
 
     ZO_ScrollList_Commit(listControl)
