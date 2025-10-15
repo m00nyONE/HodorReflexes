@@ -156,7 +156,7 @@ local function toggleTest(players)
             tag = name,
             name = name,
             userId = name,
-            classId = zo_random(1, GetNumClasses()),
+            classId = GetClassInfo(zo_random(1, GetNumClasses())), -- we use GetClassInfo here to get the real ID out of the iterator - GetClassInfo's first return value is the classId
             isPlayer = name == GetUnitDisplayName(localPlayer),
         }
     end
