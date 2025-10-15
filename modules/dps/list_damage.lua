@@ -163,15 +163,16 @@ function module:UpdateDamageList()
     end
     table.sort(playersDataList, self.sortByDamageType)
 
+    -- insert header row
+    table.insert(dataList, ZO_ScrollList_CreateDataEntry(self.damageList.HEADER_TYPE, {
+        dmgType = dmgType,
+    }))
+
     -- insert damageRows
     for i, playerData in ipairs(playersDataList) do
         playerData.orderIndex = i
         table.insert(dataList, ZO_ScrollList_CreateDataEntry(self.damageList.ROW_TYPE, playerData))
     end
-
-    table.insert(dataList, ZO_ScrollList_CreateDataEntry(self.damageList.HEADER_TYPE, {
-        dmgType = dmgType,
-    }))
 
     ZO_ScrollList_Commit(listControl)
 end
