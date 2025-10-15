@@ -7,19 +7,33 @@ local internal = addon.internal
 local core = internal.core
 
 local addon_modules = addon.modules
+local addon_extensions = addon.extensions
 local internal_modules = internal.modules
 
 local module_name = "ult"
 local module = addon_modules[module_name]
 
+local custom = addon_extensions.custom
+
 local svDefault = {
     enabled =  1, -- 1=always, 2=out of combat, 3=non bossfights, 0=off
     disableInPvP = true,
+
     windowPosLeft = 240,
-    windowPosTop = 300,
+    windowPosTop = 200,
     windowWidth = 262,
-    listHeaderHeight = 22,
-    listRowHeight = 22,
+
+    listHeaderHeight = 28,
+    listRowHeight = 24,
+
+    showPercentValue = 1.0,
+    showRawValue = 1.0,
+
+    headerOpacity = 0.0,
+    zeroTimerOpacity = 0.7,
+
+    colorAtro = {0, 1, 1}, -- cyan
+    colorBerserk = {1, 1, 0}, -- yellow
 }
 
 function module:CreateAtroList()
@@ -29,8 +43,108 @@ function module:CreateAtroList()
         Update = function() self:UpdateAtroList() end,
     }
     self.atroList = internal.listClass:New(listDefinition)
+
+    self.atroList.HEADER_TYPE = 1 -- type id for header
+    self.atroList.ROW_TYPE = 2 -- type id for rows
+    self.atroList.HEADER_TEMPLATE = "HodorReflexes_Ult_AtroList_Header"
+    self.atroList.ROW_TEMPLATE = "HodorReflexes_Ult_AtroList_PlayerRow"
+
+    local function headerRowCreationWrapper(wrappedFunction)
+        return function(rowControl, data, scrollList)
+            wrappedFunction(self, rowControl, data, scrollList)
+        end
+    end
+
+    local function playerRowCreationWrapper(wrappedFunction)
+        return function(rowControl, data, scrollList)
+            if data.ultValue > 0 and (self.isTestRunning or IsUnitOnline(data.tag)) then
+                wrappedFunction(self, rowControl, data, scrollList)
+            end
+        end
+    end
+
+    ZO_ScrollList_AddDataType(
+            self.atroList.listControl,
+            self.atroList.HEADER_TYPE,
+            self.atroList.HEADER_TEMPLATE,
+            self.atroList.sw.listHeaderHeight,
+            headerRowCreationWrapper(self.atroListHeaderRowCreationFunction)
+    )
+    ZO_ScrollList_SetTypeCategoryHeader(self.atroList.listControl, self.atroList.HEADER_TYPE, true)
+
+    ZO_ScrollList_AddDataType(
+            self.atroList.listControl,
+            self.atroList.ROW_TYPE,
+            self.atroList.ROW_TEMPLATE,
+            self.atroList.sw.listRowHeight,
+            playerRowCreationWrapper(self.atroListRowCreationFunction)
+    )
+end
+
+function module:atroListHeaderRowCreationFunction(rowControl, data, scrollList)
+    rowControl:GetNamedChild("_BG"):SetAlpha(self.atroList.sw.headerOpacity)
+    rowControl:GetNamedChild("_AtroDuration"):SetColor(unpack(self.atroList.sw.colorAtro))
+    rowControl:GetNamedChild("_AtroDuration"):SetAlpha(self.atroList.sw.zeroTimerOpacity)
+    rowControl:GetNamedChild("_BerserkDuration"):SetColor(unpack(self.atroList.sw.colorBerserk))
+    rowControl:GetNamedChild("_BerserkDuration"):SetAlpha(self.atroList.sw.zeroTimerOpacity)
+
+    -- TODO: create event listeners for duration timers
+end
+
+function module:atroListRowCreationFunction(rowControl, data, scrollList)
+    local userName = custom.GetAliasForUserId(data.userId, true)
+    local userIcon = custom.GetIconForUserId(data.userId)
+    local defaultIcon = custom.GetClassIcon(data.classId)
+
+    local nameControl = rowControl:GetNamedChild('_Name')
+    nameControl:SetText(userName)
+    nameControl:SetColor(1, 1, 1)
+    local iconControl = rowControl:GetNamedChild('_Icon')
+    iconControl:SetTextureCoords(0, 1, 0, 1)
+    iconControl:SetTexture(defaultIcon)
+
+    local percentageColor = self:getUltPercentageColor(data.atroPercentage, 'FFFFFF')
+    local percentageControl = rowControl:GetNamedChild("_PctValue")
+    percentageControl:SetText(string.format('|c%s%d%%|r', percentageColor, zo_min(200, data.atroPercentage)))
+    percentageControl:SetScale(self.atroList.sw.showPercentValue)
+    local rawValueControl = rowControl:GetNamedChild("_RawValue")
+    rawValueControl:SetText(string.format('%s', data.ultValue))
+    rawValueControl:SetScale(self.atroList.sw.showRawValue)
 end
 
 function module:UpdateAtroList()
-    --ZO_ScrollList_Commit(self.atroList.listControl)
+    local listControl = self.atroList.listControl
+
+    ZO_ScrollList_Clear(listControl)
+    local dataList = ZO_ScrollList_GetDataList(listControl)
+
+    local playersDataList = {}
+    for _, playerData in pairs(addon.playersData) do
+        if playerData.ultValue > 0 and playerData.hasAtro then
+            local lowestPossibleAtroCost = 0
+            if self:isAtro(playerData.ult1ID) then lowestPossibleAtroCost = playerData.ult1Cost end
+            if self:isAtro(playerData.ult2ID) then lowestPossibleAtroCost = playerData.ult2Cost end
+            playerData.atroPercentage = self:getUltPercentage(playerData.ultValue, lowestPossibleAtroCost)
+            table.insert(playersDataList, playerData)
+        end
+    end
+    table.sort(playersDataList, self.sortByUltPercentage)
+
+    --- fill dataList ---
+    -- insert Header
+    table.insert(dataList, ZO_ScrollList_CreateDataEntry(self.atroList.HEADER_TYPE, {
+    }))
+
+    -- insert playerRows
+    for i, playerData in ipairs(playersDataList) do
+        playerData.orderIndex = i
+        table.insert(dataList, ZO_ScrollList_CreateDataEntry(self.atroList.ROW_TYPE, playerData))
+    end
+
+    self.atroList.window:SetHeight(
+        self.atroList.sw.listHeaderHeight +
+        (#playersDataList * self.atroList.sw.listRowHeight)
+    )
+
+    ZO_ScrollList_Commit(listControl)
 end
