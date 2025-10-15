@@ -96,6 +96,9 @@ function module:SetupDamageList()
     )
 end
 
+--- renders the current fight time to the control passed as argument.
+--- @param control LabelControl
+--- @return void
 function module.RenderFightTimeToControl(control)
     local t = combat.GetCombatTime()
     control:SetText(t > 0 and string.format("%d:%04f|u0:2::|u", t / 60, t % 60) or "")
