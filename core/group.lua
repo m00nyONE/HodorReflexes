@@ -156,7 +156,7 @@ local function toggleTest(players)
             tag = name,
             name = name,
             userId = name,
-            classId = zo_random(1, GetNumClasses() -1),
+            classId = zo_random(1, GetNumClasses()),
             isPlayer = name == GetUnitDisplayName(localPlayer),
         }
     end
