@@ -206,5 +206,10 @@ function module:UpdateDamageList()
         }))
     end
 
+    self.damageList.window:SetHeight(
+            self.damageList.sw.listHeaderHeight +
+            (#playersDataList * self.damageList.sw.listRowHeight) +
+            (#playersDataList > 0 and self.damageList.sw.listRowHeight or 0) -- summary row
+    )
     ZO_ScrollList_Commit(listControl)
 end
