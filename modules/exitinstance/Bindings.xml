@@ -4,14 +4,14 @@
 -->
 
 <Bindings>
-<Layer name="SI_KEYBINDINGS_LAYER_GENERAL">
-    <Category name="|cFFFF00Hodor Reflexes|r">
-        <Action name="HR_MODULES_EXITINSTANCE_BINDING_SENDEJECT">
-            <Down>HodorReflexes.modules.exitinstance:SendExitInstanceRequest()</Down>
-        </Action>
-        <Action name="HR_MODULES_EXITINSTANCE_BINDING_EXITINSTANCE">
-            <Down>HodorReflexes.modules.exitinstance:ExitInstance()</Down>
-        </Action>
-    </Category>
-</Layer>
+    <Layer name="SI_KEYBINDINGS_LAYER_GENERAL">
+        <Category name="|cFFFF00Hodor Reflexes|r">
+            <Action name="HR_MODULES_EXITINSTANCE_BINDING_SENDEJECT">
+                <Down>HodorReflexes.modules.exitinstance:SendExitInstanceRequest()</Down>
+            </Action>
+            <Action name="HR_MODULES_EXITINSTANCE_BINDING_EXITINSTANCE">
+                <Down>HodorReflexes.modules.exitinstance:ExitInstance()</Down>
+            </Action>
+        </Category>
+    </Layer>
 </Bindings>
