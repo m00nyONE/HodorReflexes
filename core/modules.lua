@@ -66,10 +66,13 @@ end
 --- @param module moduleClass the module to register
 --- @return void
 function core.RegisterModule(module)
-    assert(addon.modules[module.name] == nil, "module already registered")
-
+    if addon.modules[module.name] then
+        logger:Error("Module " .. module.name .. " is already registered!")
+        return
+    end
     module.enabled = false -- set enabled to false by default
     addon.modules[module.name] = module -- add module to the addon.modules table
+    logger:Debug("Successfully registered module: " .. module.name)
 end
 
 

@@ -27,8 +27,12 @@ end
 --- @param extension extensionClass the extension to register
 --- @return void
 function core.RegisterExtension(extension)
-    assert(addon.extensions[extension.name] == nil, "extension already registered")
+    if addon.extensions[extension.name] then
+        logger:Error("Extension " .. extension.name .. " is already registered!")
+        return
+    end
     addon.extensions[extension.name] = extension -- add extension to the addon.extensions table
+    logger:Debug("Successfully registered extension: " .. extension.name)
 end
 
 --- runs a function only once and then removes it from the object
