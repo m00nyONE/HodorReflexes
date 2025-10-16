@@ -7,10 +7,6 @@ local internal = addon.internal
 local core = internal.core
 local logger = core.logger.main
 
---- @class: extensionClass
-internal.extensionClass = ZO_InitializingObject:Subclass()
-local extensionClass = internal.extensionClass
-
 --- initializes all registered extensions
 --- @return void
 function core.InitializeExtensions()
@@ -34,6 +30,13 @@ function core.RegisterExtension(extension)
     addon.extensions[extension.name] = extension -- add extension to the addon.extensions table
     logger:Debug("Successfully registered extension: " .. extension.name)
 end
+
+--- @class: extensionClass
+internal.extensionClass = ZO_InitializingObject:Subclass()
+local extensionClass = internal.extensionClass
+
+-- must implement functions
+extensionClass:MUST_IMPLEMENT("Activate") -- function that gets called to activate the extension when it's enabled
 
 --- runs a function only once and then removes it from the object
 --- @param funcName string the name of the function to run
