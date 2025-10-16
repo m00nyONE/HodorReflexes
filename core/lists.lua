@@ -149,6 +149,11 @@ function listClass:CreateSavedVariables()
     else
         self.sv = self.sw
     end
+
+    -- Ensure sv is not nil
+    if not self.sv then
+        self.sv = self.svDefault
+    end
 end
 --- creates the window and controls for the list
 function listClass:CreateControls()
