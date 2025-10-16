@@ -83,6 +83,8 @@ function listClass:Initialize(listDefinition)
     addon.RegisterCallback(HR_EVENT_GROUP_CHANGED, onGroupChanged)
     addon.RegisterCallback(HR_EVENT_PLAYERSDATA_UPDATED, function(...) self:UpdateDebounced(...) end)
     addon.RegisterCallback(HR_EVENT_PLAYERSDATA_CLEANED, function(...) self:UpdateDebounced(...) end)
+
+    logger:Debug("initialized list '%s'", self.name)
 end
 
 function listClass:UpdateDebounced()
