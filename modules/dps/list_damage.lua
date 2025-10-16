@@ -122,21 +122,37 @@ function module.RenderFightTimeToControl(control)
     control:SetText(t > 0 and string.format("%d:%04.1f|u0:2::|u", t / 60, t % 60) or "")
 end
 
+--- creates and registers a fight time updater on the control passed as argument. can be used by custom themes as well.
+--- @param control LabelControl
+--- @return void
+function module:CreateFightTimeUpdaterOnControl(control)
+    -- check if timer is already registered - if so, return
+    if control._onCombatStart or control._onCombatStop then return end
+
+    local function renderFightTimeToControl()
+        self.RenderFightTimeToControl(control)
+    end
+
+    -- reate timer start & stop functions
+    control._onCombatStop = function()
+        self.RenderFightTimeToControl(control)
+        EM:UnregisterForUpdate(self.damageList._eventId .. "TimerUpdate")
+    end
+    control._onCombatStart = function()
+        control._onCombatStop()
+        EM:RegisterForUpdate(self.damageList._eventId .. "TimerUpdate", self.damageList.sv.timerUpdateInterval, renderFightTimeToControl)
+    end
+    -- register timer update callbacks
+    addon.RegisterCallback(HR_EVENT_COMBAT_START, control._onCombatStart)
+    addon.RegisterCallback(HR_EVENT_COMBAT_END, control._onCombatStop)
+end
+
+--- creation function for the header row. This can be overwritten if using a custom theme
 function module:headerRowCreationFunction(rowControl, data, scrollList)
     rowControl:GetNamedChild("_Title"):SetText(self.getDamageHeaderFormat(data.dmgType, self.damageList.sw.colorDamageBoss, self.damageList.sw.colorDamageTotal))
     rowControl:GetNamedChild("_BG"):SetAlpha(self.damageList.sw.listHeaderOpacity)
     local timeControl = rowControl:GetNamedChild("_Time")
-    local function onCombatStop()
-        self.RenderFightTimeToControl(timeControl)
-        EM:UnregisterForUpdate(self.damageList._eventId .. "TimerUpdate")
-    end
-    local function onCombatStart()
-        onCombatStop()
-        EM:RegisterForUpdate(self.damageList._eventId .. "TimerUpdate", self.damageList.sv.timerUpdateInterval, function() self.RenderFightTimeToControl(timeControl) end)
-    end
-
-    addon.RegisterCallback(HR_EVENT_COMBAT_START, onCombatStart)
-    addon.RegisterCallback(HR_EVENT_COMBAT_END, onCombatStop)
+    self:CreateFightTimeUpdaterOnControl(timeControl)
 end
 
 --- creation function for the damage rows. This can be overwritten if using a custom theme
