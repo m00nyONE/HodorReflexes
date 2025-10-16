@@ -31,9 +31,9 @@ function core.RegisterExtension(extension)
     logger:Debug("Successfully registered extension: " .. extension.name)
 end
 
---- @class: extensionClass
-internal.extensionClass = ZO_InitializingObject:Subclass()
-local extensionClass = internal.extensionClass
+--- @class: extensionClass : ZO_InitializingObject
+local extensionClass = ZO_InitializingObject:Subclass()
+internal.extensionClass = extensionClass
 
 -- must implement functions
 extensionClass:MUST_IMPLEMENT("Activate") -- function that gets called to activate the extension when it's enabled

@@ -6,8 +6,10 @@ local addon = _G[addon_name]
 local internal = addon.internal
 local core = internal.core
 
+--- @type table<string, Logger>
 core.logger = {}
-core.logger.main = LibDebugLogger.Create(addon_name)
+--- @class Logger
+core.logger.main = LibDebugLogger:Create(addon_name)
 
 --- Initialize a sub logger
 --- @param name string the name of the sub logger
