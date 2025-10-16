@@ -11,6 +11,7 @@ local util = core.util
 local hud = core.hud
 
 local WM = GetWindowManager()
+local EM = GetEventManager()
 local localPlayer = "player"
 local localBoss1 = "boss1"
 local localBoss2 = "boss2"
@@ -21,7 +22,7 @@ local HR_EVENT_GROUP_CHANGED = addon.HR_EVENT_GROUP_CHANGED
 local HR_EVENT_PLAYERSDATA_CLEANED = addon.HR_EVENT_PLAYERSDATA_CLEANED
 local HR_EVENT_PLAYERSDATA_UPDATED = addon.HR_EVENT_PLAYERSDATA_UPDATED
 
-local debounceDelayMS = 15
+local globalUpdateDebounceDelayMS = 15 -- global debounce delay for all lists, can be overridden in each list
 
 --- @class: listClass
 local listClass = ZO_InitializingObject:Subclass()
@@ -56,7 +57,8 @@ function listClass:Initialize(listDefinition)
         self[k] = v
     end
 
-    self._eventId = string.match(tostring(self), "0%x+")
+    self._eventId = "List_" .. string.match(tostring(self), "0%x+")
+    self.updateDebounceDelayMS = self.updateDebounceDelayMS or globalUpdateDebounceDelayMS
 
     self:RunOnce("CreateSavedVariables")
     self:RunOnce("CreateControls")
@@ -89,8 +91,8 @@ end
 
 function listClass:UpdateDebounced()
     if not self:WindowFragmentCondition() then return end
-    EVENT_MANAGER:RegisterForUpdate(self._eventId, debounceDelayMS, function()
-        EVENT_MANAGER:UnregisterForUpdate(self._eventId)
+    EM:RegisterForUpdate(self._eventId, self.updateDebounceDelayMS, function()
+        EM:UnregisterForUpdate(self._eventId)
         self:Update()
     end)
 end
