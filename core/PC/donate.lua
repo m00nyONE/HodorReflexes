@@ -9,7 +9,7 @@ local logger = core.logger.main
 
 --- opens the mail interface with prefilled data for donation
 --- @return void
-function addon.Donation()
+function addon.Donate()
     logger:Debug("Donation function called")
     SCENE_MANAGER:Show('mailSend')
     zo_callLater(function()
