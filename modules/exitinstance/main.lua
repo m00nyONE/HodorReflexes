@@ -51,8 +51,12 @@ function module:Activate()
         end
     end
     -- Add hotkey to group window
-    KEYBOARD_GROUP_MENU_SCENE:RegisterCallback('StateChange', OnStateChanged)
-    GAMEPAD_GROUP_SCENE:RegisterCallback('StateChange', OnStateChanged)
+    if KEYBOARD_GROUP_MENU_SCENE then
+        KEYBOARD_GROUP_MENU_SCENE:RegisterCallback("StateChange", OnStateChanged)
+    end
+    if GAMEPAD_GROUP_SCENE then
+        GAMEPAD_GROUP_SCENE:RegisterCallback("StateChange", OnStateChanged)
+    end
 
     -- register custom dialog
     self:registerExitInstanceRequestDialog()
