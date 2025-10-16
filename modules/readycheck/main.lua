@@ -86,7 +86,6 @@ function module:CreateReadyCheckUI()
     end)
 
     local readycheckTitle = WM:CreateControl(readycheckWindowName .. "_Title", readycheckWindow, CT_LABEL)
-    readycheckTitle:SetFont("ZoFontWinH1")
     readycheckTitle:SetHorizontalAlignment(TEXT_ALIGN_CENTER)
     readycheckTitle:SetMouseEnabled(false)
     readycheckTitle:SetAnchor(TOP, readycheckWindow, TOP, 0, 0)
@@ -94,12 +93,19 @@ function module:CreateReadyCheckUI()
     readycheckTitle:SetWidth(600)
 
     local readycheckList = WM:CreateControl(readycheckWindowName .. "_List", readycheckWindow, CT_LABEL)
-    readycheckList:SetFont("ZoFontWinH2")
     readycheckList:SetHorizontalAlignment(TEXT_ALIGN_CENTER)
     readycheckList:SetMouseEnabled(false)
     readycheckList:SetAnchor(TOP, readycheckTitle, BOTTOM, 0, 0)
     readycheckList:SetText(player1to12)
     readycheckList:SetWidth(600)
+
+    if IsConsoleUI() then
+        readycheckTitle:SetFont("ZoFontGamepad34")
+        readycheckList:SetFont("ZoFontGamepad25")
+    else
+        readycheckTitle:SetFont("ZoFontWinH1")
+        readycheckList:SetFont("ZoFontWinH2")
+    end
 
     self.readycheckWindow = readycheckWindow
 
