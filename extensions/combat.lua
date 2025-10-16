@@ -13,6 +13,10 @@ local LC = LibCombat
 local HR_EVENT_COMBAT_START = addon.HR_EVENT_COMBAT_START
 --local HR_EVENT_COMBAT_END = addon.HR_EVENT_COMBAT_END
 
+local HR_EVENT_TEST_STARTED = addon.HR_EVENT_TEST_STARTED
+local HR_EVENT_TEST_STOPPED = addon.HR_EVENT_TEST_STOPPED
+local HR_EVENT_TEST_TICK = addon.HR_EVENT_TEST_TICK
+
 local extensionDefinition = {
     name = "combat",
     version = "1.0.0",
@@ -41,6 +45,10 @@ function extension:Activate()
 
     addon.RegisterCallback(HR_EVENT_COMBAT_START, function() self:Reset() end)
     --addon.RegisterCallback(HR_EVENT_COMBAT_END, function() self:Reset() end)
+
+    addon.RegisterCallback(HR_EVENT_TEST_STARTED, function(...) self:startTest(...) end)
+    addon.RegisterCallback(HR_EVENT_TEST_STOPPED, function(...) self:stopTest(...) end)
+    addon.RegisterCallback(HR_EVENT_TEST_TICK, function(...) self:updateTest(...) end)
 end
 
 function extension:Reset()
@@ -94,4 +102,32 @@ function extension:GetGroupDPSOverTime(seconds)
         return zo_round(damageDiff / (timeDiff / 1000)) -- convert to seconds
     end
     return self:GetGroupDPSOut()
+end
+
+--- test functions
+
+function extension:startTest()
+    self.testBeginTime = GetGameTimeMilliseconds()
+    self:Reset()
+
+    for _, data in pairs(addon.playerData) do
+        self.groupDPSOut = self.groupDPSOut + (data.dps or 0)
+        self.damageOutTotalGroup = self.damageOutTotalGroup + (data.dmg or 0)
+    end
+end
+function extension:stopTest()
+    self.testBeginTime = nil
+    self:Reset()
+end
+function extension:updateTest()
+    self.dpstime = (GetGameTimeMilliseconds() - self.testBeginTime) / 1000
+
+    for _, data in pairs(addon.playerData) do
+        self.groupDPSOut = self.groupDPSOut + (data.dps or 0)
+        self.damageOutTotalGroup = self.damageOutTotalGroup + (data.dmg or 0)
+    end
+    table.insert(self.damageHistory, {
+        timestamp = GetGameTimeMilliseconds(),
+        damage = self.damageOutTotalGroup
+    })
 end
