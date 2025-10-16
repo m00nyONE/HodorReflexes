@@ -46,6 +46,8 @@ local svDefault = {
     timerUpdateInterval = 100, -- ms
 }
 
+--- initializes the damage list
+--- @return void
 function module:CreateDamageList()
     local listDefinition = {
         name = "damage",
@@ -111,10 +113,11 @@ function module:CreateDamageList()
     ZO_ScrollList_SetTypeCategoryHeader(self.damageList.listControl, self.damageList.SUMMARY_TYPE, true)
 end
 
---- renders the current fight time to the control passed as argument.
+--- renders the current fight time to the control passed as argument. can be used by custom themes as well.
 --- @param control LabelControl
 --- @return void
 function module.RenderFightTimeToControl(control)
+    -- it would be more expensive here to check if the list is visible and prevent the rendering of the text than just rendering it anyways
     local t = combat:GetCombatTime()
     control:SetText(t > 0 and string.format("%d:%04.1f|u0:2::|u", t / 60, t % 60) or "")
 end
@@ -136,6 +139,7 @@ function module:headerRowCreationFunction(rowControl, data, scrollList)
     addon.RegisterCallback(HR_EVENT_COMBAT_END, onCombatStop)
 end
 
+--- creation function for the damage rows. This can be overwritten if using a custom theme
 function module:damageRowCreationFunction(rowControl, data, scrollList)
     local userName = custom.GetAliasForUserId(data.userId, true)
     local userIcon = custom.GetIconForUserId(data.userId)
@@ -165,12 +169,14 @@ function module:damageRowCreationFunction(rowControl, data, scrollList)
     end
 end
 
+--- creation function for the summary row. This can be overwritten if using a custom theme
 function module:summaryRowCreationFunction(rowControl, data, scrollList)
     rowControl:GetNamedChild("_Title"):SetText("Group Total:")
     local str = string.format("%0.1fK (%0.1fK/10s)", data.groupDPS / 1000, data.groupDPS10sec / 1000)
     rowControl:GetNamedChild("_Value"):SetText(str)
 end
 
+--- update function to refresh the damage list. This should usually not be overwritten by a custom theme unless absolutely necessary.
 function module:UpdateDamageList()
     local listControl = self.damageList.listControl
 
