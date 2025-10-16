@@ -41,9 +41,12 @@ function core.OptionalLibrariesCheck()
             mustChoose = true,
             canQueue = true,
             allowShowOnDead = false,
-        }, nil, IsInGamepadPreferredMode())
+            gamepadInfo = {
+                dialogType = GAMEPAD_DIALOGS.BASIC,
+            },
+        })
 
-        ZO_Dialogs_ShowDialog(dialogName)
+        ZO_Dialogs_ShowDialog(dialogName, nil, nil, IsInGamepadPreferredMode())
     end
 
 end
