@@ -211,6 +211,7 @@ function listClass.RenderCurrentFightTimeToControl(control)
 end
 
 --- creates and registers a fight time updater on the control passed as argument. can be used by custom themes as well.
+--- WARNING: DO NOT use it on controls that get recycled (e.g. playerRows)! ONLY USE on headers or static labels! Otherwise the timers will pile up and cause performance issues. They do NOT get automatically cleaned up on control recycling!
 --- @param control LabelControl the control to render the fight time to
 --- @return void
 function listClass:CreateFightTimeUpdaterOnControl(control)
