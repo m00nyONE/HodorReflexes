@@ -8,15 +8,14 @@ local core = internal.core
 
 local LC = LibCombat
 local HR_EVENT_COMBAT_START = addon.HR_EVENT_COMBAT_START
---local HR_EVENT_COMBAT_END = addon.HR_EVENT_COMBAT_END
+local HR_EVENT_COMBAT_END = addon.HR_EVENT_COMBAT_END
 
 local HR_EVENT_TEST_STARTED = addon.HR_EVENT_TEST_STARTED
 local HR_EVENT_TEST_STOPPED = addon.HR_EVENT_TEST_STOPPED
 local HR_EVENT_TEST_TICK = addon.HR_EVENT_TEST_TICK
 
 
-local combat = ZO_InitializingObject:Subclass()
-local combatDefinition = {
+local combat = {
     damageHistory = {
         {
             timeStamp = 0,
@@ -30,29 +29,18 @@ local combatDefinition = {
         damageOutTotalGroup = 0,
     },
 }
+core.combat = combat
 
 function core.InitializeCombat()
-    core.combat = combat:New(combatDefinition)
-end
+    combat:Reset()
+    LC:RegisterCallbackType(LIBCOMBAT_EVENT_FIGHTRECAP, function(...) combat:FightRecapCallback(...) end, addon_name .. "_Combat")
 
-function combat:Initialize(t)
-    if t then
-        for k, v in pairs(t) do
-            self[k] = v
-        end
-    end
+    addon.RegisterCallback(HR_EVENT_COMBAT_START, function() combat:Reset() end)
+    addon.RegisterCallback(HR_EVENT_COMBAT_END, function() self:Reset() end)
 
-    self.logger = core.initSubLogger("combat")
-
-    self:Reset()
-    LC:RegisterCallbackType(LIBCOMBAT_EVENT_FIGHTRECAP, function(...) self:FightRecapCallback(...) end, addon_name .. "_Combat")
-
-    addon.RegisterCallback(HR_EVENT_COMBAT_START, function() self:Reset() end)
-    --addon.RegisterCallback(HR_EVENT_COMBAT_END, function() self:Reset() end)
-
-    addon.RegisterCallback(HR_EVENT_TEST_STARTED, function(...) self:startTest(...) end)
-    addon.RegisterCallback(HR_EVENT_TEST_STOPPED, function(...) self:stopTest(...) end)
-    addon.RegisterCallback(HR_EVENT_TEST_TICK, function(...) self:updateTest(...) end)
+    addon.RegisterCallback(HR_EVENT_TEST_STARTED, function(...) combat:startTest(...) end)
+    addon.RegisterCallback(HR_EVENT_TEST_STOPPED, function(...) combat:stopTest(...) end)
+    addon.RegisterCallback(HR_EVENT_TEST_TICK, function(...) combat:updateTest(...) end)
 end
 
 function combat:Reset()
@@ -106,6 +94,14 @@ function combat:GetGroupDPSOverTime(seconds)
         return zo_round(damageDiff / (timeDiff / 1000)) -- convert to seconds
     end
     return self:GetGroupDPSOut()
+end
+function combat:GetTimeToKill(unitTag)
+    local current, max, _ = GetUnitPower(unitTag, POWERTYPE_HEALTH)
+    local groupDPS = self:GetGroupDPSOut()
+    if groupDPS > 0 then
+        return zo_roundToNearest(current / groupDPS, 0.1)
+    end
+    return 0
 end
 
 --- test functions
