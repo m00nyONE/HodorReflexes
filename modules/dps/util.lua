@@ -109,7 +109,7 @@ function module:CreateFightTimeUpdaterOnControl(list, control)
     end
     control._onCombatStart = function()
         control._onCombatStop()
-        EM:RegisterForUpdate(list._eventId .. "TimerUpdate", list.sv.timerUpdateInterval, renderFightTimeToControl)
+        EM:RegisterForUpdate(list._eventId .. "TimerUpdate", list.sw.timerUpdateInterval, renderFightTimeToControl)
     end
     -- register timer update callbacks
     addon.RegisterCallback(HR_EVENT_COMBAT_START, control._onCombatStart)
