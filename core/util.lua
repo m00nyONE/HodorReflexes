@@ -155,5 +155,4 @@ function util.GetUserIcon(userId, classId)
     return util.GetClassIcon(classId), 0, 1, 0, 1
 end
 
-
 --[[ doc.lua end ]]
