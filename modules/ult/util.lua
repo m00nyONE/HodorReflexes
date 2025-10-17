@@ -45,6 +45,7 @@ end
 function module.sortByName(a, b)
     return a.name > b.name
 end
+
 --- sort by ultValue descending
 --- @param a table
 --- @param b table
@@ -55,6 +56,7 @@ function module.sortByUltValue(a, b)
     end
     return a.ultValue > b.ultValue
 end
+
 --- sort by ultPercentage descending
 --- @param a table
 --- @param b table
@@ -78,30 +80,35 @@ local function isAbilityInList(abilityId, abilityList)
     end
     return false
 end
+
 --- checks if the abilityId is a horn
 --- @param abilityId number
 --- @return boolean
 function module:isHorn(abilityId)
     return isAbilityInList(abilityId, self.hornAbilityIds)
 end
+
 --- checks if the abilityId is a colos
 --- @param abilityId number
 --- @return boolean
 function module:isColos(abilityId)
     return isAbilityInList(abilityId, self.colosAbilityIds)
 end
+
 --- checks if the abilityId is an atro
 --- @param abilityId number
 --- @return boolean
 function module:isAtro(abilityId)
     return isAbilityInList(abilityId, self.atroAbilityIds)
 end
+
 --- checks if the abilityId is a barrier
 --- @param abilityId number
 --- @return boolean
 function module:isBarrier(abilityId)
     return isAbilityInList(abilityId, self.barrierAbilityIds)
 end
+
 --- checks if the abilityId is a crypt cannon
 --- @param abilityId number
 --- @return boolean
@@ -118,6 +125,7 @@ function module:hasUnitHorn(playerData)
     if self:isHorn(playerData.ult1ID) or self:isHorn(playerData.ult2ID) then return true end
     return false
 end
+
 --- checks if the player has a colos ult ability
 --- @param playerData table
 --- @return boolean
@@ -125,6 +133,7 @@ function module:hasUnitColos(playerData)
     if self:isColos(playerData.ult1ID) or self:isColos(playerData.ult2ID) then return true end
     return false
 end
+
 --- checks if the player has an atro ult ability
 --- @param playerData table
 --- @return boolean
@@ -132,6 +141,7 @@ function module:hasUnitAtro(playerData)
     if self:isAtro(playerData.ult1ID) or self:isAtro(playerData.ult2ID) then return true end
     return false
 end
+
 --- checks if the player has a barrier ult ability
 --- @param playerData table
 --- @return boolean
@@ -139,6 +149,7 @@ function module:hasUnitBarrier(playerData)
     if self:isBarrier(playerData.ult1ID) or self:isBarrier(playerData.ult2ID) then return true end
     return false
 end
+
 --- checks if the player has a crypt cannon ult ability
 --- @param playerData table
 --- @return boolean
@@ -146,6 +157,7 @@ function module:hasUnitCryptCannon(playerData)
     if self:isCryptCannon(playerData.ult1ID) or self:isCryptCannon(playerData.ult2ID) then return true end
     return false
 end
+
 --- checks if the player has the saxhleel ult activated set
 --- @param playerData table
 --- @return boolean
@@ -153,6 +165,7 @@ function module:hasUnitSaxhleel(playerData)
     if playerData.ultActivatedSetID == 1 then return true end
     return false
 end
+
 --- checks if the player has the MasterArchitect or WarMachine ult activated set
 --- @param playerData table
 --- @return boolean
@@ -160,6 +173,7 @@ function module:hasUnitMAorWM(playerData)
     if playerData.ultActivatedSetID == 4 or playerData.ultActivatedSetID == 5 then return true end
     return false
 end
+
 --- checks if the player has the Pillager ult activated set
 --- @param playerData table
 --- @return boolean
