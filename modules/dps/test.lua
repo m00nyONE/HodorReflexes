@@ -34,6 +34,9 @@ function module:startTest()
             dmgType = DAMAGE_BOSS,
         })
     end
+
+    -- manually force updates on lists without the usual debounce to initialize them early during the test
+    self.damageList:Update()
 end
 --- callback function that gets called on test stop
 --- @return void

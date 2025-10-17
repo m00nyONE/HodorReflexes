@@ -57,13 +57,6 @@ end
 function module:startTest()
     self.isTestRunning = true
 
-    CM:FireCallbacks(HR_EVENT_HORN_BUFF_GAINED, localPlayer, 30 * 1000)
-    CM:FireCallbacks(HR_EVENT_MAJOR_FORCE_BUFF_GAINED, localPlayer, 15 * 1000)
-    CM:FireCallbacks(HR_EVENT_MAJOR_VULNERABILITY_DEBUFF_GAINED, localPlayer, 17 * 1000)
-    CM:FireCallbacks(HR_EVENT_ATRO_CAST_STARTED, localPlayer, 15 * 1000)
-    CM:FireCallbacks(HR_EVENT_MAJOR_BERSERK_BUFF_GAINED, localPlayer, 10 * 1000)
-    CM:FireCallbacks(HR_EVENT_MAJOR_SLAYER_BUFF_GAINED, localPlayer, 50 * 1000)
-    CM:FireCallbacks(HR_EVENT_PILLAGER_BUFF_GAINED, localPlayer, 10 * 1000) -- no need to fire HR_EVENT_PILLAGER_BUFF_COOLDOWN as this is done automatically when the BUFF_GAINED event is fired
 
     if not ultPool then genUltPool() end
 
@@ -115,6 +108,21 @@ function module:startTest()
             ultActivatedSetID = ultActivatedSetID,
         })
     end
+
+    -- manually force updates on lists without the usual debounce to initialize them early during the test
+    self.hornList:Update()
+    self.colosList:Update()
+    self.atroList:Update()
+    self.miscList:Update()
+
+    -- fire some buff/debuff events for testing purposes
+    CM:FireCallbacks(HR_EVENT_HORN_BUFF_GAINED, localPlayer, 30 * 1000)
+    CM:FireCallbacks(HR_EVENT_MAJOR_FORCE_BUFF_GAINED, localPlayer, 15 * 1000)
+    CM:FireCallbacks(HR_EVENT_MAJOR_VULNERABILITY_DEBUFF_GAINED, localPlayer, 17 * 1000)
+    CM:FireCallbacks(HR_EVENT_ATRO_CAST_STARTED, localPlayer, 15 * 1000)
+    CM:FireCallbacks(HR_EVENT_MAJOR_BERSERK_BUFF_GAINED, localPlayer, 10 * 1000)
+    CM:FireCallbacks(HR_EVENT_MAJOR_SLAYER_BUFF_GAINED, localPlayer, 50 * 1000)
+    CM:FireCallbacks(HR_EVENT_PILLAGER_BUFF_GAINED, localPlayer, 10 * 1000) -- no need to fire HR_EVENT_PILLAGER_BUFF_COOLDOWN as this is done automatically when the BUFF_GAINED event is fired
 end
 --- callback function that gets called on test stop
 --- @return void

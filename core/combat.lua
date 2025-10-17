@@ -110,9 +110,10 @@ end
 function combat:startTest()
     self._testBeginTime = GetGameTimeMilliseconds()
     self:Reset()
+    -- we have to fire the event a bit later than usual to let all other parts and modules prepare
     zo_callLater(function()
         CM:FireCallbacks(HR_EVENT_COMBAT_START)
-    end, 1100)
+    end, 100)
 
     -- TODO: implement when summary works correctly
     --for _, data in pairs(addon.playersData) do
