@@ -13,8 +13,8 @@ local internal_modules = internal.modules
 local module_name = "ult"
 local module = addon_modules[module_name]
 
-local custom = addon_extensions.custom
 local names = addon_extensions.names
+local icons = addon_extensions.icons
 
 local HR_EVENT_ATRO_CAST_STARTED = addon.HR_EVENT_ATRO_CAST_STARTED
 local HR_EVENT_MAJOR_BERSERK_BUFF_GAINED = addon.HR_EVENT_MAJOR_BERSERK_BUFF_GAINED
@@ -105,15 +105,14 @@ end
 
 function module:atroListRowCreationFunction(rowControl, data, scrollList)
     local userName = names.Get(data.userId, true)
-    local userIcon = custom.GetIconForUserId(data.userId)
-    local defaultIcon = custom.GetClassIcon(data.classId)
+    local userIcon, tcLeft, tcRight, tcTop, tcBottom = icons.Get(data.userId, data.classId)
 
     local nameControl = rowControl:GetNamedChild('_Name')
     nameControl:SetText(userName)
     nameControl:SetColor(1, 1, 1)
     local iconControl = rowControl:GetNamedChild('_Icon')
-    iconControl:SetTextureCoords(0, 1, 0, 1)
-    iconControl:SetTexture(defaultIcon)
+    iconControl:SetTextureCoords(tcLeft, tcRight, tcTop, tcBottom)
+    iconControl:SetTexture(userIcon)
 
     local percentageColor = self:getUltPercentageColor(data.atroPercentage, 'FFFFFF')
     local percentageControl = rowControl:GetNamedChild("_PctValue")

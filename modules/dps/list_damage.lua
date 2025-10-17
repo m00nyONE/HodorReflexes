@@ -15,7 +15,7 @@ local module = addon_modules[module_name]
 
 local combat = addon_extensions.combat
 local names = addon_extensions.names
-local custom = addon_extensions.custom
+local icons = addon_extensions.icons
 
 local LGCS = LibGroupCombatStats
 local DAMAGE_UNKNOWN = LGCS.DAMAGE_UNKNOWN
@@ -120,15 +120,14 @@ end
 --- creation function for the damage rows. This can be overwritten if using a custom theme
 function module:damageRowCreationFunction(rowControl, data, scrollList)
     local userName = names.Get(data.userId, true)
-    local userIcon = custom.GetIconForUserId(data.userId)
-    local defaultIcon = custom.GetClassIcon(data.classId)
+    local userIcon, tcLeft, tcRight, tcTop, tcBottom = icons.Get(data.userId, data.classId)
 
     local nameControl = rowControl:GetNamedChild('_Name')
     nameControl:SetText(userName)
     nameControl:SetColor(1, 1, 1)
     local iconControl = rowControl:GetNamedChild('_Icon')
-    iconControl:SetTextureCoords(0, 1, 0, 1)
-    iconControl:SetTexture(defaultIcon)
+    iconControl:SetTextureCoords(tcLeft, tcRight, tcTop, tcBottom)
+    iconControl:SetTexture(userIcon)
 
     local valueControl = rowControl:GetNamedChild("_Value")
     valueControl:SetText(self.getDamageRowFormat(data.dmgType, data.dmg, data.dps, self.damageList.sw.colorDamageBoss, self.damageList.sw.colorDamageTotal))
