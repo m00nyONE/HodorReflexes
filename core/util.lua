@@ -101,4 +101,11 @@ function util.spairs(t, sortFunction)
     end
 end
 
+--- Get a unique reference string for a table.
+--- @param t table
+--- @return string reference string
+function util.GetTableReference(t)
+    return string.match(tostring(t), "0%x+")
+end
+
 --[[ doc.lua end ]]
