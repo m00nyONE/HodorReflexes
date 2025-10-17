@@ -17,6 +17,10 @@ local util = addon.util
 
 local LGCS = LibGroupCombatStats
 local DAMAGE_UNKNOWN = LGCS.DAMAGE_UNKNOWN
+local DAMAGE_BOSS = LGCS.DAMAGE_BOSS
+local DAMAGE_TOTAL = LGCS.DAMAGE_TOTAL
+
+local localBoss1 = "boss1"
 
 local svDefault = {
     enabled =  1, -- 1=always, 2=out of combat, 3=non bossfights, 0=off
@@ -146,9 +150,20 @@ end
 
 --- creation function for the summary row. This can be overwritten if using a custom theme
 function module:summaryRowCreationFunction(rowControl, data, scrollList)
-    rowControl:GetNamedChild("_Title"):SetText("Group Total:")
-    local str = string.format("%0.1fK (%0.1fK/10s)", data.groupDPS / 1000, data.groupDPS10sec / 1000)
-    rowControl:GetNamedChild("_Value"):SetText(str)
+    local title = "Group Total: "
+    local value = ""
+    if data.dmgType == DAMAGE_BOSS then
+        --title = string.format("dps (10sBurst) [ttk]:")
+        --value = string.format("%0.1fK (%0.1fK) [%0.1s]", data.groupDPS / 1000, data.groupDPS10sec / 1000, data.timeToKillMainBoss and data.timeToKillMainBoss > 0 and data.timeToKillMainBoss or "-")
+        title = "Group Total: "
+        value = self.getDamageRowFormat(data.dmgType, (data.damageOutTotalGroup / 100) / data.fightTime, data.groupDPS / 1000, self.damageList.sw.colorDamageBoss, self.damageList.sw.colorDamageTotal)
+    else
+        title = "Group Total: "
+        value = self.getDamageRowFormat(data.dmgType, data.damageOutTotalGroup / 10000, data.groupDPS / 1000, self.damageList.sw.colorDamageBoss, self.damageList.sw.colorDamageTotal)
+    end
+
+    rowControl:GetNamedChild("_Title"):SetText(title)
+    rowControl:GetNamedChild("_Value"):SetText(value)
 end
 
 --- update function to refresh the damage list. This should usually not be overwritten by a custom theme unless absolutely necessary.
@@ -182,6 +197,10 @@ function module:UpdateDamageList()
 
     if #playersDataList > 0 then
         table.insert(dataList, ZO_ScrollList_CreateDataEntry(self.damageList.SUMMARY_TYPE, {
+            dmgType = dmgType,
+            fightTime = combat:GetCombatTime(),
+            damageOutTotalGroup = combat:GetDamageOutTotalGroup(),
+            --timeToKillMainBoss = combat:GetTimeToKill(localBoss1), -- TODO: implement
             groupDPS = combat:GetGroupDPSOut(),
             groupDPS10sec = combat:GetGroupDPSOverTime(10),
         }))

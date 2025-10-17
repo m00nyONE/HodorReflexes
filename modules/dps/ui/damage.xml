@@ -28,7 +28,7 @@
                 <Label name="$(parent)_Title" horizontalAlignment="LEFT" font="$(MEDIUM_FONT)|$(KB_16)|shadow" text="Group total:" wrapMode="TRUNCATE">
                     <Anchor point="LEFT" relativePoint="LEFT" relativeTo="$(parent)" offsetX="2"/>
                 </Label>
-                <Label name="$(parent)_Value" horizontalAlignment="RIGHT" font="$(MEDIUM_FONT)|$(KB_16)|shadow" text="0.0K (0.0K/10sec)" wrapMode="TRUNCATE">
+                <Label name="$(parent)_Value" horizontalAlignment="RIGHT" font="$(MEDIUM_FONT)|$(KB_16)|shadow" text="0.0K (0.0K)" wrapMode="TRUNCATE">
                     <Anchor point="RIGHT" relativePoint="RIGHT" relativeTo="$(parent)" offsetX="-2"/>
                 </Label>
             </Controls>
