@@ -192,7 +192,7 @@ end
 --- @return void
 function listClass:CreateControls()
     -- create the main window
-    local windowName = addon_name .. "_List_" .. self.name
+    local windowName = addon_name .. self._id
     local window = WM:CreateTopLevelWindow(windowName)
     window:SetClampedToScreen(true)
     window:SetResizeToFitDescendents(true)
