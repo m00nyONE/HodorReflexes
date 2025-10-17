@@ -11,6 +11,7 @@ local util = addon.util
 local extensionDefinition = {
     name = "names",
     version = "1.0.0",
+    description = "Extension to provide user names via LibCustomNames.",
     svDefault = {},
 }
 

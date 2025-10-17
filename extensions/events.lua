@@ -10,6 +10,7 @@ local util = addon.util
 local extensionDefinition = {
     name = "events",
     version = "1.0.0",
+    description = "Seasonal events which change some behaviors of the addon on specific dates.",
     svDefault = {
         enableAprilFools = true,
         enableChristmas = true,
