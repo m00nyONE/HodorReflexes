@@ -18,6 +18,8 @@ local extensionDefinition = {
     svDefault = {
         enabled = true,
     },
+
+    enabled = false,
 }
 
 --- @class namesExtension : extensionClass
@@ -41,6 +43,7 @@ end
 function extension:Activate()
     if LCN and self.sw.enabled then
         util.GetUserName = LCN_GetUserName
+        self.enabled = true
     end
 end
 

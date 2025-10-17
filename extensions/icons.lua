@@ -18,6 +18,8 @@ local extensionDefinition = {
     svDefault = {
         enabled = true,
     },
+
+    enabled = false,
 }
 
 --- @class iconsExtension : extensionClass
@@ -49,6 +51,7 @@ end
 function extension:Activate()
     if LCI and self.sw.enabled then
         util.GetUserIcon = LCI_GetUserIcon
+        self.enabled = true
     end
 end
 
