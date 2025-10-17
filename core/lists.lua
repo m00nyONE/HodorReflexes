@@ -53,6 +53,7 @@ function listClass:RunOnce(funcName, ...)
     return nil
 end
 
+--- NOT for manual use! this gets automatically called by :New() when creating a new list instance.
 --- initializes the list with the given definition.
 --- calls CreateSavedVariables(), CreateControls() and CreateFragment() once and deletes them afterwards.
 --- sets up event listeners for group changes, ui lock/unlock and player data updates.
