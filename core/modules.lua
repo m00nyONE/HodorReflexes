@@ -7,7 +7,7 @@ local internal = addon.internal
 local core = internal.core
 local logger = core.logger.main
 
-local util = core.util
+local util = addon.util
 
 
 -- utility functions

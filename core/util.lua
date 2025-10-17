@@ -8,7 +8,7 @@ local core = internal.core
 local logger = core.logger.main
 
 local util = {}
-core.util = util
+addon.util = util
 
 local localPlayer = "player"
 local localBoss1 = 'boss1'

@@ -12,8 +12,6 @@ local internal_modules = internal.modules
 local module_name = "ult"
 local module = addon_modules[module_name]
 
-local util = core.util
-
 --- get the ultimate in percent from 0-100. from 100-200 its scaled acordingly.
 --- @param ultValue number current ult value
 --- @param ultCost number ult cost of the ability

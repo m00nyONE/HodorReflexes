@@ -8,7 +8,7 @@ local core = internal.core
 local logger = core.logger.main
 
 local hud = core.hud
-local util = core.util
+local util = addon.util
 
 local WM = GetWindowManager()
 local EM = GetEventManager()
