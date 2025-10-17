@@ -13,8 +13,7 @@ local internal_modules = internal.modules
 local module_name = "ult"
 local module = addon_modules[module_name]
 
-local names = addon_extensions.names
-local icons = addon_extensions.icons
+local util = addon.util
 
 local HR_EVENT_ATRO_CAST_STARTED = addon.HR_EVENT_ATRO_CAST_STARTED
 local HR_EVENT_MAJOR_BERSERK_BUFF_GAINED = addon.HR_EVENT_MAJOR_BERSERK_BUFF_GAINED
@@ -104,8 +103,8 @@ function module:atroListHeaderRowCreationFunction(rowControl, data, scrollList)
 end
 
 function module:atroListRowCreationFunction(rowControl, data, scrollList)
-    local userName = names.Get(data.userId, true)
-    local userIcon, tcLeft, tcRight, tcTop, tcBottom = icons.Get(data.userId, data.classId)
+    local userName = util.GetUserName(data.userId, true)
+    local userIcon, tcLeft, tcRight, tcTop, tcBottom = util.GetUserIcon(data.userId, data.classId)
 
     local nameControl = rowControl:GetNamedChild('_Name')
     nameControl:SetText(userName)

@@ -108,4 +108,52 @@ function util.GetTableReference(t)
     return string.match(tostring(t), "0%x+")
 end
 
+-- user related functions
+
+local classIcons = nil
+--- overwrite class icons with new ones.
+--- This is used for some events. For example on christmas, class icons get overwritten by their christmas version.
+--- @param newClassIcons table<number, string> {classId: number, texturePath: string}
+--- @return void
+function util.overwriteClassIcons(newClassIcons)
+    for classId, icon in pairs(newClassIcons) do
+        classIcons[classId] = icon
+    end
+end
+
+--- get class icon for classId.
+--- @param classId number
+--- @return string, number, number, number, number texturePath (falls back to "campaignbrowser_guestcampaign.dds" if the icon is not found), textureCoordsLeft, textureCoordsRight, textureCoordsTop, textureCoordsBottom
+function util.GetClassIcon(classId)
+    if not classIcons then
+        for i = 1, GetNumClasses() do
+            local realClassId, _, _, _, _, _, icon, _, _, _ = GetClassInfo(i)
+            classIcons[realClassId] = icon
+        end
+    end
+
+    local texturePath = classIcons[classId]
+    if not texturePath then
+        texturePath = "esoui/art/campaign/campaignbrowser_guestcampaign.dds"
+    end
+    return texturePath, 0, 1, 0, 1
+end
+
+--- get alias for userId.
+--- @param userId string
+--- @param pretty boolean if true, will return a colored name if available
+--- @return string alias
+function util.GetUserName(userId, pretty)
+    return userId and UndecorateDisplayName(userId) or ''
+end
+
+--- get icon for userId.
+--- @param userId string
+--- @param classId number
+--- @return string, number, number, number, number texturePath, textureCoordsLeft, textureCoordsRight, textureCoordsTop, textureCoordsBottom
+function util.GetUserIcon(userId, classId)
+    return util.GetClassIcon(classId), 0, 1, 0, 1
+end
+
+
 --[[ doc.lua end ]]
