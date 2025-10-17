@@ -49,6 +49,7 @@ core/modules.lua
 extensions/events.lua
 extensions/names.lua
 extensions/icons.lua
+extensions/animations.lua
 
 ; modules
 modules/ult/lang/en.lua
