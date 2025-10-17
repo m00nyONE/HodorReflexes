@@ -235,3 +235,67 @@ function listClass:CreateFightTimeUpdaterOnControl(control)
     addon.RegisterCallback(HR_EVENT_COMBAT_START, control._onCombatStart)
     addon.RegisterCallback(HR_EVENT_COMBAT_END, control._onCombatStop)
 end
+
+--- renders the given time (in milliseconds) to the control passed as argument. can be used by custom themes as well.
+--- @param control LabelControl
+--- @param timeMS number time in milliseconds
+--- @param opacity number|nil optional opacity to set on the control
+--- @return void
+function listClass.RenderTimeToControl(control, timeMS, opacity)
+    local timeS = timeMS / 1000
+    control:SetText(string.format("%0.1f|u0:2::|u", timeS) or "")
+    if opacity then
+        control:SetAlpha(opacity)
+    end
+
+end
+
+--- creates and registers a buff/debuff countdown timer on the control passed as argument. can be used by custom themes as well.
+--- WARNING: DO NOT use it on controls that get recycled (e.g. playerRows)! ONLY USE on headers or static labels! Otherwise the timers will pile up and cause performance issues. They do NOT get automatically cleaned up on control recycling!
+--- @param control LabelControl the control to render the countdown to
+--- @param eventName string the event name to register the countdown start callback to
+--- @return void
+function listClass:CreateCountdownOnControl(control, eventName)
+    -- check if timer is already registered - if so, return
+    if control._onCountdownStart or control._onCountdownTick then return end
+
+    local blinkDurationMS = 5000 -- TODO: possibly make configurable by savedVars ?
+    local zeroTimerOpacity = 0.7 -- TODO: possibly make configurable by savedVars ?
+
+    control._onCountdownTick = function()
+        local nowMS = GetGameTimeMilliseconds()
+
+        -- when the timer ended more than 5 seconds ago, set the opacity to zeroTimerOpacity, stop updating and return
+        if not control._countdownEndTime or control._countdownEndTime + blinkDurationMS < nowMS then
+            self.RenderTimeToControl(control, 0, zeroTimerOpacity)
+            EM:UnregisterForUpdate(self._eventId .. "CountdownUpdate")
+            return
+        end
+
+        -- render remaining time
+        local remainingMS = control._countdownEndTime - nowMS
+        local remainingMSDisplayed = zo_max(0, remainingMS)
+        local opacity = 1.0
+
+        -- if remaining time is less than blinkDurationMS, start blinking the text
+        if remainingMS <= blinkDurationMS then
+            -- Blinking: switch every 250ms between 1.0 and zeroTimerOpacity
+            local blinkPhase = zo_floor((remainingMS % 500) / 250)
+            opacity = (blinkPhase == 0) and 1.0 or zeroTimerOpacity
+        end
+
+        self.RenderTimeToControl(control, remainingMSDisplayed, opacity)
+    end
+
+    control._onCountdownStart = function(_, durationMS)
+        -- draw the initial time
+        self.RenderTimeToControl(control, durationMS, 1.0)
+
+        -- set the end time and start/overwrite the update timer
+        control._countdownEndTime = GetGameTimeMilliseconds() + durationMS
+        EM:RegisterForUpdate(self._eventId .. "CountdownUpdate", self.sw.timerUpdateInterval or 100, control._onCountdownTick)
+    end
+
+    -- register countdown start callback
+    addon.RegisterCallback(eventName, control._onCountdownStart)
+end
