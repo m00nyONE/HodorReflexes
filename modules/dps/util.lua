@@ -91,7 +91,8 @@ function module.RenderFightTimeToControl(control)
 end
 
 --- creates and registers a fight time updater on the control passed as argument. can be used by custom themes as well.
---- @param control LabelControl
+--- @param list listClass the list the control belongs to
+--- @param control LabelControl the control to render the fight time to
 --- @return void
 function module:CreateFightTimeUpdaterOnControl(list, control)
     -- check if timer is already registered - if so, return
