@@ -93,7 +93,7 @@ end
 --- creates and registers a fight time updater on the control passed as argument. can be used by custom themes as well.
 --- @param control LabelControl
 --- @return void
-function module:CreateFightTimeUpdaterOnControl(control)
+function module:CreateFightTimeUpdaterOnControl(list, control)
     -- check if timer is already registered - if so, return
     if control._onCombatStart or control._onCombatStop then return end
 
@@ -103,12 +103,12 @@ function module:CreateFightTimeUpdaterOnControl(control)
 
     -- reate timer start & stop functions
     control._onCombatStop = function()
-        self.RenderFightTimeToControl(control)
-        EM:UnregisterForUpdate(self.damageList._eventId .. "TimerUpdate")
+        renderFightTimeToControl()
+        EM:UnregisterForUpdate(list._eventId .. "TimerUpdate")
     end
     control._onCombatStart = function()
         control._onCombatStop()
-        EM:RegisterForUpdate(self.damageList._eventId .. "TimerUpdate", self.damageList.sv.timerUpdateInterval, renderFightTimeToControl)
+        EM:RegisterForUpdate(list._eventId .. "TimerUpdate", list.sv.timerUpdateInterval, renderFightTimeToControl)
     end
     -- register timer update callbacks
     addon.RegisterCallback(HR_EVENT_COMBAT_START, control._onCombatStart)
