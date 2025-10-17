@@ -7,7 +7,6 @@ local internal = addon.internal
 local core = internal.core
 local logger = core.logger.main
 
-local util = core.util
 local hud = core.hud
 
 local WM = GetWindowManager()
@@ -40,6 +39,11 @@ listClass.listControl = {}
 -- must implement fields
 listClass:MUST_IMPLEMENT("Update") -- function to update the list
 
+--- NOT for manual use! this is a helper function that runs a function only once and then removes it from the list instance.
+--- If you use it on a still needed function, it will be gone after the first call and thus break your list!
+--- @param funcName string name of the function to run once
+--- @param ... any arguments to pass to the function
+--- @return any result of the function, or nil if the function does not exist
 function listClass:RunOnce(funcName, ...)
     if type(self[funcName]) == "function" then
         local result = self[funcName](self, ...)
@@ -49,6 +53,11 @@ function listClass:RunOnce(funcName, ...)
     return nil
 end
 
+--- initializes the list with the given definition.
+--- calls CreateSavedVariables(), CreateControls() and CreateFragment() once and deletes them afterwards.
+--- sets up event listeners for group changes, ui lock/unlock and player data updates.
+--- @param listDefinition table definition of the list
+--- @return void
 function listClass:Initialize(listDefinition)
     assert(type(listDefinition) == "table", "listDefinition must be a table")
     assert(type(listDefinition.name) == "string" and listDefinition.name ~= "", "list must have a valid name")
@@ -89,8 +98,12 @@ function listClass:Initialize(listDefinition)
     addon.RegisterCallback(HR_EVENT_PLAYERSDATA_CLEANED, function(...) self:UpdateDebounced(...) end)
 
     logger:Debug("initialized list '%s'", self.name)
+    self.Initialize = nil -- prevent re-initialization
 end
 
+--- NOT for manual use! this gets called to update the list with a debounce.
+--- debounces the update calls to prevent excessive updates
+--- @return void
 function listClass:UpdateDebounced()
     if not self:WindowFragmentCondition() then return end
     EM:RegisterForUpdate(self._eventId, self.updateDebounceDelayMS, function()
@@ -99,6 +112,9 @@ function listClass:UpdateDebounced()
     end)
 end
 
+--- NOT for manual use! this gets called to check if the list is enabled.
+--- checks if the list is enabled based on the saved variables and current conditions
+--- @return boolean true if the list is enabled, false otherwise
 function listClass:IsEnabled()
     if self.sv.disableInPvP and (IsPlayerInAvAWorld() or IsActiveWorldBattleground()) then
         return false
@@ -116,10 +132,17 @@ function listClass:IsEnabled()
     end
 end
 
+--- NOT for manual use! this gets called to refresh the visibility of the list.
+--- refresh the visibility of the list based on the current conditions
+--- @return void
 function listClass:RefreshVisibility()
     self.windowFragment:Refresh()
 end
 
+--- NOT for manual use! this gets called to check the visibility
+--- condition function for the window fragment of the list.
+--- checks if the list should be shown based on the current conditions.
+--- @return boolean true if the window fragment should be shown, false otherwise
 function listClass:WindowFragmentCondition()
     if not self.uiLocked then
         return true -- always show when ui is unlocked
@@ -131,8 +154,10 @@ function listClass:WindowFragmentCondition()
     return self:IsEnabled()
 end
 
+--- NOT for manual use! this gets called once when the list is initialized.
 --- Create saved variables for the list.
 --- sets default values if they are not provided during initialization.
+--- @return void
 function listClass:CreateSavedVariables()
     self.svDefault.enabled = self.svDefault.enabled or 1 -- 1=always, 2=out of combat, 3=non bossfights, 0=off
     self.svDefault.disableInPvP = self.svDefault.disableInPvP or true
@@ -157,7 +182,11 @@ function listClass:CreateSavedVariables()
         self.sv = self.svDefault
     end
 end
---- creates the window and controls for the list
+
+--- NOT for manual use! this gets called once when the list is initialized.
+--- creates the window and controls for the list.
+--- the window is saved under sel.window and the scrollList control under self.listControl
+--- @return void
 function listClass:CreateControls()
     -- create the main window
     local windowName = addon_name .. "_List_" .. self.name
@@ -191,7 +220,9 @@ function listClass:CreateControls()
     ZO_ScrollList_SetScrollbarEthereal(listControl, true)
 end
 
---- creates the window fragment for the list
+--- NOT for manual use! this gets called once when the list is initialized.
+--- creates the window fragment for the list.
+--- @return void
 function listClass:CreateFragment()
     local function windowFragmentConditionWrapper()
         return self:WindowFragmentCondition()
@@ -200,7 +231,8 @@ function listClass:CreateFragment()
     self.windowFragment = hud.AddFadeFragment(self.window, windowFragmentConditionWrapper)
 end
 
---- renders the current fight time to the control passed as argument. can be used by custom themes as well.
+--- renders the current fight time to the control passed as argument.
+--- Can be used by custom themes as well.
 --- @param control LabelControl
 --- @return void
 function listClass.RenderCurrentFightTimeToControl(control)
@@ -210,7 +242,8 @@ function listClass.RenderCurrentFightTimeToControl(control)
     control:SetText(t > 0 and string.format("%d:%04.1f|u0:2::|u", t / 60, t % 60) or "")
 end
 
---- creates and registers a fight time updater on the control passed as argument. can be used by custom themes as well.
+--- creates and registers a fight time updater on the control passed as argument.
+--- Can be used by custom themes as well.
 --- WARNING: DO NOT use it on controls that get recycled (e.g. playerRows)! ONLY USE on headers or static labels! Otherwise the timers will pile up and cause performance issues. They do NOT get automatically cleaned up on control recycling!
 --- @param control LabelControl the control to render the fight time to
 --- @return void
@@ -236,7 +269,8 @@ function listClass:CreateFightTimeUpdaterOnControl(control)
     addon.RegisterCallback(HR_EVENT_COMBAT_END, control._onCombatStop)
 end
 
---- renders the given time (in milliseconds) to the control passed as argument. can be used by custom themes as well.
+--- renders the given time (in milliseconds) to the control passed as argument.
+--- Can be used by custom themes as well.
 --- @param control LabelControl
 --- @param timeMS number time in milliseconds
 --- @param opacity number|nil optional opacity to set on the control
@@ -250,10 +284,11 @@ function listClass.RenderTimeToControl(control, timeMS, opacity)
 
 end
 
---- creates and registers a buff/debuff countdown timer on the control passed as argument. can be used by custom themes as well.
+--- creates and registers a buff/debuff countdown timer on the control passed as argument.
+--- Can be used by custom themes as well.
 --- WARNING: DO NOT use it on controls that get recycled (e.g. playerRows)! ONLY USE on headers or static labels! Otherwise the timers will pile up and cause performance issues. They do NOT get automatically cleaned up on control recycling!
 --- @param control LabelControl the control to render the countdown to
---- @param eventName string the event name to register the countdown start callback to
+--- @param eventName string the event name to register the countdown start callback to (must provide the following arguments: (unitTag, duration) where duration is in milliseconds)
 --- @return void
 function listClass:CreateCountdownOnControl(control, eventName)
     -- check if timer is already registered - if so, return
