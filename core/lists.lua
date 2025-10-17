@@ -246,8 +246,7 @@ end
 --- @return void
 function listClass.RenderCurrentFightTimeToControl(control)
     -- it would be more expensive here to check if the list is visible and prevent the rendering of the text than just rendering it anyways
-    -- addon.extensions.combat is NOT loaded yet when this file is loaded - so we access it here instead of at the top of the file - TODO: usually the core should not be dependent on extensions. Fine for now but may find i way around that
-    local t = addon.extensions.combat:GetCombatTime()
+    local t = core.combat:GetCombatTime()
     control:SetText(t > 0 and string.format("%d:%04.1f|u0:2::|u", t / 60, t % 60) or "")
 end
 

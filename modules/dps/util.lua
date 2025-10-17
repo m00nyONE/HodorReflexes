@@ -8,22 +8,15 @@ local core = internal.core
 
 local addon_modules = addon.modules
 local internal_modules = internal.modules
-local addon_extensions = addon.extensions
 
 local module_name = "dps"
 local module = addon_modules[module_name]
 
-local combat = addon_extensions.combat
-
 local LGCS = LibGroupCombatStats
-local EM = GetEventManager()
 
 local DAMAGE_UNKNOWN = LGCS.DAMAGE_UNKNOWN
 local DAMAGE_TOTAL = LGCS.DAMAGE_TOTAL
 local DAMAGE_BOSS = LGCS.DAMAGE_BOSS
-
-local HR_EVENT_COMBAT_START = addon.HR_EVENT_COMBAT_START
-local HR_EVENT_COMBAT_END = addon.HR_EVENT_COMBAT_END
 
 -- sorting functions
 

@@ -30,6 +30,7 @@ core/LGBHandler.lua
 core/diagnostic.lua
 core/hud.lua
 core/group.lua
+core/combat.lua
 core/lists.lua
 core/menu.lua
 core/donate.lua
@@ -47,7 +48,6 @@ core/modules.lua
 ; extensions
 extensions/names.lua
 extensions/icons.lua
-extensions/combat.lua
 
 ; modules
 modules/ult/lang/en.lua

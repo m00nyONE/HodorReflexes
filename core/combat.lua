@@ -6,9 +6,6 @@ local addon = _G[addon_name]
 local internal = addon.internal
 local core = internal.core
 
-local addon_extensions = addon.extensions
-local internal_extensions = internal.extensions
-
 local LC = LibCombat
 local HR_EVENT_COMBAT_START = addon.HR_EVENT_COMBAT_START
 --local HR_EVENT_COMBAT_END = addon.HR_EVENT_COMBAT_END
@@ -17,18 +14,15 @@ local HR_EVENT_TEST_STARTED = addon.HR_EVENT_TEST_STARTED
 local HR_EVENT_TEST_STOPPED = addon.HR_EVENT_TEST_STOPPED
 local HR_EVENT_TEST_TICK = addon.HR_EVENT_TEST_TICK
 
-local extensionDefinition = {
-    name = "combat",
-    version = "1.0.0",
-    svDefault = {},
 
+local combat = ZO_InitializingObject:Subclass()
+local combatDefinition = {
     damageHistory = {
         {
             timeStamp = 0,
             damageDone = 0,
         },
     },
-
     data = {
         dpstime = 0,
         hpstime = 0,
@@ -37,11 +31,21 @@ local extensionDefinition = {
     },
 }
 
-local extension = internal.extensionClass:New(extensionDefinition)
+function core.InitializeCombat()
+    core.combat = combat:New(combatDefinition)
+end
 
-function extension:Activate()
+function combat:Initialize(t)
+    if t then
+        for k, v in pairs(t) do
+            self[k] = v
+        end
+    end
+
+    self.logger = core.initSubLogger("combat")
+
     self:Reset()
-    LC:RegisterCallbackType(LIBCOMBAT_EVENT_FIGHTRECAP, function(...) self:FightRecapCallback(...) end, addon_name .. self.name)
+    LC:RegisterCallbackType(LIBCOMBAT_EVENT_FIGHTRECAP, function(...) self:FightRecapCallback(...) end, addon_name .. "_Combat")
 
     addon.RegisterCallback(HR_EVENT_COMBAT_START, function() self:Reset() end)
     --addon.RegisterCallback(HR_EVENT_COMBAT_END, function() self:Reset() end)
@@ -51,14 +55,14 @@ function extension:Activate()
     addon.RegisterCallback(HR_EVENT_TEST_TICK, function(...) self:updateTest(...) end)
 end
 
-function extension:Reset()
+function combat:Reset()
     self.data.dpstime = 0
     self.data.hpstime = 0
     self.data.groupDPSOut = 0
     self.data.damageOutTotalGroup = 0
     self.damageHistory = {}
 end
-function extension:FightRecapCallback(_, data)
+function combat:FightRecapCallback(_, data)
     self.data.dpstime = data.dpstime or 0
     self.data.hpstime = data.hpstime or 0
     self.data.groupDPSOut = data.groupDPSOut or 0
@@ -70,21 +74,21 @@ function extension:FightRecapCallback(_, data)
     })
 end
 
-function extension:GetCombatTime()
+function combat:GetCombatTime()
     return zo_roundToNearest(zo_max(self.data.dpstime, self.data.hpstime), 0.1)
 end
-function extension:GetGroupDPSOut()
+function combat:GetGroupDPSOut()
     return self.data.groupDPSOut
 end
-function extension:GetDamageOutTotalGroup()
+function combat:GetDamageOutTotalGroup()
     return self.data.damageOutTotalGroup
 end
-function extension:GetGroupDPSOverTime(seconds)
+function combat:GetGroupDPSOverTime(seconds)
     local now = GetGameTimeMilliseconds()
     local cutoff = now - (seconds * 1000) -- convert to milliseconds
     local oldest, newest
 
-    -- Finde ältesten und neuesten Wert im Zeitraum
+    -- find oldest and newest entries within the time frame
     for i = #self.damageHistory, 1, -1 do
         local entry = self.damageHistory[i]
         if not newest and entry.timestamp <= now then
@@ -106,7 +110,7 @@ end
 
 --- test functions
 
-function extension:startTest()
+function combat:startTest()
     self.testBeginTime = GetGameTimeMilliseconds()
     self:Reset()
 
@@ -115,11 +119,11 @@ function extension:startTest()
         self.damageOutTotalGroup = self.damageOutTotalGroup + (data.dmg or 0)
     end
 end
-function extension:stopTest()
+function combat:stopTest()
     self.testBeginTime = nil
     self:Reset()
 end
-function extension:updateTest()
+function combat:updateTest()
     self.dpstime = (GetGameTimeMilliseconds() - self.testBeginTime) / 1000
 
     for _, data in pairs(addon.playerData) do

@@ -8,12 +8,11 @@ local core = internal.core
 
 local addon_modules = addon.modules
 local internal_modules = internal.modules
-local addon_extensions = addon.extensions
 
 local module_name = "dps"
 local module = addon_modules[module_name]
 
-local combat = addon_extensions.combat
+local combat = core.combat
 local util = addon.util
 
 local LGCS = LibGroupCombatStats
