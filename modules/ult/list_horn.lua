@@ -95,6 +95,7 @@ function module:hornListHeaderRowCreationFunction(rowControl, data, scrollList)
         rowControl:GetNamedChild("_HornDuration"):SetAlpha(self.hornList.sw.zeroTimerOpacity)
         rowControl:GetNamedChild("_ForceDuration"):SetColor(unpack(self.hornList.sw.colorForce))
         rowControl:GetNamedChild("_ForceDuration"):SetAlpha(self.hornList.sw.zeroTimerOpacity)
+
         self.hornList:CreateCountdownOnControl(
             rowControl:GetNamedChild("_HornDuration"),
             HR_EVENT_HORN_BUFF_GAINED,
