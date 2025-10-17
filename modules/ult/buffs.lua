@@ -106,6 +106,15 @@ function module:registerBuffTrackers()
         EM:AddFilterForEvent(eventName, EVENT_EFFECT_CHANGED, REGISTER_FILTER_TARGET_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_GROUP)
     end
 
+    do -- pillager cooldown tracker
+        local eventName = addon_name .. module_name .. "PillagerCooldown"
+        EM:UnregisterForEvent(eventName, EVENT_EFFECT_CHANGED)
+        EM:RegisterForEvent(eventName, EVENT_EFFECT_CHANGED, getEffectChangedHandler(HR_EVENT_PILLAGER_BUFF_COOLDOWN))
+        EM:AddFilterForEvent(eventName, EVENT_EFFECT_CHANGED, REGISTER_FILTER_ABILITY_ID, self.pillagerCooldownId)
+        EM:AddFilterForEvent(eventName, EVENT_EFFECT_CHANGED, REGISTER_FILTER_COMBAT_RESULT, EFFECT_RESULT_UPDATED)
+        EM:AddFilterForEvent(eventName, EVENT_EFFECT_CHANGED, REGISTER_FILTER_TARGET_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_GROUP)
+    end
+
     do -- major vulnerability debuff tracker
         local eventName = addon_name .. module_name .. "MajorVulnerabilityDebuff"
         EM:UnregisterForEvent(eventName, EVENT_EFFECT_CHANGED)
@@ -124,10 +133,4 @@ function module:registerBuffTrackers()
             EM:AddFilterForEvent(eventName .. i, EVENT_COMBAT_EVENT, REGISTER_FILTER_SOURCE_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_GROUP)
         end
     end
-
-    -- register additional cooldown tracker for pillager -- TODO: does the cooldown have an abilityID we can listen on? If so, we should use that instead of this workaround.
-    CM:RegisterCallback(HR_EVENT_PILLAGER_BUFF_GAINED, function(unitTag, _)
-        CM:FireCallbacks(HR_EVENT_PILLAGER_BUFF_COOLDOWN, unitTag, pillagersProfitCooldown)
-        self.logger.Debug("fired %s for %s with duration %s", HR_EVENT_PILLAGER_BUFF_COOLDOWN, unitTag, tostring(pillagersProfitCooldown))
-    end)
 end
