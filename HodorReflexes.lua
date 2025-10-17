@@ -21,6 +21,10 @@ local addon = {
             sw = nil, -- global accountwide saved variables
             svDefault = {
                 accountwide = true,
+                extensions = {
+                    ["names"] = true,
+                    ["icons"] = true,
+                },
                 modules = {
                     ["readycheck"] = true,
                     ["exitinstance"] = true,

@@ -4,10 +4,6 @@
 local addon_name = "HodorReflexes2"
 local addon = _G[addon_name]
 local internal = addon.internal
-local core = internal.core
-
-local addon_extensions = addon.extensions
-local internal_extensions = internal.extensions
 
 local LCI = LibCustomIcons
 local util = addon.util
@@ -15,11 +11,7 @@ local util = addon.util
 local extensionDefinition = {
     name = "icons",
     version = "1.0.0",
-    svDefault = {
-        enabled = true,
-    },
-
-    enabled = false,
+    svDefault = {},
 }
 
 --- @class iconsExtension : extensionClass
@@ -49,9 +41,11 @@ end
 --- NOT for manual use. This function gets called once when the extension is loaded and then deleted afterwards.
 --- @return void
 function extension:Activate()
-    if LCI and self.sw.enabled then
-        util.GetUserIcon = LCI_GetUserIcon
-        self.enabled = true
+    if not LCI then
+        self.enabled = false
+        return
     end
+
+    util.GetUserIcon = LCI_GetUserIcon
 end
 

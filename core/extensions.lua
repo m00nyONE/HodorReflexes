@@ -12,10 +12,19 @@ local logger = core.logger.main
 function core.InitializeExtensions()
     logger:Debug("Initializing extensions...")
 
-    for name, extension in pairs(addon.extensions) do
-        extension:RunOnce("CreateSavedVariables")
+    -- check if saved variables are populated
+    if not core.sw.extensions then
+        logger:Debug("No extensions found in saved variables, populating with defaults...")
+        core.sw.extensions = core.svDefault.extensions
+    end
 
-        extension:RunOnce("Activate")
+    for extensionName, extension in pairs(addon.extensions) do
+        logger:Debug("Initializing extension: %s", extensionName)
+        if core.sw.extensions[extensionName] then
+            extension:RunOnce("CreateSavedVariables")
+            extension:RunOnce("Activate")
+            extension.enabled = true
+        end
     end
 end
 
@@ -27,6 +36,7 @@ function core.RegisterExtension(extension)
         logger:Error("Extension " .. extension.name .. " is already registered!")
         return
     end
+    extension.enabled = false
     addon.extensions[extension.name] = extension -- add extension to the addon.extensions table
     logger:Debug("Successfully registered extension: " .. extension.name)
 end
@@ -37,6 +47,13 @@ internal.extensionClass = extensionClass
 
 -- must implement functions
 extensionClass:MUST_IMPLEMENT("Activate") -- function that gets called to activate the extension when it's enabled
+
+
+--- returns whether the module is enabled
+--- @return boolean true if the module is enabled, false otherwise
+function extensionClass:IsEnabled()
+    return self.enabled
+end
 
 --- runs a function only once and then removes it from the object
 --- @param funcName string the name of the function to run
