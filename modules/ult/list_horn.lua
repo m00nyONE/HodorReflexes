@@ -89,20 +89,25 @@ function module:CreateHornList()
 end
 
 function module:hornListHeaderRowCreationFunction(rowControl, data, scrollList)
-    rowControl:GetNamedChild("_BG"):SetAlpha(self.hornList.sw.headerOpacity)
-    rowControl:GetNamedChild("_HornDuration"):SetColor(unpack(self.hornList.sw.colorHorn))
-    rowControl:GetNamedChild("_HornDuration"):SetAlpha(self.hornList.sw.zeroTimerOpacity)
-    rowControl:GetNamedChild("_ForceDuration"):SetColor(unpack(self.hornList.sw.colorForce))
-    rowControl:GetNamedChild("_ForceDuration"):SetAlpha(self.hornList.sw.zeroTimerOpacity)
+    if not rowControl._initialized then
+        rowControl:GetNamedChild("_BG"):SetAlpha(self.hornList.sw.headerOpacity)
+        rowControl:GetNamedChild("_HornDuration"):SetColor(unpack(self.hornList.sw.colorHorn))
+        rowControl:GetNamedChild("_HornDuration"):SetAlpha(self.hornList.sw.zeroTimerOpacity)
+        rowControl:GetNamedChild("_ForceDuration"):SetColor(unpack(self.hornList.sw.colorForce))
+        rowControl:GetNamedChild("_ForceDuration"):SetAlpha(self.hornList.sw.zeroTimerOpacity)
+        self.hornList:CreateCountdownOnControl(
+            rowControl:GetNamedChild("_HornDuration"),
+            HR_EVENT_HORN_BUFF_GAINED,
+            self.hornList.sw.zeroTimerOpacity
+        )
+        self.hornList:CreateCountdownOnControl(
+            rowControl:GetNamedChild("_ForceDuration"),
+            HR_EVENT_MAJOR_FORCE_BUFF_GAINED,
+            self.hornList.sw.zeroTimerOpacity
+        )
 
-    self.hornList:CreateCountdownOnControl(
-        rowControl:GetNamedChild("_HornDuration"),
-        HR_EVENT_HORN_BUFF_GAINED
-    )
-    self.hornList:CreateCountdownOnControl(
-        rowControl:GetNamedChild("_ForceDuration"),
-        HR_EVENT_MAJOR_FORCE_BUFF_GAINED
-    )
+        rowControl._initialized = true
+    end
 end
 
 function module:hornListRowCreationFunction(rowControl, data, scrollList)

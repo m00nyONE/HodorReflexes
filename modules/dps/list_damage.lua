@@ -113,10 +113,14 @@ end
 
 --- creation function for the header row. This can be overwritten if using a custom theme
 function module:headerRowCreationFunction(rowControl, data, scrollList)
-    rowControl:GetNamedChild("_Title"):SetText(self.getDamageHeaderFormat(data.dmgType, self.damageList.sw.colorDamageBoss, self.damageList.sw.colorDamageTotal))
-    rowControl:GetNamedChild("_BG"):SetAlpha(self.damageList.sw.listHeaderOpacity)
-    local timeControl = rowControl:GetNamedChild("_Time")
-    self.damageList:CreateFightTimeUpdaterOnControl(timeControl)
+    if not rowControl._initialized then
+        rowControl:GetNamedChild("_Title"):SetText(self.getDamageHeaderFormat(data.dmgType, self.damageList.sw.colorDamageBoss, self.damageList.sw.colorDamageTotal))
+        rowControl:GetNamedChild("_BG"):SetAlpha(self.damageList.sw.listHeaderOpacity)
+        local timeControl = rowControl:GetNamedChild("_Time")
+        self.damageList:CreateFightTimeUpdaterOnControl(timeControl)
+
+        rowControl._initialized = true
+    end
 end
 
 --- creation function for the damage rows. This can be overwritten if using a custom theme

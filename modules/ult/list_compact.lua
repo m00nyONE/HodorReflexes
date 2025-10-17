@@ -79,9 +79,13 @@ function module:CreateCompactList()
 end
 
 function module:compactListHeaderRowCreationFunction(rowControl, data, scrollList)
-    rowControl:GetNamedChild("_BG"):SetAlpha(self.compactList.sw.headerOpacity)
+    if not rowControl._initialized then
+        rowControl:GetNamedChild("_BG"):SetAlpha(self.compactList.sw.headerOpacity)
 
-    -- TODO: create event listeners for duration timers
+        -- TODO: create event listeners for duration timers
+
+        rowControl._initialized = true
+    end
 end
 
 function module:compactListRowCreationFunction(rowControl, data, scrollList)

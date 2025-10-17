@@ -84,14 +84,19 @@ function module:CreateColosList()
 end
 
 function module:colosListHeaderRowCreationFunction(rowControl, data, scrollList)
-    rowControl:GetNamedChild("_BG"):SetAlpha(self.colosList.sw.headerOpacity)
-    rowControl:GetNamedChild("_Duration"):SetColor(unpack(self.colosList.sw.colorVuln))
-    rowControl:GetNamedChild("_Duration"):SetAlpha(self.colosList.sw.zeroTimerOpacity)
+    if not rowControl._initialized then
+        rowControl:GetNamedChild("_BG"):SetAlpha(self.colosList.sw.headerOpacity)
+        rowControl:GetNamedChild("_Duration"):SetColor(unpack(self.colosList.sw.colorVuln))
+        rowControl:GetNamedChild("_Duration"):SetAlpha(self.colosList.sw.zeroTimerOpacity)
 
-    self.colosList:CreateCountdownOnControl(
-        rowControl:GetNamedChild("_Duration"),
-        HR_EVENT_MAJOR_VULNERABILITY_DEBUFF_GAINED
-    )
+        self.colosList:CreateCountdownOnControl(
+            rowControl:GetNamedChild("_Duration"),
+            HR_EVENT_MAJOR_VULNERABILITY_DEBUFF_GAINED,
+            self.colosList.sw.zeroTimerOpacity
+        )
+
+        rowControl._initialized = true
+    end
 end
 
 function module:colosListRowCreationFunction(rowControl, data, scrollList)

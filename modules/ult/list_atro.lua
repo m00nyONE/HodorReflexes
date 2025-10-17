@@ -86,20 +86,26 @@ function module:CreateAtroList()
 end
 
 function module:atroListHeaderRowCreationFunction(rowControl, data, scrollList)
-    rowControl:GetNamedChild("_BG"):SetAlpha(self.atroList.sw.headerOpacity)
-    rowControl:GetNamedChild("_AtroDuration"):SetColor(unpack(self.atroList.sw.colorAtro))
-    rowControl:GetNamedChild("_AtroDuration"):SetAlpha(self.atroList.sw.zeroTimerOpacity)
-    rowControl:GetNamedChild("_BerserkDuration"):SetColor(unpack(self.atroList.sw.colorBerserk))
-    rowControl:GetNamedChild("_BerserkDuration"):SetAlpha(self.atroList.sw.zeroTimerOpacity)
+    if not rowControl._initialized then
+        rowControl:GetNamedChild("_BG"):SetAlpha(self.atroList.sw.headerOpacity)
+        rowControl:GetNamedChild("_AtroDuration"):SetColor(unpack(self.atroList.sw.colorAtro))
+        rowControl:GetNamedChild("_AtroDuration"):SetAlpha(self.atroList.sw.zeroTimerOpacity)
+        rowControl:GetNamedChild("_BerserkDuration"):SetColor(unpack(self.atroList.sw.colorBerserk))
+        rowControl:GetNamedChild("_BerserkDuration"):SetAlpha(self.atroList.sw.zeroTimerOpacity)
 
-    self.atroList:CreateCountdownOnControl(
-        rowControl:GetNamedChild("_AtroDuration"),
-        HR_EVENT_ATRO_CAST_STARTED
-    )
-    self.atroList:CreateCountdownOnControl(
-        rowControl:GetNamedChild("_BerserkDuration"),
-        HR_EVENT_MAJOR_BERSERK_BUFF_GAINED
-    )
+        self.atroList:CreateCountdownOnControl(
+            rowControl:GetNamedChild("_AtroDuration"),
+            HR_EVENT_ATRO_CAST_STARTED,
+            self.atroList.sw.zeroTimerOpacity
+        )
+        self.atroList:CreateCountdownOnControl(
+            rowControl:GetNamedChild("_BerserkDuration"),
+            HR_EVENT_MAJOR_BERSERK_BUFF_GAINED,
+            self.atroList.sw.zeroTimerOpacity
+        )
+
+        rowControl._initialized = true
+    end
 end
 
 function module:atroListRowCreationFunction(rowControl, data, scrollList)

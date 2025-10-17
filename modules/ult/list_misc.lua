@@ -78,8 +78,12 @@ function module:CreateMiscList()
 end
 
 function module:miscListHeaderRowCreationFunction(rowControl, data, scrollList)
-    rowControl:GetNamedChild("_BG"):SetAlpha(self.miscList.sw.headerOpacity)
-    rowControl:GetNamedChild("_Text"):SetText(data.title)
+    if not rowControl._initialized then
+        rowControl:GetNamedChild("_BG"):SetAlpha(self.miscList.sw.headerOpacity)
+        rowControl:GetNamedChild("_Text"):SetText(data.title)
+
+        rowControl._initialized = true
+    end
 end
 
 function module:miscListRowCreationFunction(rowControl, data, scrollList)
