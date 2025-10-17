@@ -13,6 +13,18 @@ local module_name = "ult"
 local module = addon_modules[module_name]
 
 local group = core.group
+local CM = core.CM
+
+local HR_EVENT_MAJOR_FORCE_BUFF_GAINED = addon.HR_EVENT_MAJOR_FORCE_BUFF_GAINED
+local HR_EVENT_MAJOR_BERSERK_BUFF_GAINED = addon.HR_EVENT_MAJOR_BERSERK_BUFF_GAINED
+local HR_EVENT_MAJOR_SLAYER_BUFF_GAINED = addon.HR_EVENT_MAJOR_SLAYER_BUFF_GAINED
+local HR_EVENT_PILLAGER_BUFF_GAINED = addon.HR_EVENT_PILLAGER_BUFF_GAINED
+local HR_EVENT_MAJOR_VULNERABILITY_DEBUFF_GAINED = addon.HR_EVENT_MAJOR_VULNERABILITY_DEBUFF_GAINED
+local HR_EVENT_HORN_BUFF_GAINED = addon.HR_EVENT_HORN_BUFF_GAINED
+local HR_EVENT_ATRO_CAST_STARTED = addon.HR_EVENT_ATRO_CAST_STARTED
+
+local localPlayer = "player"
+
 
 --- @type table<number> a pool of all ultimates in the game
 local ultPool
@@ -44,6 +56,14 @@ end
 --- @return void
 function module:startTest()
     self.isTestRunning = true
+
+    CM:FireCallbacks(HR_EVENT_HORN_BUFF_GAINED, localPlayer, 30 * 1000)
+    CM:FireCallbacks(HR_EVENT_MAJOR_FORCE_BUFF_GAINED, localPlayer, 15 * 1000)
+    CM:FireCallbacks(HR_EVENT_MAJOR_VULNERABILITY_DEBUFF_GAINED, localPlayer, 17 * 1000)
+    CM:FireCallbacks(HR_EVENT_ATRO_CAST_STARTED, localPlayer, 15 * 1000)
+    CM:FireCallbacks(HR_EVENT_MAJOR_BERSERK_BUFF_GAINED, localPlayer, 10 * 1000)
+    CM:FireCallbacks(HR_EVENT_MAJOR_SLAYER_BUFF_GAINED, localPlayer, 50 * 1000)
+    CM:FireCallbacks(HR_EVENT_PILLAGER_BUFF_GAINED, localPlayer, 10 * 1000) -- no need to fire HR_EVENT_PILLAGER_BUFF_COOLDOWN as this is done automatically when the BUFF_GAINED event is fired
 
     if not ultPool then genUltPool() end
 
