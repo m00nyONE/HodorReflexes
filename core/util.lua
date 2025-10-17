@@ -126,6 +126,7 @@ end
 --- @return string, number, number, number, number texturePath (falls back to "campaignbrowser_guestcampaign.dds" if the icon is not found), textureCoordsLeft, textureCoordsRight, textureCoordsTop, textureCoordsBottom
 function util.GetClassIcon(classId)
     if not classIcons then
+        classIcons = {}
         for i = 1, GetNumClasses() do
             local realClassId, _, _, _, _, _, icon, _, _, _ = GetClassInfo(i)
             classIcons[realClassId] = icon
