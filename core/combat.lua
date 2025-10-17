@@ -14,6 +14,7 @@ local HR_EVENT_TEST_STARTED = addon.HR_EVENT_TEST_STARTED
 local HR_EVENT_TEST_STOPPED = addon.HR_EVENT_TEST_STOPPED
 local HR_EVENT_TEST_TICK = addon.HR_EVENT_TEST_TICK
 
+local CM = core.CM
 
 local combat = {
     damageHistory = {
@@ -36,7 +37,7 @@ function core.InitializeCombat()
     LC:RegisterCallbackType(LIBCOMBAT_EVENT_FIGHTRECAP, function(...) combat:FightRecapCallback(...) end, addon_name .. "_Combat")
 
     addon.RegisterCallback(HR_EVENT_COMBAT_START, function() combat:Reset() end)
-    addon.RegisterCallback(HR_EVENT_COMBAT_END, function() self:Reset() end)
+    --addon.RegisterCallback(HR_EVENT_COMBAT_END, function() combat:Reset() end)
 
     addon.RegisterCallback(HR_EVENT_TEST_STARTED, function(...) combat:startTest(...) end)
     addon.RegisterCallback(HR_EVENT_TEST_STOPPED, function(...) combat:stopTest(...) end)
@@ -107,8 +108,11 @@ end
 --- test functions
 
 function combat:startTest()
-    self.testBeginTime = GetGameTimeMilliseconds()
+    self._testBeginTime = GetGameTimeMilliseconds()
     self:Reset()
+    zo_callLater(function()
+        CM:FireCallbacks(HR_EVENT_COMBAT_START)
+    end, 1100)
 
     for _, data in pairs(addon.playerData) do
         self.groupDPSOut = self.groupDPSOut + (data.dps or 0)
@@ -116,11 +120,12 @@ function combat:startTest()
     end
 end
 function combat:stopTest()
-    self.testBeginTime = nil
+    self._testBeginTime = nil
+    CM:FireCallbacks(HR_EVENT_COMBAT_END)
     self:Reset()
 end
 function combat:updateTest()
-    self.dpstime = (GetGameTimeMilliseconds() - self.testBeginTime) / 1000
+    self.data.dpstime = (GetGameTimeMilliseconds() - self._testBeginTime) / 1000
 
     for _, data in pairs(addon.playerData) do
         self.groupDPSOut = self.groupDPSOut + (data.dps or 0)
