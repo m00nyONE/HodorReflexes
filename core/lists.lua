@@ -260,6 +260,9 @@ function listClass:CreateFightTimeUpdaterOnControl(control)
     -- check if timer is already registered - if so, return
     if control._onCombatStart or control._onCombatStop then return end
 
+    -- create a unique id for the control that can be used as a key for the timer update
+    control._Id = util.GetTableReference(control)
+
     local function renderFightTimeToControl()
         self.RenderCurrentFightTimeToControl(control)
     end
@@ -267,11 +270,11 @@ function listClass:CreateFightTimeUpdaterOnControl(control)
     -- reate timer start & stop functions
     control._onCombatStop = function()
         renderFightTimeToControl()
-        EM:UnregisterForUpdate(self._eventId .. "TimerUpdate")
+        EM:UnregisterForUpdate(control._Id .. "_TimerUpdate")
     end
     control._onCombatStart = function()
         control._onCombatStop()
-        EM:RegisterForUpdate(self._eventId .. "TimerUpdate", self.sw.timerUpdateInterval or 100, renderFightTimeToControl)
+        EM:RegisterForUpdate(control._Id .. "_TimerUpdate", self.sw.timerUpdateInterval or 100, renderFightTimeToControl)
     end
     -- register timer update callbacks
     addon.RegisterCallback(HR_EVENT_COMBAT_START, control._onCombatStart)
@@ -303,6 +306,9 @@ function listClass:CreateCountdownOnControl(control, eventName)
     -- check if timer is already registered - if so, return
     if control._onCountdownStart or control._onCountdownTick then return end
 
+    -- create a unique id for the control that can be used as a key for the timer update
+    control._Id = util.GetTableReference(control)
+
     local blinkDurationMS = 5000 -- TODO: possibly make configurable by savedVars ?
     local zeroTimerOpacity = 0.7 -- TODO: possibly make configurable by savedVars ?
 
@@ -312,7 +318,7 @@ function listClass:CreateCountdownOnControl(control, eventName)
         -- when the timer ended more than 5 seconds ago, set the opacity to zeroTimerOpacity, stop updating and return
         if not control._countdownEndTime or control._countdownEndTime + blinkDurationMS < nowMS then
             self.RenderTimeToControl(control, 0, zeroTimerOpacity)
-            EM:UnregisterForUpdate(self._eventId .. "CountdownUpdate")
+            EM:UnregisterForUpdate(control._Id .. "_CountdownUpdate")
             return
         end
 
@@ -337,7 +343,7 @@ function listClass:CreateCountdownOnControl(control, eventName)
 
         -- set the end time and start/overwrite the update timer
         control._countdownEndTime = GetGameTimeMilliseconds() + durationMS
-        EM:RegisterForUpdate(self._eventId .. "CountdownUpdate", self.sw.timerUpdateInterval or 100, control._onCountdownTick)
+        EM:RegisterForUpdate(control._Id .. "_CountdownUpdate", self.sw.timerUpdateInterval or 100, control._onCountdownTick)
     end
 
     -- register countdown start callback
