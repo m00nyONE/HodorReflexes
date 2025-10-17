@@ -46,7 +46,7 @@ function module:CreateAtroList()
         svDefault = svDefault,
         Update = function() self:UpdateAtroList() end,
     }
-    self.atroList = internal.listClass:New(listDefinition)
+    self.atroList = addon.listClass:New(listDefinition)
 
     self.atroList.HEADER_TYPE = 1 -- type id for header
     self.atroList.ROW_TYPE = 2 -- type id for rows

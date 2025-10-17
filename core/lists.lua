@@ -27,7 +27,7 @@ local globalUpdateDebounceDelayMS = 15 -- global debounce delay for all lists, c
 
 --- @class: listClass
 local listClass = ZO_InitializingObject:Subclass()
-internal.listClass = listClass
+addon.listClass = listClass
 
 listClass.uiLocked = true
 listClass.windowName = ""

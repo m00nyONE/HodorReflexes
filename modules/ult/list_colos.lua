@@ -44,7 +44,7 @@ function module:CreateColosList()
         svDefault = svDefault,
         Update = function() self:UpdateColosList() end,
     }
-    self.colosList = internal.listClass:New(listDefinition)
+    self.colosList = addon.listClass:New(listDefinition)
 
     self.colosList.HEADER_TYPE = 1 -- type id for header
     self.colosList.ROW_TYPE = 2 -- type id for rows

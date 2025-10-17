@@ -38,7 +38,7 @@ function module:CreateMiscList()
         svDefault = svDefault,
         Update = function() self:UpdateMiscList() end,
     }
-    self.miscList = internal.listClass:New(listDefinition)
+    self.miscList = addon.listClass:New(listDefinition)
 
     self.miscList.HEADER_TYPE = 1 -- type id for header
     self.miscList.ROW_TYPE = 2 -- type id for rows

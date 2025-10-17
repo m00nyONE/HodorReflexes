@@ -39,7 +39,7 @@ function module:CreateCompactList()
         svDefault = svDefault,
         Update = function() self:UpdateCompactList() end,
     }
-    self.compactList = internal.listClass:New(listDefinition)
+    self.compactList = addon.listClass:New(listDefinition)
 
     self.compactList.HEADER_TYPE = 1 -- type id for header
     self.compactList.ROW_TYPE = 2 -- type id for rows

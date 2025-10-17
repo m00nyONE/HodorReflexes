@@ -49,7 +49,7 @@ function module:CreateHornList()
         svDefault = svDefault,
         Update = function() self:UpdateHornList() end,
     }
-    self.hornList = internal.listClass:New(listDefinition)
+    self.hornList = addon.listClass:New(listDefinition)
 
     self.hornList.HEADER_TYPE = 1 -- type id for header
     self.hornList.ROW_TYPE = 2 -- type id for rows

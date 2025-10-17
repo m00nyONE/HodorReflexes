@@ -49,7 +49,7 @@ function module:CreateDamageList()
         svDefault = svDefault,
         Update = function() self:UpdateDamageList() end,
     }
-    self.damageList = internal.listClass:New(listDefinition)
+    self.damageList = addon.listClass:New(listDefinition)
 
     self.damageList.HEADER_TYPE = 1 -- type id for header
     self.damageList.ROW_TYPE = 2    -- type id for rows
