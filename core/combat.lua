@@ -114,10 +114,11 @@ function combat:startTest()
         CM:FireCallbacks(HR_EVENT_COMBAT_START)
     end, 1100)
 
-    for _, data in pairs(addon.playerData) do
-        self.groupDPSOut = self.groupDPSOut + (data.dps or 0)
-        self.damageOutTotalGroup = self.damageOutTotalGroup + (data.dmg or 0)
-    end
+    -- TODO: implement when summary works correctly
+    --for _, data in pairs(addon.playersData) do
+    --    self.data.groupDPSOut = self.data.groupDPSOut + (data.dps * 100 or 0)
+    --    self.data.damageOutTotalGroup = self.data.damageOutTotalGroup + (data.dmg * 100 or 0)
+    --end
 end
 function combat:stopTest()
     self._testBeginTime = nil
@@ -127,12 +128,14 @@ end
 function combat:updateTest()
     self.data.dpstime = (GetGameTimeMilliseconds() - self._testBeginTime) / 1000
 
-    for _, data in pairs(addon.playerData) do
-        self.groupDPSOut = self.groupDPSOut + (data.dps or 0)
-        self.damageOutTotalGroup = self.damageOutTotalGroup + (data.dmg or 0)
-    end
-    table.insert(self.damageHistory, {
-        timestamp = GetGameTimeMilliseconds(),
-        damage = self.damageOutTotalGroup
-    })
+    -- TODO: implement when summary works correctly
+    --self.data.groupDPSOut = 0
+    --for _, data in pairs(addon.playersData) do
+    --    self.data.groupDPSOut = self.data.groupDPSOut + (data.dps * 100 or 0)
+    --    self.data.damageOutTotalGroup = self.data.damageOutTotalGroup + (data.dmg * 100 or 0)
+    --end
+    --table.insert(self.damageHistory, {
+    --    timestamp = GetGameTimeMilliseconds(),
+    --    damage = self.data.damageOutTotalGroup
+    --})
 end
