@@ -125,7 +125,7 @@ function module:registerBuffTrackers()
         end
     end
 
-    -- register additional cooldown tracker for pillager
+    -- register additional cooldown tracker for pillager -- TODO: does the cooldown have an abilityID we can listen on? If so, we should use that instead of this workaround.
     CM:RegisterCallback(HR_EVENT_PILLAGER_BUFF_GAINED, function(unitTag, _)
         CM:FireCallbacks(HR_EVENT_PILLAGER_BUFF_COOLDOWN, unitTag, pillagersProfitCooldown)
         self.logger.Debug("fired %s for %s with duration %s", HR_EVENT_PILLAGER_BUFF_COOLDOWN, unitTag, tostring(pillagersProfitCooldown))
