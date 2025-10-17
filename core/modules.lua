@@ -105,6 +105,12 @@ function moduleClass:GetDiagnostic()
     self.GetDiagnosticInfo = nil
 end
 
+--- returns whether the module is enabled
+--- @return boolean true if the module is enabled, false otherwise
+function moduleClass:IsEnabled()
+    return self.enabled
+end
+
 --- runs a function only once and then removes it from the object
 --- @param funcName string the name of the function to run
 --- @param ... any the arguments to pass to the function
