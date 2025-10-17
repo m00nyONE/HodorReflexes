@@ -21,6 +21,8 @@ local HR_EVENT_UNLOCKUI = addon.HR_EVENT_UNLOCKUI
 local HR_EVENT_GROUP_CHANGED = addon.HR_EVENT_GROUP_CHANGED
 local HR_EVENT_PLAYERSDATA_CLEANED = addon.HR_EVENT_PLAYERSDATA_CLEANED
 local HR_EVENT_PLAYERSDATA_UPDATED = addon.HR_EVENT_PLAYERSDATA_UPDATED
+local HR_EVENT_COMBAT_START = addon.HR_EVENT_COMBAT_START
+local HR_EVENT_COMBAT_END = addon.HR_EVENT_COMBAT_END
 
 local globalUpdateDebounceDelayMS = 15 -- global debounce delay for all lists, can be overridden in each list
 
@@ -196,4 +198,39 @@ function listClass:CreateFragment()
     end
 
     self.windowFragment = hud.AddFadeFragment(self.window, windowFragmentConditionWrapper)
+end
+
+--- renders the current fight time to the control passed as argument. can be used by custom themes as well.
+--- @param control LabelControl
+--- @return void
+function listClass.RenderCurrentFightTimeToControl(control)
+    -- it would be more expensive here to check if the list is visible and prevent the rendering of the text than just rendering it anyways
+    -- addon.extensions.combat is NOT loaded yet when this file is loaded - so we access it here instead of at the top of the file - TODO: usually the core should not be dependent on extensions. Fine for now but may find i way around that
+    local t = addon.extensions.combat:GetCombatTime()
+    control:SetText(t > 0 and string.format("%d:%04.1f|u0:2::|u", t / 60, t % 60) or "")
+end
+
+--- creates and registers a fight time updater on the control passed as argument. can be used by custom themes as well.
+--- @param control LabelControl the control to render the fight time to
+--- @return void
+function listClass:CreateFightTimeUpdaterOnControl(control)
+    -- check if timer is already registered - if so, return
+    if control._onCombatStart or control._onCombatStop then return end
+
+    local function renderFightTimeToControl()
+        self.RenderCurrentFightTimeToControl(control)
+    end
+
+    -- reate timer start & stop functions
+    control._onCombatStop = function()
+        renderFightTimeToControl()
+        EM:UnregisterForUpdate(self._eventId .. "TimerUpdate")
+    end
+    control._onCombatStart = function()
+        control._onCombatStop()
+        EM:RegisterForUpdate(self._eventId .. "TimerUpdate", self.sw.timerUpdateInterval or 100, renderFightTimeToControl)
+    end
+    -- register timer update callbacks
+    addon.RegisterCallback(HR_EVENT_COMBAT_START, control._onCombatStart)
+    addon.RegisterCallback(HR_EVENT_COMBAT_END, control._onCombatStop)
 end

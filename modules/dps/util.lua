@@ -80,38 +80,3 @@ function module.getDamageRowFormat(dmgType, dmg, dps, colorDamageBoss, colorDama
 
     return string.format('|c%s%0.1fK|r |c%s(%dK)|r|u0:2::|u', colorDamageBoss, dmg / 10, colorDamageTotal, dps)
 end
-
---- renders the current fight time to the control passed as argument. can be used by custom themes as well.
---- @param control LabelControl
---- @return void
-function module.RenderFightTimeToControl(control)
-    -- it would be more expensive here to check if the list is visible and prevent the rendering of the text than just rendering it anyways
-    local t = combat:GetCombatTime()
-    control:SetText(t > 0 and string.format("%d:%04.1f|u0:2::|u", t / 60, t % 60) or "")
-end
-
---- creates and registers a fight time updater on the control passed as argument. can be used by custom themes as well.
---- @param list listClass the list the control belongs to
---- @param control LabelControl the control to render the fight time to
---- @return void
-function module:CreateFightTimeUpdaterOnControl(list, control)
-    -- check if timer is already registered - if so, return
-    if control._onCombatStart or control._onCombatStop then return end
-
-    local function renderFightTimeToControl()
-        self.RenderFightTimeToControl(control)
-    end
-
-    -- reate timer start & stop functions
-    control._onCombatStop = function()
-        renderFightTimeToControl()
-        EM:UnregisterForUpdate(list._eventId .. "TimerUpdate")
-    end
-    control._onCombatStart = function()
-        control._onCombatStop()
-        EM:RegisterForUpdate(list._eventId .. "TimerUpdate", list.sw.timerUpdateInterval or 100, renderFightTimeToControl)
-    end
-    -- register timer update callbacks
-    addon.RegisterCallback(HR_EVENT_COMBAT_START, control._onCombatStart)
-    addon.RegisterCallback(HR_EVENT_COMBAT_END, control._onCombatStop)
-end
