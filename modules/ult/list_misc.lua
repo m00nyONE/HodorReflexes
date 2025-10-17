@@ -14,6 +14,7 @@ local module_name = "ult"
 local module = addon_modules[module_name]
 
 local custom = addon_extensions.custom
+local names = addon_extensions.names
 
 local svDefault = {
     enabled =  1, -- 1=always, 2=out of combat, 3=non bossfights, 0=off
@@ -83,7 +84,7 @@ function module:miscListHeaderRowCreationFunction(rowControl, data, scrollList)
 end
 
 function module:miscListRowCreationFunction(rowControl, data, scrollList)
-    local userName = custom.GetAliasForUserId(data.userId, true)
+    local userName = names.Get(data.userId, true)
     local userIcon = custom.GetIconForUserId(data.userId)
     local defaultIcon = custom.GetClassIcon(data.classId)
 

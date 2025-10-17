@@ -14,6 +14,7 @@ local module_name = "ult"
 local module = addon_modules[module_name]
 
 local custom = addon_extensions.custom
+local names = addon_extensions.names
 
 local HR_EVENT_HORN_BUFF_GAINED = addon.HR_EVENT_HORN_BUFF_GAINED
 local HR_EVENT_MAJOR_FORCE_BUFF_GAINED = addon.HR_EVENT_MAJOR_FORCE_BUFF_GAINED
@@ -106,7 +107,7 @@ function module:hornListHeaderRowCreationFunction(rowControl, data, scrollList)
 end
 
 function module:hornListRowCreationFunction(rowControl, data, scrollList)
-    local userName = custom.GetAliasForUserId(data.userId, true)
+    local userName = names.Get(data.userId, true)
     local userIcon = custom.GetIconForUserId(data.userId)
     local defaultIcon = custom.GetClassIcon(data.classId)
 

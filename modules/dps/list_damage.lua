@@ -14,6 +14,7 @@ local module_name = "dps"
 local module = addon_modules[module_name]
 
 local combat = addon_extensions.combat
+local names = addon_extensions.names
 local custom = addon_extensions.custom
 
 local LGCS = LibGroupCombatStats
@@ -118,7 +119,7 @@ end
 
 --- creation function for the damage rows. This can be overwritten if using a custom theme
 function module:damageRowCreationFunction(rowControl, data, scrollList)
-    local userName = custom.GetAliasForUserId(data.userId, true)
+    local userName = names.Get(data.userId, true)
     local userIcon = custom.GetIconForUserId(data.userId)
     local defaultIcon = custom.GetClassIcon(data.classId)
 

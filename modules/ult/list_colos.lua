@@ -14,6 +14,7 @@ local module_name = "ult"
 local module = addon_modules[module_name]
 
 local custom = addon_extensions.custom
+local names = addon_extensions.names
 
 local HR_EVENT_MAJOR_VULNERABILITY_DEBUFF_GAINED = addon.HR_EVENT_MAJOR_VULNERABILITY_DEBUFF_GAINED
 
@@ -95,7 +96,7 @@ function module:colosListHeaderRowCreationFunction(rowControl, data, scrollList)
 end
 
 function module:colosListRowCreationFunction(rowControl, data, scrollList)
-    local userName = custom.GetAliasForUserId(data.userId, true)
+    local userName = names.Get(data.userId, true)
     local userIcon = custom.GetIconForUserId(data.userId)
     local defaultIcon = custom.GetClassIcon(data.classId)
 
