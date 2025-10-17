@@ -8,6 +8,7 @@ local core = internal.core
 local logger = core.logger.main
 
 local hud = core.hud
+local util = core.util
 
 local WM = GetWindowManager()
 local EM = GetEventManager()
@@ -69,7 +70,8 @@ function listClass:Initialize(listDefinition)
         self[k] = v
     end
 
-    self._eventId = "List_" .. string.match(tostring(self), "0%x+")
+    -- create a unique id for the list instance (and make it somewhat readable by adding the list name at the end)
+    self._Id = string.format("%s_%s", util.GetTableReference(self), self.name)
     self.updateDebounceDelayMS = self.updateDebounceDelayMS or globalUpdateDebounceDelayMS
 
     self:RunOnce("CreateSavedVariables")
@@ -107,8 +109,8 @@ end
 --- @return void
 function listClass:UpdateDebounced()
     if not self:WindowFragmentCondition() then return end
-    EM:RegisterForUpdate(self._eventId, self.updateDebounceDelayMS, function()
-        EM:UnregisterForUpdate(self._eventId)
+    EM:RegisterForUpdate(self._Id .. "_UpdateDebounced", self.updateDebounceDelayMS, function()
+        EM:UnregisterForUpdate(self._Id .. "_UpdateDebounced")
         self:Update()
     end)
 end
