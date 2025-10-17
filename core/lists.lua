@@ -292,7 +292,6 @@ function listClass.RenderTimeToControl(control, timeMS, opacity)
     if opacity then
         control:SetAlpha(opacity)
     end
-
 end
 
 --- creates and registers a buff/debuff countdown timer on the control passed as argument.
@@ -300,16 +299,17 @@ end
 --- WARNING: DO NOT use it on controls that get recycled (e.g. playerRows)! ONLY USE on headers or static labels! Otherwise the timers will pile up and cause performance issues. They do NOT get automatically cleaned up on control recycling!
 --- @param control LabelControl the control to render the countdown to
 --- @param eventName string the event name to register the countdown start callback to (must provide the following arguments: (unitTag, duration) where duration is in milliseconds)
+--- @param zeroTimerOpacity number|nil optional opacity to set on the control when the timer reaches zero (default: 0.7)
 --- @return void
-function listClass:CreateCountdownOnControl(control, eventName)
+function listClass:CreateCountdownOnControl(control, eventName, zeroTimerOpacity)
     -- check if timer is already registered - if so, return
     if control._onCountdownStart or control._onCountdownTick then return end
 
     -- create a unique id for the control that can be used as a key for the timer update
     control._Id = util.GetTableReference(control)
 
-    local blinkDurationMS = 3000 -- TODO: possibly make configurable by savedVars ?
-    local zeroTimerOpacity = 0.7 -- TODO: possibly make configurable by savedVars ?
+    local blinkDurationMS = 2500 -- TODO: possibly make configurable by savedVars ?
+    zeroTimerOpacity = zeroTimerOpacity or 0.7
 
     control._onCountdownTick = function()
         local nowMS = GetGameTimeMilliseconds()
@@ -324,10 +324,10 @@ function listClass:CreateCountdownOnControl(control, eventName)
         -- render remaining time
         local remainingMS = control._countdownEndTime - nowMS
         local remainingMSDisplayed = zo_max(0, remainingMS)
-        local opacity = 1.0
+        local opacity = nil
 
         -- if remaining time is less than blinkDurationMS, start blinking the text
-        if remainingMS <= blinkDurationMS then
+        if remainingMS <= 0 then
             -- Blinking: switch every 250ms between 1.0 and zeroTimerOpacity
             local blinkPhase = zo_floor((remainingMS % 500) / 250)
             opacity = (blinkPhase == 0) and 1.0 or zeroTimerOpacity
