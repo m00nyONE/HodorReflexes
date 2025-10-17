@@ -84,7 +84,7 @@ end
 --- @param t table
 --- @param sortFunction function|nil optional sorting function
 --- @return function iterator
-function util.spairs(t, sortFunction)
+function util.Spairs(t, sortFunction)
     local keys = {}
     for k in pairs(t) do keys[#keys+1] = k end
     if sortFunction then

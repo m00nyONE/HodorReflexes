@@ -39,7 +39,7 @@ function core.InitializeModules()
         core.sw.modules = core.svDefault.modules
     end
 
-    for moduleName, module in util.spairs(addon.modules, sortByPriority) do
+    for moduleName, module in util.Spairs(addon.modules, sortByPriority) do
         logger:Debug("Initializing module: %s", moduleName)
         if core.sw.modules[moduleName] then
             -- create saved variables for the module
