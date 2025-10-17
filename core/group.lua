@@ -189,9 +189,9 @@ local function onGroupChanged()
 end
 
 --- registers subcommand to test group functionality
-core.RegisterSubCommand("group test", GetString(HR_CORE_GROUP_COMMAND_TEST_HELP), function(str)
+core.RegisterSubCommand("test", GetString(HR_CORE_GROUP_COMMAND_TEST_HELP), function(str)
     local players = zo_strmatch(str, "^%s*(.*)")
-    logger:Debug("group test command received: '%s'", tostring(players))
+    logger:Debug("test command received: '%s'", tostring(players))
     if players then
         if IsUnitGrouped(localPlayer) then
             df("|cFF0000%s|r %s", addon_name, GetString(HR_CORE_GROUP_COMMAND_TEST_LEAVE_GROUP))
