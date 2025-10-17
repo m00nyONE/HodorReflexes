@@ -19,11 +19,6 @@ local custom = addon_extensions.custom
 local LGCS = LibGroupCombatStats
 local DAMAGE_UNKNOWN = LGCS.DAMAGE_UNKNOWN
 
-local HR_EVENT_COMBAT_START = addon.HR_EVENT_COMBAT_START
-local HR_EVENT_COMBAT_END = addon.HR_EVENT_COMBAT_END
-
-local EM = GetEventManager()
-
 local svDefault = {
     enabled =  1, -- 1=always, 2=out of combat, 3=non bossfights, 0=off
     disableInPvP = true,
@@ -111,40 +106,6 @@ function module:CreateDamageList()
             summaryRowCreationWrapper(self.summaryRowCreationFunction)
     )
     ZO_ScrollList_SetTypeCategoryHeader(self.damageList.listControl, self.damageList.SUMMARY_TYPE, true)
-end
-
---- renders the current fight time to the control passed as argument. can be used by custom themes as well.
---- @param control LabelControl
---- @return void
-function module.RenderFightTimeToControl(control)
-    -- it would be more expensive here to check if the list is visible and prevent the rendering of the text than just rendering it anyways
-    local t = combat:GetCombatTime()
-    control:SetText(t > 0 and string.format("%d:%04.1f|u0:2::|u", t / 60, t % 60) or "")
-end
-
---- creates and registers a fight time updater on the control passed as argument. can be used by custom themes as well.
---- @param control LabelControl
---- @return void
-function module:CreateFightTimeUpdaterOnControl(control)
-    -- check if timer is already registered - if so, return
-    if control._onCombatStart or control._onCombatStop then return end
-
-    local function renderFightTimeToControl()
-        self.RenderFightTimeToControl(control)
-    end
-
-    -- reate timer start & stop functions
-    control._onCombatStop = function()
-        self.RenderFightTimeToControl(control)
-        EM:UnregisterForUpdate(self.damageList._eventId .. "TimerUpdate")
-    end
-    control._onCombatStart = function()
-        control._onCombatStop()
-        EM:RegisterForUpdate(self.damageList._eventId .. "TimerUpdate", self.damageList.sv.timerUpdateInterval, renderFightTimeToControl)
-    end
-    -- register timer update callbacks
-    addon.RegisterCallback(HR_EVENT_COMBAT_START, control._onCombatStart)
-    addon.RegisterCallback(HR_EVENT_COMBAT_END, control._onCombatStop)
 end
 
 --- creation function for the header row. This can be overwritten if using a custom theme
