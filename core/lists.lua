@@ -308,7 +308,7 @@ function listClass:CreateCountdownOnControl(control, eventName)
     -- create a unique id for the control that can be used as a key for the timer update
     control._Id = util.GetTableReference(control)
 
-    local blinkDurationMS = 5000 -- TODO: possibly make configurable by savedVars ?
+    local blinkDurationMS = 3000 -- TODO: possibly make configurable by savedVars ?
     local zeroTimerOpacity = 0.7 -- TODO: possibly make configurable by savedVars ?
 
     control._onCountdownTick = function()
