@@ -22,6 +22,7 @@ local addon = {
             svDefault = {
                 accountwide = true,
                 extensions = {
+                    ["events"] = true,
                     ["names"] = true,
                     ["icons"] = true,
                 },
