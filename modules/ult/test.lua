@@ -115,6 +115,7 @@ function module:startTest()
     self.colosList:Update()
     self.atroList:Update()
     self.miscList:Update()
+    self.compactList:Update()
 
     -- fire some buff/debuff events for testing purposes
     CM:FireCallbacks(HR_EVENT_HORN_BUFF_GAINED, localPlayer, 30 * 1000)

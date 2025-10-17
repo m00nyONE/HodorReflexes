@@ -58,6 +58,7 @@ modules/ult/ui/horn.xml
 modules/ult/ui/colos.xml
 modules/ult/ui/atro.xml
 modules/ult/ui/misc.xml
+modules/ult/ui/compact.xml
 modules/ult/main.lua
 modules/ult/util.lua
 modules/ult/buffs.lua
@@ -65,6 +66,7 @@ modules/ult/list_horn.lua
 modules/ult/list_colos.lua
 modules/ult/list_atro.lua
 modules/ult/list_misc.lua
+modules/ult/list_compact.lua
 modules/ult/test.lua
 modules/ult/menu.lua
 

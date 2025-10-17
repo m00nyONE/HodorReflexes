@@ -140,6 +140,6 @@ function module:CreateLists()
     self:RunOnce("CreateColosList")
     self:RunOnce("CreateAtroList")
     self:RunOnce("CreateMiscList")
-    --self:RunOnce("CreateCompactList")
+    self:RunOnce("CreateCompactList")
 end
 
