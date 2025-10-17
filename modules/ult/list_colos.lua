@@ -15,6 +15,9 @@ local module = addon_modules[module_name]
 
 local custom = addon_extensions.custom
 
+local HR_EVENT_MAJOR_VULNERABILITY_DEBUFF_GAINED = addon.HR_EVENT_MAJOR_VULNERABILITY_DEBUFF_GAINED
+
+
 local svDefault = {
     enabled =  1, -- 1=always, 2=out of combat, 3=non bossfights, 0=off
     disableInPvP = true,
@@ -85,7 +88,10 @@ function module:colosListHeaderRowCreationFunction(rowControl, data, scrollList)
     rowControl:GetNamedChild("_Duration"):SetColor(unpack(self.colosList.sw.colorVuln))
     rowControl:GetNamedChild("_Duration"):SetAlpha(self.colosList.sw.zeroTimerOpacity)
 
-    -- TODO: create event listeners for duration timers
+    self.colosList:CreateCountdownOnControl(
+        rowControl:GetNamedChild("_Duration"),
+        HR_EVENT_MAJOR_VULNERABILITY_DEBUFF_GAINED
+    )
 end
 
 function module:colosListRowCreationFunction(rowControl, data, scrollList)

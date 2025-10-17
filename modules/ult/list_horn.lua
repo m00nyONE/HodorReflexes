@@ -15,6 +15,10 @@ local module = addon_modules[module_name]
 
 local custom = addon_extensions.custom
 
+local HR_EVENT_HORN_BUFF_GAINED = addon.HR_EVENT_HORN_BUFF_GAINED
+local HR_EVENT_MAJOR_FORCE_BUFF_GAINED = addon.HR_EVENT_MAJOR_FORCE_BUFF_GAINED
+
+
 local svDefault = {
     enabled =  1, -- 1=always, 2=out of combat, 3=non bossfights, 0=off
     disableInPvP = true,
@@ -91,7 +95,14 @@ function module:hornListHeaderRowCreationFunction(rowControl, data, scrollList)
     rowControl:GetNamedChild("_ForceDuration"):SetColor(unpack(self.hornList.sw.colorForce))
     rowControl:GetNamedChild("_ForceDuration"):SetAlpha(self.hornList.sw.zeroTimerOpacity)
 
-    -- TODO: create event listeners for duration timers
+    self.hornList:CreateCountdownOnControl(
+        rowControl:GetNamedChild("_HornDuration"),
+        HR_EVENT_HORN_BUFF_GAINED
+    )
+    self.hornList:CreateCountdownOnControl(
+        rowControl:GetNamedChild("_ForceDuration"),
+        HR_EVENT_MAJOR_FORCE_BUFF_GAINED
+    )
 end
 
 function module:hornListRowCreationFunction(rowControl, data, scrollList)

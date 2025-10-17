@@ -15,6 +15,10 @@ local module = addon_modules[module_name]
 
 local custom = addon_extensions.custom
 
+local HR_EVENT_ATRO_CAST_STARTED = addon.HR_EVENT_ATRO_CAST_STARTED
+local HR_EVENT_MAJOR_BERSERK_BUFF_GAINED = addon.HR_EVENT_MAJOR_BERSERK_BUFF_GAINED
+
+
 local svDefault = {
     enabled =  1, -- 1=always, 2=out of combat, 3=non bossfights, 0=off
     disableInPvP = true,
@@ -88,7 +92,14 @@ function module:atroListHeaderRowCreationFunction(rowControl, data, scrollList)
     rowControl:GetNamedChild("_BerserkDuration"):SetColor(unpack(self.atroList.sw.colorBerserk))
     rowControl:GetNamedChild("_BerserkDuration"):SetAlpha(self.atroList.sw.zeroTimerOpacity)
 
-    -- TODO: create event listeners for duration timers
+    self.atroList:CreateCountdownOnControl(
+        rowControl:GetNamedChild("_AtroDuration"),
+        HR_EVENT_ATRO_CAST_STARTED
+    )
+    self.atroList:CreateCountdownOnControl(
+        rowControl:GetNamedChild("_BerserkDuration"),
+        HR_EVENT_MAJOR_BERSERK_BUFF_GAINED
+    )
 end
 
 function module:atroListRowCreationFunction(rowControl, data, scrollList)
