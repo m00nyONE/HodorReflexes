@@ -54,6 +54,12 @@ function listClass:RunOnce(funcName, ...)
     return nil
 end
 
+--- get the unique ID of the List instance
+--- @return string unique ID of the list instance
+function listClass:GetId()
+    return self._Id
+end
+
 --- NOT for manual use! this gets automatically called by :New() when creating a new list instance.
 --- initializes the list with the given definition.
 --- calls CreateSavedVariables(), CreateControls() and CreateFragment() once and deletes them afterwards.
