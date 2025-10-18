@@ -61,7 +61,7 @@ modules/ult/ui/misc.xml
 modules/ult/ui/compact.xml
 modules/ult/main.lua
 modules/ult/util.lua
-modules/ult/buffs.lua
+modules/ult/trackers.lua
 modules/ult/list_horn.lua
 modules/ult/list_colos.lua
 modules/ult/list_atro.lua

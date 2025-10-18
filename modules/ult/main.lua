@@ -56,6 +56,8 @@ local moduleDefinition = {
     slayerIcon = GetAbilityIcon(93109),
     cryptCannonIcon = GetAbilityIcon(195031),
     pillagerIcon = "esoui/art/icons/ability_healer_030.dds",
+
+    pillagerCooldownEndTime = 0,
 }
 
 local module = internal.moduleClass:New(moduleDefinition)
@@ -141,7 +143,7 @@ function module:Activate()
         ultActivatedSetID = 0, -- TODO: remove after reworking LGCS later
     })
 
-    self:RunOnce("registerBuffTrackers")
+    self:RunOnce("registerTrackers")
     self:RunOnce("CreateLists")
 end
 

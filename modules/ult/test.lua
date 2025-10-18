@@ -175,6 +175,7 @@ end
 --- @return void
 function module:stopTest()
     self.isTestRunning = false
+    self.pillagerCooldownEndTime = 0
 end
 --- callback function that gets called on test tick
 --- @return void

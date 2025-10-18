@@ -32,15 +32,13 @@ addon.HR_EVENT_MAJOR_VULNERABILITY_DEBUFF_GAINED = HR_EVENT_MAJOR_VULNERABILITY_
 addon.HR_EVENT_HORN_BUFF_GAINED = HR_EVENT_HORN_BUFF_GAINED
 addon.HR_EVENT_ATRO_CAST_STARTED = HR_EVENT_ATRO_CAST_STARTED
 
-local pillagersProfitCooldown = 45 * 1000 -- 45s cooldown
-
 
 --- when registering for effect changes, we only use the UPDATED result, as this is also fired when an effect is applied.
 --- This avoids double triggers when an effect is applied (GAINED and UPDATED are fired in sequence).
 --- The register parts are scoped in do ... end blocks to avoid name clashes.
 --- The Handlers are generic functions returning the actual handler functions to avoid code duplication.
 --- @return void
-function module:registerBuffTrackers()
+function module:registerTrackers()
     -- handlers
     local function getEffectChangedHandler(eventToFire)
         return function(eventId, changeType, effectSlot, effectName, unitTag, beginTime, endTime, stackCount, iconName, buffType, effectType, abilityType, statusEffectType, unitName, unitId, abilityId, sourceType)
@@ -133,4 +131,11 @@ function module:registerBuffTrackers()
             EM:AddFilterForEvent(eventName .. i, EVENT_COMBAT_EVENT, REGISTER_FILTER_SOURCE_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_GROUP)
         end
     end
+
+    -- register cooldown end time tracker for pillager cooldown
+    local function setPillagerCooldownEndTime(_, duration)
+        self.pillagerCooldownEndTime = GetGameTimeMilliseconds() + duration
+    end
+
+    addon.RegisterCallback(HR_EVENT_PILLAGER_BUFF_COOLDOWN, setPillagerCooldownEndTime)
 end
