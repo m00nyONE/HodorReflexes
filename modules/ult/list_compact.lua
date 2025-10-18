@@ -33,7 +33,14 @@ local svDefault = {
     windowWidth = 262,
 
     showPercentValue = 1.0,
-    showRawValue = 1.0,
+    showGainValue = 1.0,
+
+    showHorn = true,
+    showColos = true,
+    showAtro = true,
+    showSlayer = true,
+    showPillager = true,
+    showCryptCannon = true,
 
     headerOpacity = 0.0,
     zeroTimerOpacity = 0.7,
@@ -215,7 +222,7 @@ function module:applyUserStyles(rowControl, data, scrollList)
     percentageControl:SetScale(self.compactList.sw.showPercentValue)
     local rawValueControl = rowControl:GetNamedChild("_RawValue")
     rawValueControl:SetText(string.format('%s', data.ultValue))
-    rawValueControl:SetScale(self.compactList.sw.showRawValue)
+    rawValueControl:SetScale(self.compactList.sw.showGainValue)
 end
 
 function module:applyValues(rowControl, data, scrollList, percentage, gain, gainUnit)
@@ -322,12 +329,6 @@ function module:UpdateCompactList()
     ZO_ScrollList_Clear(listControl)
     local dataList = ZO_ScrollList_GetDataList(listControl)
 
-    local highestSlayerPoints = 0
-    local highestPillagerPoints = 0
-    local highestCryptCannonPoints = 0
-
-    local lists = {}
-
     local hornList = {}
     local colosList = {}
     local atroList = {}
@@ -336,32 +337,23 @@ function module:UpdateCompactList()
     local cryptCannonList = {}
 
     for _, playerData in pairs(addon.playersData) do
-        if playerData.hasHorn or playerData.hasSaxhleel then
+        if self.compactList.sw.showHorn and playerData.hasHorn or playerData.hasSaxhleel then
             table.insert(hornList, playerData)
         end
-        if playerData.hasColos then
+        if self.compactList.sw.showColos and playerData.hasColos then
             table.insert(colosList, playerData)
         end
-        if playerData.hasAtro then
+        if self.compactList.sw.showAtro and playerData.hasAtro then
             table.insert(atroList, playerData)
         end
-        if playerData.hasMAorWM then
+        if self.compactList.sw.showSlayer and playerData.hasMAorWM then
             table.insert(slayerList, playerData)
-            if playerData.ultValue > highestSlayerPoints then
-                highestSlayerPoints = playerData.ultValue
-            end
         end
-        if playerData.hasPillager then
+        if self.compactList.sw.showPillager and playerData.hasPillager then
             table.insert(pillagerList, playerData)
-            if playerData.ultValue > highestPillagerPoints then
-                highestPillagerPoints = playerData.ultValue
-            end
         end
-        if playerData.hasCryptCannon then
+        if self.compactList.sw.showCryptCannon and playerData.hasCryptCannon then
             table.insert(cryptCannonList, playerData)
-            if playerData.ultValue > highestCryptCannonPoints then
-                highestCryptCannonPoints = playerData.ultValue
-            end
         end
     end
     table.sort(hornList, self.sortByUltPercentage)
@@ -374,11 +366,7 @@ function module:UpdateCompactList()
 
     --- fill dataList ---
     -- insert Header
-    table.insert(dataList, ZO_ScrollList_CreateDataEntry(self.compactList.HEADER_TYPE, {
-        slayerSeconds = zo_floor(highestSlayerPoints / 10), -- 10 points per second
-        pillagerGain = zo_floor(highestPillagerPoints * 0.02) * 5, -- 2% of ult spent gets transferred per tick ( 5 ticks in total )
-        cryptCannonGain = zo_floor(highestCryptCannonPoints / GetGroupSize()), -- ult gets transferred equally amongst living group members / we ignore the living part here
-    }))
+    table.insert(dataList, ZO_ScrollList_CreateDataEntry(self.compactList.HEADER_TYPE, {}))
 
     local entryCount = 0
     for i, playerData in ipairs(hornList) do
