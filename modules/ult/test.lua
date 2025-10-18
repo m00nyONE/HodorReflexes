@@ -29,9 +29,21 @@ local localPlayer = "player"
 
 --- @type table<number> a pool of all ultimates in the game
 local ultPool
---- generate a pool of all ultimates in the game
+--- generate a pool of all ultimates in the game except for special ultimates for testing purposes
 --- @return void
-local function genUltPool()
+function module:genUltPoolForTest()
+    local ignoredSpecialUlts = {}
+    for _, id in ipairs(self.hornAbilityIds) do table.insert(ignoredSpecialUlts, id) end
+    for _, id in ipairs(self.colosAbilityIds) do table.insert(ignoredSpecialUlts, id) end
+    for _, id in ipairs(self.atroAbilityIds) do table.insert(ignoredSpecialUlts, id) end
+    for _, id in ipairs(self.barrierAbilityIds) do table.insert(ignoredSpecialUlts, id) end
+    local function isIgnoredSpecialUlt(abilityId)
+        for _, id in ipairs(ignoredSpecialUlts) do
+            if abilityId == id then return true end
+        end
+        return false
+    end
+
     ultPool = {}
     for skillType = 1, GetNumSkillTypes() do
         for skillLineIndex = 1, GetNumSkillLines(skillType) do
@@ -45,7 +57,10 @@ local function genUltPool()
                     end
                     -- iterate over temporary Id table and write it to our final destination
                     for _, _abilityId in ipairs(_tempIds) do
-                        table.insert(ultPool, _abilityId)
+                        if not isIgnoredSpecialUlt(_abilityId) then
+                            -- only add non-special ultimates to the pool. Special ultimates are handled separately and are assigned manually during the test
+                            table.insert(ultPool, _abilityId)
+                        end
                     end
                 end
             end
@@ -59,25 +74,54 @@ function module:startTest()
     self.isTestRunning = true
 
 
-    if not ultPool then genUltPool() end
+    if not ultPool then self:genUltPoolForTest() end
+
+    local limits = {
+        horn = 1,
+        saxhleel = 1,
+        colos = 2,
+        atro = 2,
+        cryptCannon = 1,
+        pillager = 1,
+        MAorWM = 2,
+    }
+
 
     for name, data in pairs(addon.playersData) do
         local ultValue = zo_random(1, 500)
         local ult1ID = ultPool[zo_random(1, #ultPool)]
         local ult2ID = ultPool[zo_random(1, #ultPool)]
-        if data.classId == 5 then
-            ult1ID = 122395
-            ult2ID = 40223
+        local ultActivatedSetID = 0
+
+        if limits.horn > 0 then
+            ult1ID = self.hornAbilityIds[zo_random(1, #self.hornAbilityIds)]
+            limits.horn = limits.horn - 1
+        elseif limits.saxhleel > 0 then
+            ultActivatedSetID = 1 -- saxhleel
+            limits.saxhleel = limits.saxhleel - 1
+        elseif limits.colos > 0 then
+            ult1ID = self.colosAbilityIds[zo_random(1, #self.colosAbilityIds)]
+            limits.colos = limits.colos - 1
+        elseif limits.atro > 0 then
+            ult1ID = self.atroAbilityIds[zo_random(1, #self.atroAbilityIds)]
+            limits.atro = limits.atro - 1
+        elseif limits.cryptCannon > 0 then
+            ult1ID = self.cryptCannonAbilityIds[zo_random(1, #self.cryptCannonAbilityIds)]
+            ult2ID = self.cryptCannonAbilityIds[zo_random(1, #self.cryptCannonAbilityIds)]
+            limits.cryptCannon = limits.cryptCannon - 1
+        elseif limits.pillager > 0 then
+            ult1ID = self.barrierAbilityIds[zo_random(1, #self.barrierAbilityIds)]
+            ultActivatedSetID = 2 -- pillager
+            limits.pillager = limits.pillager - 1
+        elseif limits.MAorWM > 0 then
+            ultActivatedSetID = zo_random(4, 5) -- MA or WM
+            limits.MAorWM = limits.MAorWM - 1
         end
-        if data.classId == 2 then
-            ult1ID = 23492
-        end
+
         local ult1Cost = GetAbilityCost(ult2ID)
         local ult2Cost = GetAbilityCost(ult2ID)
         local ult1Percentage = self:getUltPercentage(ultValue, ult1Cost)
         local ult2Percentage = self:getUltPercentage(ultValue, ult2Cost)
-
-        local ultActivatedSetID = zo_random(0, 5)
 
         local mockData = {
             ult1ID = ult1ID,
