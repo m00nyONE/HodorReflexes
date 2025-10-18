@@ -76,6 +76,9 @@ function listClass:Initialize(listDefinition)
         self[k] = v
     end
 
+    self.listHeaderHeight = self.listHeaderHeight or 22
+    self.listRowHeight = self.listRowHeight or 22
+
     -- create a unique id for the list instance (and make it somewhat readable by adding the list name at the end)
     self._Id = string.format("%s_%s", util.GetTableReference(self), self.name)
     self.updateDebounceDelayMS = self.updateDebounceDelayMS or globalUpdateDebounceDelayMS
@@ -173,8 +176,6 @@ function listClass:CreateSavedVariables()
     self.svDefault.windowPosLeft = self.svDefault.windowPosLeft or 0
     self.svDefault.windowPosTop = self.svDefault.windowPosTop or 0
     self.svDefault.windowWidth = self.svDefault.windowWidth or 220
-    self.svDefault.listHeaderHeight = self.svDefault.listHeaderHeight or 22
-    self.svDefault.listRowHeight = self.svDefault.listRowHeight or 22
 
     local svNamespace = self.name .. "List"
     -- we use a combination of accountWide saved variables and per character saved variables. This little swappi swappi allows us to switch between them without defining new variables
@@ -205,7 +206,7 @@ function listClass:CreateControls()
     window:SetHidden(true)
     window:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, self.sv.windowPosLeft, self.sv.windowPosTop)
     window:SetWidth(self.sv.windowWidth)
-    window:SetHeight(self.sv.listHeaderHeight + (self.sv.listRowHeight * GROUP_SIZE_MAX) + self.sv.listRowHeight) -- header + rows + extraRow for padding
+    window:SetHeight(self.listHeaderHeight + (self.listRowHeight * GROUP_SIZE_MAX) + self.listRowHeight) -- header + rows + extraRow for padding
     window:SetHandler( "OnMoveStop", function()
         self.sv.windowPosLeft = window:GetLeft()
         self.sv.windowPosTop = window:GetTop()
@@ -218,7 +219,7 @@ function listClass:CreateControls()
     local listControl = WM:CreateControlFromVirtual(listControlName, window, "ZO_ScrollList")
     listControl:SetAnchor(TOPLEFT, window, TOPLEFT, 0, 0, ANCHOR_CONSTRAINS_XY)
     listControl:SetAnchor(TOPRIGHT, window, TOPRIGHT, ZO_SCROLL_BAR_WIDTH, 0, ANCHOR_CONSTRAINS_X)
-    listControl:SetHeight(self.sv.listHeaderHeight + (self.sv.listRowHeight * GROUP_SIZE_MAX) + self.sv.listRowHeight) -- header + rows + extraRow for padding
+    listControl:SetHeight(self.listHeaderHeight + (self.listRowHeight * GROUP_SIZE_MAX) + self.listRowHeight) -- header + rows + extraRow for padding
     listControl:SetMouseEnabled(false)
     listControl:GetNamedChild("Contents"):SetMouseEnabled(false)
     self.listControlName = listControlName
