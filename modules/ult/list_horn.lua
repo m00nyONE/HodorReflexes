@@ -36,8 +36,7 @@ local svDefault = {
     colorHorn = {0, 1, 1}, -- cyan
     colorForce = {1, 1, 0}, -- yellow
     highlightSaxhleel = true,
-    highlightSaxhleelColor = {1, 1, 0, 0.15} -- yellow, alpha 0.15
-
+    --highlightSaxhleelColor = {1, 1, 0}, -- yellow
 }
 
 function module:CreateHornList()
@@ -124,7 +123,9 @@ function module:hornListRowCreationFunction(rowControl, data, scrollList)
     if self.hornList.sw.highlightSaxhleel then
         local _BG = rowControl:GetNamedChild("_BG")
         if data.hasSaxhleel then
-            _BG:SetColor(unpack(self.hornList.sw.highlightSaxhleelColor))
+            --_BG:SetColor(unpack(self.hornList.sw.highlightSaxhleelColor))
+            _BG:SetColor(util.Hex2RGB("b4bcb0"))
+            _BG:SetAlpha(0.2)
         else
             _BG:SetColor(1, 1, 1, 0)
         end

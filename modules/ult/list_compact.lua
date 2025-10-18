@@ -56,6 +56,7 @@ function module:CreateCompactList()
         colorCooldowns = {1, 0, 0}, -- red
         colorDurations = {1, 1, 0}, -- yellow
         colorHornBG = {1, 1, 0}, -- yellow
+        --colorHornBG = { util.Hex2RGB("fa5b26") }, -- orange
         colorColosBG = {0, 0, 1}, -- blue
         colorAtroBG = {0, 1, 1}, -- cyan
         colorSlayerBG = {1, 0, 0}, -- red
