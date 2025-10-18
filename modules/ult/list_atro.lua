@@ -27,9 +27,6 @@ local svDefault = {
     windowPosTop = 200,
     windowWidth = 262,
 
-    listHeaderHeight = 28,
-    listRowHeight = 24,
-
     showPercentValue = 1.0,
     showRawValue = 1.0,
 
@@ -45,6 +42,8 @@ function module:CreateAtroList()
         name = "atro",
         svDefault = svDefault,
         Update = function() self:UpdateAtroList() end,
+        listHeaderHeight = 28,
+        listRowHeight = 24,
     }
     self.atroList = addon.listClass:New(listDefinition)
 
@@ -71,7 +70,7 @@ function module:CreateAtroList()
             self.atroList.listControl,
             self.atroList.HEADER_TYPE,
             self.atroList.HEADER_TEMPLATE,
-            self.atroList.sw.listHeaderHeight,
+            self.atroList.listHeaderHeight,
             headerRowCreationWrapper(self.atroListHeaderRowCreationFunction)
     )
     ZO_ScrollList_SetTypeCategoryHeader(self.atroList.listControl, self.atroList.HEADER_TYPE, true)
@@ -80,7 +79,7 @@ function module:CreateAtroList()
             self.atroList.listControl,
             self.atroList.ROW_TYPE,
             self.atroList.ROW_TEMPLATE,
-            self.atroList.sw.listRowHeight,
+            self.atroList.listRowHeight,
             playerRowCreationWrapper(self.atroListRowCreationFunction)
     )
 end
@@ -158,8 +157,8 @@ function module:UpdateAtroList()
     end
 
     self.atroList.window:SetHeight(
-        self.atroList.sw.listHeaderHeight +
-        (#playersDataList * self.atroList.sw.listRowHeight)
+        self.atroList.listHeaderHeight +
+        (#playersDataList * self.atroList.listRowHeight)
     )
 
     ZO_ScrollList_Commit(listControl)

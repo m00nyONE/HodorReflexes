@@ -23,9 +23,6 @@ local svDefault = {
     windowPosTop = 200,
     windowWidth = 262,
 
-    listHeaderHeight = 28,
-    listRowHeight = 24,
-
     showPercentValue = 1.0,
     showRawValue = 1.0,
 
@@ -37,6 +34,8 @@ function module:CreateMiscList()
         name = "misc",
         svDefault = svDefault,
         Update = function() self:UpdateMiscList() end,
+        listHeaderHeight = 28,
+        listRowHeight = 24,
     }
     self.miscList = addon.listClass:New(listDefinition)
 
@@ -63,7 +62,7 @@ function module:CreateMiscList()
             self.miscList.listControl,
             self.miscList.HEADER_TYPE,
             self.miscList.HEADER_TEMPLATE,
-            self.miscList.sw.listHeaderHeight,
+            self.miscList.listHeaderHeight,
             headerRowCreationWrapper(self.miscListHeaderRowCreationFunction)
     )
     ZO_ScrollList_SetTypeCategoryHeader(self.miscList.listControl, self.miscList.HEADER_TYPE, true)
@@ -72,7 +71,7 @@ function module:CreateMiscList()
             self.miscList.listControl,
             self.miscList.ROW_TYPE,
             self.miscList.ROW_TEMPLATE,
-            self.miscList.sw.listRowHeight,
+            self.miscList.listRowHeight,
             playerRowCreationWrapper(self.miscListRowCreationFunction)
     )
 end
@@ -135,8 +134,8 @@ function module:UpdateMiscList()
     end
 
     self.miscList.window:SetHeight(
-        self.miscList.sw.listHeaderHeight +
-        (#playersDataList * self.miscList.sw.listRowHeight)
+        self.miscList.listHeaderHeight +
+        (#playersDataList * self.miscList.listRowHeight)
     )
 
     ZO_ScrollList_Commit(listControl)

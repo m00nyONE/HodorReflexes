@@ -26,9 +26,6 @@ local svDefault = {
     windowPosTop = 50,
     windowWidth = 262,
 
-    listHeaderHeight = 28,
-    listRowHeight = 24,
-
     showPercentValue = 1.0,
     showRawValue = 1.0,
 
@@ -43,6 +40,8 @@ function module:CreateColosList()
         name = "colos",
         svDefault = svDefault,
         Update = function() self:UpdateColosList() end,
+        listHeaderHeight = 28,
+        listRowHeight = 24,
     }
     self.colosList = addon.listClass:New(listDefinition)
 
@@ -69,7 +68,7 @@ function module:CreateColosList()
             self.colosList.listControl,
             self.colosList.HEADER_TYPE,
             self.colosList.HEADER_TEMPLATE,
-            self.colosList.sw.listHeaderHeight,
+            self.colosList.listHeaderHeight,
             headerRowCreationWrapper(self.colosListHeaderRowCreationFunction)
     )
     ZO_ScrollList_SetTypeCategoryHeader(self.colosList.listControl, self.colosList.HEADER_TYPE, true)
@@ -78,7 +77,7 @@ function module:CreateColosList()
             self.colosList.listControl,
             self.colosList.ROW_TYPE,
             self.colosList.ROW_TEMPLATE,
-            self.colosList.sw.listRowHeight,
+            self.colosList.listRowHeight,
             playerRowCreationWrapper(self.colosListRowCreationFunction)
     )
 end
@@ -149,8 +148,8 @@ function module:UpdateColosList()
     end
 
     self.colosList.window:SetHeight(
-        self.colosList.sw.listHeaderHeight +
-        (#playersDataList * self.colosList.sw.listRowHeight)
+        self.colosList.listHeaderHeight +
+        (#playersDataList * self.colosList.listRowHeight)
     )
 
     ZO_ScrollList_Commit(listControl)

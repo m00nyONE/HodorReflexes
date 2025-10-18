@@ -27,9 +27,6 @@ local svDefault = {
     windowPosTop = 50,
     windowWidth = 262,
 
-    listHeaderHeight = 28,
-    listRowHeight = 24,
-
     showPercentValue = 1.0,
     showRawValue = 1.0,
 
@@ -48,6 +45,8 @@ function module:CreateHornList()
         name = "horn",
         svDefault = svDefault,
         Update = function() self:UpdateHornList() end,
+        listHeaderHeight = 28,
+        listRowHeight = 24,
     }
     self.hornList = addon.listClass:New(listDefinition)
 
@@ -74,7 +73,7 @@ function module:CreateHornList()
             self.hornList.listControl,
             self.hornList.HEADER_TYPE,
             self.hornList.HEADER_TEMPLATE,
-            self.hornList.sw.listHeaderHeight,
+            self.hornList.listHeaderHeight,
             headerRowCreationWrapper(self.hornListHeaderRowCreationFunction)
     )
     ZO_ScrollList_SetTypeCategoryHeader(self.hornList.listControl, self.hornList.HEADER_TYPE, true)
@@ -83,7 +82,7 @@ function module:CreateHornList()
             self.hornList.listControl,
             self.hornList.ROW_TYPE,
             self.hornList.ROW_TEMPLATE,
-            self.hornList.sw.listRowHeight,
+            self.hornList.listRowHeight,
             playerRowCreationWrapper(self.hornListRowCreationFunction)
     )
 end
@@ -174,8 +173,8 @@ function module:UpdateHornList()
     end
 
     self.hornList.window:SetHeight(
-            self.hornList.sw.listHeaderHeight +
-            (#playersDataList * self.hornList.sw.listRowHeight)
+            self.hornList.listHeaderHeight +
+            (#playersDataList * self.hornList.listRowHeight)
     )
 
     ZO_ScrollList_Commit(listControl)

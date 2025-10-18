@@ -30,9 +30,6 @@ local svDefault = {
     windowPosTop = 50,
     windowWidth = 227,
 
-    listHeaderHeight = 22,
-    listRowHeight = 22,
-
     listHeaderOpacity = 0.8,
     listRowEvenOpacity = 0.65,
     listRowOddOpacity = 0.45,
@@ -51,6 +48,8 @@ function module:CreateDamageList()
         name = "damage",
         svDefault = svDefault,
         Update = function() self:UpdateDamageList() end,
+        listHeaderHeight = 22,
+        listRowHeight = 22,
     }
     self.damageList = addon.listClass:New(listDefinition)
 
@@ -88,7 +87,7 @@ function module:CreateDamageList()
             self.damageList.listControl,
             self.damageList.HEADER_TYPE,
             self.damageList.HEADER_TEMPLATE,
-            self.damageList.sw.listHeaderHeight,
+            self.damageList.listHeaderHeight,
             headerRowCreationWrapper(self.headerRowCreationFunction)
     )
     ZO_ScrollList_SetTypeCategoryHeader(self.damageList.listControl, self.damageList.HEADER_TYPE, true)
@@ -97,7 +96,7 @@ function module:CreateDamageList()
             self.damageList.listControl,
             self.damageList.ROW_TYPE,
             self.damageList.ROW_TEMPLATE,
-            self.damageList.sw.listRowHeight,
+            self.damageList.listRowHeight,
             damageRowCreationWrapper(self.damageRowCreationFunction)
     )
 
@@ -105,7 +104,7 @@ function module:CreateDamageList()
             self.damageList.listControl,
             self.damageList.SUMMARY_TYPE,
             self.damageList.SUMMARY_TEMPLATE,
-            self.damageList.sw.listRowHeight,
+            self.damageList.listRowHeight,
             summaryRowCreationWrapper(self.summaryRowCreationFunction)
     )
     ZO_ScrollList_SetTypeCategoryHeader(self.damageList.listControl, self.damageList.SUMMARY_TYPE, true)
@@ -211,9 +210,9 @@ function module:UpdateDamageList()
     end
 
     self.damageList.window:SetHeight(
-            self.damageList.sw.listHeaderHeight +
-            (#playersDataList * self.damageList.sw.listRowHeight) +
-            (#playersDataList > 0 and self.damageList.sw.listRowHeight or 0) -- summary row
+            self.damageList.listHeaderHeight +
+            (#playersDataList * self.damageList.listRowHeight) +
+            (#playersDataList > 0 and self.damageList.listRowHeight or 0) -- summary row
     )
     ZO_ScrollList_Commit(listControl)
 end

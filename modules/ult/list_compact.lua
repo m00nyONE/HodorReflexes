@@ -33,9 +33,6 @@ local svDefault = {
     windowPosTop = 50,
     windowWidth = 262,
 
-    listHeaderHeight = 84,
-    listRowHeight = 24,
-
     showPercentValue = 1.0,
     showRawValue = 1.0,
 
@@ -58,6 +55,8 @@ function module:CreateCompactList()
         name = "compact",
         svDefault = svDefault,
         Update = function() self:UpdateCompactList() end,
+        listHeaderHeight = 58,
+        listRowHeight = 24,
     }
     self.compactList = addon.listClass:New(listDefinition)
 
@@ -84,7 +83,7 @@ function module:CreateCompactList()
             self.compactList.listControl,
             self.compactList.HEADER_TYPE,
             self.compactList.HEADER_TEMPLATE,
-            self.compactList.sw.listHeaderHeight,
+            self.compactList.listHeaderHeight,
             headerRowCreationWrapper(self.compactListHeaderRowCreationFunction)
     )
     ZO_ScrollList_SetTypeCategoryHeader(self.compactList.listControl, self.compactList.HEADER_TYPE, true)
@@ -102,7 +101,7 @@ function module:CreateCompactList()
             self.compactList.listControl,
             hornType,
             self.compactList.ROW_TEMPLATE,
-            self.compactList.sw.listRowHeight,
+            self.compactList.listRowHeight,
             playerRowCreationWrapper(self.compactListHornRowCreationFunction)
     )
     local colosType = 4
@@ -110,7 +109,7 @@ function module:CreateCompactList()
             self.compactList.listControl,
             colosType,
             self.compactList.ROW_TEMPLATE,
-            self.compactList.sw.listRowHeight,
+            self.compactList.listRowHeight,
             playerRowCreationWrapper(self.compactListColosRowCreationFunction)
     )
     local atroType = 5
@@ -118,7 +117,7 @@ function module:CreateCompactList()
             self.compactList.listControl,
             atroType,
             self.compactList.ROW_TEMPLATE,
-            self.compactList.sw.listRowHeight,
+            self.compactList.listRowHeight,
             playerRowCreationWrapper(self.compactListAtroRowCreationFunction)
     )
     local slayerType = 6
@@ -126,7 +125,7 @@ function module:CreateCompactList()
             self.compactList.listControl,
             slayerType,
             self.compactList.ROW_TEMPLATE,
-            self.compactList.sw.listRowHeight,
+            self.compactList.listRowHeight,
             playerRowCreationWrapper(self.compactListSlayerRowCreationFunction)
     )
     local pillagerType = 7
@@ -134,7 +133,7 @@ function module:CreateCompactList()
             self.compactList.listControl,
             pillagerType,
             self.compactList.ROW_TEMPLATE,
-            self.compactList.sw.listRowHeight,
+            self.compactList.listRowHeight,
             playerRowCreationWrapper(self.compactListPillagerRowCreationFunction)
     )
 
@@ -336,9 +335,8 @@ function module:UpdateCompactList()
     end
 
     self.compactList.window:SetHeight(
-        self.compactList.sw.listHeaderHeight +
-        (entryCount * self.compactList.sw.listRowHeight) +
-        self.compactList.sw.listRowHeight
+        self.compactList.listHeaderHeight +
+        (entryCount * self.compactList.listRowHeight)
     )
 
     ZO_ScrollList_Commit(listControl)
