@@ -18,7 +18,6 @@ local util = addon.util
 local HR_EVENT_HORN_BUFF_GAINED = addon.HR_EVENT_HORN_BUFF_GAINED
 local HR_EVENT_MAJOR_FORCE_BUFF_GAINED = addon.HR_EVENT_MAJOR_FORCE_BUFF_GAINED
 local HR_EVENT_MAJOR_VULNERABILITY_DEBUFF_GAINED = addon.HR_EVENT_MAJOR_VULNERABILITY_DEBUFF_GAINED
-local HR_EVENT_ATRO_CAST_STARTED = addon.HR_EVENT_ATRO_CAST_STARTED
 local HR_EVENT_MAJOR_BERSERK_BUFF_GAINED = addon.HR_EVENT_MAJOR_BERSERK_BUFF_GAINED
 local HR_EVENT_MAJOR_SLAYER_BUFF_GAINED = addon.HR_EVENT_MAJOR_SLAYER_BUFF_GAINED
 local HR_EVENT_PILLAGER_BUFF_COOLDOWN = addon.HR_EVENT_PILLAGER_BUFF_COOLDOWN
@@ -38,16 +37,6 @@ local svDefault = {
 
     headerOpacity = 0.0,
     zeroTimerOpacity = 0.7,
-
-    colorHorn = {0, 1, 1}, -- cyan
-    colorForce = {1, 1, 0}, -- yellow
-    colorVuln = {1, 1, 0}, -- yellow
-    colorAtro = {0, 1, 1}, -- cyan
-    colorBerserk = {1, 1, 0}, -- yellow
-    colorSlayerSeconds = {1, 0.5, 0}, -- orange
-    colorSlayer = {1, 1, 0}, -- yellow
-    colorPillagerUlt = {1, 0.5, 0}, -- orange
-    colorPillagerCooldown = {1, 0, 0}, -- red
 }
 
 function module:CreateCompactList()
@@ -55,13 +44,27 @@ function module:CreateCompactList()
         name = "compact",
         svDefault = svDefault,
         Update = function() self:UpdateCompactList() end,
-        listHeaderHeight = 58,
+        listHeaderHeight = 60,
         listRowHeight = 24,
+        colorCooldowns = {1, 0, 0}, -- red
+        colorDurations = {1, 1, 0}, -- yellow
+        colorHornBG = {1, 1, 0}, -- yellow
+        colorColosBG = {0, 0, 1}, -- blue
+        colorAtroBG = {0, 1, 1}, -- cyan
+        colorSlayerBG = {1, 0, 0}, -- red
+        colorPillagerBG = {0, 1, 0}, -- green
+        colorCryptCannonBG = {1, 0, 1}, -- purple
+        backgroundAlpha = 0.2,
     }
     self.compactList = addon.listClass:New(listDefinition)
 
     self.compactList.HEADER_TYPE = 1 -- type id for header
-    self.compactList.ROW_TYPE = 2 -- type id for rows
+    self.compactList.ROW_TYPE_HORN = 2 -- type id for horn rows
+    self.compactList.ROW_TYPE_COLOS = 3 -- type id for colos rows
+    self.compactList.ROW_TYPE_ATRO = 4 -- type id for atro rows
+    self.compactList.ROW_TYPE_SLAYER = 5 -- type id for slayer rows
+    self.compactList.ROW_TYPE_PILLAGER = 6 -- type id for pillager rows
+    self.compactList.ROW_TYPE_CRYPTCANNON = 7 -- type id for cryptcannon rows
     self.compactList.HEADER_TEMPLATE = "HodorReflexes_Ult_CompactList_Header"
     self.compactList.ROW_TEMPLATE = "HodorReflexes_Ult_CompactList_PlayerRow"
 
@@ -73,7 +76,7 @@ function module:CreateCompactList()
 
     local function playerRowCreationWrapper(wrappedFunction)
         return function(rowControl, data, scrollList)
-            if data.ultValue > 0 and (self.isTestRunning or IsUnitOnline(data.tag)) then
+            if (self.isTestRunning or IsUnitOnline(data.tag)) then
                 wrappedFunction(self, rowControl, data, scrollList)
             end
         end
@@ -88,53 +91,47 @@ function module:CreateCompactList()
     )
     ZO_ScrollList_SetTypeCategoryHeader(self.compactList.listControl, self.compactList.HEADER_TYPE, true)
 
-    --ZO_ScrollList_AddDataType(
-    --        self.compactList.listControl,
-    --        self.compactList.ROW_TYPE,
-    --        self.compactList.ROW_TEMPLATE,
-    --        self.compactList.sw.listRowHeight,
-    --        playerRowCreationWrapper(self.compactListRowCreationFunction)
-    --)
-
-    local hornType = 3
     ZO_ScrollList_AddDataType(
             self.compactList.listControl,
-            hornType,
+            self.compactList.ROW_TYPE_HORN,
             self.compactList.ROW_TEMPLATE,
             self.compactList.listRowHeight,
             playerRowCreationWrapper(self.compactListHornRowCreationFunction)
     )
-    local colosType = 4
     ZO_ScrollList_AddDataType(
             self.compactList.listControl,
-            colosType,
+            self.compactList.ROW_TYPE_COLOS,
             self.compactList.ROW_TEMPLATE,
             self.compactList.listRowHeight,
             playerRowCreationWrapper(self.compactListColosRowCreationFunction)
     )
-    local atroType = 5
     ZO_ScrollList_AddDataType(
             self.compactList.listControl,
-            atroType,
+            self.compactList.ROW_TYPE_ATRO,
             self.compactList.ROW_TEMPLATE,
             self.compactList.listRowHeight,
             playerRowCreationWrapper(self.compactListAtroRowCreationFunction)
     )
-    local slayerType = 6
     ZO_ScrollList_AddDataType(
             self.compactList.listControl,
-            slayerType,
+            self.compactList.ROW_TYPE_SLAYER,
             self.compactList.ROW_TEMPLATE,
             self.compactList.listRowHeight,
             playerRowCreationWrapper(self.compactListSlayerRowCreationFunction)
     )
-    local pillagerType = 7
     ZO_ScrollList_AddDataType(
             self.compactList.listControl,
-            pillagerType,
+            self.compactList.ROW_TYPE_PILLAGER,
             self.compactList.ROW_TEMPLATE,
             self.compactList.listRowHeight,
             playerRowCreationWrapper(self.compactListPillagerRowCreationFunction)
+    )
+    ZO_ScrollList_AddDataType(
+            self.compactList.listControl,
+            self.compactList.ROW_TYPE_CRYPTCANNON,
+            self.compactList.ROW_TEMPLATE,
+            self.compactList.listRowHeight,
+            playerRowCreationWrapper(self.compactListCryptCannonRowCreationFunction)
     )
 
 end
@@ -142,22 +139,27 @@ end
 function module:compactListHeaderRowCreationFunction(rowControl, data, scrollList)
     if not rowControl._initialized then
         rowControl:GetNamedChild("_BG"):SetAlpha(self.compactList.sw.headerOpacity)
-        rowControl:GetNamedChild("_HornDuration"):SetColor(unpack(self.compactList.sw.colorHorn))
+
+        rowControl:GetNamedChild("_HornIcon"):SetTexture(self.hornIcon)
+        rowControl:GetNamedChild("_HornDuration"):SetColor(unpack(self.compactList.colorDurations))
         rowControl:GetNamedChild("_HornDuration"):SetAlpha(self.compactList.sw.zeroTimerOpacity)
-        rowControl:GetNamedChild("_ForceDuration"):SetColor(unpack(self.compactList.sw.colorForce))
-        rowControl:GetNamedChild("_ForceDuration"):SetAlpha(self.compactList.sw.zeroTimerOpacity)
         self.compactList:CreateCountdownOnControl(
                 rowControl:GetNamedChild("_HornDuration"),
                 HR_EVENT_HORN_BUFF_GAINED,
                 self.compactList.sw.zeroTimerOpacity
         )
+
+        rowControl:GetNamedChild("_ForceIcon"):SetTexture(self.forceIcon)
+        rowControl:GetNamedChild("_ForceDuration"):SetColor(unpack(self.compactList.colorDurations))
+        rowControl:GetNamedChild("_ForceDuration"):SetAlpha(self.compactList.sw.zeroTimerOpacity)
         self.compactList:CreateCountdownOnControl(
                 rowControl:GetNamedChild("_ForceDuration"),
                 HR_EVENT_MAJOR_FORCE_BUFF_GAINED,
                 self.compactList.sw.zeroTimerOpacity
         )
 
-        rowControl:GetNamedChild("_VulnDuration"):SetColor(unpack(self.compactList.sw.colorVuln))
+        rowControl:GetNamedChild("_ColosIcon"):SetTexture(self.vulnIcon)
+        rowControl:GetNamedChild("_VulnDuration"):SetColor(unpack(self.compactList.colorDurations))
         rowControl:GetNamedChild("_VulnDuration"):SetAlpha(self.compactList.sw.zeroTimerOpacity)
         self.compactList:CreateCountdownOnControl(
                 rowControl:GetNamedChild("_VulnDuration"),
@@ -165,50 +167,38 @@ function module:compactListHeaderRowCreationFunction(rowControl, data, scrollLis
                 self.compactList.sw.zeroTimerOpacity
         )
 
-        rowControl:GetNamedChild("_AtroDuration"):SetColor(unpack(self.compactList.sw.colorAtro))
-        rowControl:GetNamedChild("_AtroDuration"):SetAlpha(self.compactList.sw.zeroTimerOpacity)
-        rowControl:GetNamedChild("_BerserkDuration"):SetColor(unpack(self.compactList.sw.colorBerserk))
+        rowControl:GetNamedChild("_AtroIcon"):SetTexture(self.berserkIcon)
+        rowControl:GetNamedChild("_BerserkDuration"):SetColor(unpack(self.compactList.colorDurations))
         rowControl:GetNamedChild("_BerserkDuration"):SetAlpha(self.compactList.sw.zeroTimerOpacity)
-        self.compactList:CreateCountdownOnControl(
-                rowControl:GetNamedChild("_AtroDuration"),
-                HR_EVENT_ATRO_CAST_STARTED,
-                self.compactList.sw.zeroTimerOpacity
-        )
         self.compactList:CreateCountdownOnControl(
                 rowControl:GetNamedChild("_BerserkDuration"),
                 HR_EVENT_MAJOR_BERSERK_BUFF_GAINED,
                 self.compactList.sw.zeroTimerOpacity
         )
 
-        rowControl:GetNamedChild("_SlayerSeconds"):SetColor(unpack(self.compactList.sw.colorSlayerSeconds))
-        rowControl:GetNamedChild("_SlayerSeconds"):SetAlpha(self.compactList.sw.zeroTimerOpacity)
-        rowControl:GetNamedChild("_SlayerDuration"):SetColor(unpack(self.compactList.sw.colorSlayer))
+        rowControl:GetNamedChild("_SlayerIcon"):SetTexture(self.slayerIcon)
+        rowControl:GetNamedChild("_SlayerDuration"):SetColor(unpack(self.compactList.colorDurations))
         rowControl:GetNamedChild("_SlayerDuration"):SetAlpha(self.compactList.sw.zeroTimerOpacity)
         self.compactList:CreateCountdownOnControl(
                 rowControl:GetNamedChild("_SlayerDuration"),
-                addon.HR_EVENT_MAJOR_SLAYER_BUFF_GAINED,
+                HR_EVENT_MAJOR_SLAYER_BUFF_GAINED,
                 self.compactList.sw.zeroTimerOpacity
         )
 
-        rowControl:GetNamedChild("_PillagerGain"):SetColor(unpack(self.compactList.sw.colorPillagerUlt))
-        rowControl:GetNamedChild("_PillagerGain"):SetAlpha(self.compactList.sw.zeroTimerOpacity)
-        rowControl:GetNamedChild("_PillagerCooldown"):SetColor(unpack(self.compactList.sw.colorPillagerCooldown))
+        rowControl:GetNamedChild("_PillagerIcon"):SetTexture(self.pillagerIcon)
+        rowControl:GetNamedChild("_PillagerCooldown"):SetColor(unpack(self.compactList.colorCooldowns))
         rowControl:GetNamedChild("_PillagerCooldown"):SetAlpha(self.compactList.sw.zeroTimerOpacity)
         self.compactList:CreateCountdownOnControl(
                 rowControl:GetNamedChild("_PillagerCooldown"),
-                addon.HR_EVENT_PILLAGER_BUFF_COOLDOWN,
+                HR_EVENT_PILLAGER_BUFF_COOLDOWN,
                 self.compactList.sw.zeroTimerOpacity
         )
 
         rowControl._initialized = true
     end
-
-    rowControl:GetNamedChild("_SlayerSeconds"):SetText(string.format('%ds', data.slayerSeconds))
-    rowControl:GetNamedChild("_PillagerGain"):SetText(string.format('%du', data.pillagerGain))
-
 end
 
-function module:compactListRowCreationFunction(rowControl, data, scrollList)
+function module:applyUserStyles(rowControl, data, scrollList)
     local userName = util.GetUserName(data.userId, true)
     local userIcon, tcLeft, tcRight, tcTop, tcBottom = util.GetUserIcon(data.userId, data.classId)
 
@@ -228,34 +218,102 @@ function module:compactListRowCreationFunction(rowControl, data, scrollList)
     rawValueControl:SetScale(self.compactList.sw.showRawValue)
 end
 
+function module:applyValues(rowControl, data, scrollList, percentage, gain, gainUnit)
+    local percentageColor = self:getUltPercentageColor(percentage, 'FFFFFF')
+    rowControl:GetNamedChild("_PctValue"):SetText(string.format('|c%s%d%%|r', percentageColor, percentage))
+    local gainString = "-"
+    if gain ~= nil then gainString = string.format('%d%s', gain, gainUnit or "|u0:2:: |u") end
+    rowControl:GetNamedChild("_RawValue"):SetText(gainString)
+end
+
 function module:compactListHornRowCreationFunction(rowControl, data, scrollList)
-    self:compactListRowCreationFunction(rowControl, data, scrollList)
-    local bgControl = rowControl:GetNamedChild('_BG')
-    bgControl:SetColor(1, 1, 0, 0.2) -- yellow
+    self:applyUserStyles(rowControl, data, scrollList)
+    rowControl:GetNamedChild('_BG'):SetColor(unpack(self.compactList.colorHornBG))
+    rowControl:GetNamedChild('_BG'):SetAlpha(self.compactList.backgroundAlpha)
+    rowControl:GetNamedChild("_UltIcon"):SetTexture(self.hornIcon)
+
+    local hornPercentage = 0
+    local gainSeconds = nil
+    if self:isHorn(data.ult1ID) then hornPercentage = data.ult1Percentage end
+    if self:isHorn(data.ult2ID) then hornPercentage = data.ult2Percentage end
+    if data.hasSaxhleel then
+        hornPercentage = zo_min(data.ult1Percentage, data.ult2Percentage) -- we use the cheapest ult because saxhleel can be thrown at any time
+        gainSeconds = zo_floor(data.ultValue / 15) -- 1s per 15 points of ult
+    end
+
+    self:applyValues(rowControl, data, scrollList, hornPercentage, gainSeconds, "s")
 end
 
 function module:compactListColosRowCreationFunction(rowControl, data, scrollList)
-    self:compactListRowCreationFunction(rowControl, data, scrollList)
-    local bgControl = rowControl:GetNamedChild('_BG')
-    bgControl:SetColor(0, 0, 1, 0.2) -- blue
+    self:applyUserStyles(rowControl, data, scrollList)
+    rowControl:GetNamedChild('_BG'):SetColor(unpack(self.compactList.colorColosBG))
+    rowControl:GetNamedChild('_BG'):SetAlpha(self.compactList.backgroundAlpha)
+    rowControl:GetNamedChild("_UltIcon"):SetTexture(self.colosIcon)
+
+    local colosPercentage = 0
+    if self:isColos(data.ult1ID) then colosPercentage = data.ult1Percentage end
+    if self:isColos(data.ult2ID) then colosPercentage = data.ult2Percentage end
+
+    self:applyValues(rowControl, data, scrollList, colosPercentage, nil, nil)
 end
 
 function module:compactListAtroRowCreationFunction(rowControl, data, scrollList)
-    self:compactListRowCreationFunction(rowControl, data, scrollList)
-    local bgControl = rowControl:GetNamedChild('_BG')
-    bgControl:SetColor(0, 1, 1, 0.2) -- cyan
+    self:applyUserStyles(rowControl, data, scrollList)
+    rowControl:GetNamedChild('_BG'):SetColor(unpack(self.compactList.colorAtroBG))
+    rowControl:GetNamedChild('_BG'):SetAlpha(self.compactList.backgroundAlpha)
+    rowControl:GetNamedChild("_UltIcon"):SetTexture(self.atroIcon)
+
+    local atroPercentage = 0
+    if self:isAtro(data.ult1ID) then atroPercentage = data.ult1Percentage end
+    if self:isAtro(data.ult2ID) then atroPercentage = data.ult2Percentage end
+
+    self:applyValues(rowControl, data, scrollList, atroPercentage, nil, nil)
 end
 
 function module:compactListSlayerRowCreationFunction(rowControl, data, scrollList)
-    self:compactListRowCreationFunction(rowControl, data, scrollList)
-    local bgControl = rowControl:GetNamedChild('_BG')
-    bgControl:SetColor(1, 0, 0, 0.2) -- red
+    self:applyUserStyles(rowControl, data, scrollList)
+    rowControl:GetNamedChild('_BG'):SetColor(unpack(self.compactList.colorSlayerBG))
+    rowControl:GetNamedChild('_BG'):SetAlpha(self.compactList.backgroundAlpha)
+    rowControl:GetNamedChild("_UltIcon"):SetTexture(self.slayerIcon)
+
+    local slayerPercentage = zo_min(data.ult1Percentage, data.ult2Percentage)
+    local gainSeconds = zo_floor(data.ultValue / 10) -- 1s per 10 points of ult
+
+    self:applyValues(rowControl, data, scrollList, slayerPercentage, gainSeconds, "s")
 end
 
 function module:compactListPillagerRowCreationFunction(rowControl, data, scrollList)
-    self:compactListRowCreationFunction(rowControl, data, scrollList)
-    local bgControl = rowControl:GetNamedChild('_BG')
-    bgControl:SetColor(1, 0.5, 0, 0.2) -- orange
+    self:applyUserStyles(rowControl, data, scrollList)
+    rowControl:GetNamedChild('_BG'):SetColor(unpack(self.compactList.colorPillagerBG))
+    rowControl:GetNamedChild('_BG'):SetAlpha(self.compactList.backgroundAlpha)
+    rowControl:GetNamedChild("_UltIcon"):SetTexture(self.pillagerIcon)
+
+    local pillagerPercentage = zo_min(data.ult1Percentage, data.ult2Percentage)
+    local gainUltimate = zo_floor(data.ultValue * 0.02) * 5 -- 2% of ult spent gets transferred per tick ( 5 ticks in total )
+
+    self:applyValues(rowControl, data, scrollList, pillagerPercentage, gainUltimate, nil)
+    if self.pillagerCooldownEndTime > GetGameTimeMilliseconds() then
+        rowControl:GetNamedChild("_PctValue"):SetText(string.format("|c%s%d%%", "FF0000", pillagerPercentage)) -- red
+    end
+end
+
+function module:compactListCryptCannonRowCreationFunction(rowControl, data, scrollList)
+    self:applyUserStyles(rowControl, data, scrollList)
+    rowControl:GetNamedChild('_BG'):SetColor(unpack(self.compactList.colorCryptCannonBG))
+    rowControl:GetNamedChild('_BG'):SetAlpha(self.compactList.backgroundAlpha)
+    rowControl:GetNamedChild("_UltIcon"):SetTexture(self.cryptCannonIcon)
+
+    local groupSize = GetGroupSize()
+    if groupSize == 0 then -- when in test mode, we use the number of players in the data table so we do not divide by 0 while calculating the shared ult
+        for _, _ in pairs(addon.playersData) do
+            groupSize = groupSize + 1
+        end
+    end
+
+    local cryptCannonPercentage = zo_min(data.ult1Percentage, data.ult2Percentage)
+    local gainUltimate = zo_floor(data.ultValue / groupSize) -- ult gets transferred equally amongst living group members / we ignore the living part here
+
+    self:applyValues(rowControl, data, scrollList, cryptCannonPercentage, gainUltimate, nil)
 end
 
 function module:UpdateCompactList()
@@ -266,35 +324,43 @@ function module:UpdateCompactList()
 
     local highestSlayerPoints = 0
     local highestPillagerPoints = 0
+    local highestCryptCannonPoints = 0
+
+    local lists = {}
 
     local hornList = {}
     local colosList = {}
     local atroList = {}
     local slayerList = {}
     local pillagerList = {}
+    local cryptCannonList = {}
 
     for _, playerData in pairs(addon.playersData) do
-        if playerData.ultValue > 0 then
-            if playerData.hasHorn or playerData.hasSaxhleel then
-                table.insert(hornList, playerData)
+        if playerData.hasHorn or playerData.hasSaxhleel then
+            table.insert(hornList, playerData)
+        end
+        if playerData.hasColos then
+            table.insert(colosList, playerData)
+        end
+        if playerData.hasAtro then
+            table.insert(atroList, playerData)
+        end
+        if playerData.hasMAorWM then
+            table.insert(slayerList, playerData)
+            if playerData.ultValue > highestSlayerPoints then
+                highestSlayerPoints = playerData.ultValue
             end
-            if playerData.hasColos then
-                table.insert(colosList, playerData)
+        end
+        if playerData.hasPillager then
+            table.insert(pillagerList, playerData)
+            if playerData.ultValue > highestPillagerPoints then
+                highestPillagerPoints = playerData.ultValue
             end
-            if playerData.hasAtro then
-                table.insert(atroList, playerData)
-            end
-            if playerData.hasMAorWM then
-                table.insert(slayerList, playerData)
-                if playerData.ultValue > highestSlayerPoints then
-                    highestSlayerPoints = playerData.ultValue
-                end
-            end
-            if playerData.hasPillager then
-                table.insert(pillagerList, playerData)
-                if playerData.ultValue > highestPillagerPoints then
-                    highestPillagerPoints = playerData.ultValue
-                end
+        end
+        if playerData.hasCryptCannon then
+            table.insert(cryptCannonList, playerData)
+            if playerData.ultValue > highestCryptCannonPoints then
+                highestCryptCannonPoints = playerData.ultValue
             end
         end
     end
@@ -303,35 +369,41 @@ function module:UpdateCompactList()
     table.sort(atroList, self.sortByUltPercentage)
     table.sort(slayerList, self.sortByUltPercentage)
     table.sort(pillagerList, self.sortByUltPercentage)
+    table.sort(cryptCannonList, self.sortByUltPercentage)
 
 
     --- fill dataList ---
     -- insert Header
     table.insert(dataList, ZO_ScrollList_CreateDataEntry(self.compactList.HEADER_TYPE, {
         slayerSeconds = zo_floor(highestSlayerPoints / 10), -- 10 points per second
-        pillagerGain = zo_floor(highestPillagerPoints * 0.02), -- 2% of ult spent gets transferred
+        pillagerGain = zo_floor(highestPillagerPoints * 0.02) * 5, -- 2% of ult spent gets transferred per tick ( 5 ticks in total )
+        cryptCannonGain = zo_floor(highestCryptCannonPoints / GetGroupSize()), -- ult gets transferred equally amongst living group members / we ignore the living part here
     }))
 
     local entryCount = 0
     for i, playerData in ipairs(hornList) do
         entryCount = entryCount + 1
-        table.insert(dataList, ZO_ScrollList_CreateDataEntry(3, playerData))
+        table.insert(dataList, ZO_ScrollList_CreateDataEntry(self.compactList.ROW_TYPE_HORN, playerData))
     end
     for i, playerData in ipairs(colosList) do
         entryCount = entryCount + 1
-        table.insert(dataList, ZO_ScrollList_CreateDataEntry(4, playerData))
+        table.insert(dataList, ZO_ScrollList_CreateDataEntry(self.compactList.ROW_TYPE_COLOS, playerData))
     end
     for i, playerData in ipairs(atroList) do
         entryCount = entryCount + 1
-        table.insert(dataList, ZO_ScrollList_CreateDataEntry(5, playerData))
+        table.insert(dataList, ZO_ScrollList_CreateDataEntry(self.compactList.ROW_TYPE_ATRO, playerData))
     end
     for i, playerData in ipairs(slayerList) do
         entryCount = entryCount + 1
-        table.insert(dataList, ZO_ScrollList_CreateDataEntry(6, playerData))
+        table.insert(dataList, ZO_ScrollList_CreateDataEntry(self.compactList.ROW_TYPE_SLAYER, playerData))
     end
     for i, playerData in ipairs(pillagerList) do
         entryCount = entryCount + 1
-        table.insert(dataList, ZO_ScrollList_CreateDataEntry(7, playerData))
+        table.insert(dataList, ZO_ScrollList_CreateDataEntry(self.compactList.ROW_TYPE_PILLAGER, playerData))
+    end
+    for i, playerData in ipairs(cryptCannonList) do
+        entryCount = entryCount + 1
+        table.insert(dataList, ZO_ScrollList_CreateDataEntry(self.compactList.ROW_TYPE_CRYPTCANNON, playerData))
     end
 
     self.compactList.window:SetHeight(

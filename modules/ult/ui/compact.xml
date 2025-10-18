@@ -6,75 +6,64 @@
 <GuiXml>
     <Controls>
         <Control name="HodorReflexes_Ult_CompactList_Header" virtual="true">
-            <Dimensions y="84" />
+            <Dimensions y="60" />
             <Controls>
                 <Texture name="$(parent)_BG" color="000000" alpha="0.0" hidden="false">
                     <AnchorFill />
                 </Texture>
 
-                <Texture name="$(parent)_HornIcon" textureFile="/esoui/art/icons/ability_ava_003_a.dds">
+                <Texture name="$(parent)_HornIcon" textureFile="/esoui/art/icons/ability_ava_003.dds">
                     <Dimensions x="28" y="28"/>
-                    <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)" offsetX="10"/>
+                    <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)" offsetX="4"/> <!-- 24px offset -->
                 </Texture>
                 <Label name="$(parent)_HornDuration" horizontalAlignment="center" font="$(MEDIUM_FONT)|$(KB_22)|soft-shadow-thick" text="0.0" wrapMode="TRUNCATE">
                     <Dimensions x="50" y="24"/>
                     <Anchor point="TOP" relativePoint="BOTTOM" relativeTo="$(parent)_HornIcon" offsetX="0" offsetY="2" />
                 </Label>
-                <Label name="$(parent)_ForceDuration" horizontalAlignment="center" font="$(MEDIUM_FONT)|$(KB_22)|soft-shadow-thick" text="0.0" wrapMode="TRUNCATE">
-                    <Dimensions x="50" y="24"/>
-                    <Anchor point="TOP" relativePoint="BOTTOM" relativeTo="$(parent)_HornDuration" offsetX="0" offsetY="2" />
-                </Label>
 
-                <Texture name="$(parent)_ColosIcon" textureFile="/esoui/art/icons/ability_necromancer_006_a.dds">
+                <Texture name="$(parent)_ForceIcon" textureFile="/esoui/art/icons/ability_ava_003.dds">
                     <Dimensions x="28" y="28"/>
                     <Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$(parent)_HornIcon" offsetX="10"/>
                 </Texture>
-                <Label name="$(parent)_ColosDuration" horizontalAlignment="center" font="$(MEDIUM_FONT)|$(KB_22)|soft-shadow-thick" text="" wrapMode="TRUNCATE">
+                <Label name="$(parent)_ForceDuration" horizontalAlignment="center" font="$(MEDIUM_FONT)|$(KB_22)|soft-shadow-thick" text="0.0" wrapMode="TRUNCATE">
                     <Dimensions x="50" y="24"/>
-                    <Anchor point="TOP" relativePoint="BOTTOM" relativeTo="$(parent)_ColosIcon" offsetX="0" offsetY="2" />
+                    <Anchor point="TOP" relativePoint="BOTTOM" relativeTo="$(parent)_ForceIcon" offsetX="0" offsetY="2" />
                 </Label>
+
+                <Texture name="$(parent)_ColosIcon" textureFile="/esoui/art/icons/ability_necromancer_006.dds">
+                    <Dimensions x="28" y="28"/>
+                    <Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$(parent)_ForceIcon" offsetX="10"/>
+                </Texture>
                 <Label name="$(parent)_VulnDuration" horizontalAlignment="center" font="$(MEDIUM_FONT)|$(KB_22)|soft-shadow-thick" text="0.0" wrapMode="TRUNCATE">
                     <Dimensions x="50" y="24"/>
-                    <Anchor point="TOP" relativePoint="BOTTOM" relativeTo="$(parent)_ColosDuration" offsetX="0" offsetY="2" />
+                    <Anchor point="TOP" relativePoint="BOTTOM" relativeTo="$(parent)_ColosIcon" offsetX="0" offsetY="2" />
                 </Label>
 
                 <Texture name="$(parent)_AtroIcon" textureFile="/esoui/art/icons/ability_sorcerer_greater_storm_atronach.dds">
                     <Dimensions x="28" y="28"/>
                     <Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$(parent)_ColosIcon" offsetX="10"/>
                 </Texture>
-                <Label name="$(parent)_AtroDuration" horizontalAlignment="center" font="$(MEDIUM_FONT)|$(KB_22)|soft-shadow-thick" text="0.0" wrapMode="TRUNCATE">
-                    <Dimensions x="50" y="24"/>
-                    <Anchor point="TOP" relativePoint="BOTTOM" relativeTo="$(parent)_AtroIcon" offsetX="0" offsetY="2" />
-                </Label>
                 <Label name="$(parent)_BerserkDuration" horizontalAlignment="center" font="$(MEDIUM_FONT)|$(KB_22)|soft-shadow-thick" text="0.0" wrapMode="TRUNCATE">
                     <Dimensions x="50" y="24"/>
-                    <Anchor point="TOP" relativePoint="BOTTOM" relativeTo="$(parent)_AtroDuration" offsetX="0" offsetY="2" />
+                    <Anchor point="TOP" relativePoint="BOTTOM" relativeTo="$(parent)_AtroIcon" offsetX="0" offsetY="2" />
                 </Label>
 
                 <Texture name="$(parent)_SlayerIcon" textureFile="/esoui/art/icons/ability_buff_major_slayer.dds">
                     <Dimensions x="28" y="28"/>
                     <Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$(parent)_AtroIcon" offsetX="10"/>
                 </Texture>
-                <Label name="$(parent)_SlayerSeconds" horizontalAlignment="center" font="$(MEDIUM_FONT)|$(KB_22)|soft-shadow-thick" text="0.0" wrapMode="TRUNCATE">
-                    <Dimensions x="50" y="24"/>
-                    <Anchor point="TOP" relativePoint="BOTTOM" relativeTo="$(parent)_SlayerIcon" offsetX="0" offsetY="2" />
-                </Label>
                 <Label name="$(parent)_SlayerDuration" horizontalAlignment="center" font="$(MEDIUM_FONT)|$(KB_22)|soft-shadow-thick" text="0.0" wrapMode="TRUNCATE">
                     <Dimensions x="50" y="24"/>
-                    <Anchor point="TOP" relativePoint="BOTTOM" relativeTo="$(parent)_SlayerSeconds" offsetX="0" offsetY="2" />
+                    <Anchor point="TOP" relativePoint="BOTTOM" relativeTo="$(parent)_SlayerIcon" offsetX="0" offsetY="2" />
                 </Label>
 
                 <Texture name="$(parent)_PillagerIcon" textureFile="esoui/art/icons/ability_healer_030.dds">
                     <Dimensions x="28" y="28"/>
-                    <Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$(parent)_SlayerIcon" offsetX="10"/>
+                    <Anchor point="TOPRIGHT" relativePoint="TOPRIGHT" relativeTo="$(parent)" offsetX="-4"/>
                 </Texture>
-                <Label name="$(parent)_PillagerGain" horizontalAlignment="center" font="$(MEDIUM_FONT)|$(KB_22)|soft-shadow-thick" text="0.0" wrapMode="TRUNCATE">
-                    <Dimensions x="50" y="24"/>
-                    <Anchor point="TOP" relativePoint="BOTTOM" relativeTo="$(parent)_PillagerIcon" offsetX="0" offsetY="2" />
-                </Label>
                 <Label name="$(parent)_PillagerCooldown" horizontalAlignment="center" font="$(MEDIUM_FONT)|$(KB_22)|soft-shadow-thick" text="0.0" wrapMode="TRUNCATE">
                     <Dimensions x="50" y="24"/>
-                    <Anchor point="TOP" relativePoint="BOTTOM" relativeTo="$(parent)_PillagerGain" offsetX="0" offsetY="2" />
+                    <Anchor point="TOP" relativePoint="BOTTOM" relativeTo="$(parent)_PillagerIcon" offsetX="0" offsetY="2" />
                 </Label>
 
             </Controls>
@@ -85,11 +74,15 @@
                 <Texture name="$(parent)_BG" color="000000" alpha="0.0" hidden="false">
                     <AnchorFill />
                 </Texture>
+                <Texture name="$(parent)_UltIcon" textureFile="/esoui/art/icons/ability_ava_003.dds" alpha="0.5">
+                    <Dimensions x="24" y="24" />
+                    <Anchor point="LEFT" relativePoint="LEFT" relativeTo="$(parent)" offsetX="0" offsetY="0" />
+                </Texture>
                 <Label name="$(parent)_PctValue" horizontalAlignment="RIGHT" font="$(BOLD_FONT)|$(KB_19)|soft-shadow-thick" text="0%">
                     <Dimensions x="50" y="24" />
-                    <Anchor point="LEFT" relativePoint="LEFT" relativeTo="$(parent)" offsetX="0" offsetY="0" />
+                    <Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$(parent)_UltIcon" offsetX="0" offsetY="0" />
                 </Label>
-                <Label name="$(parent)_RawValue" horizontalAlignment="RIGHT" font="$(MEDIUM_FONT)|$(KB_19)|soft-shadow-thick" text="0">
+                <Label name="$(parent)_RawValue" horizontalAlignment="RIGHT" font="$(MEDIUM_FONT)|$(KB_19)|soft-shadow-thick" text="-">
                     <Dimensions x="30" y="24" />
                     <Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$(parent)_PctValue" offsetX="4" offsetY="0" />
                 </Label>
