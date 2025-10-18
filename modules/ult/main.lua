@@ -45,6 +45,17 @@ local moduleDefinition = {
     atroAbilityIds = {23634, 23492, 23495},
     barrierAbilityIds = {40237,	40239, 38573},
     cryptCannonAbilityIds = {195031},
+
+    hornIcon = GetAbilityIcon(38563),
+    forceIcon = GetAbilityIcon(61747),
+    colosIcon = GetAbilityIcon(122174),
+    vulnIcon = GetAbilityIcon(122174), -- we use colos icon here because nobody knows how the vuln icon looks like
+    atroIcon = GetAbilityIcon(23492),
+    berserkIcon = GetAbilityIcon(61745),
+    barrierIcon = GetAbilityIcon(40237),
+    slayerIcon = GetAbilityIcon(93109),
+    cryptCannonIcon = GetAbilityIcon(195031),
+    pillagerIcon = "esoui/art/icons/ability_healer_030.dds",
 }
 
 local module = internal.moduleClass:New(moduleDefinition)
