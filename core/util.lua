@@ -109,7 +109,7 @@ end
 --- @param a string key of the first module to compare
 --- @param b string key of the second module to compare
 --- @return boolean true if a should come before b, false otherwise
-function util.sortByPriority(t, a, b)
+function util.SortByPriority(t, a, b)
     if t[a].priority == t[b].priority then
         return a < b
     end

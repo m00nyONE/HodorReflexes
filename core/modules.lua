@@ -24,7 +24,7 @@ function core.InitializeModules()
         core.sw.modules = core.svDefault.modules
     end
 
-    for moduleName, module in util.Spairs(addon.modules, util.sortByPriority) do
+    for moduleName, module in util.Spairs(addon.modules, util.SortByPriority) do
         local isEnabled = core.sw.modules[moduleName]
         if isEnabled == nil then
             logger:Warn("Module '%s' not found in saved variables, setting default to enabled", moduleName)

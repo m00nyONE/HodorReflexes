@@ -18,7 +18,7 @@ function core.InitializeExtensions()
         core.sw.extensions = core.svDefault.extensions
     end
 
-    for extensionName, extension in util.Spairs(addon.extensions, util.sortByPriority) do
+    for extensionName, extension in util.Spairs(addon.extensions, util.SortByPriority) do
         local isEnabled = core.sw.extensions[extensionName]
         if isEnabled == nil then
             logger:Warn("Extension '%s' not found in saved variables, setting default to enabled", extensionName)
