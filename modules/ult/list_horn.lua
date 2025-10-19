@@ -115,14 +115,18 @@ end
 
 function module:hornListRowCreationFunction(rowControl, data, scrollList)
     local userName = util.GetUserName(data.userId, true)
-    local nameControl = rowControl:GetNamedChild('_Name')
-    nameControl:SetText(userName)
-    nameControl:SetColor(1, 1, 1)
+    if userName then
+        local nameControl = rowControl:GetNamedChild('_Name')
+        nameControl:SetText(userName)
+        nameControl:SetColor(1, 1, 1)
+    end
 
     local userIcon, tcLeft, tcRight, tcTop, tcBottom = util.GetUserIcon(data.userId, data.classId)
-    local iconControl = rowControl:GetNamedChild('_Icon')
-    iconControl:SetTexture(userIcon)
-    iconControl:SetTextureCoords(tcLeft, tcRight, tcTop, tcBottom)
+    if userIcon then
+        local iconControl = rowControl:GetNamedChild('_Icon')
+        iconControl:SetTexture(userIcon)
+        iconControl:SetTextureCoords(tcLeft, tcRight, tcTop, tcBottom)
+    end
 
     if self.hornList.sw.highlightSaxhleel then
         local _BG = rowControl:GetNamedChild("_BG")

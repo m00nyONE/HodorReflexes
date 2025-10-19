@@ -130,14 +130,18 @@ end
 --- creation function for the damage rows. This can be overwritten if using a custom theme
 function module:damageRowCreationFunction(rowControl, data, scrollList)
     local userName = util.GetUserName(data.userId, true)
-    local nameControl = rowControl:GetNamedChild('_Name')
-    nameControl:SetText(userName)
-    nameControl:SetColor(1, 1, 1)
+    if userName then
+        local nameControl = rowControl:GetNamedChild('_Name')
+        nameControl:SetText(userName)
+        nameControl:SetColor(1, 1, 1)
+    end
 
     local userIcon, tcLeft, tcRight, tcTop, tcBottom = util.GetUserIcon(data.userId, data.classId)
-    local iconControl = rowControl:GetNamedChild('_Icon')
-    iconControl:SetTexture(userIcon)
-    iconControl:SetTextureCoords(tcLeft, tcRight, tcTop, tcBottom)
+    if userIcon then
+        local iconControl = rowControl:GetNamedChild('_Icon')
+        iconControl:SetTexture(userIcon)
+        iconControl:SetTextureCoords(tcLeft, tcRight, tcTop, tcBottom)
+    end
 
     local valueControl = rowControl:GetNamedChild("_Value")
     valueControl:SetText(self.getDamageRowFormat(data.dmgType, data.dmg, data.dps, self.damageList.sw.colorDamageBoss, self.damageList.sw.colorDamageTotal))
