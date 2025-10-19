@@ -18,6 +18,7 @@ local moduleDefinition = {
     version = "1.0.0",
     priority = 10,
     enabled = false,
+    svVersion = 1,
     svDefault = {
         ignoreExitInstanceRequests = false,
         confirmExitInstance = true,

@@ -145,10 +145,11 @@ end
 --- creates the saved variables for the module
 --- @return void
 function moduleClass:CreateSavedVariables()
+    local svVersion = core.svVersion + self.svVersion
     -- we use a combination of accountWide saved variables and per character saved variables. This little swappi swappi allows us to switch between them without defining new variables
-    self.sw = ZO_SavedVars:NewAccountWide(core.svName, core.svVersion, self.name, self.svDefault)
+    self.sw = ZO_SavedVars:NewAccountWide(core.svName, svVersion, self.name, self.svDefault)
     if not core.sw.accountWide then
-        self.sv = ZO_SavedVars:NewCharacterIdSettings(core.svName, core.svVersion, self.name, self.svDefault)
+        self.sv = ZO_SavedVars:NewCharacterIdSettings(core.svName, svVersion, self.name, self.svDefault)
         core.sv.accountWide = false
     else
         self.sv = self.sw

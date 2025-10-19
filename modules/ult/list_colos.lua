@@ -18,6 +18,7 @@ local util = addon.util
 local HR_EVENT_MAJOR_VULNERABILITY_DEBUFF_GAINED = addon.HR_EVENT_MAJOR_VULNERABILITY_DEBUFF_GAINED
 
 
+local svVersion = 1
 local svDefault = {
     enabled =  1, -- 1=always, 2=out of combat, 3=non bossfights, 0=off
     disableInPvP = true,
@@ -38,6 +39,7 @@ local svDefault = {
 function module:CreateColosList()
     local listDefinition = {
         name = "colos",
+        svVersion = svVersion,
         svDefault = svDefault,
         Update = function() self:UpdateColosList() end,
         listHeaderHeight = 28,

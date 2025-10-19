@@ -22,6 +22,7 @@ local DAMAGE_TOTAL = LGCS.DAMAGE_TOTAL
 
 local localBoss1 = "boss1"
 
+local svVersion = 1
 local svDefault = {
     enabled =  1, -- 1=always, 2=out of combat, 3=non bossfights, 0=off
     disableInPvP = true,
@@ -46,6 +47,7 @@ local svDefault = {
 function module:CreateDamageList()
     local listDefinition = {
         name = "damage",
+        svVersion = svVersion,
         svDefault = svDefault,
         Update = function() self:UpdateDamageList() end,
         listHeaderHeight = 22,

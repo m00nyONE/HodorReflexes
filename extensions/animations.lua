@@ -17,6 +17,7 @@ local extensionDefinition = {
     name = "animations",
     description = "Provides animated user icon support for lists.",
     version = "0.1.0",
+    svVersion = 1,
     svDefault = {},
 
     animations = {},

@@ -15,6 +15,7 @@ local module = addon_modules[module_name]
 
 local util = addon.util
 
+local svVersion = 1
 local svDefault = {
     enabled =  1, -- 1=always, 2=out of combat, 3=non bossfights, 0=off
     disableInPvP = true,
@@ -32,6 +33,7 @@ local svDefault = {
 function module:CreateMiscList()
     local listDefinition = {
         name = "misc",
+        svVersion = svVersion,
         svDefault = svDefault,
         Update = function() self:UpdateMiscList() end,
         listHeaderHeight = 28,

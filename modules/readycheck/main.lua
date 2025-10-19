@@ -33,6 +33,7 @@ local moduleDefinition = {
     version = "1.0.0",
     priority = 99,
     enabled = false,
+    svVersion = 1,
     svDefault = {
         enableChatMessages = true,
         readycheckWindowPosLeft = 0,

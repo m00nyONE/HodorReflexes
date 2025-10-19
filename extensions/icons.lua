@@ -12,6 +12,7 @@ local extensionDefinition = {
     name = "icons",
     version = "1.0.0",
     description = "Extension to provide user icons via LibCustomIcons.",
+    svVersion = 1,
     svDefault = {},
 }
 

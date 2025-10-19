@@ -18,6 +18,7 @@ local moduleDefinition = {
     version = "0.9.0",
     priority = 10,
     enabled = false,
+    svVersion = 1,
     svDefault = {
         countdownDuration = 5,
     },

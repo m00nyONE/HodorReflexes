@@ -171,6 +171,7 @@ end
 --- sets default values if they are not provided during initialization.
 --- @return void
 function listClass:CreateSavedVariables()
+    if not self.svVersion then self.svVersion = 1 end
     self.svDefault.enabled = self.svDefault.enabled or 1 -- 1=always, 2=out of combat, 3=non bossfights, 0=off
     self.svDefault.disableInPvP = self.svDefault.disableInPvP or true
     self.svDefault.windowPosLeft = self.svDefault.windowPosLeft or 0
@@ -178,10 +179,11 @@ function listClass:CreateSavedVariables()
     self.svDefault.windowWidth = self.svDefault.windowWidth or 220
 
     local svNamespace = self.name .. "List"
+    local svVersion = core.svVersion + self.svVersion
     -- we use a combination of accountWide saved variables and per character saved variables. This little swappi swappi allows us to switch between them without defining new variables
-    self.sw = ZO_SavedVars:NewAccountWide(core.svName, core.svVersion, svNamespace, self.svDefault)
+    self.sw = ZO_SavedVars:NewAccountWide(core.svName, svVersion, svNamespace, self.svDefault)
     if not core.sw.accountWide then
-        self.sv = ZO_SavedVars:NewCharacterIdSettings(core.svName, core.svVersion, svNamespace, self.svDefault)
+        self.sv = ZO_SavedVars:NewCharacterIdSettings(core.svName, svVersion, svNamespace, self.svDefault)
         core.sv.accountWide = false
     else
         self.sv = self.sw

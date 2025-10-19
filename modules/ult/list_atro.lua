@@ -19,6 +19,7 @@ local HR_EVENT_ATRO_CAST_STARTED = addon.HR_EVENT_ATRO_CAST_STARTED
 local HR_EVENT_MAJOR_BERSERK_BUFF_GAINED = addon.HR_EVENT_MAJOR_BERSERK_BUFF_GAINED
 
 
+local svVersion = 1
 local svDefault = {
     enabled =  1, -- 1=always, 2=out of combat, 3=non bossfights, 0=off
     disableInPvP = true,
@@ -40,6 +41,7 @@ local svDefault = {
 function module:CreateAtroList()
     local listDefinition = {
         name = "atro",
+        svVersion = svVersion,
         svDefault = svDefault,
         Update = function() self:UpdateAtroList() end,
         listHeaderHeight = 28,

@@ -28,6 +28,7 @@ local moduleDefinition = {
     version = "1.0.0",
     priority = 2,
     enabled = false,
+    svVersion = 1,
     svDefault = {
         accountWide = true,
     },

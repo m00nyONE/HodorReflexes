@@ -23,7 +23,7 @@ local HR_EVENT_MAJOR_SLAYER_BUFF_GAINED = addon.HR_EVENT_MAJOR_SLAYER_BUFF_GAINE
 local HR_EVENT_PILLAGER_BUFF_COOLDOWN = addon.HR_EVENT_PILLAGER_BUFF_COOLDOWN
 
 
-
+local svVersion = 1
 local svDefault = {
     enabled =  1, -- 1=always, 2=out of combat, 3=non bossfights, 0=off
     disableInPvP = true,
@@ -49,6 +49,7 @@ local svDefault = {
 function module:CreateCompactList()
     local listDefinition = {
         name = "compact",
+        svVersion = svVersion,
         svDefault = svDefault,
         Update = function() self:UpdateCompactList() end,
         listHeaderHeight = 60,

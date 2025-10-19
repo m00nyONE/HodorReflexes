@@ -89,10 +89,11 @@ end
 --- creates the saved variables for the extension
 --- @return void
 function extensionClass:CreateSavedVariables()
+    local svVersion = core.svVersion + self.svVersion
     -- we use a combination of accountWide saved variables and per character saved variables. This little swappi swappi allows us to switch between them without defining new variables
-    self.sw = ZO_SavedVars:NewAccountWide(core.svName, core.svVersion, self.name, self.svDefault)
+    self.sw = ZO_SavedVars:NewAccountWide(core.svName, svVersion, self.name, self.svDefault)
     if not self.sw.accountWide then
-        self.sv = ZO_SavedVars:NewCharacterIdSettings(core.svName, core.svVersion, self.name, self.svDefault)
+        self.sv = ZO_SavedVars:NewCharacterIdSettings(core.svName, svVersion, self.name, self.svDefault)
         self.sv.accountWide = false
     else
         self.sv = self.sw

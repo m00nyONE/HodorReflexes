@@ -19,6 +19,7 @@ local HR_EVENT_HORN_BUFF_GAINED = addon.HR_EVENT_HORN_BUFF_GAINED
 local HR_EVENT_MAJOR_FORCE_BUFF_GAINED = addon.HR_EVENT_MAJOR_FORCE_BUFF_GAINED
 
 
+local svVersion = 1
 local svDefault = {
     enabled =  1, -- 1=always, 2=out of combat, 3=non bossfights, 0=off
     disableInPvP = true,
@@ -42,6 +43,7 @@ local svDefault = {
 function module:CreateHornList()
     local listDefinition = {
         name = "horn",
+        svVersion = svVersion,
         svDefault = svDefault,
         Update = function() self:UpdateHornList() end,
         listHeaderHeight = 28,
