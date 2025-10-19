@@ -31,6 +31,8 @@ local extensionDefinition = {
 --- @class animExtension
 local extension = internal.extensionClass:New(extensionDefinition)
 
+--- Activate the extension
+--- @return void
 function extension:Activate()
     if not LCI then
         self.enabled = false
@@ -60,48 +62,53 @@ function extension:Activate()
     end
 
     -- register for character removed to clean up animations when they are no longer needed
-    addon.RegisterCallback(HR_EVENT_PLAYERSDATA_CHARACTER_REMOVED, function(data) self:RemoveAnimationsForUser(data.userId) end)
+    addon.RegisterCallback(HR_EVENT_PLAYERSDATA_CHARACTER_REMOVED, function(data) self:_removeAnimationsForUser(data.userId) end)
 end
 
 --- Hook a list to add animation support
 --- @param list listClass
+--- @param iconControlName string optional name of the icon control in the list row template (defaults to "_Icon")
 --- @return void
-function extension:AttachToList(list)
+function extension:AttachToList(list, iconControlName)
     if self.registeredLists[list.name] then
         self.logger:Warn("List '%s' is already registered for animations. Skipping", list.name)
         return
     end
 
     self.logger:Debug("Attaching to list '%s'", list.name)
-    list.animations = {}
 
     -- hook into list update function
     local listUpdate = list.Update
     list.Update = function()
         listUpdate()
-        self:UpdateList(list)
+        self:_listUpdatePostHook(list, iconControlName and iconControlName or "_Icon")
     end
 
     self.registeredLists[list.name] = true
 end
 
-function extension:UpdateList(list, iconControlName)
+--- NOT for manual use.
+--- post hook for list update to attach animations to icon controls
+--- @param list listClass
+--- @param iconControlName string name of the icon control in the list row template
+--- @return void
+function extension:_listUpdatePostHook(list, iconControlName)
     local contents = list.listControl:GetNamedChild("Contents")
     for childId = 1, contents:GetNumChildren() do
         local rowControl = contents:GetChild(childId)
         local entryData = ZO_ScrollList_GetData(rowControl)
         if entryData and entryData.userId and LCI.HasAnimated(entryData.userId) then
-            self:AnimateUserIconOnControl(entryData.userId, list.name, rowControl:GetNamedChild(iconControlName and iconControlName or "_Icon"))
+            self:_createAnimationForUser(entryData.userId)
+            self:_attachAnimationToControl(entryData.userId, list.name, rowControl:GetNamedChild(iconControlName))
         end
     end
 end
 
-function extension:AnimateUserIconOnControl(userId, listName, iconControl)
-    self:CreateAnimationForUser(userId)
-    self:AttachAnimationToControl(userId, listName, iconControl)
-end
-
-function extension:CreateAnimationForUser(userId)
+--- NOT for manual use.
+--- creates an animation entry and timeline for a user if it does not already exist
+--- @param userId string the user id
+--- @return void
+function extension:_createAnimationForUser(userId)
     if self.animations[userId] then
         return -- animation already exists for this user
     end
@@ -123,7 +130,13 @@ function extension:CreateAnimationForUser(userId)
     self.logger:Debug("created animation for user '%s'", userId)
 end
 
-function extension:AttachAnimationToControl(userId, listName, iconControl)
+--- NOT for manual use.
+--- attaches the animation for a user to a specific icon control in a list
+--- @param userId string the user id
+--- @param listName string the name of the list
+--- @param iconControl table the icon control to attach the animation to
+--- @return void
+function extension:_attachAnimationToControl(userId, listName, iconControl)
     local a =  self.animations[userId]
 
     if a.attachedControls[listName] == iconControl then
@@ -150,7 +163,11 @@ function extension:AttachAnimationToControl(userId, listName, iconControl)
     a.attachedControls[listName] = iconControl
 end
 
-function extension:RemoveAnimationsForUser(userId)
+--- NOT for manual use.
+--- removes and stops all animations for a user
+--- @param userId string the user id
+--- @return void
+function extension:_removeAnimationsForUser(userId)
     local a = self.animations[userId]
     if a then
         self.logger:Debug("removing animations for user '%s'", userId)
