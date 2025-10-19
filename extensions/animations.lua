@@ -24,6 +24,7 @@ local extensionDefinition = {
     svVersion = 1,
     svDefault = {},
 
+    animations = {},
     registeredLists = {},
 }
 
@@ -78,30 +79,30 @@ function extension:AttachToList(list)
     local listUpdate = list.Update
     list.Update = function()
         listUpdate()
-        self:UpdateListAnimations(list)
+        self:UpdateList(list)
     end
 
-    self.registeredLists[list.name] = list
+    self.registeredLists[list.name] = true
 end
 
-function extension:UpdateListAnimations(list)
+function extension:UpdateList(list, iconControlName)
     local contents = list.listControl:GetNamedChild("Contents")
     for childId = 1, contents:GetNumChildren() do
         local rowControl = contents:GetChild(childId)
         local entryData = ZO_ScrollList_GetData(rowControl)
         if entryData and entryData.userId and LCI.HasAnimated(entryData.userId) then
-            self:AnimateUserIconOnControl(entryData.userId, list.animations, rowControl:GetNamedChild("_Icon"))
+            self:AnimateUserIconOnControl(entryData.userId, list.name, rowControl:GetNamedChild(iconControlName and iconControlName or "_Icon"))
         end
     end
 end
 
-function extension:AnimateUserIconOnControl(userId, animationsTable, iconControl)
-    self:CreateAnimationForUser(userId, animationsTable)
-    self:AttachAnimationToControl(userId, animationsTable, iconControl)
+function extension:AnimateUserIconOnControl(userId, listName, iconControl)
+    self:CreateAnimationForUser(userId)
+    self:AttachAnimationToControl(userId, listName, iconControl)
 end
 
-function extension:CreateAnimationForUser(userId, animationsTable)
-    if animationsTable[userId] then
+function extension:CreateAnimationForUser(userId)
+    if self.animations[userId] then
         return -- animation already exists for this user
     end
 
@@ -110,32 +111,33 @@ function extension:CreateAnimationForUser(userId, animationsTable)
         self.logger:Warn("no animated icon found for user '%s'", userId)
         return
     end
-    animationsTable[userId] = {
+    self.animations[userId] = {
         timeline = AM:CreateTimeline(),
-        animationObject = nil,
+        animationObjects = {},
         texture = userAnim[1],
         width = userAnim[2],
         height = userAnim[3],
         frameRate = userAnim[4],
+        attachedControls = {},
     }
     self.logger:Debug("created animation for user '%s'", userId)
 end
 
-function extension:AttachAnimationToControl(userId, animationsTable, iconControl)
-    local a = animationsTable[userId]
+function extension:AttachAnimationToControl(userId, listName, iconControl)
+    local a =  self.animations[userId]
 
-    if a.currentControl == iconControl then
+    if a.attachedControls[listName] == iconControl then
         return -- already attached to this control
     end
 
     iconControl:SetTexture(a.texture)
 
-    if a.animationObject then
-        a.animationObject:SetAnimatedControl(iconControl)
+    if a.animationObjects[listName] then
+        a.animationObjects[listName]:SetAnimatedControl(iconControl)
     else
-        a.animationObject = a.timeline:InsertAnimation(ANIMATION_TEXTURE, iconControl)
-        a.animationObject:SetImageData(a.width, a.height)
-        a.animationObject:SetFramerate(a.frameRate)
+        a.animationObjects[listName] = a.timeline:InsertAnimation(ANIMATION_TEXTURE, iconControl)
+        a.animationObjects[listName]:SetImageData(a.width, a.height)
+        a.animationObjects[listName]:SetFramerate(a.frameRate)
         self.logger:Debug("create animationObject user '%s'", userId)
     end
 
@@ -145,20 +147,19 @@ function extension:AttachAnimationToControl(userId, animationsTable, iconControl
         a.timeline:PlayFromStart()
     end
 
-    a.currentControl = iconControl
+    a.attachedControls[listName] = iconControl
 end
 
 function extension:RemoveAnimationsForUser(userId)
-    self.logger:Debug("removing animations for user '%s'", userId)
-    for listName, list in pairs(self.registeredLists) do
-        if list.animations[userId] then
-            if list.animations[userId].animationObject then -- it is somewhat possible that the animationObject is still nil here
-                list.animations[userId].animationObject:SetAnimatedControl(nil)
+    local a = self.animations[userId]
+    if a then
+        self.logger:Debug("removing animations for user '%s'", userId)
+        for listName, _ in pairs(self.registeredLists) do
+            if a.animationObjects[listName] then -- it is somewhat possible that the animationObject is still nil here. better be safe than sorry
+                a.animationObjects[listName]:SetAnimatedControl(nil)
             end
-            list.animations[userId].timeline:SetEnabled(false)
-            list.animations[userId] = nil
+            a.timeline:SetEnabled(false)
+            self.animations[userId] = nil
         end
     end
 end
-
-
