@@ -1,14 +1,14 @@
 -- SPDX-FileCopyrightText: 2025 m00nyONE
 -- SPDX-License-Identifier: Artistic-2.0
 
-local addon_name = "HodorReflexes2"
+local addon_name = "HodorReflexes"
 local addon = _G[addon_name]
 local internal = addon.internal
 
 local util = addon.util
 
 local extensionDefinition = {
-    name = "events",
+    name = "seasons",
     version = "1.0.0",
     description = "Seasonal events which change some behaviors of the addon on specific dates.",
     svVersion = 1,
