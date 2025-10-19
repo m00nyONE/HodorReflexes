@@ -4,8 +4,8 @@
 --[[ doc.lua begin ]]
 --- @class HodorReflexes
 local addon = {
-    name = "HodorReflexes2",
-    slashCmd = "hodor2",
+    name = "HodorReflexes",
+    slashCmd = "hodor",
     version = "dev",
     author = "|cFFFF00@andy.s|r, |c76c3f4@m00nyONE|r",
 
