@@ -38,7 +38,13 @@ function core.InitializeModules()
     end
 
     for moduleName, module in util.Spairs(addon.modules, sortByPriority) do
-        if core.sw.modules[moduleName] then
+        local isEnabled = core.sw.modules[moduleName]
+        if isEnabled == nil then
+            logger:Warn("Module '%s' not found in saved variables, setting default to enabled", moduleName)
+            core.sw.modules[moduleName] = true
+            isEnabled = true
+        end
+        if isEnabled then
             logger:Info("Initializing module: %s", moduleName)
             -- create saved variables for the module
             module:RunOnce("CreateSavedVariables")

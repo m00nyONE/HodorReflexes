@@ -17,8 +17,14 @@ function core.InitializeExtensions()
     end
 
     for extensionName, extension in pairs(addon.extensions) do
-        logger:Info("Initializing extension: %s", extensionName)
-        if core.sw.extensions[extensionName] then
+        local isEnabled = core.sw.extensions[extensionName]
+        if isEnabled == nil then
+            logger:Warn("Extension '%s' not found in saved variables, setting default to enabled", extensionName)
+            core.sw.extensions[extensionName] = true
+            isEnabled = true
+        end
+        if isEnabled then
+            logger:Info("Initializing extension: %s", extensionName)
             extension:RunOnce("CreateSavedVariables")
             extension:RunOnce("Activate")
             extension.enabled = true
