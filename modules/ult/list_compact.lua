@@ -52,8 +52,10 @@ function module:CreateCompactList()
         svVersion = svVersion,
         svDefault = svDefault,
         Update = function() self:UpdateCompactList() end,
+
         listHeaderHeight = 60,
         listRowHeight = 24,
+
         colorCooldowns = {1, 0, 0}, -- red
         colorDurations = {1, 1, 0}, -- yellow
         colorHornBG = {1, 1, 0}, -- yellow
@@ -143,6 +145,11 @@ function module:CreateCompactList()
             playerRowCreationWrapper(self.compactListCryptCannonRowCreationFunction)
     )
 
+    -- register cooldown end time tracker for pillager cooldown
+    local function setPillagerCooldownEndTime(_, duration)
+        self.pillagerCooldownEndTime = GetGameTimeMilliseconds() + duration
+    end
+    addon.RegisterCallback(HR_EVENT_PILLAGER_BUFF_COOLDOWN, setPillagerCooldownEndTime)
 end
 
 function module:compactListHeaderRowCreationFunction(rowControl, data, scrollList)

@@ -131,11 +131,4 @@ function module:registerTrackers()
             EM:AddFilterForEvent(eventName .. i, EVENT_COMBAT_EVENT, REGISTER_FILTER_SOURCE_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_GROUP)
         end
     end
-
-    -- register cooldown end time tracker for pillager cooldown
-    local function setPillagerCooldownEndTime(_, duration)
-        self.pillagerCooldownEndTime = GetGameTimeMilliseconds() + duration
-    end
-
-    addon.RegisterCallback(HR_EVENT_PILLAGER_BUFF_COOLDOWN, setPillagerCooldownEndTime)
 end
