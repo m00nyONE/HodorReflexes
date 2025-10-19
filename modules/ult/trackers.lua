@@ -45,14 +45,14 @@ function module:registerTrackers()
             if GetGameTimeSeconds() >= endTime then return end -- effect already expired
             local duration = (endTime - beginTime) * 1000
             CM:FireCallbacks(eventToFire, unitTag, duration)
-            self.logger.Debug("fired %s for %s with duration %s", eventToFire, unitTag, tostring(duration))
+            self.logger:Debug("fired %s for %s with duration %s", eventToFire, unitTag, tostring(duration))
         end
     end
     local function getCombatEventHandler(eventToFire)
         return function(eventId, result, isError, abilityName, abilityGraphic, abilityActionSlotType, sourceName, sourceType, targetName, targetType, hitValue, powerType, damageType, log, sourceUnitId, targetUnitId, abilityId, overflow)
             local duration = GetAbilityDuration(abilityId)
             CM:FireCallbacks(eventToFire, sourceName, duration)
-            self.logger.Debug("fired %s for %s with duration %s", eventToFire, sourceName, tostring(duration))
+            self.logger:Debug("fired %s for %s with duration %s", eventToFire, sourceName, tostring(duration))
         end
     end
 

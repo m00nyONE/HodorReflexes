@@ -67,6 +67,7 @@ end
 --- @param listDefinition table definition of the list
 --- @return void
 function listClass:Initialize(listDefinition)
+    local beginTime = GetGameTimeMilliseconds()
     assert(type(listDefinition) == "table", "listDefinition must be a table")
     assert(type(listDefinition.name) == "string" and listDefinition.name ~= "", "list must have a valid name")
     assert(type(listDefinition.svDefault) == "table", "list must have a valid svDefault table")
@@ -114,7 +115,7 @@ function listClass:Initialize(listDefinition)
     addon.RegisterCallback(HR_EVENT_PLAYERSDATA_UPDATED, function(...) self:UpdateDebounced(...) end)
     addon.RegisterCallback(HR_EVENT_PLAYERSDATA_CLEANED, function(...) self:UpdateDebounced(...) end)
 
-    self.logger:Debug("finished initializing")
+    self.logger:Debug("initialized in %d ms", GetGameTimeMilliseconds() - beginTime)
     self.Initialize = nil -- prevent re-initialization
 end
 
