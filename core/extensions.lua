@@ -7,6 +7,8 @@ local internal = addon.internal
 local core = internal.core
 local logger = core.initSubLogger("extensions")
 
+local util = addon.util
+
 --- initializes all registered extensions
 --- @return void
 function core.InitializeExtensions()
@@ -16,7 +18,7 @@ function core.InitializeExtensions()
         core.sw.extensions = core.svDefault.extensions
     end
 
-    for extensionName, extension in pairs(addon.extensions) do
+    for extensionName, extension in util.Spairs(addon.extensions, util.sortByPriority) do
         local isEnabled = core.sw.extensions[extensionName]
         if isEnabled == nil then
             logger:Warn("Extension '%s' not found in saved variables, setting default to enabled", extensionName)

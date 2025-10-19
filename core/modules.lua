@@ -10,19 +10,6 @@ local logger = core.initSubLogger("modules")
 local util = addon.util
 
 
--- utility functions
---- sorts a table of modules by their priority field, and by name if priorities are equal
---- @param t table table of modules
---- @param a string key of the first module to compare
---- @param b string key of the second module to compare
---- @return boolean true if a should come before b, false otherwise
-local function sortByPriority(t, a, b)
-    if t[a].priority == t[b].priority then
-        return a < b
-    end
-    return t[a].priority < t[b].priority
-end
-
 --- initializes all registered modules if they are enabled in the saved variables.
 --- creates saved variables for each module.
 --- registers LibGroupBroadcast protocols if available.
@@ -37,7 +24,7 @@ function core.InitializeModules()
         core.sw.modules = core.svDefault.modules
     end
 
-    for moduleName, module in util.Spairs(addon.modules, sortByPriority) do
+    for moduleName, module in util.Spairs(addon.modules, util.sortByPriority) do
         local isEnabled = core.sw.modules[moduleName]
         if isEnabled == nil then
             logger:Warn("Module '%s' not found in saved variables, setting default to enabled", moduleName)

@@ -11,6 +11,7 @@ local extensionDefinition = {
     name = "seasons",
     version = "1.0.0",
     description = "Seasonal events which change some behaviors of the addon on specific dates.",
+    priority = 10,
     svVersion = 1,
     svDefault = {
         enableAprilFools = true,

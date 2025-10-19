@@ -10,10 +10,6 @@ local logger = core.initSubLogger("util")
 local util = {}
 addon.util = util
 
-local localPlayer = "player"
-local localBoss1 = 'boss1'
-local localBoss2 = 'boss2'
-
 --[[ doc.lua begin ]]
 
 --- calculate the distance between two points
@@ -106,6 +102,18 @@ end
 --- @return string reference string
 function util.GetTableReference(t)
     return string.match(tostring(t), "0%x+")
+end
+
+--- sorts a table of modules/extensions by their priority field, and by name if priorities are equal
+--- @param t table table of modules
+--- @param a string key of the first module to compare
+--- @param b string key of the second module to compare
+--- @return boolean true if a should come before b, false otherwise
+function util.sortByPriority(t, a, b)
+    if t[a].priority == t[b].priority then
+        return a < b
+    end
+    return t[a].priority < t[b].priority
 end
 
 -- user related functions
