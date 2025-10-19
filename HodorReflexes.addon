@@ -42,14 +42,8 @@ core/Console/menu.lua
 core/Console/donate.lua
 core/Console/LibCheck.lua
 
-core/extensions.lua
 core/modules.lua
-
-; extensions
-extensions/seasons.lua
-extensions/names.lua
-extensions/icons.lua
-extensions/animations.lua
+core/extensions.lua
 
 ; modules
 modules/ult/lang/en.lua
@@ -102,3 +96,9 @@ modules/skilllines/lang/en.lua
 modules/skilllines/lang/$(language).lua
 modules/skilllines/main.lua
 modules/skilllines/menu.lua
+
+; extensions
+extensions/seasons.lua
+extensions/names.lua
+extensions/icons.lua
+extensions/animations.lua

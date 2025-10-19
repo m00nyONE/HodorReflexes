@@ -31,17 +31,14 @@ function extension:Activate()
     -- April Fools Day: reverse DPS ranking
     if self.sw.enableAprilFools and self.date == "0104" then
         self.logger:Debug("enable april fools mode: reverse dps ranking")
-        -- we have to wait for the module to initialize because extensions are loaded before modules
-        zo_callLater(function()
-            local dps_module = addon.modules.dps
-            local function sortByDamageReversed(a, b)
-                if a.dmg == b.dmg then
-                    return dps_module.sortByName(a, b)
-                end
-                return a.dmg < b.dmg
+        local dps_module = addon.modules.dps
+        local function sortByDamageReversed(a, b)
+            if a.dmg == b.dmg then
+                return dps_module.sortByName(a, b)
             end
-            dps_module.sortByDamage = sortByDamageReversed
-        end, 200)
+            return a.dmg < b.dmg
+        end
+        dps_module.sortByDamage = sortByDamageReversed
     end
 
     -- Christmas event: change class icons
