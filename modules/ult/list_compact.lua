@@ -101,6 +101,7 @@ function module:CreateCompactList()
             headerRowCreationWrapper(self.compactListHeaderRowCreationFunction)
     )
     ZO_ScrollList_SetTypeCategoryHeader(self.compactList.listControl, self.compactList.HEADER_TYPE, true)
+    self.compactList.logger:Debug("added header row type '%d' with template '%s'", self.compactList.HEADER_TYPE, self.compactList.HEADER_TEMPLATE)
 
     ZO_ScrollList_AddDataType(
             self.compactList.listControl,
@@ -109,6 +110,7 @@ function module:CreateCompactList()
             self.compactList.listRowHeight,
             playerRowCreationWrapper(self.compactListHornRowCreationFunction)
     )
+    self.compactList.logger:Debug("added horn player row type '%d' with template '%s'", self.compactList.ROW_TYPE_HORN, self.compactList.ROW_TEMPLATE)
     ZO_ScrollList_AddDataType(
             self.compactList.listControl,
             self.compactList.ROW_TYPE_COLOS,
@@ -116,6 +118,7 @@ function module:CreateCompactList()
             self.compactList.listRowHeight,
             playerRowCreationWrapper(self.compactListColosRowCreationFunction)
     )
+    self.compactList.logger:Debug("added colos player row type '%d' with template '%s'", self.compactList.ROW_TYPE_COLOS, self.compactList.ROW_TEMPLATE)
     ZO_ScrollList_AddDataType(
             self.compactList.listControl,
             self.compactList.ROW_TYPE_ATRO,
@@ -123,6 +126,7 @@ function module:CreateCompactList()
             self.compactList.listRowHeight,
             playerRowCreationWrapper(self.compactListAtroRowCreationFunction)
     )
+    self.compactList.logger:Debug("added atro player row type '%d' with template '%s'", self.compactList.ROW_TYPE_ATRO, self.compactList.ROW_TEMPLATE)
     ZO_ScrollList_AddDataType(
             self.compactList.listControl,
             self.compactList.ROW_TYPE_SLAYER,
@@ -130,6 +134,7 @@ function module:CreateCompactList()
             self.compactList.listRowHeight,
             playerRowCreationWrapper(self.compactListSlayerRowCreationFunction)
     )
+    self.compactList.logger:Debug("added slayer player row type '%d' with template '%s'", self.compactList.ROW_TYPE_SLAYER, self.compactList.ROW_TEMPLATE)
     ZO_ScrollList_AddDataType(
             self.compactList.listControl,
             self.compactList.ROW_TYPE_PILLAGER,
@@ -137,6 +142,7 @@ function module:CreateCompactList()
             self.compactList.listRowHeight,
             playerRowCreationWrapper(self.compactListPillagerRowCreationFunction)
     )
+    self.compactList.logger:Debug("added pillager player row type '%d' with template '%s'", self.compactList.ROW_TYPE_PILLAGER, self.compactList.ROW_TEMPLATE)
     ZO_ScrollList_AddDataType(
             self.compactList.listControl,
             self.compactList.ROW_TYPE_CRYPTCANNON,
@@ -144,6 +150,7 @@ function module:CreateCompactList()
             self.compactList.listRowHeight,
             playerRowCreationWrapper(self.compactListCryptCannonRowCreationFunction)
     )
+    self.compactList.logger:Debug("added cryptcannon player row type '%d' with template '%s'", self.compactList.ROW_TYPE_CRYPTCANNON, self.compactList.ROW_TEMPLATE)
 
     -- register cooldown end time tracker for pillager cooldown
     local function setPillagerCooldownEndTime(_, duration)

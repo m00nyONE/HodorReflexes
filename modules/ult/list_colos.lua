@@ -74,6 +74,7 @@ function module:CreateColosList()
             headerRowCreationWrapper(self.colosListHeaderRowCreationFunction)
     )
     ZO_ScrollList_SetTypeCategoryHeader(self.colosList.listControl, self.colosList.HEADER_TYPE, true)
+    self.colosList.logger:Debug("added header row type '%d' with template '%s'", self.colosList.HEADER_TYPE, self.colosList.HEADER_TEMPLATE)
 
     ZO_ScrollList_AddDataType(
             self.colosList.listControl,
@@ -82,6 +83,7 @@ function module:CreateColosList()
             self.colosList.listRowHeight,
             playerRowCreationWrapper(self.colosListRowCreationFunction)
     )
+    self.colosList.logger:Debug("added player row type '%d' with template '%s'", self.colosList.ROW_TYPE, self.colosList.ROW_TEMPLATE)
 end
 
 function module:colosListHeaderRowCreationFunction(rowControl, data, scrollList)

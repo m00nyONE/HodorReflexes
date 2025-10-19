@@ -5,7 +5,7 @@ local addon_name = "HodorReflexes"
 local addon = _G[addon_name]
 local internal = addon.internal
 local core = internal.core
-local logger = core.logger.main
+local logger = core.initSubLogger("util")
 
 local util = {}
 addon.util = util

@@ -5,16 +5,14 @@ local addon_name = "HodorReflexes"
 local addon = _G[addon_name]
 local internal = addon.internal
 local core = internal.core
-local logger = core.logger.main
+local logger = core.initSubLogger("cmd")
 
 local addon_version = addon.version
-local CM = core.CM
 
 -- for initializing basic commands from HR Core
 --- registers base commands: version, donate, debug
 --- @return void
 function core.RegisterCoreCommands()
-    logger:Debug("Registering base commands")
     core.RegisterSubCommand("version", "Show addon version", function()
         df("|cFFFF00%s|r version |c76c3f4%s|r", addon_name, addon_version)
     end)
@@ -25,6 +23,7 @@ function core.RegisterCoreCommands()
         addon.debug = not addon.debug
         addon.internal = internal
         df("|cFFFF00%s|r debug mode %s", addon_name, addon.debug and "|c00FF00enabled|r" or "|cFF0000disabled|r")
+        logger:Info("Debug mode %s", addon.debug and "enabled" or "disabled")
     end)
 end
 

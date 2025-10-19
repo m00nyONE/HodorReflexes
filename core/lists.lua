@@ -76,12 +76,17 @@ function listClass:Initialize(listDefinition)
         self[k] = v
     end
 
+    self.logger = core.initSubLogger("list/" .. self.name)
+    self.logger:Debug("initializing")
+
     self.listHeaderHeight = self.listHeaderHeight or 22
     self.listRowHeight = self.listRowHeight or 22
 
     -- create a unique id for the list instance (and make it somewhat readable by adding the list name at the end)
     self._Id = string.format("%s_%s", util.GetTableReference(self), self.name)
+    self.logger:Debug("assigned unique id '%s'", self._Id)
     self.updateDebounceDelayMS = self.updateDebounceDelayMS or globalUpdateDebounceDelayMS
+    self.logger:Debug("using update debounce delay of %d ms", self.updateDebounceDelayMS)
 
     self:RunOnce("CreateSavedVariables")
     self:RunOnce("CreateControls")
@@ -109,7 +114,7 @@ function listClass:Initialize(listDefinition)
     addon.RegisterCallback(HR_EVENT_PLAYERSDATA_UPDATED, function(...) self:UpdateDebounced(...) end)
     addon.RegisterCallback(HR_EVENT_PLAYERSDATA_CLEANED, function(...) self:UpdateDebounced(...) end)
 
-    logger:Debug("initialized list '%s'", self.name)
+    self.logger:Debug("finished initializing")
     self.Initialize = nil -- prevent re-initialization
 end
 
@@ -180,6 +185,7 @@ function listClass:CreateSavedVariables()
 
     local svNamespace = self.name .. "List"
     local svVersion = core.svVersion + self.svVersion
+    self.logger:Debug("using saved variables version %d", svVersion)
     -- we use a combination of accountWide saved variables and per character saved variables. This little swappi swappi allows us to switch between them without defining new variables
     self.sw = ZO_SavedVars:NewAccountWide(core.svName, svVersion, svNamespace, self.svDefault)
     if not core.sw.accountWide then
@@ -201,7 +207,7 @@ end
 --- @return void
 function listClass:CreateControls()
     -- create the main window
-    local windowName = addon_name .. self._Id
+    local windowName = string.format("%s_%s", addon_name, self._Id)
     local window = WM:CreateTopLevelWindow(windowName)
     window:SetClampedToScreen(true)
     window:SetResizeToFitDescendents(true)
@@ -215,9 +221,10 @@ function listClass:CreateControls()
     end)
     self.windowName = windowName
     self.window = window
+    self.logger:Debug("created main window '%s'", windowName)
 
     -- create the list control
-    local listControlName = windowName .. "_List"
+    local listControlName = string.format("%s_%s", windowName, "List")
     local listControl = WM:CreateControlFromVirtual(listControlName, window, "ZO_ScrollList")
     listControl:SetAnchor(TOPLEFT, window, TOPLEFT, 0, 0, ANCHOR_CONSTRAINS_XY)
     listControl:SetAnchor(TOPRIGHT, window, TOPRIGHT, ZO_SCROLL_BAR_WIDTH, 0, ANCHOR_CONSTRAINS_X)
@@ -226,6 +233,7 @@ function listClass:CreateControls()
     listControl:GetNamedChild("Contents"):SetMouseEnabled(false)
     self.listControlName = listControlName
     self.listControl = listControl
+    self.logger:Debug("created list control '%s'", listControlName)
 
     ZO_ScrollList_SetHideScrollbarOnDisable(listControl, true)
     ZO_ScrollList_SetUseScrollbar(listControl, false)
@@ -241,6 +249,7 @@ function listClass:CreateFragment()
     end
 
     self.windowFragment = hud.AddFadeFragment(self.window, windowFragmentConditionWrapper)
+    self.logger:Debug("created window fragment")
 end
 
 --- renders the current fight time to the control passed as argument.
@@ -264,6 +273,7 @@ function listClass:CreateFightTimeUpdaterOnControl(control)
 
     -- create a unique id for the control that can be used as a key for the timer update
     control._Id = util.GetTableReference(control)
+    self.logger:Debug("creating fight time updater on control with id '%s'", control._Id)
 
     local function renderFightTimeToControl()
         self.RenderCurrentFightTimeToControl(control)
@@ -281,6 +291,7 @@ function listClass:CreateFightTimeUpdaterOnControl(control)
     -- register timer update callbacks
     addon.RegisterCallback(HR_EVENT_COMBAT_START, control._onCombatStart)
     addon.RegisterCallback(HR_EVENT_COMBAT_END, control._onCombatStop)
+    self.logger:Debug("registered fight time updater on control with id '%s'", control._Id)
 end
 
 --- renders the given time (in milliseconds) to the control passed as argument.
@@ -310,9 +321,12 @@ function listClass:CreateCountdownOnControl(control, eventName, zeroTimerOpacity
 
     -- create a unique id for the control that can be used as a key for the timer update
     control._Id = util.GetTableReference(control)
+    self.logger:Debug("creating countdown timer on control with id '%s'", control._Id)
 
     local blinkDurationMS = 2500 -- TODO: possibly make configurable by savedVars ?
+    self.logger:Debug("using blink duration of %d ms", blinkDurationMS)
     zeroTimerOpacity = zeroTimerOpacity or 0.7
+    self.logger:Debug("using zero timer opacity of %.2f", zeroTimerOpacity)
 
     control._onCountdownTick = function()
         local nowMS = GetGameTimeMilliseconds()
@@ -350,4 +364,5 @@ function listClass:CreateCountdownOnControl(control, eventName, zeroTimerOpacity
 
     -- register countdown start callback
     addon.RegisterCallback(eventName, control._onCountdownStart)
+    self.logger:Debug("registered countdown timer on control with id '%s'", control._Id)
 end

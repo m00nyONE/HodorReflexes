@@ -68,6 +68,7 @@ function module:CreateMiscList()
             headerRowCreationWrapper(self.miscListHeaderRowCreationFunction)
     )
     ZO_ScrollList_SetTypeCategoryHeader(self.miscList.listControl, self.miscList.HEADER_TYPE, true)
+    self.miscList.logger:Debug("added header row type '%d' with template '%s'", self.miscList.HEADER_TYPE, self.miscList.HEADER_TEMPLATE)
 
     ZO_ScrollList_AddDataType(
             self.miscList.listControl,
@@ -76,6 +77,7 @@ function module:CreateMiscList()
             self.miscList.listRowHeight,
             playerRowCreationWrapper(self.miscListRowCreationFunction)
     )
+    self.miscList.logger:Debug("added player row type '%d' with template '%s'", self.miscList.ROW_TYPE, self.miscList.ROW_TEMPLATE)
 end
 
 function module:miscListHeaderRowCreationFunction(rowControl, data, scrollList)

@@ -78,6 +78,7 @@ function module:CreateHornList()
             headerRowCreationWrapper(self.hornListHeaderRowCreationFunction)
     )
     ZO_ScrollList_SetTypeCategoryHeader(self.hornList.listControl, self.hornList.HEADER_TYPE, true)
+    self.hornList.logger:Debug("added header row type '%d' with template '%s'", self.hornList.HEADER_TYPE, self.hornList.HEADER_TEMPLATE)
 
     ZO_ScrollList_AddDataType(
             self.hornList.listControl,
@@ -86,6 +87,7 @@ function module:CreateHornList()
             self.hornList.listRowHeight,
             playerRowCreationWrapper(self.hornListRowCreationFunction)
     )
+    self.hornList.logger:Debug("added player row type '%d' with template '%s'", self.hornList.ROW_TYPE, self.hornList.ROW_TEMPLATE)
 end
 
 function module:hornListHeaderRowCreationFunction(rowControl, data, scrollList)

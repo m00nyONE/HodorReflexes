@@ -29,6 +29,7 @@ local combat = {
         groupDPSOut = 0,
         damageOutTotalGroup = 0,
     },
+    logger = core.initSubLogger("combat"),
 }
 core.combat = combat
 
@@ -50,6 +51,7 @@ function combat:Reset()
     self.data.groupDPSOut = 0
     self.data.damageOutTotalGroup = 0
     self.damageHistory = {}
+    self.logger:Debug("Combat data reset")
 end
 function combat:FightRecapCallback(_, data)
     self.data.dpstime = data.dpstime or 0
@@ -108,6 +110,7 @@ end
 --- test functions
 
 function combat:startTest()
+    self.logger:Debug("Starting combat test")
     self._testBeginTime = GetGameTimeMilliseconds()
     self:Reset()
     -- we have to fire the event a bit later than usual to let all other parts and modules prepare
@@ -122,6 +125,7 @@ function combat:startTest()
     --end
 end
 function combat:stopTest()
+    self.logger:Debug("Stopping combat test")
     self._testBeginTime = nil
     CM:FireCallbacks(HR_EVENT_COMBAT_END)
     self:Reset()

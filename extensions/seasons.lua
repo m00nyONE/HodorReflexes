@@ -30,6 +30,7 @@ function extension:Activate()
 
     -- April Fools Day: reverse DPS ranking
     if self.sw.enableAprilFools and self.date == "0104" then
+        self.logger:Debug("enable april fools mode: reverse dps ranking")
         -- we have to wait for the module to initialize because extensions are loaded before modules
         zo_callLater(function()
             local dps_module = addon.modules.dps
@@ -45,6 +46,7 @@ function extension:Activate()
 
     -- Christmas event: change class icons
     if self.sw.enableChristmas and (self.date == "2412" or self.date == "2512" or self.date == "2612") then
+        self.logger:Debug("enable christmas mode: change class icons")
         local christmasIcons = {
             [1] = "HodorReflexes/assets/events/christmas/class_dragonknight_christmas.dds",
             [2] = "HodorReflexes/assets/events/christmas/class_sorcerer_christmas.dds",
@@ -59,6 +61,7 @@ function extension:Activate()
 
     -- Valentine's Day: random hearts as user icons
     if self.sw.enableValentines and self.date == "1402" then
+        self.logger:Debug("enable valentines mode: random hearts as class icons")
         local valentineIcons = {
             "HodorReflexes/assets/events/valentine/8bitHeart.dds",
             "HodorReflexes/assets/events/valentine/angel_heart.dds",

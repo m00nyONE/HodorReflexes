@@ -93,6 +93,7 @@ function module:CreateDamageList()
             headerRowCreationWrapper(self.headerRowCreationFunction)
     )
     ZO_ScrollList_SetTypeCategoryHeader(self.damageList.listControl, self.damageList.HEADER_TYPE, true)
+    self.damageList.logger:Debug("added header row type '%d' with template '%s'", self.damageList.HEADER_TYPE, self.damageList.HEADER_TEMPLATE)
 
     ZO_ScrollList_AddDataType(
             self.damageList.listControl,
@@ -101,6 +102,7 @@ function module:CreateDamageList()
             self.damageList.listRowHeight,
             damageRowCreationWrapper(self.damageRowCreationFunction)
     )
+    self.damageList.logger:Debug("added player row type '%d' with template '%s'", self.damageList.ROW_TYPE, self.damageList.ROW_TEMPLATE)
 
     ZO_ScrollList_AddDataType(
             self.damageList.listControl,
@@ -110,6 +112,7 @@ function module:CreateDamageList()
             summaryRowCreationWrapper(self.summaryRowCreationFunction)
     )
     ZO_ScrollList_SetTypeCategoryHeader(self.damageList.listControl, self.damageList.SUMMARY_TYPE, true)
+    self.damageList.logger:Debug("added summary row type '%d' with template '%s'", self.damageList.SUMMARY_TYPE, self.damageList.SUMMARY_TEMPLATE)
 end
 
 --- creation function for the header row. This can be overwritten if using a custom theme

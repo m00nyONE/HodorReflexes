@@ -31,17 +31,15 @@ end
 --- runs the module's initialization function.
 --- @return void
 function core.InitializeModules()
-    logger:Debug("Initializing modules...")
-
     -- check if saved variables are populated
     if not core.sw.modules then
-        logger:Debug("No modules found in saved variables, populating with defaults...")
+        logger:Warn("No modules found in saved variables, populating with defaults...")
         core.sw.modules = core.svDefault.modules
     end
 
     for moduleName, module in util.Spairs(addon.modules, sortByPriority) do
-        logger:Debug("Initializing module: %s", moduleName)
         if core.sw.modules[moduleName] then
+            logger:Info("Initializing module: %s", moduleName)
             -- create saved variables for the module
             module:RunOnce("CreateSavedVariables")
 

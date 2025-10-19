@@ -76,6 +76,7 @@ function module:CreateAtroList()
             headerRowCreationWrapper(self.atroListHeaderRowCreationFunction)
     )
     ZO_ScrollList_SetTypeCategoryHeader(self.atroList.listControl, self.atroList.HEADER_TYPE, true)
+    self.atroList.logger:Debug("added header row type '%d' with template '%s'", self.atroList.HEADER_TYPE, self.atroList.HEADER_TEMPLATE)
 
     ZO_ScrollList_AddDataType(
             self.atroList.listControl,
@@ -84,6 +85,7 @@ function module:CreateAtroList()
             self.atroList.listRowHeight,
             playerRowCreationWrapper(self.atroListRowCreationFunction)
     )
+    self.atroList.logger:Debug("added player row type '%d' with template '%s'", self.atroList.ROW_TYPE, self.atroList.ROW_TEMPLATE)
 end
 
 function module:atroListHeaderRowCreationFunction(rowControl, data, scrollList)

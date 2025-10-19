@@ -51,6 +51,8 @@ core.CM = CM -- make the callback manager available to other parts of the addon
 
 -- initialize addon
 local function initialize()
+    core.logger.main:Info("version: %s", addon.version)
+    core.logger.main:Info("svVersion: %d", core.svVersion)
     -- we use a combination of accountWide saved variables and per character saved variables. This little swappi swappi allows us to switch between them without defining new variables
     core.sw = ZO_SavedVars:NewAccountWide(core.svName, core.svVersion, nil, core.svDefault)
     if not core.sw.accountWide then
@@ -80,9 +82,7 @@ EM:RegisterForEvent(addon_name, EVENT_ADD_ON_LOADED, function(_, name)
 
     local beginTime = GetGameTimeMilliseconds()
     initialize()
-    local endTime = GetGameTimeMilliseconds()
-
-    core.logger.main:Debug("%s initialized in %d ms", addon_name, endTime - beginTime)
+    core.logger.main:Debug("initialized in %d ms", GetGameTimeMilliseconds() - beginTime)
 end)
 
 --[[ doc.lua end ]]

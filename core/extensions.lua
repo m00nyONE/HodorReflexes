@@ -10,16 +10,14 @@ local logger = core.logger.main
 --- initializes all registered extensions
 --- @return void
 function core.InitializeExtensions()
-    logger:Debug("Initializing extensions...")
-
     -- check if saved variables are populated
     if not core.sw.extensions then
-        logger:Debug("No extensions found in saved variables, populating with defaults...")
+        logger:Warn("No extensions found in saved variables, populating with defaults...")
         core.sw.extensions = core.svDefault.extensions
     end
 
     for extensionName, extension in pairs(addon.extensions) do
-        logger:Debug("Initializing extension: %s", extensionName)
+        logger:Info("Initializing extension: %s", extensionName)
         if core.sw.extensions[extensionName] then
             extension:RunOnce("CreateSavedVariables")
             extension:RunOnce("Activate")
