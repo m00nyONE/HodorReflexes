@@ -223,14 +223,14 @@ end
 
 function module:applyUserStyles(rowControl, data, scrollList)
     local userName = util.GetUserName(data.userId, true)
-    local userIcon, tcLeft, tcRight, tcTop, tcBottom = util.GetUserIcon(data.userId, data.classId)
-
     local nameControl = rowControl:GetNamedChild('_Name')
     nameControl:SetText(userName)
     nameControl:SetColor(1, 1, 1)
+
+    local userIcon, tcLeft, tcRight, tcTop, tcBottom = util.GetUserIcon(data.userId, data.classId)
     local iconControl = rowControl:GetNamedChild('_Icon')
-    iconControl:SetTextureCoords(tcLeft, tcRight, tcTop, tcBottom)
     iconControl:SetTexture(userIcon)
+    iconControl:SetTextureCoords(tcLeft, tcRight, tcTop, tcBottom)
 
     local percentageColor = self:getUltPercentageColor(data.lowestUltPercentage, 'FFFFFF')
     local percentageControl = rowControl:GetNamedChild("_PctValue")
