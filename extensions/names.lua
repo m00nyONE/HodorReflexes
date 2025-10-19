@@ -41,5 +41,6 @@ function extension:Activate()
     end
 
     util.GetUserName = LCN_GetUserName
+    self.logger:Debug("Overwrote util.GetUserName with LCN_GetUserName.")
 end
 

@@ -49,5 +49,6 @@ function extension:Activate()
     end
 
     util.GetUserIcon = LCI_GetUserIcon
+    self.logger:Debug("Overwrote util.GetUserIcon with LCI_GetUserIcon")
 end
 
