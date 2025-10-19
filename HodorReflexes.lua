@@ -22,9 +22,10 @@ local addon = {
             svDefault = {
                 accountwide = true,
                 extensions = {
-                    ["events"] = true,
+                    ["seasons"] = true,
                     ["names"] = true,
                     ["icons"] = true,
+                    ["animations"] = true,
                 },
                 modules = {
                     ["readycheck"] = true,
