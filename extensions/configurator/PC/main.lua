@@ -44,6 +44,8 @@ function extension:Activate()
     end
 
     self.currentFolder = (LCI.GetCurrentFolder and LCI.GetCurrentFolder()) or "misc"
+
+    self:RunOnce("BuildMenu")
 end
 
 --- Escapes the display name to a valid string that can be used as a filename.
