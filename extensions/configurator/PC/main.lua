@@ -58,13 +58,13 @@ function extension:escapeName(displayName)
 end
 
 --- Generates a colored name with optional gradient coloring.
---- @param withGradient boolean|nil optional whether to use gradient coloring or not.
+--- @param withGradient boolean|nil optional whether to use gradient coloring or not. If nil, uses self.sw.nameGradient
 --- @param nameRaw string|nil optional raw name. If nil, uses self.sw.nameRaw
 --- @param colorBegin table optional begin color as {r, g, b}. If nil, uses self.sw.nameColorBegin
 --- @param colorEnd table optional end color as {r, g, b}. If nil, uses self.sw.nameColorEnd
 --- @return string The formatted name.
 function extension:generateColoredName(withGradient, nameRaw, colorBegin, colorEnd)
-    if withGradient == nil then withGradient = self.sw.withGradient end
+    if withGradient == nil then withGradient = self.sw.nameGradient end
     if nameRaw == nil then nameRaw = self.sw.nameRaw end
     if colorBegin == nil then colorBegin = self.sw.nameColorBegin end
     if colorEnd == nil then colorEnd = self.sw.nameColorEnd end
@@ -168,6 +168,13 @@ function extension:generateGradient(rawName, colorBegin, colorEnd)
     local r2, g2, b2 = unpack(colorEnd)
     local chars = {} -- raw name split into single characters
     local numChars = 0 -- number of non spaces
+
+    -- sanity check for colors
+    if r1 == r2 and g1 == g2 and b1 == b2 then
+        local hex = util.RGB2Hex(r1, g1, b1)
+        return string.format('|c%s%s|r', hex, rawName)
+    end
+
     -- Split raw name into single utf8 characters.
     for i = 1, utf8.len(rawName) do
         chars[i] = string.sub(rawName, utf8.offset(rawName, i), utf8.offset(rawName, i + 1) - 1)
