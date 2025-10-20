@@ -102,18 +102,18 @@ end
 function core.BuildMenu()
     logger:Debug("Building menu for PC")
     local options = getCoreMenuOptions()
-    for header, mainMenuOptions in pairs(core.mainMenuOptions) do
+    for _, data in ipairs(core.mainMenuOptions) do
         table.insert(options, {
             type = "header",
-            name = string.format("|cFFFACD%s|r", header)
+            name = string.format("|cFFFACD%s|r", data.header)
         })
-        for _, option in ipairs(mainMenuOptions) do
+        for _, option in ipairs(data.options) do
             table.insert(options, option)
         end
     end
     createMenu(nil, options)
 
-    for header, subMenuOptions in pairs(core.subMenuOptions) do
-        createMenu(header, subMenuOptions)
+    for _, data in ipairs(core.subMenuOptions) do
+        createMenu(data.header, data.options)
     end
 end

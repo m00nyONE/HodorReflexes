@@ -12,10 +12,10 @@ core.subMenuOptions = {}
 function core.BuildMenu() end
 
 
-function core.RegisterMainMenuOptions(header, mainMenuOptions)
-    core.mainMenuOptions[header] = mainMenuOptions
+function core.RegisterMainMenuOptions(header, options)
+    table.insert(core.mainMenuOptions, { header = header, options = options })
 end
 
-function core.RegisterSubMenuOptions(header, subMenuOptions)
-    core.subMenuOptions[header] = subMenuOptions
+function core.RegisterSubMenuOptions(header, options)
+    table.insert(core.subMenuOptions, { header = header, options = options })
 end
