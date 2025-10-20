@@ -11,6 +11,26 @@ local util = addon.util
 
 local LAM = LibAddonMenu2
 
+function core.GetCoreOptions()
+    return {
+        {
+            type = "header",
+            name = string.format("|cFFFACD%s|r", "General")
+        },
+        {
+            type = "checkbox",
+            name = "account wide settings",
+            tooltip = "enable/disable account-wide settings.",
+            default = true,
+            getFunc = function() return core.sw.accountwide end,
+            setFunc = function(value)
+                core.sw.accountwide = value
+            end,
+            requiresReload = true,
+        },
+    }
+end
+
 function core.GetExtensionOptions()
     local options = {
         {
@@ -74,6 +94,9 @@ function core.BuildMenu()
         registerForRefresh = true,
     }
     local options = {}
+    for _, opt in ipairs(core.GetCoreOptions()) do
+        table.insert(options, opt)
+    end
     for _, opt in ipairs(core.GetExtensionOptions()) do
         table.insert(options, opt)
     end
