@@ -3,7 +3,7 @@
 
 local strings = {
     HR_MODULES_EXITINSTANCE_FRIENDLYNAME = "Exit Instance",
-    HR_MODULES_EXITINSTANCE_DESCRIPTION = "Allows you to send pull exit instance requests to your group.",
+    HR_MODULES_EXITINSTANCE_DESCRIPTION = "Allows you to send exit instance requests to your group.",
     HR_MODULES_EXITINSTANCE_BINDING_SENDEJECT = "Eject Group",
     HR_MODULES_EXITINSTANCE_BINDING_EXITINSTANCE = "Exit Instance Immediately",
     HR_MODULES_EXITINSTANCE_COMMAND_HELP = "Sends a request to your group to exit the current instance.",
