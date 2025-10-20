@@ -5,6 +5,8 @@ local addon_name = "HodorReflexes"
 local addon = _G[addon_name]
 local internal = addon.internal
 
+local core = internal.core
+
 local LCN = LibCustomNames
 local LCI = LibCustomIcons
 local util = addon.util
@@ -45,7 +47,8 @@ function extension:Activate()
 
     self.currentFolder = (LCI.GetCurrentFolder and LCI.GetCurrentFolder()) or "misc"
 
-    self:RunOnce("BuildMenu")
+    local options = self:RunOnce("BuildMenuOptions")
+    core.RegisterSubMenuOptions(self.friendlyName, options)
 end
 
 --- Escapes the display name to a valid string that can be used as a filename.
