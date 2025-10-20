@@ -6,13 +6,8 @@ local addon = _G[addon_name]
 local internal = addon.internal
 
 local LAM = LibAddonMenu2
-local LCN = LibCustomNames
-local LCI = LibCustomIcons
-local util = addon.util
 
 local addon_extensions = addon.extensions
-local internal_extensions = internal.extensions
-
 local extension = addon_extensions.configurator
 
 function extension:BuildMenu()
