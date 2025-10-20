@@ -12,7 +12,7 @@ local internal_modules = internal.modules
 local module_name = "ult"
 local module = addon_modules[module_name]
 
-function module:GetMenuOptions()
+function module:GetSubMenuOptions()
     return {
 
     }
