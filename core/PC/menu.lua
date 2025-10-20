@@ -8,11 +8,41 @@ local core = internal.core
 local logger = core.initSubLogger("menu")
 
 local util = addon.util
-
 local LAM = LibAddonMenu2
 
-function core.GetCoreOptions()
+local function GetPanelConfig(subName)
+    local name = addon.friendlyName
+    local displayName = string.format('|cFFFACD%s|r', addon.friendlyName)
+    if subName then
+        name = string.format("%s - %s", addon.friendlyName, subName)
+        displayName = string.format('|cFFFACD%s - %s|r', addon.friendlyName, subName)
+    end
+
     return {
+        type = "panel",
+        name = name,
+        displayName = displayName,
+        author = addon.author,
+        version = addon.version,
+        website = "https://www.esoui.com/downloads/info2311-HodorReflexes-DPSULTtracker.html#donate",
+        donation = addon.Donate,
+        registerForRefresh = true,
+    }
+end
+
+local function createMenu(subName, options)
+    local panel = GetPanelConfig(subName)
+    local menuReference = addon_name .. "_menu"
+    if subName then
+        menuReference = string.format("%s_module_%s_menu", addon_name, subName)
+    end
+
+    LAM:RegisterAddonPanel(menuReference, panel)
+    LAM:RegisterOptionControls(menuReference, options)
+end
+
+local function getCoreMenuOptions()
+    local options = {
         {
             type = "header",
             name = string.format("|cFFFACD%s|r", "General")
@@ -29,15 +59,10 @@ function core.GetCoreOptions()
             requiresReload = true,
         },
     }
-end
-
-function core.GetExtensionOptions()
-    local options = {
-        {
-            type = "header",
-            name = string.format("|cFFFACD%s|r", "Extensions")
-        }
-    }
+    table.insert(options, {
+        type = "header",
+        name = string.format("|cFFFACD%s|r", "Extensions")
+    })
     for extensionName, extension in util.Spairs(addon.extensions, util.SortByPriority) do
         table.insert(options, {
             type = "checkbox",
@@ -51,17 +76,10 @@ function core.GetExtensionOptions()
             requiresReload = true,
         })
     end
-
-    return options
-end
-
-function core.GetModuleOptions()
-    local options = {
-        {
-            type = "header",
-            name = string.format("|cFFFACD%s|r", "Modules")
-        }
-    }
+    table.insert(options, {
+        type = "header",
+        name = string.format("|cFFFACD%s|r", "Modules")
+    })
     for moduleName, module in util.Spairs(addon.modules, util.SortByPriority) do
         table.insert(options, {
             type = "checkbox",
@@ -82,28 +100,20 @@ end
 --- build the menu for PC platform
 --- @return void
 function core.BuildMenu()
-    logger:Info("Building menu for PC")
-    local panel = {
-        type = "panel",
-        name = addon.friendlyName,
-        displayName = string.format('|cFFFACD%s|r', addon.friendlyName),
-        author = addon.author,
-        version = addon.version,
-        website = "https://www.esoui.com/downloads/info2311-HodorReflexes-DPSULTtracker.html#donate",
-        donation = addon.Donate,
-        registerForRefresh = true,
-    }
-    local options = {}
-    for _, opt in ipairs(core.GetCoreOptions()) do
-        table.insert(options, opt)
+    logger:Debug("Building menu for PC")
+    local options = getCoreMenuOptions()
+    for header, mainMenuOptions in pairs(core.mainMenuOptions) do
+        table.insert(options, {
+            type = "header",
+            name = string.format("|cFFFACD%s|r", header)
+        })
+        for _, option in ipairs(mainMenuOptions) do
+            table.insert(options, option)
+        end
     end
-    for _, opt in ipairs(core.GetExtensionOptions()) do
-        table.insert(options, opt)
-    end
-    for _, opt in ipairs(core.GetModuleOptions()) do
-        table.insert(options, opt)
-    end
+    createMenu(nil, options)
 
-    LAM:RegisterAddonPanel(addon_name .. "_Menu", panel)
-    LAM:RegisterOptionControls(addon_name .. "_Menu", options)
+    for header, subMenuOptions in pairs(core.subMenuOptions) do
+        createMenu(header, subMenuOptions)
+    end
 end
