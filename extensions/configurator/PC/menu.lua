@@ -19,20 +19,27 @@ function extension:BuildMenu()
     local menuReference = string.format("%s_extension_%s_menu", addon_name, self.name)
     local discordURL = "https://discord.gg/8YpvXJhAyz"
 
-    local function _generateCodeWrapper(...)
-        self:generateCode(...)
-
-        if _G[menuReference .. "_Code"] then
-            _G[menuReference .. "_Code"].container:SetHeight(24 * 6)
-            _G[menuReference .. "_Code"]:SetHeight(24 * 6)
-        end
-    end
-
     local function _generatePreview(updateControl)
         local s = string.format("                    %s", self.sw.nameColored)
         if updateControl then
             _G[menuReference .. "_preview"].data.text = s
         end
+    end
+
+    local function _generateCodeWrapper(...)
+        if _G[menuReference .. "_Code"] then
+            _G[menuReference .. "_Code"].container:SetHeight(24 * 6)
+            _G[menuReference .. "_Code"]:SetHeight(24 * 6)
+        end
+
+        return self:generateCode(...)
+    end
+    local function _generateColoredNameWrapper(updateControl)
+        self.sw.nameColored = self:generateColoredName()
+        if updateControl then
+            _generatePreview(updateControl)
+        end
+        return self.sw.nameColored
     end
 
     local panel = {
@@ -103,7 +110,7 @@ function extension:BuildMenu()
             setFunc = function(value)
                 if value ~= self.sw.nameRaw then
                     self.sw.nameRaw = value or ""
-                    self:generateColoredName(true)
+                    _generateColoredNameWrapper(true)
                 end
             end,
         },
@@ -115,7 +122,7 @@ function extension:BuildMenu()
             getFunc = function() return self.sw.nameGradient end,
             setFunc = function(value)
                 self.sw.nameGradient = value
-                self:generateColoredName(value)
+                _generateColoredNameWrapper(true)
             end,
         },
         {
@@ -127,9 +134,8 @@ function extension:BuildMenu()
                 local r1, g1, b1 = unpack(self.sw.nameColorBegin)
                 if r1 ~= r2 or g1 ~= g2 or b1 ~= b2 then
                     self.sw.nameColorBegin = {r2, g2, b2}
-                    self:generateColoredName(true)
+                    _generateColoredNameWrapper(true)
                 end
-                self:generateColoredName(false)
             end,
             width = 'full',
         },
@@ -142,7 +148,7 @@ function extension:BuildMenu()
                 local r1, g1, b1 = unpack(self.sw.nameColorEnd)
                 if r1 ~= r2 or g1 ~= g2 or b1 ~= b2 then
                     self.sw.nameColorEnd = {r2, g2, b2}
-                    self:generateColoredName(true)
+                    _generateColoredNameWrapper(true)
                 end
             end,
             width = 'full',
