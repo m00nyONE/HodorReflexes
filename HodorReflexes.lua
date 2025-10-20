@@ -5,6 +5,7 @@
 --- @class HodorReflexes
 local addon = {
     name = "HodorReflexes",
+    friendlyName = "Hodor Reflexes",
     slashCmd = "hodor",
     version = "dev",
     author = "|cFFFF00@andy.s|r, |c76c3f4@m00nyONE|r",
