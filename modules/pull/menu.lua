@@ -12,7 +12,7 @@ local internal_modules = internal.modules
 local module_name = "pull"
 local module = addon_modules[module_name]
 
-function module:GetMainMenuOptions()
+function module:GetMenuOptions()
     return {
         {
             type = "slider",

@@ -39,10 +39,7 @@ function core.InitializeModules()
             -- register LibGroupBroadcast Protocols if available
             module:RunOnce("RegisterLGBProtocols", core.LGBHandler)
 
-            -- register mainMenu options if available
-            local mainMenuOptions = module:RunOnce("GetMainMenuOptions")
-
-            -- register submenu if available
+            -- get menu options if available
             local menuOptions = module:RunOnce("GetMenuOptions")
 
             -- run the module's initialization function
@@ -85,9 +82,6 @@ moduleClass:MUST_IMPLEMENT("Activate") -- function that gets called to activate 
 -- can implement functions
 function moduleClass:RegisterLGBProtocols(handler)
     self.RegisterLGBProtocols = nil
-end
-function moduleClass:GetMainMenuOptions()
-    self.GetMainMenuOptions = nil
 end
 function moduleClass:GetMenuOptions()
     self.GetMenuOptions = nil
