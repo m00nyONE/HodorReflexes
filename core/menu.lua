@@ -5,7 +5,17 @@ local addon_name = "HodorReflexes"
 local addon = _G[addon_name]
 local internal = addon.internal
 local core = internal.core
+core.mainMenuOptions = {}
+core.subMenuOptions = {}
 
--- functions needs to be implemented platform specific
+-- function needs to be implemented platform specific
 function core.BuildMenu() end
-function core.RegisterSubMenu(name, menuTable) end
+
+
+function core.RegisterMainMenuOptions(header, mainMenuOptions)
+    core.mainMenuOptions[header] = mainMenuOptions
+end
+
+function core.RegisterSubMenuOptions(header, subMenuOptions)
+    core.subMenuOptions[header] = subMenuOptions
+end

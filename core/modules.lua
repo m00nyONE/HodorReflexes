@@ -40,7 +40,14 @@ function core.InitializeModules()
             module:RunOnce("RegisterLGBProtocols", core.LGBHandler)
 
             -- get menu options if available
-            local menuOptions = module:RunOnce("GetMenuOptions")
+            local mainMenuOptions = module:RunOnce("GetMainMenuOptions")
+            if mainMenuOptions then
+                core.RegisterMainMenuOptions(module.friendlyName, mainMenuOptions)
+            end
+            local subMenuOptions = module:RunOnce("GetSubMenuOptions")
+            if subMenuOptions then
+                core.RegisterSubMenuOptions(module.friendlyName, subMenuOptions)
+            end
 
             -- run the module's initialization function
             module:RunOnce("Activate")
@@ -83,8 +90,13 @@ moduleClass:MUST_IMPLEMENT("Activate") -- function that gets called to activate 
 function moduleClass:RegisterLGBProtocols(handler)
     self.RegisterLGBProtocols = nil
 end
-function moduleClass:GetMenuOptions()
-    self.GetMenuOptions = nil
+function moduleClass:GetSubMenuOptions()
+    self.GetSubMenuOptions = nil
+    return nil
+end
+function moduleClass:GetMainMenuOptions()
+    self.GetMainMenuOptions = nil
+    return nil
 end
 function moduleClass:GetDiagnostic()
     self.GetDiagnosticInfo = nil
