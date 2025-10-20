@@ -11,6 +11,7 @@ local util = addon.util
 
 local extensionDefinition = {
     name = "configurator",
+    friendlyName = "Configurator",
     version = "1.0.0",
     description = "Allows you to request a custom name/icon yourself with an easy to use editor.",
     priority = 11,
