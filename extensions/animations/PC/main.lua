@@ -49,15 +49,7 @@ function extension:Activate()
         return originalGetUserIcon(userId, classId)
     end
 
-    local lists = {
-        addon.modules.dps.damageList,
-        addon.modules.ult.hornList,
-        addon.modules.ult.colosList,
-        addon.modules.ult.atroList,
-        addon.modules.ult.miscList,
-        addon.modules.ult.compactList,
-    }
-    for _, list in pairs(lists) do
+    for _, list in pairs(internal.registeredLists) do
         self:AttachToList(list)
     end
 
