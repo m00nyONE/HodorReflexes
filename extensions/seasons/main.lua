@@ -4,8 +4,23 @@
 local addon_name = "HodorReflexes"
 local addon = _G[addon_name]
 local internal = addon.internal
+local core = internal.core
 
-local util = addon.util
+local HR_EVENT_DEBUG_MODE_CHANGED = core.HR_EVENT_DEBUG_MODE_CHANGED
+
+--- @class seasonClass : ZO_Object
+local seasonClass = ZO_Object:Subclass()
+seasonClass:MUST_IMPLEMNT("Activate")
+function seasonClass:IsEnabled()
+    return self.enabled
+end
+function seasonClass:ActivateAndEnable()
+    if not self:IsEnabled() then
+        self.enabled = true
+        self:Activate()
+    end
+end
+
 
 local extensionDefinition = {
     name = "seasons",
@@ -13,11 +28,9 @@ local extensionDefinition = {
     description = "Seasonal events which change some behaviors of the addon on specific dates.",
     priority = 10,
     svVersion = 1,
-    svDefault = {
-        enableAprilFools = true,
-        enableChristmas = true,
-        enableValentines = true,
-    },
+    svDefault = {}, -- per-season settings are created dynamically
+
+    seasons = {},
 }
 
 --- @class seasonsExtension : extensionClass
@@ -29,62 +42,52 @@ local extension = internal.extensionClass:New(extensionDefinition)
 function extension:Activate()
     self.date = os.date("%d%m")
 
-    -- April Fools Day: reverse DPS ranking
-    if self.sw.enableAprilFools and self.date == "0104" then
-        self.logger:Debug("enable april fools mode: reverse dps ranking")
-        local dps_module = addon.modules.dps
-        local function sortByDamageReversed(a, b)
-            if a.dmg == b.dmg then
-                return dps_module.sortByName(a, b)
+    for name, season in pairs(self.seasons) do
+        if self.sw[name] == nil then
+            self.sw[name] = true
+        end
+
+        if self.sw[name] then
+            for _, date in ipairs(season.dates) do
+                if date == self.date then
+                    self.logger:Debug("Activating season '%s' - %s", name, season.description)
+                    season:ActivateAndEnable()
+                    break
+                end
             end
-            return a.dmg < b.dmg
         end
-        dps_module.sortByDamage = sortByDamageReversed
     end
 
-    -- Christmas event: change class icons
-    if self.sw.enableChristmas and (self.date == "2412" or self.date == "2512" or self.date == "2612") then
-        self.logger:Debug("enable christmas mode: change class icons")
-        local christmasIcons = {
-            [1] = "HodorReflexes/assets/seasons/christmas/class_dragonknight_christmas.dds",
-            [2] = "HodorReflexes/assets/seasons/christmas/class_sorcerer_christmas.dds",
-            [3] = "HodorReflexes/assets/seasons/christmas/class_nightblade_christmas.dds",
-            [4] = "HodorReflexes/assets/seasons/christmas/class_warden_christmas.dds",
-            [5] = "HodorReflexes/assets/seasons/christmas/class_necromancer_christmas.dds",
-            [6] = "HodorReflexes/assets/seasons/christmas/class_templar_christmas.dds",
-            [117] = "HodorReflexes/assets/seasons/christmas/class_arcanist_christmas.dds"
-        }
-        util.OverwriteClassIcons(christmasIcons)
-    end
+    -- debug command to manually activate seasons
+    local function onDebugModeChanged(enabled)
+        if enabled then
+            self.logger:Debug("current date is: " .. tostring(self.date))
+            core.RegisterSubCommand("seasons", "activates seasonal events for testing purposes", function(str)
+                local availableSeasons = "Available seasons:"
+                for name, season in pairs(self.seasons) do
+                    availableSeasons = string.format("%s %s", availableSeasons, name)
+                    if str == name then
+                        season:ActivateAndEnable()
+                        return
+                    end
+                end
 
-    -- Valentine's Day: random hearts as user icons
-    if self.sw.enableValentines and self.date == "1402" then
-        self.logger:Debug("enable valentines mode: random hearts as class icons")
-        local valentineIcons = {
-            "HodorReflexes/assets/seasons/valentine/8bitHeart.dds",
-            "HodorReflexes/assets/seasons/valentine/angel_heart.dds",
-            "HodorReflexes/assets/seasons/valentine/blue_heart.dds",
-            "HodorReflexes/assets/seasons/valentine/calender.dds",
-            "HodorReflexes/assets/seasons/valentine/ff_heart.dds",
-            "HodorReflexes/assets/seasons/valentine/green_heart.dds",
-            "HodorReflexes/assets/seasons/valentine/happyheart.dds",
-            "HodorReflexes/assets/seasons/valentine/orange_heart.dds",
-            "HodorReflexes/assets/seasons/valentine/present.dds",
-            "HodorReflexes/assets/seasons/valentine/purple_heart.dds",
-            "HodorReflexes/assets/seasons/valentine/rainbow_heart.dds",
-            "HodorReflexes/assets/seasons/valentine/ring.dds",
-            "HodorReflexes/assets/seasons/valentine/rose.dds",
-            "HodorReflexes/assets/seasons/valentine/round_heart.dds",
-            "HodorReflexes/assets/seasons/valentine/smiling_heart.dds",
-            "HodorReflexes/assets/seasons/valentine/sparkling_heart.dds",
-            "HodorReflexes/assets/seasons/valentine/white_heart.dds",
-        }
-        local function getRandomValentinesIcon()
-            local randomIconIndex = zo_random(1, #valentineIcons)
-            return valentineIcons[randomIconIndex], 0, 1, 0, 1
+                d(availableSeasons)
+            end)
+        else
+            core.UnregisterSubCommand("seasons")
         end
-
-        util.GetClassIcon = getRandomValentinesIcon()
     end
+    addon.RegisterCallback(HR_EVENT_DEBUG_MODE_CHANGED, onDebugModeChanged)
+end
+
+--- create a new season.
+--- @param season table season definition
+--- @return seasonClass season object
+function extension:NewSeason(season)
+    local obj = seasonClass:New(season)
+    obj.enabled = false
+    self.seasons[obj.name] = obj
+    return obj
 end
 

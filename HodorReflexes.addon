@@ -99,6 +99,9 @@ modules/skilllines/menu.lua
 
 ; extensions
 extensions/seasons/main.lua
+extensions/seasons/aprilfools.lua.lua
+extensions/seasons/PC/christmas.lua
+extensions/seasons/PC/valentines.lua
 extensions/names/main.lua
 extensions/icons/PC/main.lua
 extensions/animations/PC/main.lua
