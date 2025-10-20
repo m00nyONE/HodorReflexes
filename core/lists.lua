@@ -77,6 +77,10 @@ function listClass:Initialize(listDefinition)
         self[k] = v
     end
 
+    if internal.registeredLists[self.name] then
+        error(string.format("A list with the name '%s' is already registered!", self.name), 2)
+    end
+
     self.logger = core.initSubLogger("list/" .. self.name)
     self.logger:Debug("initializing")
 
@@ -117,6 +121,8 @@ function listClass:Initialize(listDefinition)
 
     self.logger:Debug("initialized in %d ms", GetGameTimeMilliseconds() - beginTime)
     self.Initialize = nil -- prevent re-initialization
+
+    internal.registeredLists[self.name] = self -- register the list
 end
 
 --- NOT for manual use! this gets called to update the list with a debounce.

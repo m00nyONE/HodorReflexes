@@ -38,6 +38,9 @@ local addon = {
                 libraryPopupDisabled = false,
             }
         },
+        registeredLists = {}, -- list of all registered lists
+        extensionClass = {}, -- will be set later
+        moduleClass = {}, -- will be set later
     },
 }
 local addon_name = addon.name
