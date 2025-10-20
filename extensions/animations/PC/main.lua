@@ -41,12 +41,12 @@ function extension:Activate()
 
     -- hook util.GetUserIcon to return nil when an animation is found so the static icon does not get attached to any controls
     -- This is to prevent flickering between static and animated icons while updating the list
-    local _getUserIcon = util.GetUserIcon
-    function util.GetUserIcon(userId)
+    local originalGetUserIcon = util.GetUserIcon
+    util.GetUserIcon = function(userId, classId)
         if LCI.HasAnimated(userId) then
-            return nil
+            return nil, 0, 1, 0, 1
         end
-        return _getUserIcon(userId)
+        return originalGetUserIcon(userId, classId)
     end
 
     local lists = {
