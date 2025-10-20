@@ -11,14 +11,12 @@ local util = addon.util
 local addon_extensions = addon.extensions
 local extension = addon_extensions.seasons
 
-local seasonDefinition = {
+local season = {
     name = "valentines",
     version = "1.0.0",
     description = "random hearts as class icons",
     dates = { "1402" },
 }
-
-local season = extension:NewSeason(seasonDefinition)
 
 function season:Activate()
     local valentineIcons = { -- TODO: combine into one texture and set textureCoordinates for performance
@@ -47,3 +45,5 @@ function season:Activate()
 
     util.GetClassIcon = getRandomValentinesIcon()
 end
+
+extension:NewSeason(season)

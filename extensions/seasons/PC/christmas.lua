@@ -11,14 +11,12 @@ local util = addon.util
 local addon_extensions = addon.extensions
 local extension = addon_extensions.seasons
 
-local seasonDefinition = {
+local season = {
     name = "christmas",
     version = "1.0.0",
     description = "class icons with christmas hats",
     dates = { "2412", "2512", "2612" },
 }
-
-local season = extension:NewSeason(seasonDefinition)
 
 function season:Activate()
     local christmasIcons = {
@@ -30,5 +28,7 @@ function season:Activate()
         [6] = "HodorReflexes/extensions/seasons/PC/assets/christmas/class_templar_christmas.dds",
         [117] = "HodorReflexes/extensions/seasons/PC/assets/christmas/class_arcanist_christmas.dds"
     }
-    util.OverwriteClassIcons(christmasIcons)
+    util.overwriteClassIcons(christmasIcons)
 end
+
+extension:NewSeason(season)

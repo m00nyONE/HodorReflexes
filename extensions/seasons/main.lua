@@ -9,8 +9,15 @@ local core = internal.core
 local HR_EVENT_DEBUG_MODE_CHANGED = core.HR_EVENT_DEBUG_MODE_CHANGED
 
 --- @class seasonClass : ZO_Object
-local seasonClass = ZO_Object:Subclass()
-seasonClass:MUST_IMPLEMNT("Activate")
+local seasonClass = ZO_InitializingObject:Subclass()
+seasonClass:MUST_IMPLEMENT("Activate")
+function seasonClass:Initialize(season)
+    for k, v in pairs(season) do
+        self[k] = v
+    end
+
+    self.enabled = false
+end
 function seasonClass:IsEnabled()
     return self.enabled
 end
@@ -20,7 +27,6 @@ function seasonClass:ActivateAndEnable()
         self:Activate()
     end
 end
-
 
 local extensionDefinition = {
     name = "seasons",
@@ -86,8 +92,5 @@ end
 --- @return seasonClass season object
 function extension:NewSeason(season)
     local obj = seasonClass:New(season)
-    obj.enabled = false
     self.seasons[obj.name] = obj
-    return obj
 end
-
