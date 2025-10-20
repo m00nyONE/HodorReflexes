@@ -42,11 +42,12 @@ function util.RGB2Hex(r, g, b)
 end
 
 --- color code string
---- @param hex string hex color code without #, e.g. FFFFFF
+--- @param hex string hex color code with or without #, e.g. FFFFFF
 --- @param str string string to color code
 --- @return string color coded string
 function util.ColorCode(hex, str)
-    return "|c" .. hex .. str .. "|r"
+    hex = hex:gsub("#", "")
+    return string.format("|c%s%s|r", hex, str)
 end
 
 --- Remove duplicate values from a table.
