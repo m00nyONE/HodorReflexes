@@ -38,12 +38,12 @@ function season:Activate()
         "HodorReflexes/extensions/seasons/PC/assets/valentine/sparkling_heart.dds",
         "HodorReflexes/extensions/seasons/PC/assets/valentine/white_heart.dds",
     }
-    local function getRandomValentinesIcon()
+    local function getRandomValentinesIcon(classId)
         local randomIconIndex = zo_random(1, #valentineIcons)
         return valentineIcons[randomIconIndex], 0, 1, 0, 1
     end
 
-    util.GetClassIcon = getRandomValentinesIcon()
+    util.GetClassIcon = getRandomValentinesIcon
 end
 
 extension:NewSeason(season)
