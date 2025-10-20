@@ -105,3 +105,7 @@ extensions/seasons/PC/valentines.lua
 extensions/names/main.lua
 extensions/icons/PC/main.lua
 extensions/animations/PC/main.lua
+extensions/configurator/PC/lang/en.lua
+extensions/configurator/PC/lang/$(language).lua
+extensions/configurator/PC/main.lua
+extensions/configurator/PC/menu.lua
