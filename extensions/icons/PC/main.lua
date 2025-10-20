@@ -37,7 +37,7 @@ local function LCI_GetUserIcon(userId, classId)
         return animation, 0, 1/width, 0, 1/height
     end
     -- as a last resort, return class icon
-    return extension.GetClassIcon(classId)
+    return util.GetClassIcon(classId)
 end
 
 --- Module activation function.
