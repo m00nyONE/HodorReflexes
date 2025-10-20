@@ -7,6 +7,11 @@ local internal = addon.internal
 local core = internal.core
 local logger = core.initSubLogger("cmd")
 
+local CM = core.CM
+
+local HR_EVENT_DEBUG_MODE_CHANGED = "HR_EVENT_DEBUG_MODE_CHANGED"
+core.HR_EVENT_DEBUG_MODE_CHANGED = HR_EVENT_DEBUG_MODE_CHANGED
+
 local addon_version = addon.version
 
 -- for initializing basic commands from HR Core
@@ -21,9 +26,16 @@ function core.RegisterCoreCommands()
     end)
     core.RegisterSubCommand("debug", "Toggle debug mode", function()
         addon.debug = not addon.debug
-        addon.internal = internal
         df("|cFFFF00%s|r debug mode %s", addon_name, addon.debug and "|c00FF00enabled|r" or "|cFF0000disabled|r")
         logger:Info("Debug mode %s", addon.debug and "enabled" or "disabled")
+
+        if addon.debug then
+            addon.internal = internal
+        else
+            addon.internal = nil
+        end
+
+        CM:FireCallbacks(HR_EVENT_DEBUG_MODE_CHANGED, addon.debug)
     end)
 end
 
@@ -47,6 +59,16 @@ function core.RegisterSubCommand(command, help, func)
         help = help,
         func = func,
     }
+end
+
+--- allow other modules to unregister sub commands.
+--- @param command string the command name
+--- @return void
+function core.UnregisterSubCommand(command)
+    assert(type(command) == "string", "command must be a string")
+    logger:Debug("Unregistering command: /%s %s", addon.slashCmd, command)
+
+    commands[command] = nil
 end
 
 -- create slash command
