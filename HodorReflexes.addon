@@ -100,5 +100,5 @@ modules/skilllines/menu.lua
 ; extensions
 extensions/seasons/main.lua
 extensions/names/main.lua
-extensions/icons/main.lua
-extensions/animations/main.lua
+extensions/icons/PC/main.lua
+extensions/animations/PC/main.lua
