@@ -20,7 +20,7 @@ local extensionDefinition = {
     },
 }
 
---- @class eventsExtension : extensionClass
+--- @class seasonsExtension : extensionClass
 local extension = internal.extensionClass:New(extensionDefinition)
 
 --- Module activation function.
@@ -46,13 +46,13 @@ function extension:Activate()
     if self.sw.enableChristmas and (self.date == "2412" or self.date == "2512" or self.date == "2612") then
         self.logger:Debug("enable christmas mode: change class icons")
         local christmasIcons = {
-            [1] = "HodorReflexes/assets/events/christmas/class_dragonknight_christmas.dds",
-            [2] = "HodorReflexes/assets/events/christmas/class_sorcerer_christmas.dds",
-            [3] = "HodorReflexes/assets/events/christmas/class_nightblade_christmas.dds",
-            [4] = "HodorReflexes/assets/events/christmas/class_warden_christmas.dds",
-            [5] = "HodorReflexes/assets/events/christmas/class_necromancer_christmas.dds",
-            [6] = "HodorReflexes/assets/events/christmas/class_templar_christmas.dds",
-            [117] = "HodorReflexes/assets/events/christmas/class_arcanist_christmas.dds"
+            [1] = "HodorReflexes/assets/seasons/christmas/class_dragonknight_christmas.dds",
+            [2] = "HodorReflexes/assets/seasons/christmas/class_sorcerer_christmas.dds",
+            [3] = "HodorReflexes/assets/seasons/christmas/class_nightblade_christmas.dds",
+            [4] = "HodorReflexes/assets/seasons/christmas/class_warden_christmas.dds",
+            [5] = "HodorReflexes/assets/seasons/christmas/class_necromancer_christmas.dds",
+            [6] = "HodorReflexes/assets/seasons/christmas/class_templar_christmas.dds",
+            [117] = "HodorReflexes/assets/seasons/christmas/class_arcanist_christmas.dds"
         }
         util.OverwriteClassIcons(christmasIcons)
     end
@@ -61,23 +61,23 @@ function extension:Activate()
     if self.sw.enableValentines and self.date == "1402" then
         self.logger:Debug("enable valentines mode: random hearts as class icons")
         local valentineIcons = {
-            "HodorReflexes/assets/events/valentine/8bitHeart.dds",
-            "HodorReflexes/assets/events/valentine/angel_heart.dds",
-            "HodorReflexes/assets/events/valentine/blue_heart.dds",
-            "HodorReflexes/assets/events/valentine/calender.dds",
-            "HodorReflexes/assets/events/valentine/ff_heart.dds",
-            "HodorReflexes/assets/events/valentine/green_heart.dds",
-            "HodorReflexes/assets/events/valentine/happyheart.dds",
-            "HodorReflexes/assets/events/valentine/orange_heart.dds",
-            "HodorReflexes/assets/events/valentine/present.dds",
-            "HodorReflexes/assets/events/valentine/purple_heart.dds",
-            "HodorReflexes/assets/events/valentine/rainbow_heart.dds",
-            "HodorReflexes/assets/events/valentine/ring.dds",
-            "HodorReflexes/assets/events/valentine/rose.dds",
-            "HodorReflexes/assets/events/valentine/round_heart.dds",
-            "HodorReflexes/assets/events/valentine/smiling_heart.dds",
-            "HodorReflexes/assets/events/valentine/sparkling_heart.dds",
-            "HodorReflexes/assets/events/valentine/white_heart.dds",
+            "HodorReflexes/assets/seasons/valentine/8bitHeart.dds",
+            "HodorReflexes/assets/seasons/valentine/angel_heart.dds",
+            "HodorReflexes/assets/seasons/valentine/blue_heart.dds",
+            "HodorReflexes/assets/seasons/valentine/calender.dds",
+            "HodorReflexes/assets/seasons/valentine/ff_heart.dds",
+            "HodorReflexes/assets/seasons/valentine/green_heart.dds",
+            "HodorReflexes/assets/seasons/valentine/happyheart.dds",
+            "HodorReflexes/assets/seasons/valentine/orange_heart.dds",
+            "HodorReflexes/assets/seasons/valentine/present.dds",
+            "HodorReflexes/assets/seasons/valentine/purple_heart.dds",
+            "HodorReflexes/assets/seasons/valentine/rainbow_heart.dds",
+            "HodorReflexes/assets/seasons/valentine/ring.dds",
+            "HodorReflexes/assets/seasons/valentine/rose.dds",
+            "HodorReflexes/assets/seasons/valentine/round_heart.dds",
+            "HodorReflexes/assets/seasons/valentine/smiling_heart.dds",
+            "HodorReflexes/assets/seasons/valentine/sparkling_heart.dds",
+            "HodorReflexes/assets/seasons/valentine/white_heart.dds",
         }
         local function getRandomValentinesIcon()
             local randomIconIndex = zo_random(1, #valentineIcons)
