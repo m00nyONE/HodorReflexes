@@ -98,7 +98,7 @@ modules/skilllines/main.lua
 modules/skilllines/menu.lua
 
 ; extensions
-extensions/seasons.lua
-extensions/names.lua
-extensions/icons.lua
-extensions/animations.lua
+extensions/seasons/main.lua
+extensions/names/main.lua
+extensions/icons/main.lua
+extensions/animations/main.lua
