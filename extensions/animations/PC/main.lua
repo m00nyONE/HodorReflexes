@@ -19,6 +19,7 @@ local HR_EVENT_PLAYERSDATA_CHARACTER_REMOVED = addon.HR_EVENT_PLAYERSDATA_CHARAC
 local extensionDefinition = {
     name = "animations",
     version = "0.1.0",
+    friendlyName = "Animations",
     description = "Provides animated user icon support for lists.",
     priority = 3,
     svVersion = 1,

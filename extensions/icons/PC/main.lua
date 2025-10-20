@@ -10,6 +10,7 @@ local util = addon.util
 
 local extensionDefinition = {
     name = "icons",
+    friendlyName = "Icons",
     version = "1.0.0",
     description = "Extension to provide user icons via LibCustomIcons.",
     priority = 2,

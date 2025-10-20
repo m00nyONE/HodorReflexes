@@ -31,6 +31,7 @@ end
 local extensionDefinition = {
     name = "seasons",
     version = "1.0.0",
+    friendlyName = "Seasons",
     description = "Seasonal events which change some behaviors of the addon on specific dates.",
     priority = 10,
     svVersion = 1,
