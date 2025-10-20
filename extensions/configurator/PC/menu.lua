@@ -10,7 +10,7 @@ local LAM = LibAddonMenu2
 local addon_extensions = addon.extensions
 local extension = addon_extensions.configurator
 
-function extension:BuildMenu()
+function extension:BuildMenuOptions()
     local menuReference = string.format("%s_extension_%s_menu", addon_name, self.name)
     local discordURL = "https://discord.gg/8YpvXJhAyz"
 
@@ -36,19 +36,8 @@ function extension:BuildMenu()
         end
         return self.sw.nameColored
     end
-
-    local panel = {
-        type = "panel",
-        name = string.format("%s - %s", addon.friendlyName, self.friendlyName),
-        displayName = string.format('|cFFFACD%s - %s|r', addon.friendlyName, self.friendlyName),
-        author = addon.author,
-        version = addon.version,
-        website = "https://www.esoui.com/downloads/info2311-HodorReflexes-DPSULTtracker.html#donate",
-        donation = addon.Donate,
-        registerForRefresh = true,
-    }
     
-    local options = {
+    return {
         {
             type = "header",
             name = string.format("|cFFFACD%s|r", GetString(HR_MENU_ICONS_SECTION_CUSTOM))
@@ -213,7 +202,4 @@ function extension:BuildMenu()
             text = GetString(HR_MENU_ICONS_INFO),
         },
     }
-
-    LAM:RegisterAddonPanel(menuReference, panel)
-    LAM:RegisterOptionControls(menuReference, options)
 end
