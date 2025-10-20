@@ -89,6 +89,8 @@ function listClass:Initialize(listDefinition)
 
     -- create a unique id for the list instance (and make it somewhat readable by adding the list name at the end)
     self._Id = string.format("%s_%s", util.GetTableReference(self), self.name)
+    self.updateDebouncedEventName = self._Id .. "_UpdateDebounced"
+
     self.logger:Debug("assigned unique id '%s'", self._Id)
     self.updateDebounceDelayMS = self.updateDebounceDelayMS or globalUpdateDebounceDelayMS
     self.logger:Debug("using update debounce delay of %d ms", self.updateDebounceDelayMS)
@@ -130,8 +132,8 @@ end
 --- @return void
 function listClass:UpdateDebounced()
     if not self:WindowFragmentCondition() then return end
-    EM:RegisterForUpdate(self._Id .. "_UpdateDebounced", self.updateDebounceDelayMS, function()
-        EM:UnregisterForUpdate(self._Id .. "_UpdateDebounced")
+    EM:RegisterForUpdate(self.updateDebouncedEventName, self.updateDebounceDelayMS, function()
+        EM:UnregisterForUpdate(self.updateDebouncedEventName)
         self:Update()
     end)
 end
