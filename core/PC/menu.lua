@@ -75,23 +75,6 @@ local function getCoreMenuOptions()
     }
     table.insert(options, {
         type = "header",
-        name = string.format("|cFFFACD%s|r", "Extensions")
-    })
-    for extensionName, extension in util.Spairs(addon.extensions, util.SortByPriority) do
-        table.insert(options, {
-            type = "checkbox",
-            name = extension.friendlyName or extensionName,
-            tooltip = extension.description or "",
-            default = true,
-            getFunc = function() return core.sw.extensions[extensionName] end,
-            setFunc = function(value)
-                core.sw.extensions[extensionName] = value
-            end,
-            requiresReload = true,
-        })
-    end
-    table.insert(options, {
-        type = "header",
         name = string.format("|cFFFACD%s|r", "Modules")
     })
     for moduleName, module in util.Spairs(addon.modules, util.SortByPriority) do
@@ -103,6 +86,23 @@ local function getCoreMenuOptions()
             getFunc = function() return core.sw.modules[moduleName] end,
             setFunc = function(value)
                 core.sw.modules[moduleName] = value
+            end,
+            requiresReload = true,
+        })
+    end
+    table.insert(options, {
+        type = "header",
+        name = string.format("|cFFFACD%s|r", "Extensions")
+    })
+    for extensionName, extension in util.Spairs(addon.extensions, util.SortByPriority) do
+        table.insert(options, {
+            type = "checkbox",
+            name = extension.friendlyName or extensionName,
+            tooltip = extension.description or "",
+            default = true,
+            getFunc = function() return core.sw.extensions[extensionName] end,
+            setFunc = function(value)
+                core.sw.extensions[extensionName] = value
             end,
             requiresReload = true,
         })
