@@ -45,7 +45,7 @@ function extension:BuildMenu()
     local panel = {
         type = "panel",
         name = string.format("%s - %s", addon.friendlyName, self.friendlyName),
-        displayName = string.format('%s - |cFFFACD%s|r', addon.friendlyName, self.friendlyName),
+        displayName = string.format('|cFFFACD%s - %s|r', addon.friendlyName, self.friendlyName),
         author = addon.author,
         version = addon.version,
         website = "https://www.esoui.com/downloads/info2311-HodorReflexes-DPSULTtracker.html#donate",
