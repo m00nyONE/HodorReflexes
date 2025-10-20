@@ -58,6 +58,20 @@ local function getCoreMenuOptions()
             end,
             requiresReload = true,
         },
+        {
+            type = "checkbox",
+            name = "Lock UI",
+            tooltip = "lock/unlock the addon UI for repositioning.",
+            default = true,
+            getFunc = core.hud.IsUILocked,
+            setFunc = function(value)
+                if value then
+                    core.CM:FireCallbacks(addon.HR_EVENT_LOCKUI)
+                else
+                    core.CM:FireCallbacks(addon.HR_EVENT_UNLOCKUI)
+                end
+            end,
+        }
     }
     table.insert(options, {
         type = "header",
