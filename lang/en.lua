@@ -9,7 +9,7 @@ local strings = {
     HR_VISIBILITY_SHOW_NEVER = "Never",
     HR_VISIBILITY_SHOW_ALWAYS = "Always",
     HR_VISIBILITY_SHOW_OUT_OF_COMBAT = "Out of Combat",
-    HR_VISIBILITY_SHOW_NONBOSS = "Non-boss fight",
+    HR_VISIBILITY_SHOW_NON_BOSSFIGHTS = "Non-boss fight",
 
     -------------------------
     -- HUD
