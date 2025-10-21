@@ -68,16 +68,17 @@ function module:CreateCompactList()
         backgroundAlpha = 0.2,
     }
     self.compactList = addon.listClass:New(listDefinition)
+    local list = self.compactList
 
-    self.compactList.HEADER_TYPE = 1 -- type id for header
-    self.compactList.ROW_TYPE_HORN = 2 -- type id for horn rows
-    self.compactList.ROW_TYPE_COLOS = 3 -- type id for colos rows
-    self.compactList.ROW_TYPE_ATRO = 4 -- type id for atro rows
-    self.compactList.ROW_TYPE_SLAYER = 5 -- type id for slayer rows
-    self.compactList.ROW_TYPE_PILLAGER = 6 -- type id for pillager rows
-    self.compactList.ROW_TYPE_CRYPTCANNON = 7 -- type id for cryptcannon rows
-    self.compactList.HEADER_TEMPLATE = "HodorReflexes_Ult_CompactList_Header"
-    self.compactList.ROW_TEMPLATE = "HodorReflexes_Ult_CompactList_PlayerRow"
+    list.HEADER_TYPE = list:GetNextDataTypeId() -- type id for header
+    list.ROW_TYPE_HORN = list:GetNextDataTypeId() -- type id for horn rows
+    list.ROW_TYPE_COLOS = list:GetNextDataTypeId() -- type id for colos rows
+    list.ROW_TYPE_ATRO = list:GetNextDataTypeId() -- type id for atro rows
+    list.ROW_TYPE_SLAYER = list:GetNextDataTypeId() -- type id for slayer rows
+    list.ROW_TYPE_PILLAGER = list:GetNextDataTypeId() -- type id for pillager rows
+    list.ROW_TYPE_CRYPTCANNON = list:GetNextDataTypeId() -- type id for cryptcannon rows
+    list.HEADER_TEMPLATE = "HodorReflexes_Ult_CompactList_Header"
+    list.ROW_TEMPLATE = "HodorReflexes_Ult_CompactList_PlayerRow"
 
     local function headerRowCreationWrapper(wrappedFunction)
         return function(rowControl, data, scrollList)
@@ -94,63 +95,63 @@ function module:CreateCompactList()
     end
 
     ZO_ScrollList_AddDataType(
-            self.compactList.listControl,
-            self.compactList.HEADER_TYPE,
-            self.compactList.HEADER_TEMPLATE,
-            self.compactList.listHeaderHeight,
+            list.listControl,
+            list.HEADER_TYPE,
+            list.HEADER_TEMPLATE,
+            list.listHeaderHeight,
             headerRowCreationWrapper(self.compactListHeaderRowCreationFunction)
     )
-    ZO_ScrollList_SetTypeCategoryHeader(self.compactList.listControl, self.compactList.HEADER_TYPE, true)
-    self.compactList.logger:Debug("added header row type '%d' with template '%s'", self.compactList.HEADER_TYPE, self.compactList.HEADER_TEMPLATE)
+    ZO_ScrollList_SetTypeCategoryHeader(list.listControl, list.HEADER_TYPE, true)
+    list.logger:Debug("added header row type '%d' with template '%s'", list.HEADER_TYPE, list.HEADER_TEMPLATE)
 
     ZO_ScrollList_AddDataType(
-            self.compactList.listControl,
-            self.compactList.ROW_TYPE_HORN,
-            self.compactList.ROW_TEMPLATE,
-            self.compactList.listRowHeight,
+            list.listControl,
+            list.ROW_TYPE_HORN,
+            list.ROW_TEMPLATE,
+            list.listRowHeight,
             playerRowCreationWrapper(self.compactListHornRowCreationFunction)
     )
-    self.compactList.logger:Debug("added horn player row type '%d' with template '%s'", self.compactList.ROW_TYPE_HORN, self.compactList.ROW_TEMPLATE)
+    list.logger:Debug("added horn player row type '%d' with template '%s'", list.ROW_TYPE_HORN, list.ROW_TEMPLATE)
     ZO_ScrollList_AddDataType(
-            self.compactList.listControl,
-            self.compactList.ROW_TYPE_COLOS,
-            self.compactList.ROW_TEMPLATE,
-            self.compactList.listRowHeight,
+            list.listControl,
+            list.ROW_TYPE_COLOS,
+            list.ROW_TEMPLATE,
+            list.listRowHeight,
             playerRowCreationWrapper(self.compactListColosRowCreationFunction)
     )
-    self.compactList.logger:Debug("added colos player row type '%d' with template '%s'", self.compactList.ROW_TYPE_COLOS, self.compactList.ROW_TEMPLATE)
+    list.logger:Debug("added colos player row type '%d' with template '%s'", list.ROW_TYPE_COLOS, list.ROW_TEMPLATE)
     ZO_ScrollList_AddDataType(
-            self.compactList.listControl,
-            self.compactList.ROW_TYPE_ATRO,
-            self.compactList.ROW_TEMPLATE,
-            self.compactList.listRowHeight,
+            list.listControl,
+            list.ROW_TYPE_ATRO,
+            list.ROW_TEMPLATE,
+            list.listRowHeight,
             playerRowCreationWrapper(self.compactListAtroRowCreationFunction)
     )
-    self.compactList.logger:Debug("added atro player row type '%d' with template '%s'", self.compactList.ROW_TYPE_ATRO, self.compactList.ROW_TEMPLATE)
+    list.logger:Debug("added atro player row type '%d' with template '%s'", list.ROW_TYPE_ATRO, list.ROW_TEMPLATE)
     ZO_ScrollList_AddDataType(
-            self.compactList.listControl,
-            self.compactList.ROW_TYPE_SLAYER,
-            self.compactList.ROW_TEMPLATE,
-            self.compactList.listRowHeight,
+            list.listControl,
+            list.ROW_TYPE_SLAYER,
+            list.ROW_TEMPLATE,
+            list.listRowHeight,
             playerRowCreationWrapper(self.compactListSlayerRowCreationFunction)
     )
-    self.compactList.logger:Debug("added slayer player row type '%d' with template '%s'", self.compactList.ROW_TYPE_SLAYER, self.compactList.ROW_TEMPLATE)
+    list.logger:Debug("added slayer player row type '%d' with template '%s'", list.ROW_TYPE_SLAYER, list.ROW_TEMPLATE)
     ZO_ScrollList_AddDataType(
-            self.compactList.listControl,
-            self.compactList.ROW_TYPE_PILLAGER,
-            self.compactList.ROW_TEMPLATE,
-            self.compactList.listRowHeight,
+            list.listControl,
+            list.ROW_TYPE_PILLAGER,
+            list.ROW_TEMPLATE,
+            list.listRowHeight,
             playerRowCreationWrapper(self.compactListPillagerRowCreationFunction)
     )
-    self.compactList.logger:Debug("added pillager player row type '%d' with template '%s'", self.compactList.ROW_TYPE_PILLAGER, self.compactList.ROW_TEMPLATE)
+    list.logger:Debug("added pillager player row type '%d' with template '%s'", list.ROW_TYPE_PILLAGER, list.ROW_TEMPLATE)
     ZO_ScrollList_AddDataType(
-            self.compactList.listControl,
-            self.compactList.ROW_TYPE_CRYPTCANNON,
-            self.compactList.ROW_TEMPLATE,
-            self.compactList.listRowHeight,
+            list.listControl,
+            list.ROW_TYPE_CRYPTCANNON,
+            list.ROW_TEMPLATE,
+            list.listRowHeight,
             playerRowCreationWrapper(self.compactListCryptCannonRowCreationFunction)
     )
-    self.compactList.logger:Debug("added cryptcannon player row type '%d' with template '%s'", self.compactList.ROW_TYPE_CRYPTCANNON, self.compactList.ROW_TEMPLATE)
+    list.logger:Debug("added cryptcannon player row type '%d' with template '%s'", list.ROW_TYPE_CRYPTCANNON, list.ROW_TEMPLATE)
 
     -- register cooldown end time tracker for pillager cooldown
     local function setPillagerCooldownEndTime(_, duration)

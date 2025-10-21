@@ -48,11 +48,12 @@ function module:CreateAtroList()
         listRowHeight = 24,
     }
     self.atroList = addon.listClass:New(listDefinition)
+    local list = self.atroList
 
-    self.atroList.HEADER_TYPE = 1 -- type id for header
-    self.atroList.ROW_TYPE = 2 -- type id for rows
-    self.atroList.HEADER_TEMPLATE = "HodorReflexes_Ult_AtroList_Header"
-    self.atroList.ROW_TEMPLATE = "HodorReflexes_Ult_AtroList_PlayerRow"
+    list.HEADER_TYPE = list:GetNextDataTypeId() -- type id for header
+    list.ROW_TYPE = list:GetNextDataTypeId() -- type id for rows
+    list.HEADER_TEMPLATE = "HodorReflexes_Ult_AtroList_Header"
+    list.ROW_TEMPLATE = "HodorReflexes_Ult_AtroList_PlayerRow"
 
     local function headerRowCreationWrapper(wrappedFunction)
         return function(rowControl, data, scrollList)
@@ -69,23 +70,23 @@ function module:CreateAtroList()
     end
 
     ZO_ScrollList_AddDataType(
-            self.atroList.listControl,
-            self.atroList.HEADER_TYPE,
-            self.atroList.HEADER_TEMPLATE,
-            self.atroList.listHeaderHeight,
+            list.listControl,
+            list.HEADER_TYPE,
+            list.HEADER_TEMPLATE,
+            list.listHeaderHeight,
             headerRowCreationWrapper(self.atroListHeaderRowCreationFunction)
     )
-    ZO_ScrollList_SetTypeCategoryHeader(self.atroList.listControl, self.atroList.HEADER_TYPE, true)
-    self.atroList.logger:Debug("added header row type '%d' with template '%s'", self.atroList.HEADER_TYPE, self.atroList.HEADER_TEMPLATE)
+    ZO_ScrollList_SetTypeCategoryHeader(list.listControl, list.HEADER_TYPE, true)
+    list.logger:Debug("added header row type '%d' with template '%s'", list.HEADER_TYPE, list.HEADER_TEMPLATE)
 
     ZO_ScrollList_AddDataType(
-            self.atroList.listControl,
-            self.atroList.ROW_TYPE,
-            self.atroList.ROW_TEMPLATE,
-            self.atroList.listRowHeight,
+            list.listControl,
+            list.ROW_TYPE,
+            list.ROW_TEMPLATE,
+            list.listRowHeight,
             playerRowCreationWrapper(self.atroListRowCreationFunction)
     )
-    self.atroList.logger:Debug("added player row type '%d' with template '%s'", self.atroList.ROW_TYPE, self.atroList.ROW_TEMPLATE)
+    list.logger:Debug("added player row type '%d' with template '%s'", list.ROW_TYPE, list.ROW_TEMPLATE)
 end
 
 function module:atroListHeaderRowCreationFunction(rowControl, data, scrollList)

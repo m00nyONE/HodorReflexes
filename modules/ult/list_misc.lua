@@ -40,11 +40,12 @@ function module:CreateMiscList()
         listRowHeight = 24,
     }
     self.miscList = addon.listClass:New(listDefinition)
+    local list = self.miscList
 
-    self.miscList.HEADER_TYPE = 1 -- type id for header
-    self.miscList.ROW_TYPE = 2 -- type id for rows
-    self.miscList.HEADER_TEMPLATE = "HodorReflexes_Ult_MiscList_Header"
-    self.miscList.ROW_TEMPLATE = "HodorReflexes_Ult_MiscList_PlayerRow"
+    list.HEADER_TYPE = list:GetNextDataTypeId() -- type id for header
+    list.ROW_TYPE = list:GetNextDataTypeId() -- type id for rows
+    list.HEADER_TEMPLATE = "HodorReflexes_Ult_MiscList_Header"
+    list.ROW_TEMPLATE = "HodorReflexes_Ult_MiscList_PlayerRow"
 
     local function headerRowCreationWrapper(wrappedFunction)
         return function(rowControl, data, scrollList)
@@ -61,23 +62,23 @@ function module:CreateMiscList()
     end
 
     ZO_ScrollList_AddDataType(
-            self.miscList.listControl,
-            self.miscList.HEADER_TYPE,
-            self.miscList.HEADER_TEMPLATE,
-            self.miscList.listHeaderHeight,
+            list.listControl,
+            list.HEADER_TYPE,
+            list.HEADER_TEMPLATE,
+            list.listHeaderHeight,
             headerRowCreationWrapper(self.miscListHeaderRowCreationFunction)
     )
-    ZO_ScrollList_SetTypeCategoryHeader(self.miscList.listControl, self.miscList.HEADER_TYPE, true)
-    self.miscList.logger:Debug("added header row type '%d' with template '%s'", self.miscList.HEADER_TYPE, self.miscList.HEADER_TEMPLATE)
+    ZO_ScrollList_SetTypeCategoryHeader(list.listControl, list.HEADER_TYPE, true)
+    list.logger:Debug("added header row type '%d' with template '%s'", list.HEADER_TYPE, list.HEADER_TEMPLATE)
 
     ZO_ScrollList_AddDataType(
-            self.miscList.listControl,
-            self.miscList.ROW_TYPE,
-            self.miscList.ROW_TEMPLATE,
-            self.miscList.listRowHeight,
+            list.listControl,
+            list.ROW_TYPE,
+            list.ROW_TEMPLATE,
+            list.listRowHeight,
             playerRowCreationWrapper(self.miscListRowCreationFunction)
     )
-    self.miscList.logger:Debug("added player row type '%d' with template '%s'", self.miscList.ROW_TYPE, self.miscList.ROW_TEMPLATE)
+    list.logger:Debug("added player row type '%d' with template '%s'", list.ROW_TYPE, list.ROW_TEMPLATE)
 end
 
 function module:miscListHeaderRowCreationFunction(rowControl, data, scrollList)

@@ -46,11 +46,12 @@ function module:CreateColosList()
         listRowHeight = 24,
     }
     self.colosList = addon.listClass:New(listDefinition)
+    local list = self.colosList
 
-    self.colosList.HEADER_TYPE = 1 -- type id for header
-    self.colosList.ROW_TYPE = 2 -- type id for rows
-    self.colosList.HEADER_TEMPLATE = "HodorReflexes_Ult_ColosList_Header"
-    self.colosList.ROW_TEMPLATE = "HodorReflexes_Ult_ColosList_PlayerRow"
+    list.HEADER_TYPE = list:GetNextDataTypeId() -- type id for header
+    list.ROW_TYPE = list:GetNextDataTypeId() -- type id for rows
+    list.HEADER_TEMPLATE = "HodorReflexes_Ult_ColosList_Header"
+    list.ROW_TEMPLATE = "HodorReflexes_Ult_ColosList_PlayerRow"
 
     local function headerRowCreationWrapper(wrappedFunction)
         return function(rowControl, data, scrollList)
@@ -67,23 +68,23 @@ function module:CreateColosList()
     end
 
     ZO_ScrollList_AddDataType(
-            self.colosList.listControl,
-            self.colosList.HEADER_TYPE,
-            self.colosList.HEADER_TEMPLATE,
-            self.colosList.listHeaderHeight,
+            list.listControl,
+            list.HEADER_TYPE,
+            list.HEADER_TEMPLATE,
+            list.listHeaderHeight,
             headerRowCreationWrapper(self.colosListHeaderRowCreationFunction)
     )
-    ZO_ScrollList_SetTypeCategoryHeader(self.colosList.listControl, self.colosList.HEADER_TYPE, true)
-    self.colosList.logger:Debug("added header row type '%d' with template '%s'", self.colosList.HEADER_TYPE, self.colosList.HEADER_TEMPLATE)
+    ZO_ScrollList_SetTypeCategoryHeader(list.listControl, list.HEADER_TYPE, true)
+    list.logger:Debug("added header row type '%d' with template '%s'", list.HEADER_TYPE, list.HEADER_TEMPLATE)
 
     ZO_ScrollList_AddDataType(
-            self.colosList.listControl,
-            self.colosList.ROW_TYPE,
-            self.colosList.ROW_TEMPLATE,
-            self.colosList.listRowHeight,
+            list.listControl,
+            list.ROW_TYPE,
+            list.ROW_TEMPLATE,
+            list.listRowHeight,
             playerRowCreationWrapper(self.colosListRowCreationFunction)
     )
-    self.colosList.logger:Debug("added player row type '%d' with template '%s'", self.colosList.ROW_TYPE, self.colosList.ROW_TEMPLATE)
+    list.logger:Debug("added player row type '%d' with template '%s'", list.ROW_TYPE, list.ROW_TEMPLATE)
 end
 
 function module:colosListHeaderRowCreationFunction(rowControl, data, scrollList)

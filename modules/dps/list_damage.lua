@@ -54,13 +54,14 @@ function module:CreateDamageList()
         listRowHeight = 22,
     }
     self.damageList = addon.listClass:New(listDefinition)
+    local list = self.damageList
 
-    self.damageList.HEADER_TYPE = 1 -- type id for header
-    self.damageList.ROW_TYPE = 2    -- type id for rows
-    self.damageList.SUMMARY_TYPE = 3 -- type id for summary
-    self.damageList.HEADER_TEMPLATE = "HodorReflexes_Dps_DamageList_Header"
-    self.damageList.ROW_TEMPLATE = "HodorReflexes_Dps_DamageList_DamageRow"
-    self.damageList.SUMMARY_TEMPLATE = "HodorReflexes_Dps_DamageList_Summary"
+    list.HEADER_TYPE = list:GetNextDataTypeId() -- type id for header
+    list.ROW_TYPE = list:GetNextDataTypeId()   -- type id for rows
+    list.SUMMARY_TYPE = list:GetNextDataTypeId() -- type id for summary
+    list.HEADER_TEMPLATE = "HodorReflexes_Dps_DamageList_Header"
+    list.ROW_TEMPLATE = "HodorReflexes_Dps_DamageList_DamageRow"
+    list.SUMMARY_TEMPLATE = "HodorReflexes_Dps_DamageList_Summary"
 
     local function headerRowCreationWrapper(wrappedFunction)
         return function(rowControl, data, scrollList)
@@ -86,33 +87,33 @@ function module:CreateDamageList()
     end
 
     ZO_ScrollList_AddDataType(
-            self.damageList.listControl,
-            self.damageList.HEADER_TYPE,
-            self.damageList.HEADER_TEMPLATE,
-            self.damageList.listHeaderHeight,
+            list.listControl,
+            list.HEADER_TYPE,
+            list.HEADER_TEMPLATE,
+            list.listHeaderHeight,
             headerRowCreationWrapper(self.headerRowCreationFunction)
     )
-    ZO_ScrollList_SetTypeCategoryHeader(self.damageList.listControl, self.damageList.HEADER_TYPE, true)
-    self.damageList.logger:Debug("added header row type '%d' with template '%s'", self.damageList.HEADER_TYPE, self.damageList.HEADER_TEMPLATE)
+    ZO_ScrollList_SetTypeCategoryHeader(list.listControl, list.HEADER_TYPE, true)
+    list.logger:Debug("added header row type '%d' with template '%s'", list.HEADER_TYPE, list.HEADER_TEMPLATE)
 
     ZO_ScrollList_AddDataType(
-            self.damageList.listControl,
-            self.damageList.ROW_TYPE,
-            self.damageList.ROW_TEMPLATE,
-            self.damageList.listRowHeight,
+            list.listControl,
+            list.ROW_TYPE,
+            list.ROW_TEMPLATE,
+            list.listRowHeight,
             damageRowCreationWrapper(self.damageRowCreationFunction)
     )
-    self.damageList.logger:Debug("added player row type '%d' with template '%s'", self.damageList.ROW_TYPE, self.damageList.ROW_TEMPLATE)
+    list.logger:Debug("added player row type '%d' with template '%s'", list.ROW_TYPE, list.ROW_TEMPLATE)
 
     ZO_ScrollList_AddDataType(
-            self.damageList.listControl,
-            self.damageList.SUMMARY_TYPE,
-            self.damageList.SUMMARY_TEMPLATE,
-            self.damageList.listRowHeight,
+            list.listControl,
+            list.SUMMARY_TYPE,
+            list.SUMMARY_TEMPLATE,
+            list.listRowHeight,
             summaryRowCreationWrapper(self.summaryRowCreationFunction)
     )
-    ZO_ScrollList_SetTypeCategoryHeader(self.damageList.listControl, self.damageList.SUMMARY_TYPE, true)
-    self.damageList.logger:Debug("added summary row type '%d' with template '%s'", self.damageList.SUMMARY_TYPE, self.damageList.SUMMARY_TEMPLATE)
+    ZO_ScrollList_SetTypeCategoryHeader(list.listControl, list.SUMMARY_TYPE, true)
+    list.logger:Debug("added summary row type '%d' with template '%s'", list.SUMMARY_TYPE, list.SUMMARY_TEMPLATE)
 end
 
 --- creation function for the header row. This can be overwritten if using a custom theme

@@ -50,11 +50,12 @@ function module:CreateHornList()
         listRowHeight = 24,
     }
     self.hornList = addon.listClass:New(listDefinition)
+    local list = self.hornList
 
-    self.hornList.HEADER_TYPE = 1 -- type id for header
-    self.hornList.ROW_TYPE = 2 -- type id for rows
-    self.hornList.HEADER_TEMPLATE = "HodorReflexes_Ult_HornList_Header"
-    self.hornList.ROW_TEMPLATE = "HodorReflexes_Ult_HornList_PlayerRow"
+    list.HEADER_TYPE = list:GetNextDataTypeId() -- type id for header
+    list.ROW_TYPE = list:GetNextDataTypeId() -- type id for rows
+    list.HEADER_TEMPLATE = "HodorReflexes_Ult_HornList_Header"
+    list.ROW_TEMPLATE = "HodorReflexes_Ult_HornList_PlayerRow"
 
     local function headerRowCreationWrapper(wrappedFunction)
         return function(rowControl, data, scrollList)
@@ -71,23 +72,23 @@ function module:CreateHornList()
     end
 
     ZO_ScrollList_AddDataType(
-            self.hornList.listControl,
-            self.hornList.HEADER_TYPE,
-            self.hornList.HEADER_TEMPLATE,
-            self.hornList.listHeaderHeight,
+            list.listControl,
+            list.HEADER_TYPE,
+            list.HEADER_TEMPLATE,
+            list.listHeaderHeight,
             headerRowCreationWrapper(self.hornListHeaderRowCreationFunction)
     )
-    ZO_ScrollList_SetTypeCategoryHeader(self.hornList.listControl, self.hornList.HEADER_TYPE, true)
-    self.hornList.logger:Debug("added header row type '%d' with template '%s'", self.hornList.HEADER_TYPE, self.hornList.HEADER_TEMPLATE)
+    ZO_ScrollList_SetTypeCategoryHeader(list.listControl, list.HEADER_TYPE, true)
+    list.logger:Debug("added header row type '%d' with template '%s'", list.HEADER_TYPE, list.HEADER_TEMPLATE)
 
     ZO_ScrollList_AddDataType(
-            self.hornList.listControl,
-            self.hornList.ROW_TYPE,
-            self.hornList.ROW_TEMPLATE,
-            self.hornList.listRowHeight,
+            list.listControl,
+            list.ROW_TYPE,
+            list.ROW_TEMPLATE,
+            list.listRowHeight,
             playerRowCreationWrapper(self.hornListRowCreationFunction)
     )
-    self.hornList.logger:Debug("added player row type '%d' with template '%s'", self.hornList.ROW_TYPE, self.hornList.ROW_TEMPLATE)
+    list.logger:Debug("added player row type '%d' with template '%s'", list.ROW_TYPE, list.ROW_TEMPLATE)
 end
 
 function module:hornListHeaderRowCreationFunction(rowControl, data, scrollList)
