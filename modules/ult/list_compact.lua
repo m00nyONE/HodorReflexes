@@ -33,7 +33,7 @@ local svDefault = {
     windowWidth = 262,
 
     showPercentValue = 1.0,
-    showGainValue = 1.0,
+    showRawValue = 1.0,
 
     showHorn = true,
     showColos = true,
@@ -243,7 +243,7 @@ function module:applyUserStyles(rowControl, data, scrollList)
     percentageControl:SetScale(self.compactList.sw.showPercentValue)
     local rawValueControl = rowControl:GetNamedChild("_RawValue")
     rawValueControl:SetText(string.format('%s', data.ultValue))
-    rawValueControl:SetScale(self.compactList.sw.showGainValue)
+    rawValueControl:SetScale(self.compactList.sw.showRawValue)
 end
 
 function module:applyValues(rowControl, data, scrollList, percentage, gain, gainUnit)
