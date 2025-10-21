@@ -18,7 +18,6 @@ function module:GetSubMenuOptions()
             table.insert(destination, option)
         end
     end
-
     local function getGeneralOptions()
         return {
             {
@@ -38,7 +37,6 @@ function module:GetSubMenuOptions()
             },
         }
     end
-
     local function GetComonListOptions(listName, list)
         return {
             {
@@ -156,19 +154,214 @@ function module:GetSubMenuOptions()
         }
     end
 
-    local hornList = GetComonListOptions("Horn List", self.hornList)
-    local colosList = GetComonListOptions("Colos List", self.colosList)
-    local atroList = GetComonListOptions("Atro List", self.atroList)
-    local compactList = GetComonListOptions("Compact List", self.compactList)
-    local miscList = GetComonListOptions("Misc List", self.miscList)
-
-
     local options = getGeneralOptions()
+
+    local hornList = GetComonListOptions("Horn List", self.hornList)
+    local hornListSpecificOptions = {
+        {
+            type = "divider",
+        },
+        {
+            type = "colorpicker",
+            name = "Horn Countdown Color",
+            tooltip = "set the color the horn buff countdown.",
+            default = unpack(self.hornList.svDefault.colorHorn),
+            getFunc = function() return unpack(self.hornList.sw.colorHorn) end,
+            setFunc = function(r, g, b)
+                self.hornList.sw.colorHorn = {r, g, b}
+                self.hornList:Update()
+            end,
+        },
+        {
+            type = "colorpicker",
+            name = "Force Countdown Color",
+            tooltip = "set the color the force buff countdown.",
+            default = unpack(self.hornList.svDefault.colorForce),
+            getFunc = function() return unpack(self.hornList.sw.colorForce) end,
+            setFunc = function(r, g, b)
+                self.hornList.sw.colorForce = {r, g, b}
+                self.hornList:Update()
+            end,
+        },
+        {
+            type = "checkbox",
+            name = "Highlight Saxhleel",
+            tooltip = "highlight saxhleel players in the list.",
+            default = self.hornList.svDefault.highlightSaxhleel,
+            getFunc = function() return self.hornList.sw.highlightSaxhleel end,
+            setFunc = function(value)
+                self.hornList.sw.highlightSaxhleel = value
+                self.hornList:Update()
+            end,
+        },
+        {
+            -- TODO: not implemented yet
+            type = "colorpicker",
+            name = "Saxhleel Highlight Color",
+            tooltip = "set the highlight color for saxhleel players.",
+            disabled = function() return not self.hornList.sw.highlightSaxhleel end,
+            default = unpack(self.hornList.svDefault.highlightSaxhleelColor),
+            getFunc = function() return unpack(self.hornList.sw.highlightSaxhleelColor) end,
+            setFunc = function(r, g, b, a)
+                self.hornList.sw.highlightSaxhleelColor = {r, g, b, a}
+                self.hornList:Update()
+            end,
+        }
+    }
+    mergeOptions(hornListSpecificOptions, hornList)
     mergeOptions(hornList, options)
+
+    local colosList = GetComonListOptions("Colos List", self.colosList)
+    local colosListSpecificOptions = {
+        {
+            type = "divider",
+        },
+        {
+            type = "colorpicker",
+            name = "Vulnerability Countdown Color",
+            tooltip = "set the color the vulnerability debuff countdown.",
+            default = unpack(self.colosList.svDefault.colorVuln),
+            getFunc = function() return unpack(self.colosList.sw.colorVuln) end,
+            setFunc = function(r, g, b)
+                self.colosList.sw.colorVuln = {r, g, b}
+                self.colosList:Update()
+            end,
+        },
+    }
+    mergeOptions(colosListSpecificOptions, colosList)
     mergeOptions(colosList, options)
+
+
+    local atroList = GetComonListOptions("Atro List", self.atroList)
+    local atroListSpecificOptions = {
+        {
+            type = "divider",
+        },
+        {
+            type = "colorpicker",
+            name = "Atronach Countdown Color",
+            tooltip = "set the color of the Atronach ultimate countdown.",
+            default = unpack(self.atroList.svDefault.colorAtro),
+            getFunc = function() return unpack(self.atroList.sw.colorAtro) end,
+            setFunc = function(r, g, b)
+                self.atroList.sw.colorAtro = {r, g, b}
+                self.atroList:Update()
+            end,
+        },
+        {
+            type = "checkbox",
+            name = "Berserk Countdown Color",
+            tooltip = "set the color of the Berserk countdown.",
+            default = unpack(self.atroList.svDefault.colorBerserk),
+            getFunc = function() return unpack(self.atroList.sw.colorBerserk) end,
+            setFunc = function(r, g, b)
+                self.atroList.sw.colorBerserk = {r, g, b}
+                self.atroList:Update()
+            end,
+        },
+    }
+    mergeOptions(atroListSpecificOptions, atroList)
     mergeOptions(atroList, options)
-    mergeOptions(compactList, options)
+
+    local miscList = GetComonListOptions("Misc List", self.miscList)
+    local miscListSpecificOptions = {
+        {
+            type = "divider",
+        },
+        {
+            type = "checkbox",
+            name = "Exclude Special Ults",
+            tooltip = "exclude special ultimates from the list.",
+            default = self.miscList.svDefault.excludeSpecialUlts,
+            getFunc = function() return self.miscList.sw.excludeSpecialUlts end,
+            setFunc = function(value)
+                self.miscList.sw.excludeSpecialUlts = value
+                self.miscList:Update()
+            end,
+        },
+    }
+    mergeOptions(miscListSpecificOptions, miscList)
     mergeOptions(miscList, options)
+
+    local compactList = GetComonListOptions("Compact List", self.compactList)
+    local compactListSpecificOptions = {
+        {
+            type = "divider",
+        },
+        -- TODO: countdown colors
+        -- TODO: pillager cooldown color
+        -- TODO: mark pillager ult as red when on cooldown
+        -- TODO: background colors for each ult type ( maybe with alpha? )
+        {
+            type = "checkbox",
+            name = "show Horn",
+            tooltip = "shows horns & saxhleel in the list.",
+            default = self.compactList.svDefault.showHorn,
+            getFunc = function() return self.compactList.sw.showHorn end,
+            setFunc = function(value)
+                self.compactList.sw.showHorn = value
+                self.compactList:Update()
+            end,
+        },
+        {
+            type = "checkbox",
+            name = "show Colos",
+            tooltip = "shows Colos in the list.",
+            default = self.compactList.svDefault.showColos,
+            getFunc = function() return self.compactList.sw.showColos end,
+            setFunc = function(value)
+                self.compactList.sw.showColos = value
+                self.compactList:Update()
+            end,
+        },
+        {
+            type = "checkbox",
+            name = "show Atro",
+            tooltip = "shows Atros in the list.",
+            default = self.compactList.svDefault.showAtro,
+            getFunc = function() return self.compactList.sw.showAtro end,
+            setFunc = function(value)
+                self.compactList.sw.showAtro = value
+                self.compactList:Update()
+            end,
+        },
+        {
+            type = "checkbox",
+            name = "show Slayer",
+            tooltip = "shows Slayer in the list.",
+            default = self.compactList.svDefault.showSlayer,
+            getFunc = function() return self.compactList.sw.showSlayer end,
+            setFunc = function(value)
+                self.compactList.sw.showSlayer = value
+                self.compactList:Update()
+            end,
+        },
+        {
+            type = "checkbox",
+            name = "show Pillager",
+            tooltip = "shows Pillager in the list.",
+            default = self.compactList.svDefault.showPillager,
+            getFunc = function() return self.compactList.sw.showPillager end,
+            setFunc = function(value)
+                self.compactList.sw.showPillager = value
+                self.compactList:Update()
+            end,
+        },
+        {
+            type = "checkbox",
+            name = "show Crypt Cannon",
+            tooltip = "shows CryptCannon in the list.",
+            default = self.compactList.svDefault.showCryptCannon,
+            getFunc = function() return self.compactList.sw.showCryptCannon end,
+            setFunc = function(value)
+                self.compactList.sw.showCryptCannon = value
+                self.compactList:Update()
+            end,
+        }
+    }
+    mergeOptions(compactListSpecificOptions, compactList)
+    mergeOptions(compactList, options)
+
 
     return options
 end
