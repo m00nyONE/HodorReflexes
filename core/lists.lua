@@ -179,14 +179,15 @@ end
 --- checks if the list should be shown based on the current conditions.
 --- @return boolean true if the window fragment should be shown, false otherwise
 function list:WindowFragmentCondition()
-    if not self.uiLocked then
+    local isEnabled = self:IsEnabled()
+    if not self.uiLocked and isEnabled then
         return true -- always show when ui is unlocked
     end
     if not IsUnitGrouped(localPlayer) then
         return false -- never show when not in a group
     end
 
-    return self:IsEnabled()
+    return isEnabled
 end
 
 --- NOT for manual use! this gets called once when the list is initialized.
