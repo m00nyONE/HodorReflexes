@@ -71,7 +71,8 @@ modules/dps/main.lua
 modules/dps/util.lua
 modules/dps/test.lua
 modules/dps/list_damage.lua
-modules/dps/menu.lua
+modules/dps/PC/menu.lua
+modules/dps/Console/menu.lua
 
 modules/readycheck/lang/en.lua
 modules/readycheck/lang/$(language).lua
