@@ -59,7 +59,7 @@ function module:GetSubMenuOptions()
                 GetString(HR_VISIBILITY_SHOW_NEVER),
                 GetString(HR_VISIBILITY_SHOW_ALWAYS),
                 GetString(HR_VISIBILITY_SHOW_OUT_OF_COMBAT),
-                GetString(HR_VISIBILITY_SHOW_NONBOSS)
+                GetString(HR_VISIBILITY_SHOW_NON_BOSSFIGHTS)
             },
             choicesValues = {
                 0, 1, 2, 3
