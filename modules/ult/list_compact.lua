@@ -35,15 +35,15 @@ local svDefault = {
     showPercentValue = 1.0,
     showRawValue = 1.0,
 
+    headerOpacity = 0.0,
+    zeroTimerOpacity = 0.7,
+
     showHorn = true,
     showColos = true,
     showAtro = true,
     showSlayer = true,
     showPillager = true,
     showCryptCannon = true,
-
-    headerOpacity = 0.0,
-    zeroTimerOpacity = 0.7,
 }
 
 function module:CreateCompactList()
