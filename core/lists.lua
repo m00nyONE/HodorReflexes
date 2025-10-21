@@ -27,25 +27,25 @@ local HR_EVENT_COMBAT_END = addon.HR_EVENT_COMBAT_END
 local globalUpdateDebounceDelayMS = 15 -- global debounce delay for all lists, can be overridden in each list
 
 --- @class: listClass
-local listClass = ZO_InitializingObject:Subclass()
-addon.listClass = listClass
+local list = ZO_InitializingObject:Subclass()
+addon.listClass = list
 
-listClass.uiLocked = true
-listClass.windowName = ""
-listClass.window = {}
-listClass.windowFragment = {}
-listClass.listControlName = ""
-listClass.listControl = {}
+list.uiLocked = true
+list.windowName = ""
+list.window = {}
+list.windowFragment = {}
+list.listControlName = ""
+list.listControl = {}
 
 -- must implement fields
-listClass:MUST_IMPLEMENT("Update") -- function to update the list
+list:MUST_IMPLEMENT("Update") -- function to update the list
 
 --- NOT for manual use! this is a helper function that runs a function only once and then removes it from the list instance.
 --- If you use it on a still needed function, it will be gone after the first call and thus break your list!
 --- @param funcName string name of the function to run once
 --- @param ... any arguments to pass to the function
 --- @return any result of the function, or nil if the function does not exist
-function listClass:RunOnce(funcName, ...)
+function list:RunOnce(funcName, ...)
     if type(self[funcName]) == "function" then
         local result = self[funcName](self, ...)
         self[funcName] = nil
@@ -56,13 +56,13 @@ end
 
 --- get the unique ID of the List instance
 --- @return string unique ID of the list instance
-function listClass:GetId()
+function list:GetId()
     return self._Id
 end
 
 --- get the next unique data type ID for the list instance that can be used to register a new dataType with the scrollList.
 --- @return number unique data type ID
-function listClass:GetNextDataTypeId()
+function list:GetNextDataTypeId()
     self._nextTypeId = self._nextTypeId + 1
     return self._nextTypeId - 1
 end
@@ -73,7 +73,7 @@ end
 --- sets up event listeners for group changes, ui lock/unlock and player data updates.
 --- @param listDefinition table definition of the list
 --- @return void
-function listClass:Initialize(listDefinition)
+function list:Initialize(listDefinition)
     local beginTime = GetGameTimeMilliseconds()
     assert(type(listDefinition) == "table", "listDefinition must be a table")
     assert(type(listDefinition.name) == "string" and listDefinition.name ~= "", "list must have a valid name")
@@ -139,7 +139,7 @@ end
 --- NOT for manual use! this gets called to update the list with a debounce.
 --- debounces the update calls to prevent excessive updates
 --- @return void
-function listClass:UpdateDebounced()
+function list:UpdateDebounced()
     if not self:WindowFragmentCondition() then return end
     EM:RegisterForUpdate(self.updateDebouncedEventName, self.updateDebounceDelayMS, function()
         EM:UnregisterForUpdate(self.updateDebouncedEventName)
@@ -150,7 +150,7 @@ end
 --- NOT for manual use! this gets called to check if the list is enabled.
 --- checks if the list is enabled based on the saved variables and current conditions
 --- @return boolean true if the list is enabled, false otherwise
-function listClass:IsEnabled()
+function list:IsEnabled()
     if self.sv.disableInPvP and (IsPlayerInAvAWorld() or IsActiveWorldBattleground()) then
         return false
     end
@@ -170,7 +170,7 @@ end
 --- NOT for manual use! this gets called to refresh the visibility of the list.
 --- refresh the visibility of the list based on the current conditions
 --- @return void
-function listClass:RefreshVisibility()
+function list:RefreshVisibility()
     self.windowFragment:Refresh()
 end
 
@@ -178,7 +178,7 @@ end
 --- condition function for the window fragment of the list.
 --- checks if the list should be shown based on the current conditions.
 --- @return boolean true if the window fragment should be shown, false otherwise
-function listClass:WindowFragmentCondition()
+function list:WindowFragmentCondition()
     if not self.uiLocked then
         return true -- always show when ui is unlocked
     end
@@ -193,7 +193,7 @@ end
 --- Create saved variables for the list.
 --- sets default values if they are not provided during initialization.
 --- @return void
-function listClass:CreateSavedVariables()
+function list:CreateSavedVariables()
     if not self.svVersion then self.svVersion = 1 end
     self.svDefault.enabled = self.svDefault.enabled or 1 -- 1=always, 2=out of combat, 3=non bossfights, 0=off
     self.svDefault.disableInPvP = self.svDefault.disableInPvP or true
@@ -201,7 +201,7 @@ function listClass:CreateSavedVariables()
     self.svDefault.windowPosTop = self.svDefault.windowPosTop or 0
     self.svDefault.windowWidth = self.svDefault.windowWidth or 220
 
-    local svNamespace = self.name .. "List"
+    local svNamespace = string.format("list_%s", self.name)
     local svVersion = core.svVersion + self.svVersion
     self.logger:Debug("using saved variables version %d", svVersion)
     -- we use a combination of accountWide saved variables and per character saved variables. This little swappi swappi allows us to switch between them without defining new variables
@@ -223,7 +223,7 @@ end
 --- creates the window and controls for the list.
 --- the window is saved under sel.window and the scrollList control under self.listControl
 --- @return void
-function listClass:CreateControls()
+function list:CreateControls()
     -- create the main window
     local windowName = string.format("%s_%s", addon_name, self._Id)
     local window = WM:CreateTopLevelWindow(windowName)
@@ -261,7 +261,7 @@ end
 --- NOT for manual use! this gets called once when the list is initialized.
 --- creates the window fragment for the list.
 --- @return void
-function listClass:CreateFragment()
+function list:CreateFragment()
     local function windowFragmentConditionWrapper()
         return self:WindowFragmentCondition()
     end
@@ -274,7 +274,7 @@ end
 --- Can be used by custom themes as well.
 --- @param control LabelControl
 --- @return void
-function listClass.RenderCurrentFightTimeToControl(control)
+function list.RenderCurrentFightTimeToControl(control)
     -- it would be more expensive here to check if the list is visible and prevent the rendering of the text than just rendering it anyways
     local t = core.combat:GetCombatTime()
     control:SetText(t > 0 and string.format("%d:%04.1f|u0:2::|u", t / 60, t % 60) or "")
@@ -285,7 +285,7 @@ end
 --- WARNING: DO NOT use it on controls that get recycled (e.g. playerRows)! ONLY USE on headers or static labels! Otherwise the timers will pile up and cause performance issues. They do NOT get automatically cleaned up on control recycling!
 --- @param control LabelControl the control to render the fight time to
 --- @return void
-function listClass:CreateFightTimeUpdaterOnControl(control)
+function list:CreateFightTimeUpdaterOnControl(control)
     -- check if timer is already registered - if so, return
     if control._onCombatStart or control._onCombatStop then return end
 
@@ -318,7 +318,7 @@ end
 --- @param timeMS number time in milliseconds
 --- @param opacity number|nil optional opacity to set on the control
 --- @return void
-function listClass.RenderTimeToControl(control, timeMS, opacity)
+function list.RenderTimeToControl(control, timeMS, opacity)
     local timeS = timeMS / 1000
     control:SetText(string.format("%0.1f|u0:2::|u", timeS) or "")
     if opacity then
@@ -333,7 +333,7 @@ end
 --- @param eventName string the event name to register the countdown start callback to (must provide the following arguments: (unitTag, duration) where duration is in milliseconds)
 --- @param zeroTimerOpacity number|nil optional opacity to set on the control when the timer reaches zero (default: 0.7)
 --- @return void
-function listClass:CreateCountdownOnControl(control, eventName, zeroTimerOpacity)
+function list:CreateCountdownOnControl(control, eventName, zeroTimerOpacity)
     -- check if timer is already registered - if so, return
     if control._onCountdownStart or control._onCountdownTick then return end
 
