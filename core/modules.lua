@@ -41,6 +41,7 @@ function core.InitializeModules()
             if mainMenuOptions then
                 core.RegisterMainMenuOptions(module.friendlyName, mainMenuOptions)
             end
+
             local subMenuOptions = module:RunOnce("GetSubMenuOptions")
             if subMenuOptions then
                 core.RegisterSubMenuOptions(module.friendlyName, subMenuOptions)
@@ -78,14 +79,17 @@ function module:RegisterLGBProtocols(handler)
     self.RegisterLGBProtocols = nil
     return nil
 end
+
 function module:GetSubMenuOptions()
     self.GetSubMenuOptions = nil
     return nil
 end
+
 function module:GetMainMenuOptions()
     self.GetMainMenuOptions = nil
     return nil
 end
+
 function module:GetDiagnostic()
     self.GetDiagnosticInfo = nil
     return nil
