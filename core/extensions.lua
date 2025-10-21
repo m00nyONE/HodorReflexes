@@ -27,8 +27,20 @@ function core.InitializeExtensions()
         end
         if isEnabled then
             logger:Info("Initializing extension: %s", extensionName)
-            extension:RunOnce("CreateSavedVariables")
-            extension:RunOnce("Activate")
+            extension:RunOnce("CreateSavedVariables") -- create saved variables for the extension
+
+            -- get menu options if available
+            local mainMenuOptions = extension:RunOnce("GetMainMenuOptions")
+            if mainMenuOptions then
+                core.RegisterMainMenuOptions(extension.friendlyName, mainMenuOptions)
+            end
+            local subMenuOptions = extension:RunOnce("GetSubMenuOptions")
+            if subMenuOptions then
+                core.RegisterSubMenuOptions(extension.friendlyName, subMenuOptions)
+            end
+
+
+            extension:RunOnce("Activate") -- run the extension's initialization function
             extension.enabled = true
         end
     end
@@ -48,16 +60,29 @@ function core.RegisterExtension(extension)
 end
 
 --- @class: extensionClass : ZO_InitializingObject
-local extensionClass = ZO_InitializingObject:Subclass()
-internal.extensionClass = extensionClass
+local extension = ZO_InitializingObject:Subclass()
+internal.extensionClass = extension
 
 -- must implement functions
-extensionClass:MUST_IMPLEMENT("Activate") -- function that gets called to activate the extension when it's enabled
+extension:MUST_IMPLEMENT("Activate") -- function that gets called to activate the extension when it's enabled
 
+-- can implement functions
+function extension:GetSubMenuOptions()
+    self.GetSubMenuOptions = nil
+    return nil
+end
+function extension:GetMainMenuOptions()
+    self.GetMainMenuOptions = nil
+    return nil
+end
+function extension:GetDiagnostic()
+    self.GetDiagnosticInfo = nil
+    return nil
+end
 
 --- returns whether the module is enabled
 --- @return boolean true if the module is enabled, false otherwise
-function extensionClass:IsEnabled()
+function extension:IsEnabled()
     return self.enabled
 end
 
@@ -65,7 +90,7 @@ end
 --- @param funcName string the name of the function to run
 --- @param ... any the arguments to pass to the function
 --- @return any the return value of the function, or nil if the function does not exist
-function extensionClass:RunOnce(funcName, ...)
+function extension:RunOnce(funcName, ...)
     if type(self[funcName]) == "function" then
         local result = self[funcName](self, ...)
         self[funcName] = nil
@@ -77,12 +102,17 @@ end
 --- initializes the extensionClass
 --- @param t table a table containing the properties to set on the extensionClass
 --- @return void
-function extensionClass:Initialize(t)
-    -- Initialization code for the moduleClass
-    if t then
-        for k, v in pairs(t) do
-            self[k] = v
-        end
+function extension:Initialize(extensionDefinition)
+    assert(type(extensionDefinition) == "table", "extensionDefinition must be a table")
+    assert(type(extensionDefinition.name) == "string" and extensionDefinition.name ~= "", "extension must have a valid name")
+    assert(type(extensionDefinition.friendlyName) == "string" and extensionDefinition.friendlyName ~= "", "extension must have a valid friendlyName")
+    assert(type(extensionDefinition.description) == "string", "extension must have a valid description")
+    assert(type(extensionDefinition.version) == "string", "extension must have a valid version")
+    assert(type(extensionDefinition.priority) == "number", "extension must have a valid priority")
+    assert(type(extensionDefinition.svDefault) == "table", "extension must have a valid svDefault table")
+
+    for k, v in pairs(extensionDefinition) do
+        self[k] = v
     end
 
     -- create a new subLogger for the module
@@ -94,12 +124,13 @@ end
 
 --- creates the saved variables for the extension
 --- @return void
-function extensionClass:CreateSavedVariables()
+function extension:CreateSavedVariables()
+    local svNamespace = string.format("extension_%s", self.name)
     local svVersion = core.svVersion + self.svVersion
     -- we use a combination of accountWide saved variables and per character saved variables. This little swappi swappi allows us to switch between them without defining new variables
-    self.sw = ZO_SavedVars:NewAccountWide(core.svName, svVersion, self.name, self.svDefault)
+    self.sw = ZO_SavedVars:NewAccountWide(core.svName, svVersion, svNamespace, self.svDefault)
     if not self.sw.accountWide then
-        self.sv = ZO_SavedVars:NewCharacterIdSettings(core.svName, svVersion, self.name, self.svDefault)
+        self.sv = ZO_SavedVars:NewCharacterIdSettings(core.svName, svVersion, svNamespace, self.svDefault)
         self.sv.accountWide = false
     else
         self.sv = self.sw
