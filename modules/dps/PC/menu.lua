@@ -16,7 +16,7 @@ local module = addon_modules[module_name]
 
 -- TODO: translations
 function module:GetSubMenuOptions()
-    return {
+    local general = {
         {
             type = "header",
             name = string.format("|cFFFACD%s|r", "General")
@@ -32,6 +32,9 @@ function module:GetSubMenuOptions()
             end,
             requiresReload = true,
         },
+    }
+
+    local damageList = {
         {
             type = "header",
             name = string.format("|cFFFACD%s|r", "Damage List")
@@ -190,4 +193,14 @@ function module:GetSubMenuOptions()
             requiresReload = true,
         },
     }
+
+    local options = {}
+    for _, option in ipairs(general) do
+        table.insert(options, option)
+    end
+    for _, option in ipairs(damageList) do
+        table.insert(options, option)
+    end
+
+    return options
 end
