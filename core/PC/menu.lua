@@ -52,9 +52,9 @@ local function getCoreMenuOptions()
             name = "account wide settings",
             tooltip = "enable/disable account-wide settings.",
             default = true,
-            getFunc = function() return core.sw.accountwide end,
+            getFunc = function() return core.sw.accountWide end,
             setFunc = function(value)
-                core.sw.accountwide = value
+                core.sw.accountWide = value
             end,
             requiresReload = true,
         },
