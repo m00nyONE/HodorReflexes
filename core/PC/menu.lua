@@ -27,6 +27,7 @@ local function GetPanelConfig(subName)
         website = "https://www.esoui.com/downloads/info2311-HodorReflexes-DPSULTtracker.html#donate",
         donation = addon.Donate,
         registerForRefresh = true,
+        registerForDefaults = true,
     }
 end
 
