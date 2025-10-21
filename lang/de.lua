@@ -4,6 +4,14 @@
 local strings = {
 
     -------------------------
+    -- VISIBILITY
+    -------------------------
+    HR_VISIBILITY_SHOW_NEVER = "Niemals",
+    HR_VISIBILITY_SHOW_ALWAYS = "Immer",
+    HR_VISIBILITY_SHOW_OUT_OF_COMBAT = "Außerhalb des Kampfes",
+    HR_VISIBILITY_SHOW_NONBOSS = "in Nicht-Bosskämpfen",
+
+    -------------------------
     -- HUD
     -------------------------
     HR_CORE_HUD_COMMAND_LOCK_HELP = "Sperre das UI",

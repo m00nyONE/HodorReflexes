@@ -4,6 +4,14 @@
 local strings = {
 
     -------------------------
+    -- VISIBILITY
+    -------------------------
+    HR_VISIBILITY_SHOW_NEVER = "Never",
+    HR_VISIBILITY_SHOW_ALWAYS = "Always",
+    HR_VISIBILITY_SHOW_OUT_OF_COMBAT = "Out of Combat",
+    HR_VISIBILITY_SHOW_NONBOSS = "Non-boss fight",
+
+    -------------------------
     -- HUD
     -------------------------
     HR_CORE_HUD_COMMAND_LOCK_HELP = "Lock the addon UI",
