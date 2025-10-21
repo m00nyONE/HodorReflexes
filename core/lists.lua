@@ -60,6 +60,13 @@ function listClass:GetId()
     return self._Id
 end
 
+--- get the next unique data type ID for the list instance that can be used to register a new dataType with the scrollList.
+--- @return number unique data type ID
+function listClass:GetNextDataTypeId()
+    self._nextTypeId = self._nextTypeId + 1
+    return self._nextTypeId - 1
+end
+
 --- NOT for manual use! this gets automatically called by :New() when creating a new list instance.
 --- initializes the list with the given definition.
 --- calls CreateSavedVariables(), CreateControls() and CreateFragment() once and deletes them afterwards.
@@ -86,6 +93,8 @@ function listClass:Initialize(listDefinition)
 
     self.listHeaderHeight = self.listHeaderHeight or 22
     self.listRowHeight = self.listRowHeight or 22
+
+    self._nextTypeId = 1 -- initialize the next data type id counter
 
     -- create a unique id for the list instance (and make it somewhat readable by adding the list name at the end)
     self._Id = string.format("%s_%s", util.GetTableReference(self), self.name)
