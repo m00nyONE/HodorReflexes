@@ -9,18 +9,18 @@ local core = internal.core
 local addon_extensions = addon.extensions
 
 --- @class listThemeClass : ZO_Object
-local listThemeClass = ZO_InitializingObject:Subclass()
-addon_extensions.listThemeClass = listThemeClass
+local listTheme = ZO_InitializingObject:Subclass()
+addon_extensions.listThemeClass = listTheme
 
 
-listThemeClass:MUST_IMPLEMNT("Activate")
+listTheme:MUST_IMPLEMNT("Activate")
 
 --- NOT for manual use! this is a helper function that runs a function only once and then removes it from the instance.
 --- If you use it on a still needed function, it will be gone after the first call and thus break your theme!
 --- @param funcName string name of the function to run once
 --- @param ... any arguments to pass to the function
 --- @return any result of the function, or nil if the function does not exist
-function listThemeClass:RunOnce(funcName, ...)
+function listTheme:RunOnce(funcName, ...)
     if type(self[funcName]) == "function" then
         local result = self[funcName](self, ...)
         self[funcName] = nil
@@ -31,24 +31,24 @@ end
 
 --- check if the theme is enabled
 --- @return boolean
-function listThemeClass:IsEnabled()
+function listTheme:IsEnabled()
     return self.enabled
 end
 
 --- activate and enable the theme
 --- @return void
-function listThemeClass:ActivateAndEnable()
+function listTheme:ActivateAndEnable()
     if not self:IsEnabled() then
         self.enabled = true
         self:Activate()
     end
 end
 
-function listThemeClass:Initialize()
+function listTheme:Initialize()
 
 end
 
-function listThemeClass:Instantiate(list)
+function listTheme:Instantiate(list)
     self.list = list
 
     self:RunOnce("CreateSavedVariables")
@@ -56,8 +56,8 @@ end
 
 --- create saved variables for the theme
 --- @return void
-function listThemeClass:CreateSavedVariables()
-    local svNamespace = self.listName .. "List" .. "_theme_" .. self.name
+function listTheme:CreateSavedVariables()
+    local svNamespace = string.format("list_%s_theme_%s", self.listName, self.name)
     local svVersion = core.svVersion + self.svVersion
     -- we use a combination of accountWide saved variables and per character saved variables. This little swappi swappi allows us to switch between them without defining new variables
     self.sw = ZO_SavedVars:NewAccountWide(core.svName, svVersion, svNamespace, self.svDefault)
