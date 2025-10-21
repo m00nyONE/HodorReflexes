@@ -33,11 +33,8 @@ function core.InitializeModules()
         end
         if isEnabled then
             logger:Info("Initializing module: %s", moduleName)
-            -- create saved variables for the module
-            module:RunOnce("CreateSavedVariables")
-
-            -- register LibGroupBroadcast Protocols if available
-            module:RunOnce("RegisterLGBProtocols", core.LGBHandler)
+            module:RunOnce("CreateSavedVariables") -- create saved variables for the module
+            module:RunOnce("RegisterLGBProtocols", core.LGBHandler) -- register LibGroupBroadcast Protocols if available
 
             -- get menu options if available
             local mainMenuOptions = module:RunOnce("GetMainMenuOptions")
@@ -49,9 +46,7 @@ function core.InitializeModules()
                 core.RegisterSubMenuOptions(module.friendlyName, subMenuOptions)
             end
 
-            -- run the module's initialization function
-            module:RunOnce("Activate")
-            module.RunOnce = nil
+            module:RunOnce("Activate") -- run the module's initialization function
             module.enabled = true
         end
     end
@@ -72,39 +67,33 @@ end
 
 
 --- @class: moduleClass
-internal.moduleClass = ZO_InitializingObject:Subclass()
-local moduleClass = internal.moduleClass
-
--- must implement fields
-moduleClass:MUST_IMPLEMENT("name") -- unique name of the module
-moduleClass:MUST_IMPLEMENT("friendlyName") -- user friendly name of the module; for example to be displayed in the menu
-moduleClass:MUST_IMPLEMENT("description") -- short description of the module; for example to be displayed in the menu
-moduleClass:MUST_IMPLEMENT("version") -- version of the module
-moduleClass:MUST_IMPLEMENT("priority") -- modules with higher priority get activated first and menus get added first
-moduleClass:MUST_IMPLEMENT("svDefault") -- default saved variables for the module
+local module = ZO_InitializingObject:Subclass()
+internal.moduleClass = module
 
 -- must implement functions
-moduleClass:MUST_IMPLEMENT("Activate") -- function that gets called to activate the module when it's enabled
+module:MUST_IMPLEMENT("Activate") -- function that gets called to activate the module when it's enabled
 
 -- can implement functions
-function moduleClass:RegisterLGBProtocols(handler)
+function module:RegisterLGBProtocols(handler)
     self.RegisterLGBProtocols = nil
+    return nil
 end
-function moduleClass:GetSubMenuOptions()
+function module:GetSubMenuOptions()
     self.GetSubMenuOptions = nil
     return nil
 end
-function moduleClass:GetMainMenuOptions()
+function module:GetMainMenuOptions()
     self.GetMainMenuOptions = nil
     return nil
 end
-function moduleClass:GetDiagnostic()
+function module:GetDiagnostic()
     self.GetDiagnosticInfo = nil
+    return nil
 end
 
 --- returns whether the module is enabled
 --- @return boolean true if the module is enabled, false otherwise
-function moduleClass:IsEnabled()
+function module:IsEnabled()
     return self.enabled
 end
 
@@ -112,7 +101,7 @@ end
 --- @param funcName string the name of the function to run
 --- @param ... any the arguments to pass to the function
 --- @return any the return value of the function, or nil if the function does not exist
-function moduleClass:RunOnce(funcName, ...)
+function module:RunOnce(funcName, ...)
     if type(self[funcName]) == "function" then
         local result = self[funcName](self, ...)
         self[funcName] = nil
@@ -124,12 +113,17 @@ end
 --- initializes the moduleClass
 --- @param t table a table containing the properties to set on the moduleClass
 --- @return void
-function moduleClass:Initialize(t)
-    -- Initialization code for the moduleClass
-    if t then
-        for k, v in pairs(t) do
-            self[k] = v
-        end
+function module:Initialize(moduleDefinition)
+    assert(type(moduleDefinition) == "table", "moduleDefinition must be a table")
+    assert(type(moduleDefinition.name) == "string" and moduleDefinition.name ~= "", "module must have a valid name")
+    assert(type(moduleDefinition.friendlyName) == "string" and moduleDefinition.friendlyName ~= "", "module must have a valid friendlyName")
+    assert(type(moduleDefinition.description) == "string", "module must have a valid description")
+    assert(type(moduleDefinition.version) == "string", "module must have a valid version")
+    assert(type(moduleDefinition.priority) == "number", "module must have a valid priority")
+    assert(type(moduleDefinition.svDefault) == "table", "module must have a valid svDefault table")
+
+    for k, v in pairs(moduleDefinition) do
+        self[k] = v
     end
 
     -- create a new subLogger for the module
@@ -141,12 +135,13 @@ end
 
 --- creates the saved variables for the module
 --- @return void
-function moduleClass:CreateSavedVariables()
+function module:CreateSavedVariables()
+    local svNamespace = string.format("module_%s", self.name)
     local svVersion = core.svVersion + self.svVersion
     -- we use a combination of accountWide saved variables and per character saved variables. This little swappi swappi allows us to switch between them without defining new variables
-    self.sw = ZO_SavedVars:NewAccountWide(core.svName, svVersion, self.name, self.svDefault)
+    self.sw = ZO_SavedVars:NewAccountWide(core.svName, svVersion, svNamespace, self.svDefault)
     if not core.sw.accountWide then
-        self.sv = ZO_SavedVars:NewCharacterIdSettings(core.svName, svVersion, self.name, self.svDefault)
+        self.sv = ZO_SavedVars:NewCharacterIdSettings(core.svName, svVersion, svNamespace, self.svDefault)
         core.sv.accountWide = false
     else
         self.sv = self.sw
