@@ -18,7 +18,7 @@ local util = addon.util
 local svVersion = 1
 local svDefault = {
     enabled =  1, -- 1=always, 2=out of combat, 3=non bossfights, 0=off
-    disableInPvP = true,
+    disableInPvP = false,
 
     windowPosLeft = 550,
     windowPosTop = 200,
@@ -29,6 +29,8 @@ local svDefault = {
 
     headerOpacity = 0.0,
     zeroTimerOpacity = 0.7, -- not used yet
+
+    excludeSpecialUlts = true,
 }
 
 function module:CreateMiscList()
@@ -125,7 +127,7 @@ function module:UpdateMiscList()
 
     local playersDataList = {}
     for _, playerData in pairs(addon.playersData) do
-        if playerData.ultValue > 0 and not playerData.hasHorn and not playerData.hasColos and not playerData.hasAtro and not playerData.hasCryptCannon then
+        if playerData.ultValue > 0 and (not self.miscList.sv.excludeSpecialUlts or (not playerData.hasHorn and not playerData.hasColos and not playerData.hasAtro and not playerData.hasCryptCannon)) then
             table.insert(playersDataList, playerData)
         end
     end
