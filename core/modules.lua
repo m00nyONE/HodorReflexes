@@ -35,6 +35,9 @@ function core.InitializeModules()
             module:RunOnce("CreateSavedVariables") -- Create saved variables for the module
             module:RunOnce("RegisterLGBProtocols", core.LGBHandler) -- Register LibGroupBroadcast protocols if available
 
+            module:RunOnce("Activate") -- Run the module's activation function
+            module.enabled = true
+
             -- Get main menu options if available
             local mainMenuOptions = module:RunOnce("GetMainMenuOptions")
             if mainMenuOptions then
@@ -46,9 +49,6 @@ function core.InitializeModules()
             if subMenuOptions then
                 core.RegisterSubMenuOptions(module.friendlyName, subMenuOptions)
             end
-
-            module:RunOnce("Activate") -- Run the module's activation function
-            module.enabled = true
         end
     end
 end

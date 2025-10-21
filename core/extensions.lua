@@ -32,6 +32,9 @@ function core.InitializeExtensions()
             logger:Info("Initializing extension: %s", extensionName)
             extension:RunOnce("CreateSavedVariables") -- Create saved variables for the extension
 
+            extension:RunOnce("Activate") -- Run the extension's activation function
+            extension.enabled = true
+
             -- Get main menu options if available
             local mainMenuOptions = extension:RunOnce("GetMainMenuOptions")
             if mainMenuOptions then
@@ -43,9 +46,6 @@ function core.InitializeExtensions()
             if subMenuOptions then
                 core.RegisterSubMenuOptions(extension.friendlyName, subMenuOptions)
             end
-
-            extension:RunOnce("Activate") -- Run the extension's activation function
-            extension.enabled = true
         end
     end
 end
