@@ -126,7 +126,7 @@ local function cleanPlayersData(forceDelete)
     for characterName, data in pairs(playersData) do
         if not _existingGroupCharacters[characterName] or forceDelete then
             logger:Debug("cleaning player data for '%s'", characterName)
-            CM:FireCallbacks(HR_EVENT_PLAYERSDATA_CHARACTER_REMOVED, data) -- TODO: unregister animations --anim.UnregisterUserFromAllNamespaces(data.userId)
+            CM:FireCallbacks(HR_EVENT_PLAYERSDATA_CHARACTER_REMOVED, data)
 
             playersData[characterName] = nil
         end
