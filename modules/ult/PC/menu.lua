@@ -131,7 +131,8 @@ function module:GetSubMenuOptions()
                 getFunc = function() return list.sw.headerOpacity end,
                 setFunc = function(value)
                     list.sw.headerOpacity = value
-                    list.damageList:Update()
+                    list.redrawHeaders = true
+                    list:Update()
                 end,
             },
             {
@@ -147,9 +148,9 @@ function module:GetSubMenuOptions()
                 getFunc = function() return list.sw.zeroTimerOpacity end,
                 setFunc = function(value)
                     list.sw.zeroTimerOpacity = value
-                    --list.damageList:Update() -- TODO: test if this works during runtime
+                    list.redrawHeaders = true
+                    list:Update()
                 end,
-                requiresReload = true,
             },
         }
     end
@@ -295,6 +296,7 @@ function module:GetSubMenuOptions()
             getFunc = function() return unpack(self.compactList.sw.colorDurations) end,
             setFunc = function(r, g, b)
                 self.compactList.sw.colorDurations = {r, g, b}
+                self.compactList.redrawHeaders = true
                 self.compactList:Update()
             end,
         },
@@ -306,6 +308,7 @@ function module:GetSubMenuOptions()
             getFunc = function() return unpack(self.compactList.sw.colorCooldowns) end,
             setFunc = function(r, g, b)
                 self.compactList.sw.colorCooldowns = {r, g, b}
+                self.compactList.redrawHeaders = true
                 self.compactList:Update()
             end,
         },

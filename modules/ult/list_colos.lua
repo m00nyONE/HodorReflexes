@@ -88,7 +88,7 @@ function module:CreateColosList()
 end
 
 function module:colosListHeaderRowCreationFunction(rowControl, data, scrollList)
-    if not rowControl._initialized then
+    if not rowControl._initialized or self.colosList.redrawHeaders then
         rowControl:GetNamedChild("_BG"):SetAlpha(self.colosList.sw.headerOpacity)
         rowControl:GetNamedChild("_Duration"):SetColor(unpack(self.colosList.sw.colorVuln))
         rowControl:GetNamedChild("_Duration"):SetAlpha(self.colosList.sw.zeroTimerOpacity)
@@ -99,6 +99,7 @@ function module:colosListHeaderRowCreationFunction(rowControl, data, scrollList)
             self.colosList.sw.zeroTimerOpacity
         )
 
+        self.colosList.redrawHeaders = false
         rowControl._initialized = true
     end
 end

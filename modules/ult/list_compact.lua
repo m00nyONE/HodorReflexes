@@ -164,7 +164,7 @@ function module:CreateCompactList()
 end
 
 function module:compactListHeaderRowCreationFunction(rowControl, data, scrollList)
-    if not rowControl._initialized then
+    if not rowControl._initialized or self.compactList.redrawHeaders then
         rowControl:GetNamedChild("_BG"):SetAlpha(self.compactList.sw.headerOpacity)
 
         rowControl:GetNamedChild("_HornIcon"):SetTexture(self.hornIcon)
@@ -221,6 +221,7 @@ function module:compactListHeaderRowCreationFunction(rowControl, data, scrollLis
                 self.compactList.sw.zeroTimerOpacity
         )
 
+        self.compactList.redrawHeaders = false
         rowControl._initialized = true
     end
 end

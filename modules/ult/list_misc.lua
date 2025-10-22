@@ -85,10 +85,11 @@ function module:CreateMiscList()
 end
 
 function module:miscListHeaderRowCreationFunction(rowControl, data, scrollList)
-    if not rowControl._initialized then
+    if not rowControl._initialized or self.miscList.redrawHeaders then
         rowControl:GetNamedChild("_BG"):SetAlpha(self.miscList.sw.headerOpacity)
         rowControl:GetNamedChild("_Text"):SetText(data.title)
 
+        self.miscList.redrawHeaders = false
         rowControl._initialized = true
     end
 end

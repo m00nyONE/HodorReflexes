@@ -93,6 +93,7 @@ function list:Initialize(listDefinition)
 
     self.listHeaderHeight = self.listHeaderHeight or 22
     self.listRowHeight = self.listRowHeight or 22
+    self.redrawHeaders = false -- flag to indicate if headers need to be redrawn - used internally when updating header colors or opacity values
 
     self._nextTypeId = 1 -- initialize the next data type id counter
 
