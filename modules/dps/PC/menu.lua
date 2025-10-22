@@ -16,78 +16,112 @@ local module = addon_modules[module_name]
 
 -- TODO: translations
 function module:GetSubMenuOptions()
-    local general = {
-        {
-            type = "header",
-            name = string.format("|cFFFACD%s|r", "General")
-        },
-        {
-            type = "checkbox",
-            name = "account wide settings",
-            tooltip = "enable/disable account-wide settings.",
-            default = true,
-            getFunc = function() return self.sw.accountWide end,
-            setFunc = function(value)
-                self.sw.accountWide = value
-            end,
-            requiresReload = true,
-        },
-    }
+    local function mergeOptions(source, destination)
+        for _, option in ipairs(source) do
+            if not option.isAdvancedSetting or self.sw.advancedSettings then
+                table.insert(destination, option)
+            end
+        end
+    end
 
-    local damageList = {
-        {
-            type = "header",
-            name = string.format("|cFFFACD%s|r", "Damage List")
-        },
-        {
-            type = "checkbox",
-            name = "Disable in PvP",
-            tooltip = "disable the damage list when in PvP.",
-            default = self.damageList.svDefault.disableInPvP,
-            getFunc = function() return self.damageList.sw.disableInPvP end,
-            setFunc = function(value)
-                self.damageList.sw.disableInPvP = value
-                self.damageList:RefreshVisibility()
-            end,
-        },
-        {
-            type = "dropdown",
-            name = "visibility",
-            tooltip = "set the visibility of the damage list.",
-            default = self.damageList.svDefault.enabled,
-            choices = {
-                GetString(HR_VISIBILITY_SHOW_NEVER),
-                GetString(HR_VISIBILITY_SHOW_ALWAYS),
-                GetString(HR_VISIBILITY_SHOW_OUT_OF_COMBAT),
-                GetString(HR_VISIBILITY_SHOW_NON_BOSSFIGHTS)
+    local function GetGeneralOptions()
+        return {
+            {
+                type = "header",
+                name = string.format("|cFFFACD%s|r", "General")
             },
-            choicesValues = {
-                0, 1, 2, 3
+            {
+                type = "checkbox",
+                name = "account wide settings",
+                tooltip = "enable/disable account-wide settings.",
+                default = true,
+                getFunc = function() return self.sw.accountWide end,
+                setFunc = function(value)
+                    self.sw.accountWide = value
+                end,
+                requiresReload = true,
             },
-            getFunc = function() return self.damageList.sv.enabled end,
-            setFunc = function(value)
-                self.damageList.sv.enabled = value
-                self.damageList:RefreshVisibility()
-            end,
-            width = "full",
-        },
+            {
+                type = "checkbox",
+                name = "Advanced Settings",
+                tooltip = "allows you to customize more advanced settings for the lists.",
+                default = false,
+                getFunc = function() return self.sw.advancedSettings end,
+                setFunc = function(value)
+                    self.sw.advancedSettings = value
+                end,
+                requiresReload = true,
+            },
+        }
+    end
+    local function GetComonListOptions(listName, list)
+        return {
+            {
+                type = "header",
+                name = string.format("|cFFFACD%s|r", listName)
+            },
+            {
+                type = "checkbox",
+                name = "Disable in PvP",
+                tooltip = "disable the list when in PvP.",
+                default = list.svDefault.disableInPvP,
+                getFunc = function() return list.sw.disableInPvP end,
+                setFunc = function(value)
+                    list.sw.disableInPvP = value
+                    list:RefreshVisibility()
+                end,
+            },
+            {
+                type = "dropdown",
+                name = "Visibility",
+                tooltip = "set the visibility of the list.",
+                default = list.svDefault.enabled,
+                choices = {
+                    GetString(HR_VISIBILITY_SHOW_NEVER),
+                    GetString(HR_VISIBILITY_SHOW_ALWAYS),
+                    GetString(HR_VISIBILITY_SHOW_OUT_OF_COMBAT),
+                    GetString(HR_VISIBILITY_SHOW_NON_BOSSFIGHTS),
+                },
+                choicesValues = {
+                    0, 1, 2, 3
+                },
+                getFunc = function() return list.sw.enabled end,
+                setFunc = function(value)
+                    list.sw.enabled = value
+                    list:RefreshVisibility()
+                end,
+                width = "full",
+            },
+            {
+                type = "divider",
+                isAdvancedSetting = true,
+            },
+            {
+                type = "slider",
+                name = "List width",
+                min = list.svDefault.windowWidth,
+                max = list.svDefault.windowWidth + 150,
+                step = 1,
+                decimals = 0,
+                default = list.svDefault.windowWidth,
+                clampInput = true,
+                getFunc = function() return list.sw.windowWidth end,
+                setFunc = function(value)
+                    list.sw.windowWidth = value
+                    list.window:SetWidth(list.sw.windowWidth)
+                end,
+                isAdvancedSetting = true,
+            },
+        }
+    end
+
+
+    local options = GetGeneralOptions()
+    local damageList = GetComonListOptions("Damage List", self.damageList)
+    local damageListSpecificOptions = {
         {
-            type = "slider",
-            name = "List width",
-            min = 227,
-            max = 450,
-            step = 1,
-            decimals = 0,
-            default = self.damageList.svDefault.windowWidth,
-            clampInput = true,
-            getFunc = function() return self.damageList.sw.windowWidth end,
-            setFunc = function(value)
-                self.damageList.sw.windowWidth = value
-                self.damageList.window:SetWidth(self.damageList.sw.windowWidth)
-            end,
-        },
-        {
-            type = "divider"
+            type = "divider",
+            isAdvancedSetting = true,
         },
         {
             type = "colorpicker",
@@ -99,6 +133,7 @@ function module:GetSubMenuOptions()
                 self.damageList.sw.colorDamageTotal = util.RGB2Hex(r, g, b)
                 self.damageList:Update()
             end,
+            isAdvancedSetting = true,
         },
         {
             type = "colorpicker",
@@ -110,6 +145,7 @@ function module:GetSubMenuOptions()
                 self.damageList.sw.colorDamageBoss = util.RGB2Hex(r, g, b)
                 self.damageList:Update()
             end,
+            isAdvancedSetting = true,
         },
         {
             type = "colorpicker",
@@ -121,9 +157,11 @@ function module:GetSubMenuOptions()
                 self.damageList.sw.listPlayerHighlightColor = {r, g, b, o}
                 self.damageList:Update()
             end,
+            isAdvancedSetting = true,
         },
         {
-            type = "divider"
+            type = "divider",
+            isAdvancedSetting = true,
         },
         {
             type = "slider",
@@ -140,6 +178,7 @@ function module:GetSubMenuOptions()
                 self.damageList.sw.listHeaderOpacity = value
                 self.damageList:Update()
             end,
+            isAdvancedSetting = true,
         },
         {
             type = "slider",
@@ -156,6 +195,7 @@ function module:GetSubMenuOptions()
                 self.damageList.sw.listRowEvenOpacity = value
                 self.damageList:Update()
             end,
+            isAdvancedSetting = true,
         },
         {
             type = "slider",
@@ -172,9 +212,11 @@ function module:GetSubMenuOptions()
                 self.damageList.sw.listRowOddOpacity = value
                 self.damageList:Update()
             end,
+            isAdvancedSetting = true,
         },
         {
-            type = "divider"
+            type = "divider",
+            isAdvancedSetting = true,
         },
         {
             type = "slider",
@@ -191,16 +233,12 @@ function module:GetSubMenuOptions()
                 self.damageList.sw.timerUpdateInterval = value
             end,
             requiresReload = true,
+            isAdvancedSetting = true,
         },
     }
 
-    local options = {}
-    for _, option in ipairs(general) do
-        table.insert(options, option)
-    end
-    for _, option in ipairs(damageList) do
-        table.insert(options, option)
-    end
+    mergeOptions(damageListSpecificOptions, damageList)
+    mergeOptions(damageList, options)
 
     return options
 end

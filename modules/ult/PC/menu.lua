@@ -15,7 +15,9 @@ local module = addon_modules[module_name]
 function module:GetSubMenuOptions()
     local function mergeOptions(source, destination)
         for _, option in ipairs(source) do
-            table.insert(destination, option)
+            if not option.isAdvancedSetting or self.sw.advancedSettings then
+                table.insert(destination, option)
+            end
         end
     end
     local function getGeneralOptions()
@@ -32,6 +34,17 @@ function module:GetSubMenuOptions()
                 getFunc = function() return self.sw.accountWide end,
                 setFunc = function(value)
                     self.sw.accountWide = value
+                end,
+                requiresReload = true,
+            },
+            {
+                type = "checkbox",
+                name = "Advanced Settings",
+                tooltip = "allows you to customize more advanced settings for the lists.",
+                default = false,
+                getFunc = function() return self.sw.advancedSettings end,
+                setFunc = function(value)
+                    self.sw.advancedSettings = value
                 end,
                 requiresReload = true,
             },
@@ -76,6 +89,32 @@ function module:GetSubMenuOptions()
                 width = "full",
             },
             {
+                type = "checkbox",
+                name = "Show Percent",
+                tooltip = "show/hide the percent value in the list.",
+                default = list.svDefault.showPercentValue == 1.0,
+                getFunc = function() return list.sw.showPercentValue == 1.0 end,
+                setFunc = function(value)
+                    list.sw.showPercentValue = value and 1.0 or 0.0
+                    list:Update()
+                end,
+            },
+            {
+                type = "checkbox",
+                name = "Show Points",
+                tooltip = "show/hide the raw value in the list.",
+                default = list.svDefault.showRawValue == 1.0,
+                getFunc = function() return list.sw.showRawValue == 1.0 end,
+                setFunc = function(value)
+                    list.sw.showRawValue = value and 1.0 or 0.0
+                    list:Update()
+                end,
+            },
+            {
+                type = "divider",
+                isAdvancedSetting = true,
+            },
+            {
                 type = "slider",
                 name = "List width",
                 min = list.svDefault.windowWidth,
@@ -89,34 +128,7 @@ function module:GetSubMenuOptions()
                     list.sw.windowWidth = value
                     list.window:SetWidth(list.sw.windowWidth)
                 end,
-            },
-            {
-                type = "divider",
-            },
-            {
-                type = "checkbox",
-                name = "Show Percent Value",
-                tooltip = "show/hide the percent value in the list.",
-                default = list.svDefault.showPercentValue == 1.0,
-                getFunc = function() return list.sw.showPercentValue == 1.0 end,
-                setFunc = function(value)
-                    list.sw.showPercentValue = value and 1.0 or 0.0
-                    list:Update()
-                end,
-            },
-            {
-                type = "checkbox",
-                name = "Show Raw Value",
-                tooltip = "show/hide the raw value in the list.",
-                default = list.svDefault.showRawValue == 1.0,
-                getFunc = function() return list.sw.showRawValue == 1.0 end,
-                setFunc = function(value)
-                    list.sw.showRawValue = value and 1.0 or 0.0
-                    list:Update()
-                end,
-            },
-            {
-                type = "divider",
+                isAdvancedSetting = true,
             },
             {
                 type = "slider",
@@ -134,6 +146,7 @@ function module:GetSubMenuOptions()
                     list._redrawHeaders = true
                     list:Update()
                 end,
+                isAdvancedSetting = true,
             },
             {
                 type = "slider",
@@ -151,6 +164,7 @@ function module:GetSubMenuOptions()
                     list._redrawHeaders = true
                     list:Update()
                 end,
+                isAdvancedSetting = true,
             },
         }
     end
@@ -161,28 +175,6 @@ function module:GetSubMenuOptions()
     local hornListSpecificOptions = {
         {
             type = "divider",
-        },
-        {
-            type = "colorpicker",
-            name = "Horn Countdown Color",
-            tooltip = "set the color the horn buff countdown.",
-            default = unpack(self.hornList.svDefault.colorHorn),
-            getFunc = function() return unpack(self.hornList.sw.colorHorn) end,
-            setFunc = function(r, g, b)
-                self.hornList.sw.colorHorn = {r, g, b}
-                self.hornList:Update()
-            end,
-        },
-        {
-            type = "colorpicker",
-            name = "Force Countdown Color",
-            tooltip = "set the color the force buff countdown.",
-            default = unpack(self.hornList.svDefault.colorForce),
-            getFunc = function() return unpack(self.hornList.sw.colorForce) end,
-            setFunc = function(r, g, b)
-                self.hornList.sw.colorForce = {r, g, b}
-                self.hornList:Update()
-            end,
         },
         {
             type = "checkbox",
@@ -206,7 +198,36 @@ function module:GetSubMenuOptions()
                 self.hornList.sw.highlightSaxhleelColor = {r, g, b, a}
                 self.hornList:Update()
             end,
-        }
+            isAdvancedSetting = true,
+        },
+        {
+            type = "divider",
+            isAdvancedSetting = true,
+        },
+        {
+            type = "colorpicker",
+            name = "Horn Countdown Color",
+            tooltip = "set the color the horn buff countdown.",
+            default = unpack(self.hornList.svDefault.colorHorn),
+            getFunc = function() return unpack(self.hornList.sw.colorHorn) end,
+            setFunc = function(r, g, b)
+                self.hornList.sw.colorHorn = {r, g, b}
+                self.hornList:Update()
+            end,
+            isAdvancedSetting = true,
+        },
+        {
+            type = "colorpicker",
+            name = "Force Countdown Color",
+            tooltip = "set the color the force buff countdown.",
+            default = unpack(self.hornList.svDefault.colorForce),
+            getFunc = function() return unpack(self.hornList.sw.colorForce) end,
+            setFunc = function(r, g, b)
+                self.hornList.sw.colorForce = {r, g, b}
+                self.hornList:Update()
+            end,
+            isAdvancedSetting = true,
+        },
     }
     mergeOptions(hornListSpecificOptions, hornList)
     mergeOptions(hornList, options)
@@ -215,6 +236,7 @@ function module:GetSubMenuOptions()
     local colosListSpecificOptions = {
         {
             type = "divider",
+            isAdvancedSetting = true,
         },
         {
             type = "colorpicker",
@@ -226,6 +248,7 @@ function module:GetSubMenuOptions()
                 self.colosList.sw.colorVuln = {r, g, b}
                 self.colosList:Update()
             end,
+            isAdvancedSetting = true,
         },
     }
     mergeOptions(colosListSpecificOptions, colosList)
@@ -236,6 +259,7 @@ function module:GetSubMenuOptions()
     local atroListSpecificOptions = {
         {
             type = "divider",
+            isAdvancedSetting = true,
         },
         {
             type = "colorpicker",
@@ -247,9 +271,10 @@ function module:GetSubMenuOptions()
                 self.atroList.sw.colorAtro = {r, g, b}
                 self.atroList:Update()
             end,
+            isAdvancedSetting = true,
         },
         {
-            type = "checkbox",
+            type = "colorpicker",
             name = "Berserk Countdown Color",
             tooltip = "set the color of the Berserk countdown.",
             default = unpack(self.atroList.svDefault.colorBerserk),
@@ -258,6 +283,7 @@ function module:GetSubMenuOptions()
                 self.atroList.sw.colorBerserk = {r, g, b}
                 self.atroList:Update()
             end,
+            isAdvancedSetting = true,
         },
     }
     mergeOptions(atroListSpecificOptions, atroList)
@@ -285,33 +311,6 @@ function module:GetSubMenuOptions()
 
     local compactList = GetComonListOptions("Compact List", self.compactList)
     local compactListSpecificOptions = {
-        {
-            type = "divider",
-        },
-        {
-            type = "colorpicker",
-            name = "Duration Color",
-            tooltip = "set the color of the ultimate durations.",
-            default = unpack(self.compactList.svDefault.colorDurations),
-            getFunc = function() return unpack(self.compactList.sw.colorDurations) end,
-            setFunc = function(r, g, b)
-                self.compactList.sw.colorDurations = {r, g, b}
-                self.compactList._redrawHeaders = true
-                self.compactList:Update()
-            end,
-        },
-        {
-            type = "colorpicker",
-            name = "Cooldown Color",
-            tooltip = "set the color of the ultimate cooldowns.",
-            default = unpack(self.compactList.svDefault.colorCooldowns),
-            getFunc = function() return unpack(self.compactList.sw.colorCooldowns) end,
-            setFunc = function(r, g, b)
-                self.compactList.sw.colorCooldowns = {r, g, b}
-                self.compactList._redrawHeaders = true
-                self.compactList:Update()
-            end,
-        },
         {
             type = "divider",
         },
@@ -383,10 +382,11 @@ function module:GetSubMenuOptions()
         },
         {
             type = "divider",
+            isAdvancedSetting = true,
         },
         {
             type = "slider",
-            name = "background opacity",
+            name = "ult background opacity",
             tooltip = "set the background opacity for the ults.",
             min = 0,
             max = 1,
@@ -399,6 +399,7 @@ function module:GetSubMenuOptions()
                 self.compactList.sw.backgroundAlpha = value
                 self.compactList:Update()
             end,
+            isAdvancedSetting = true,
         },
         {
             type = "colorpicker",
@@ -410,6 +411,7 @@ function module:GetSubMenuOptions()
                 self.compactList.sw.colorHornBG = {r, g, b}
                 self.compactList:Update()
             end,
+            isAdvancedSetting = true,
         },
         {
             type = "colorpicker",
@@ -421,6 +423,7 @@ function module:GetSubMenuOptions()
                 self.compactList.sw.colorColosBG = {r, g, b}
                 self.compactList:Update()
             end,
+            isAdvancedSetting = true,
         },
         {
             type = "colorpicker",
@@ -432,6 +435,7 @@ function module:GetSubMenuOptions()
                 self.compactList.sw.colorAtroBG = {r, g, b}
                 self.compactList:Update()
             end,
+            isAdvancedSetting = true,
         },
         {
             type = "colorpicker",
@@ -443,6 +447,7 @@ function module:GetSubMenuOptions()
                 self.compactList.sw.colorSlayerBG = {r, g, b}
                 self.compactList:Update()
             end,
+            isAdvancedSetting = true,
         },
         {
             type = "colorpicker",
@@ -454,6 +459,7 @@ function module:GetSubMenuOptions()
                 self.compactList.sw.colorPillagerBG = {r, g, b}
                 self.compactList:Update()
             end,
+            isAdvancedSetting = true,
         },
         {
             type = "colorpicker",
@@ -465,6 +471,7 @@ function module:GetSubMenuOptions()
                 self.compactList.sw.colorCryptCannonBG = {r, g, b}
                 self.compactList:Update()
             end,
+            isAdvancedSetting = true,
         },
         {
             type = "divider",
@@ -482,7 +489,7 @@ function module:GetSubMenuOptions()
         },
         {
             type = "colorpicker",
-            name = "mark color",
+            name = "ult percentage color",
             tooltip = "set the color for marking ults on cooldown.",
             default = unpack(self.compactList.svDefault.markOnCooldownColor),
             getFunc = function() return unpack(self.compactList.sw.markOnCooldownColor) end,
@@ -490,7 +497,38 @@ function module:GetSubMenuOptions()
                 self.compactList.sw.markOnCooldownColor = {r, g, b}
                 self.compactList:Update()
             end,
-        }
+            isAdvancedSetting = true,
+        },
+        {
+            type = "divider",
+            isAdvancedSetting = true,
+        },
+        {
+            type = "colorpicker",
+            name = "Duration Color",
+            tooltip = "set the color of the ultimate durations.",
+            default = unpack(self.compactList.svDefault.colorDurations),
+            getFunc = function() return unpack(self.compactList.sw.colorDurations) end,
+            setFunc = function(r, g, b)
+                self.compactList.sw.colorDurations = {r, g, b}
+                self.compactList._redrawHeaders = true
+                self.compactList:Update()
+            end,
+            isAdvancedSetting = true,
+        },
+        {
+            type = "colorpicker",
+            name = "Cooldown Color",
+            tooltip = "set the color of the ultimate cooldowns.",
+            default = unpack(self.compactList.svDefault.colorCooldowns),
+            getFunc = function() return unpack(self.compactList.sw.colorCooldowns) end,
+            setFunc = function(r, g, b)
+                self.compactList.sw.colorCooldowns = {r, g, b}
+                self.compactList._redrawHeaders = true
+                self.compactList:Update()
+            end,
+            isAdvancedSetting = true,
+        },
     }
     mergeOptions(compactListSpecificOptions, compactList)
     mergeOptions(compactList, options)
