@@ -195,7 +195,6 @@ function module:GetSubMenuOptions()
             end,
         },
         {
-            -- TODO: not implemented yet
             type = "colorpicker",
             name = "Saxhleel Highlight Color",
             tooltip = "set the highlight color for saxhleel players.",
