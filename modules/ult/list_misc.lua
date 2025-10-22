@@ -28,7 +28,7 @@ local svDefault = {
     showRawValue = 1.0,
 
     headerOpacity = 0.0,
-    zeroTimerOpacity = 0.7, -- not used yet
+    zeroTimerOpacity = 0.35, -- not used yet, but here for consistency
 
     excludeSpecialUlts = true,
 }

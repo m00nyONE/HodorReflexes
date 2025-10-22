@@ -32,7 +32,7 @@ local svDefault = {
     showRawValue = 1.0,
 
     headerOpacity = 0.0,
-    zeroTimerOpacity = 0.7,
+    zeroTimerOpacity = 0.35,
 
     colorAtro = {0, 1, 1}, -- cyan
     colorBerserk = {1, 1, 0}, -- yellow

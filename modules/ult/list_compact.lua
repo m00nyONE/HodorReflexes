@@ -36,7 +36,7 @@ local svDefault = {
     showRawValue = 1.0,
 
     headerOpacity = 0.0,
-    zeroTimerOpacity = 0.7,
+    zeroTimerOpacity = 0.35,
 
     showHorn = true,
     showColos = true,
