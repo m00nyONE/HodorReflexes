@@ -56,7 +56,7 @@ function module:GetSubMenuOptions()
             },
             {
                 type = "dropdown",
-                name = "visibility",
+                name = "Visibility",
                 tooltip = "set the visibility of the list.",
                 default = list.svDefault.enabled,
                 choices = {
