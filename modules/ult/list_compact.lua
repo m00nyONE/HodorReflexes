@@ -370,7 +370,7 @@ function module:UpdateCompactList()
         if self.compactList.sw.showAtro and playerData.hasAtro then
             table.insert(atroList, playerData)
         end
-        if self.compactList.sw.showSlayer and playerData.hasMAorWM then
+        if self.compactList.sw.showSlayer and playerData.hasSlayer then
             table.insert(slayerList, playerData)
         end
         if self.compactList.sw.showPillager and playerData.hasPillager then

@@ -96,7 +96,7 @@ function module:onULTDataReceived(tag, data)
         hasCryptCannon = self:hasUnitCryptCannon(data),
         -- ult activated sets
         hasSaxhleel = self:hasUnitSaxhleel(data),
-        hasMAorWM = self:hasUnitMAorWM(data),
+        hasSlayer = self:hasUnitSlayer(data),
         hasPillager = self:hasUnitPillager(data),
         ultActivatedSetID = data.ultActivatedSetID, -- TODO: remove after reworking LGCS
     })
@@ -139,7 +139,7 @@ function module:Activate()
         hasCryptCannon = false,
         -- ult activated sets
         hasSaxhleel = false,
-        hasMAorWM = false,
+        hasSlayer = false,
         hasPillager = false,
         ultActivatedSetID = 0, -- TODO: remove after reworking LGCS later
     })

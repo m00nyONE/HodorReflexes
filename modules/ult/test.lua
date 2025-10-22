@@ -81,9 +81,9 @@ function module:startTest()
         saxhleel = 1,
         colos = 2,
         atro = 2,
-        cryptCannon = 1,
+        slayer = 2,
         pillager = 1,
-        MAorWM = 2,
+        cryptCannon = 1,
     }
 
 
@@ -113,9 +113,9 @@ function module:startTest()
             ult1ID = self.barrierAbilityIds[zo_random(1, #self.barrierAbilityIds)]
             ultActivatedSetID = 2 -- pillager
             limits.pillager = limits.pillager - 1
-        elseif limits.MAorWM > 0 then
+        elseif limits.slayer > 0 then
             ultActivatedSetID = zo_random(4, 5) -- MA or WM
-            limits.MAorWM = limits.MAorWM - 1
+            limits.slayer = limits.slayer - 1
         end
 
         local ult1Cost = GetAbilityCost(ult2ID)
@@ -148,7 +148,7 @@ function module:startTest()
             hasCryptCannon = self:hasUnitCryptCannon(mockData),
             -- ult activated sets
             hasSaxhleel = self:hasUnitSaxhleel(mockData),
-            hasMAorWM = self:hasUnitMAorWM(mockData),
+            hasSlayer = self:hasUnitSlayer(mockData),
             hasPillager = self:hasUnitPillager(mockData),
             ultActivatedSetID = ultActivatedSetID,
         })

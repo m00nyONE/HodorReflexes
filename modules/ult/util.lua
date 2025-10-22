@@ -167,7 +167,7 @@ end
 --- checks if the player has the MasterArchitect or WarMachine ult activated set
 --- @param playerData table
 --- @return boolean
-function module:hasUnitMAorWM(playerData)
+function module:hasUnitSlayer(playerData)
     if playerData.ultActivatedSetID == 4 or playerData.ultActivatedSetID == 5 then return true end
     return false
 end
