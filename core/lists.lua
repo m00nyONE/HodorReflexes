@@ -137,7 +137,7 @@ function list:Initialize(listDefinition)
 end
 
 --- NOT for manual use! this gets called to update the list with a debounce.
---- debounces the update calls to prevent excessive updates
+--- debounce the update calls to prevent excessive updates
 --- @return void
 function list:UpdateDebounced()
     if not self:WindowFragmentCondition() then return end
