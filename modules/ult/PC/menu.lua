@@ -94,6 +94,31 @@ function module:GetSubMenuOptions()
                 type = "divider",
             },
             {
+                type = "checkbox",
+                name = "Show Percent Value",
+                tooltip = "show/hide the percent value in the list.",
+                default = list.svDefault.showPercentValue == 1.0,
+                getFunc = function() return list.sw.showPercentValue == 1.0 end,
+                setFunc = function(value)
+                    list.sw.showPercentValue = value and 1.0 or 0.0
+                    list:Update()
+                end,
+            },
+            {
+                type = "checkbox",
+                name = "Show Raw Value",
+                tooltip = "show/hide the raw value in the list.",
+                default = list.svDefault.showRawValue == 1.0,
+                getFunc = function() return list.sw.showRawValue == 1.0 end,
+                setFunc = function(value)
+                    list.sw.showRawValue = value and 1.0 or 0.0
+                    list:Update()
+                end,
+            },
+            {
+                type = "divider",
+            },
+            {
                 type = "slider",
                 name = "Header Opacity",
                 tooltip = "set the opacity of the list header.",
@@ -126,31 +151,6 @@ function module:GetSubMenuOptions()
                 end,
                 requiresReload = true,
             },
-            {
-                type = "divider",
-            },
-            {
-                type = "checkbox",
-                name = "Show Percent Value",
-                tooltip = "show/hide the percent value in the list.",
-                default = list.svDefault.showPercentValue == 1.0,
-                getFunc = function() return list.sw.showPercentValue == 1.0 end,
-                setFunc = function(value)
-                    list.sw.showPercentValue = value and 1.0 or 0.0
-                    list:Update()
-                end,
-            },
-            {
-                type = "checkbox",
-                name = "Show Raw Value",
-                tooltip = "show/hide the raw value in the list.",
-                default = list.svDefault.showRawValue == 1.0,
-                getFunc = function() return list.sw.showRawValue == 1.0 end,
-                setFunc = function(value)
-                    list.sw.showRawValue = value and 1.0 or 0.0
-                    list:Update()
-                end,
-            }
         }
     end
 
