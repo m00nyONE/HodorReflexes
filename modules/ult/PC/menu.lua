@@ -287,6 +287,31 @@ function module:GetSubMenuOptions()
         {
             type = "divider",
         },
+        {
+            type = "colorpicker",
+            name = "Duration Color",
+            tooltip = "set the color of the ultimate durations.",
+            default = unpack(self.compactList.svDefault.colorDurations),
+            getFunc = function() return unpack(self.compactList.sw.colorDurations) end,
+            setFunc = function(r, g, b)
+                self.compactList.sw.colorDurations = {r, g, b}
+                self.compactList:Update()
+            end,
+        },
+        {
+            type = "colorpicker",
+            name = "Cooldown Color",
+            tooltip = "set the color of the ultimate cooldowns.",
+            default = unpack(self.compactList.svDefault.colorCooldowns),
+            getFunc = function() return unpack(self.compactList.sw.colorCooldowns) end,
+            setFunc = function(r, g, b)
+                self.compactList.sw.colorCooldowns = {r, g, b}
+                self.compactList:Update()
+            end,
+        },
+        {
+            type = "divider",
+        },
         -- TODO: countdown colors
         -- TODO: pillager cooldown color
         -- TODO: mark pillager ult as red when on cooldown
