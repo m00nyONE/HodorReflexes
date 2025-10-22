@@ -31,6 +31,12 @@ local moduleDefinition = {
         accountWide = true,
     },
 
+    hornList = nil,
+    colosList = nil,
+    atroList = nil,
+    miscList = nil,
+    compactList = nil,
+
     isTestRunning = false,
 
     majorForceId = 61747,
