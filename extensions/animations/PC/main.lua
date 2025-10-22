@@ -91,8 +91,13 @@ function extension:_listUpdatePostHook(list, iconControlName)
         local rowControl = contents:GetChild(childId)
         local entryData = ZO_ScrollList_GetData(rowControl)
         if entryData and entryData.userId and LCI.HasAnimated(entryData.userId) then
+            local iconControl = rowControl:GetNamedChild(iconControlName)
+            if iconControl == nil then
+                self.logger:Warn("icon control '%s' not found in list '%s' row template", iconControlName, list.name)
+                return
+            end
             self:_createAnimationForUser(entryData.userId)
-            self:_attachAnimationToControl(entryData.userId, list.name, rowControl:GetNamedChild(iconControlName))
+            self:_attachAnimationToControl(entryData.userId, list.name, iconControl)
         end
     end
 end
