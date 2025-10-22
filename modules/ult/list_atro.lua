@@ -99,13 +99,13 @@ function module:atroListHeaderRowCreationFunction(rowControl, data, scrollList)
 
         self.atroList:CreateCountdownOnControl(
             rowControl:GetNamedChild("_AtroDuration"),
-            HR_EVENT_ATRO_CAST_STARTED,
-            self.atroList.sw.zeroTimerOpacity
+            HR_EVENT_ATRO_CAST_STARTED
+            --self.atroList.sw.zeroTimerOpacity -- we want the Function itself to set this value. That way we can update it in the menu
         )
         self.atroList:CreateCountdownOnControl(
             rowControl:GetNamedChild("_BerserkDuration"),
-            HR_EVENT_MAJOR_BERSERK_BUFF_GAINED,
-            self.atroList.sw.zeroTimerOpacity
+            HR_EVENT_MAJOR_BERSERK_BUFF_GAINED
+            --self.atroList.sw.zeroTimerOpacity -- we want the Function itself to set this value. That way we can update it in the menu
         )
 
         self.atroList._redrawHeaders = false

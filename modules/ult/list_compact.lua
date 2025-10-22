@@ -172,8 +172,8 @@ function module:compactListHeaderRowCreationFunction(rowControl, data, scrollLis
         rowControl:GetNamedChild("_HornDuration"):SetAlpha(self.compactList.sw.zeroTimerOpacity)
         self.compactList:CreateCountdownOnControl(
                 rowControl:GetNamedChild("_HornDuration"),
-                HR_EVENT_HORN_BUFF_GAINED,
-                self.compactList.sw.zeroTimerOpacity
+                HR_EVENT_HORN_BUFF_GAINED
+                --self.compactList.sw.zeroTimerOpacity -- we want the Function itself to set this value. That way we can update it in the menu
         )
 
         rowControl:GetNamedChild("_ForceIcon"):SetTexture(self.forceIcon)
@@ -181,8 +181,8 @@ function module:compactListHeaderRowCreationFunction(rowControl, data, scrollLis
         rowControl:GetNamedChild("_ForceDuration"):SetAlpha(self.compactList.sw.zeroTimerOpacity)
         self.compactList:CreateCountdownOnControl(
                 rowControl:GetNamedChild("_ForceDuration"),
-                HR_EVENT_MAJOR_FORCE_BUFF_GAINED,
-                self.compactList.sw.zeroTimerOpacity
+                HR_EVENT_MAJOR_FORCE_BUFF_GAINED
+                --self.compactList.sw.zeroTimerOpacity -- we want the Function itself to set this value. That way we can update it in the menu
         )
 
         rowControl:GetNamedChild("_ColosIcon"):SetTexture(self.vulnIcon)
@@ -190,8 +190,8 @@ function module:compactListHeaderRowCreationFunction(rowControl, data, scrollLis
         rowControl:GetNamedChild("_VulnDuration"):SetAlpha(self.compactList.sw.zeroTimerOpacity)
         self.compactList:CreateCountdownOnControl(
                 rowControl:GetNamedChild("_VulnDuration"),
-                HR_EVENT_MAJOR_VULNERABILITY_DEBUFF_GAINED,
-                self.compactList.sw.zeroTimerOpacity
+                HR_EVENT_MAJOR_VULNERABILITY_DEBUFF_GAINED
+                --self.compactList.sw.zeroTimerOpacity -- we want the Function itself to set this value. That way we can update it in the menu
         )
 
         rowControl:GetNamedChild("_AtroIcon"):SetTexture(self.berserkIcon)
@@ -199,8 +199,8 @@ function module:compactListHeaderRowCreationFunction(rowControl, data, scrollLis
         rowControl:GetNamedChild("_BerserkDuration"):SetAlpha(self.compactList.sw.zeroTimerOpacity)
         self.compactList:CreateCountdownOnControl(
                 rowControl:GetNamedChild("_BerserkDuration"),
-                HR_EVENT_MAJOR_BERSERK_BUFF_GAINED,
-                self.compactList.sw.zeroTimerOpacity
+                HR_EVENT_MAJOR_BERSERK_BUFF_GAINED
+                --self.compactList.sw.zeroTimerOpacity -- we want the Function itself to set this value. That way we can update it in the menu
         )
 
         rowControl:GetNamedChild("_SlayerIcon"):SetTexture(self.slayerIcon)
@@ -208,8 +208,8 @@ function module:compactListHeaderRowCreationFunction(rowControl, data, scrollLis
         rowControl:GetNamedChild("_SlayerDuration"):SetAlpha(self.compactList.sw.zeroTimerOpacity)
         self.compactList:CreateCountdownOnControl(
                 rowControl:GetNamedChild("_SlayerDuration"),
-                HR_EVENT_MAJOR_SLAYER_BUFF_GAINED,
-                self.compactList.sw.zeroTimerOpacity
+                HR_EVENT_MAJOR_SLAYER_BUFF_GAINED
+                --self.compactList.sw.zeroTimerOpacity -- we want the Function itself to set this value. That way we can update it in the menu
         )
 
         rowControl:GetNamedChild("_PillagerIcon"):SetTexture(self.pillagerIcon)
@@ -217,8 +217,8 @@ function module:compactListHeaderRowCreationFunction(rowControl, data, scrollLis
         rowControl:GetNamedChild("_PillagerCooldown"):SetAlpha(self.compactList.sw.zeroTimerOpacity)
         self.compactList:CreateCountdownOnControl(
                 rowControl:GetNamedChild("_PillagerCooldown"),
-                HR_EVENT_PILLAGER_BUFF_COOLDOWN,
-                self.compactList.sw.zeroTimerOpacity
+                HR_EVENT_PILLAGER_BUFF_COOLDOWN
+                --self.compactList.sw.zeroTimerOpacity -- we want the Function itself to set this value. That way we can update it in the menu
         )
 
         self.compactList._redrawHeaders = false
@@ -325,7 +325,7 @@ function module:compactListPillagerRowCreationFunction(rowControl, data, scrollL
 
     self:applyValues(rowControl, data, scrollList, pillagerPercentage, gainUltimate, nil)
     if self.compactList.sw.markOnCooldown and self.pillagerCooldownEndTime > GetGameTimeMilliseconds() then
-        rowControl:GetNamedChild("_PctValue"):SetText(string.format("|c%s%d%%", util.RGB2Hex(self.compactList.sw.markOnCooldownColor), pillagerPercentage)) -- red
+        rowControl:GetNamedChild("_PctValue"):SetText(string.format("|c%s%d%%", util.RGB2Hex(unpack(self.compactList.sw.markOnCooldownColor)), pillagerPercentage)) -- red
     end
 end
 

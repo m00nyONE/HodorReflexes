@@ -101,13 +101,13 @@ function module:hornListHeaderRowCreationFunction(rowControl, data, scrollList)
 
         self.hornList:CreateCountdownOnControl(
             rowControl:GetNamedChild("_HornDuration"),
-            HR_EVENT_HORN_BUFF_GAINED,
-            self.hornList.sw.zeroTimerOpacity
+            HR_EVENT_HORN_BUFF_GAINED
+            --self.hornList.sw.zeroTimerOpacity -- we want the Function itself to set this value. That way we can update it in the menu
         )
         self.hornList:CreateCountdownOnControl(
             rowControl:GetNamedChild("_ForceDuration"),
-            HR_EVENT_MAJOR_FORCE_BUFF_GAINED,
-            self.hornList.sw.zeroTimerOpacity
+            HR_EVENT_MAJOR_FORCE_BUFF_GAINED
+            --self.hornList.sw.zeroTimerOpacity -- we want the Function itself to set this value. That way we can update it in the menu
         )
 
         self.hornList._redrawHeaders = false

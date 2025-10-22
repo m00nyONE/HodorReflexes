@@ -95,8 +95,8 @@ function module:colosListHeaderRowCreationFunction(rowControl, data, scrollList)
 
         self.colosList:CreateCountdownOnControl(
             rowControl:GetNamedChild("_Duration"),
-            HR_EVENT_MAJOR_VULNERABILITY_DEBUFF_GAINED,
-            self.colosList.sw.zeroTimerOpacity
+            HR_EVENT_MAJOR_VULNERABILITY_DEBUFF_GAINED
+            --self.colosList.sw.zeroTimerOpacity -- we want the Function itself to set this value. That way we can update it in the menu
         )
 
         self.colosList._redrawHeaders = false
