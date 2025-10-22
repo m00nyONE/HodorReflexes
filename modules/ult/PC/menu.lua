@@ -312,10 +312,6 @@ function module:GetSubMenuOptions()
         {
             type = "divider",
         },
-        -- TODO: countdown colors
-        -- TODO: pillager cooldown color
-        -- TODO: mark pillager ult as red when on cooldown
-        -- TODO: background colors for each ult type ( maybe with alpha? )
         {
             type = "checkbox",
             name = "show Horn",
@@ -379,6 +375,116 @@ function module:GetSubMenuOptions()
             getFunc = function() return self.compactList.sw.showCryptCannon end,
             setFunc = function(value)
                 self.compactList.sw.showCryptCannon = value
+                self.compactList:Update()
+            end,
+        },
+        {
+            type = "divider",
+        },
+        {
+            type = "slider",
+            name = "background opacity",
+            tooltip = "set the background opacity for the ults.",
+            min = 0,
+            max = 1,
+            step = 0.05,
+            decimals = 2,
+            clampInput = true,
+            default = self.compactList.svDefault.backgroundAlpha,
+            getFunc = function() return self.compactList.sw.backgroundAlpha end,
+            setFunc = function(value)
+                self.compactList.sw.backgroundAlpha = value
+                self.compactList:Update()
+            end,
+        },
+        {
+            type = "colorpicker",
+            name = "horn background color",
+            tooltip = "set the background color for horn ults.",
+            default = unpack(self.compactList.svDefault.colorHornBG),
+            getFunc = function() return unpack(self.compactList.sw.colorHornBG) end,
+            setFunc = function(r, g, b)
+                self.compactList.sw.colorHornBG = {r, g, b}
+                self.compactList:Update()
+            end,
+        },
+        {
+            type = "colorpicker",
+            name = "colos background color",
+            tooltip = "set the background color for colos ults.",
+            default = unpack(self.compactList.svDefault.colorColosBG),
+            getFunc = function() return unpack(self.compactList.sw.colorColosBG) end,
+            setFunc = function(r, g, b)
+                self.compactList.sw.colorColosBG = {r, g, b}
+                self.compactList:Update()
+            end,
+        },
+        {
+            type = "colorpicker",
+            name = "atro background color",
+            tooltip = "set the background color for atro ults.",
+            default = unpack(self.compactList.svDefault.colorAtroBG),
+            getFunc = function() return unpack(self.compactList.sw.colorAtroBG) end,
+            setFunc = function(r, g, b)
+                self.compactList.sw.colorAtroBG = {r, g, b}
+                self.compactList:Update()
+            end,
+        },
+        {
+            type = "colorpicker",
+            name = "slayer background color",
+            tooltip = "set the background color for slayer ults.",
+            default = unpack(self.compactList.svDefault.colorSlayerBG),
+            getFunc = function() return unpack(self.compactList.sw.colorSlayerBG) end,
+            setFunc = function(r, g, b)
+                self.compactList.sw.colorSlayerBG = {r, g, b}
+                self.compactList:Update()
+            end,
+        },
+        {
+            type = "colorpicker",
+            name = "pillager background color",
+            tooltip = "set the background color for pillager ults.",
+            default = unpack(self.compactList.svDefault.colorPillagerBG),
+            getFunc = function() return unpack(self.compactList.sw.colorPillagerBG) end,
+            setFunc = function(r, g, b)
+                self.compactList.sw.colorPillagerBG = {r, g, b}
+                self.compactList:Update()
+            end,
+        },
+        {
+            type = "colorpicker",
+            name = "crypt cannon background color",
+            tooltip = "set the background color for crypt cannon ults.",
+            default = unpack(self.compactList.svDefault.colorCryptCannonBG),
+            getFunc = function() return unpack(self.compactList.sw.colorCryptCannonBG) end,
+            setFunc = function(r, g, b)
+                self.compactList.sw.colorCryptCannonBG = {r, g, b}
+                self.compactList:Update()
+            end,
+        },
+        {
+            type = "divider",
+        },
+        {
+            type = "checkbox",
+            name = "color ult percentage on cooldown",
+            tooltip = "mark ults that are on cooldown.",
+            default = self.compactList.svDefault.markOnCooldown,
+            getFunc = function() return self.compactList.sw.markOnCooldown end,
+            setFunc = function(value)
+                self.compactList.sw.markOnCooldown = value
+                self.compactList:Update()
+            end,
+        },
+        {
+            type = "colorpicker",
+            name = "mark color",
+            tooltip = "set the color for marking ults on cooldown.",
+            default = unpack(self.compactList.svDefault.markOnCooldownColor),
+            getFunc = function() return unpack(self.compactList.sw.markOnCooldownColor) end,
+            setFunc = function(r, g, b)
+                self.compactList.sw.markOnCooldownColor = {r, g, b}
                 self.compactList:Update()
             end,
         }
