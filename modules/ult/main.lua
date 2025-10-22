@@ -46,7 +46,7 @@ local moduleDefinition = {
     majorSlayerId = 93109,
     hornBuffIds = {38564, 40221, 40224},
     pillagerBuffId = 17055,
-    pillagerCooldownId = 172056,
+    --pillagerCooldownId = 172056,
 
     hornAbilityIds = {40223, 38563, 40220},
     colosAbilityIds = {122388, 122395, 122174},

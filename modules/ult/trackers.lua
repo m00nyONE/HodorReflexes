@@ -104,14 +104,18 @@ function module:registerTrackers()
         EM:AddFilterForEvent(eventName, EVENT_EFFECT_CHANGED, REGISTER_FILTER_TARGET_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_GROUP)
     end
 
-    do -- pillager cooldown tracker
-        local eventName = addon_name .. module_name .. "PillagerCooldown"
-        EM:UnregisterForEvent(eventName, EVENT_EFFECT_CHANGED)
-        EM:RegisterForEvent(eventName, EVENT_EFFECT_CHANGED, getEffectChangedHandler(HR_EVENT_PILLAGER_BUFF_COOLDOWN))
-        EM:AddFilterForEvent(eventName, EVENT_EFFECT_CHANGED, REGISTER_FILTER_ABILITY_ID, self.pillagerCooldownId)
-        EM:AddFilterForEvent(eventName, EVENT_EFFECT_CHANGED, REGISTER_FILTER_COMBAT_RESULT, EFFECT_RESULT_UPDATED)
-        EM:AddFilterForEvent(eventName, EVENT_EFFECT_CHANGED, REGISTER_FILTER_TARGET_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_GROUP)
-    end
+    addon.RegisterCallback(HR_EVENT_PILLAGER_BUFF_GAINED, function(unitTag, _)
+        -- when pillager buff is gained, start cooldown tracker
+        CM:FireCallbacks(HR_EVENT_PILLAGER_BUFF_COOLDOWN, unitTag, 45000) -- fixed 45s cooldown
+    end)
+    --do -- pillager cooldown tracker
+    --    local eventName = addon_name .. module_name .. "PillagerCooldown"
+    --    EM:UnregisterForEvent(eventName, EVENT_EFFECT_CHANGED)
+    --    EM:RegisterForEvent(eventName, EVENT_EFFECT_CHANGED, getEffectChangedHandler(HR_EVENT_PILLAGER_BUFF_COOLDOWN))
+    --    EM:AddFilterForEvent(eventName, EVENT_EFFECT_CHANGED, REGISTER_FILTER_ABILITY_ID, self.pillagerCooldownId)
+    --    EM:AddFilterForEvent(eventName, EVENT_EFFECT_CHANGED, REGISTER_FILTER_COMBAT_RESULT, EFFECT_RESULT_UPDATED)
+    --    EM:AddFilterForEvent(eventName, EVENT_EFFECT_CHANGED, REGISTER_FILTER_TARGET_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_GROUP)
+    --end
 
     do -- major vulnerability debuff tracker
         local eventName = addon_name .. module_name .. "MajorVulnerabilityDebuff"
