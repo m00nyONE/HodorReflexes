@@ -90,7 +90,7 @@ function module:CreateAtroList()
 end
 
 function module:atroListHeaderRowCreationFunction(rowControl, data, scrollList)
-    if not rowControl._initialized or self.atroList.redrawHeaders then
+    if not rowControl._initialized or self.atroList._redrawHeaders then
         rowControl:GetNamedChild("_BG"):SetAlpha(self.atroList.sw.headerOpacity)
         rowControl:GetNamedChild("_AtroDuration"):SetColor(unpack(self.atroList.sw.colorAtro))
         rowControl:GetNamedChild("_AtroDuration"):SetAlpha(self.atroList.sw.zeroTimerOpacity)
@@ -108,7 +108,7 @@ function module:atroListHeaderRowCreationFunction(rowControl, data, scrollList)
             self.atroList.sw.zeroTimerOpacity
         )
 
-        self.atroList.redrawHeaders = false
+        self.atroList._redrawHeaders = false
         rowControl._initialized = true
     end
 end
