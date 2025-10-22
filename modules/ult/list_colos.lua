@@ -28,7 +28,7 @@ local svDefault = {
     windowWidth = 262,
 
     showPercentValue = 1.0,
-    showRawValue = 1.0,
+    showRawValue = 0.0,
 
     headerOpacity = 0.0,
     zeroTimerOpacity = 0.35,
