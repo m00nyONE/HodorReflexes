@@ -10,6 +10,13 @@ local logger = core.initSubLogger("util")
 local util = {}
 addon.util = util
 
+-- generate classIcons table
+local classIcons = {}
+for i = 1, GetNumClasses() do
+    local realClassId, _, _, _, _, _, icon, _, _, _ = GetClassInfo(i)
+    classIcons[realClassId] = icon
+end
+
 --[[ doc.lua begin ]]
 
 --- calculate the distance between two points
@@ -119,7 +126,6 @@ end
 
 -- user related functions
 
-local classIcons = nil
 --- overwrite class icons with new ones.
 --- This is used for some events. For example on christmas, class icons get overwritten by their christmas version.
 --- @param newClassIcons table<number, string> {classId: number, texturePath: string}
@@ -132,16 +138,8 @@ end
 
 --- get class icon for classId.
 --- @param classId number
---- @return string, number, number, number, number texturePath (falls back to "campaignbrowser_guestcampaign.dds" if the icon is not found), textureCoordsLeft, textureCoordsRight, textureCoordsTop, textureCoordsBottom
+--- @return string, number, number, number, number texturePath, textureCoordsLeft, textureCoordsRight, textureCoordsTop, textureCoordsBottom
 function util.GetClassIcon(classId)
-    if not classIcons then
-        classIcons = {}
-        for i = 1, GetNumClasses() do
-            local realClassId, _, _, _, _, _, icon, _, _, _ = GetClassInfo(i)
-            classIcons[realClassId] = icon
-        end
-    end
-
     local texturePath = classIcons[classId]
     if not texturePath then
         texturePath = "esoui/art/campaign/campaignbrowser_guestcampaign.dds"
