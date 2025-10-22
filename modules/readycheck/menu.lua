@@ -16,15 +16,6 @@ function module:GetMainMenuOptions()
     return {
         {
             type = "checkbox",
-            name = GetString(HR_MODULES_READYCHECK_MENU_UI_LOCKED),
-            tooltip = GetString(HR_MODULES_READYCHECK_MENU_UI_LOCKED_TT),
-            getFunc = function() return self.uiLocked end,
-            setFunc = function(value)
-                if not value then self:unlockUI() else self:lockUI() end
-            end
-        },
-        {
-            type = "checkbox",
             name = GetString(HR_MODULES_READYCHECK_MENU_CHAT),
             tooltip = GetString(HR_MODULES_READYCHECK_MENU_CHAT_TT),
             default = self.svDefault.enableChatMessages,
