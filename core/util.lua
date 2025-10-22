@@ -160,7 +160,7 @@ end
 --- @param classId number
 --- @return string, number, number, number, number texturePath, textureCoordsLeft, textureCoordsRight, textureCoordsTop, textureCoordsBottom
 function util.GetUserIcon(userId, classId)
-    return util.GetClassIcon(classId)
+    return util.GetClassIcon(classId) -- returns texturePath, left, right, top, bottom
 end
 
 --[[ doc.lua end ]]
