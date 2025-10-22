@@ -332,7 +332,7 @@ end
 --- WARNING: DO NOT use it on controls that get recycled (e.g. playerRows)! ONLY USE on headers or static labels! Otherwise the timers will pile up and cause performance issues. They do NOT get automatically cleaned up on control recycling!
 --- @param control LabelControl the control to render the countdown to
 --- @param eventName string the event name to register the countdown start callback to (must provide the following arguments: (unitTag, duration) where duration is in milliseconds)
---- @param zeroTimerOpacity number|nil optional opacity to set on the control when the timer reaches zero (default: 0.7)
+--- @param zeroTimerOpacity number|nil optional opacity to set on the control when the timer reaches zero (default: self.sw.zeroTimerOpacity or 0.7)
 --- @return void
 function list:CreateCountdownOnControl(control, eventName, zeroTimerOpacity)
     -- check if timer is already registered - if so, return
@@ -343,16 +343,13 @@ function list:CreateCountdownOnControl(control, eventName, zeroTimerOpacity)
     self.logger:Debug("creating countdown timer on control with id '%s'", control._Id)
 
     local blinkDurationMS = 2500 -- TODO: possibly make configurable by savedVars ?
-    self.logger:Debug("using blink duration of %d ms", blinkDurationMS)
-    zeroTimerOpacity = zeroTimerOpacity or 0.7
-    self.logger:Debug("using zero timer opacity of %.2f", zeroTimerOpacity)
 
     control._onCountdownTick = function()
         local nowMS = GetGameTimeMilliseconds()
 
         -- when the timer ended more than 5 seconds ago, set the opacity to zeroTimerOpacity, stop updating and return
         if not control._countdownEndTime or control._countdownEndTime + blinkDurationMS < nowMS then
-            self.RenderTimeToControl(control, 0, zeroTimerOpacity)
+            self.RenderTimeToControl(control, 0, zeroTimerOpacity or self.sw.zeroTimerOpacity or 0.35)
             EM:UnregisterForUpdate(control._Id .. "_CountdownUpdate")
             return
         end
@@ -360,13 +357,13 @@ function list:CreateCountdownOnControl(control, eventName, zeroTimerOpacity)
         -- render remaining time
         local remainingMS = control._countdownEndTime - nowMS
         local remainingMSDisplayed = zo_max(0, remainingMS)
-        local opacity = nil
+        local opacity = 1.0
 
         -- if remaining time is less than blinkDurationMS, start blinking the text
         if remainingMS <= 0 then
             -- Blinking: switch every 250ms between 1.0 and zeroTimerOpacity
             local blinkPhase = zo_floor((remainingMS % 500) / 250)
-            opacity = (blinkPhase == 0) and 1.0 or zeroTimerOpacity
+            opacity = (blinkPhase == 0) and 1.0 or zeroTimerOpacity or self.sw.zeroTimerOpacity or 0.35
         end
 
         self.RenderTimeToControl(control, remainingMSDisplayed, opacity)
