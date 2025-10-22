@@ -89,7 +89,7 @@ function extension:BuildMenuOptions()
             type = "editbox",
             name = GetString(LCN_MENU_NAME_VAL),
             tooltip = GetString(LCN_MENU_NAME_VAL_TT),
-            default = self.sw.nameRaw,
+            default = self.svDefault.nameRaw,
             getFunc = function() return self.sw.nameRaw end,
             setFunc = function(value)
                 if value ~= self.sw.nameRaw then

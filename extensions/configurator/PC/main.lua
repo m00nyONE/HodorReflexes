@@ -21,8 +21,8 @@ local extensionDefinition = {
     svDefault = {
         selectedDonationTier = 1,
 
-        nameRaw = "",
-        nameColored = "",
+        nameRaw = UndecorateDisplayName(GetUnitDisplayName("player")),
+        nameColored = UndecorateDisplayName(GetUnitDisplayName("player")),
 
         nameGradient = false,
         nameColorBegin = {1, 1, 1},
