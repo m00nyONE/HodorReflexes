@@ -78,21 +78,24 @@ modules/dps/Console/menu.lua
 modules/readycheck/lang/en.lua
 modules/readycheck/lang/$(language).lua
 modules/readycheck/main.lua
-modules/readycheck/menu.lua
+modules/readycheck/PC/menu.lua
+modules/readycheck/Console/menu.lua
 
 modules/pull/Bindings.xml
 modules/pull/lang/en.lua
 modules/pull/lang/$(language).lua
 modules/pull/main.lua
 modules/pull/protocol.lua
-modules/pull/menu.lua
+modules/pull/PC/menu.lua
+modules/pull/Console/menu.lua
 
 modules/exitinstance/Bindings.xml
 modules/exitinstance/lang/en.lua
 modules/exitinstance/lang/$(language).lua
 modules/exitinstance/main.lua
 modules/exitinstance/protocol.lua
-modules/exitinstance/menu.lua
+modules/exitinstance/PC/menu.lua
+modules/exitinstance/Console/menu.lua
 
 modules/skilllines/lang/en.lua
 modules/skilllines/lang/$(language).lua
