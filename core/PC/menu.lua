@@ -88,6 +88,7 @@ local function getCoreMenuOptions()
             setFunc = function(value)
                 core.sw.modules[moduleName] = value
             end,
+            width = "half",
             requiresReload = true,
         })
     end
@@ -105,6 +106,7 @@ local function getCoreMenuOptions()
             setFunc = function(value)
                 core.sw.extensions[extensionName] = value
             end,
+            width = "half",
             requiresReload = true,
         })
     end
