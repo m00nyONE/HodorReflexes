@@ -50,9 +50,14 @@ function module:Activate()
             KEYBIND_STRIP:RemoveKeybindButton(countdownButton)
         end
     end
+
     -- Add hotkey to group window
-    KEYBOARD_GROUP_MENU_SCENE:RegisterCallback('StateChange', OnStateChanged)
-    GAMEPAD_GROUP_SCENE:RegisterCallback('StateChange', OnStateChanged)
+    if KEYBOARD_GROUP_MENU_SCENE then
+        KEYBOARD_GROUP_MENU_SCENE:RegisterCallback("StateChange", OnStateChanged)
+    end
+    if GAMEPAD_GROUP_SCENE then
+        GAMEPAD_GROUP_SCENE:RegisterCallback("StateChange", OnStateChanged)
+    end
 
     core.RegisterSubCommand("pull", GetString(HR_MODULES_PULL_COMMAND_HELP), function(...) self:SendPullCountdown(...) end)
 end

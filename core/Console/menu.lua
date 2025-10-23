@@ -7,6 +7,8 @@ local internal = addon.internal
 local core = internal.core
 local logger = core.initSubLogger("menu")
 
+local util = addon.util
+
 local LHAS = LibHarvensAddonSettings
 
 -- function is platform specific
@@ -34,7 +36,7 @@ end
 function core.CreateNewMenu(subName, options)
     local panel = core.GetPanelConfig(subName)
     for _, option in ipairs(options) do
-        LHAS:AddSetting(panel, option)
+        panel:AddSetting(option)
     end
 end
 
