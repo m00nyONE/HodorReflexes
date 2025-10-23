@@ -35,6 +35,7 @@ local addon = {
                     ["skilllines"] = true,
                     ["dps"] = true,
                     ["ult"] = true,
+                    ["hideme"] = true,
                 },
                 libraryPopupDisabled = false,
             }
