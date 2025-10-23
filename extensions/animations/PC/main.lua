@@ -86,27 +86,36 @@ end
 --- @param iconControlName string name of the icon control child in the list row template. (e.g. "_Icon")
 --- @return void
 function extension:_listUpdatePostHook(list, iconControlName)
+    local listTypes = {}
     local usersWithAnimation = {}
     local contents = list.listControl:GetNamedChild("Contents")
     for childId = 1, contents:GetNumChildren() do
         local rowControl = contents:GetChild(childId)
         local entryData = ZO_ScrollList_GetData(rowControl)
-        if entryData and entryData.userId and LCI.HasAnimated(entryData.userId) then -- only process player rows and only users with animated icons
-            local iconControl = rowControl:GetNamedChild(iconControlName)
-            if iconControl == nil then -- icon control not found! This can only happen when someone creates a list with a custom template that does not have the expected icon control or when the template of a standard list got overwritten by a theme that did no follow the guidelines in the README.md of the theme extension.
-                self.logger:Warn("icon control '%s' not found in list '%s' row template", iconControlName, list.name)
-                return -- exit out of the update hook because there is nothing we can do here
-            end
+        if entryData and entryData.userId then -- only process player rows
+            local listName = string.format("%s_%s", list.name, entryData.dataEntry.typeId) -- we create a "sub list" for each data type in the list to avoid conflicts when the same user is present in multiple data types
+            listTypes[listName] = true
+            if LCI.HasAnimated(entryData.userId) then -- find users with animations
+                local iconControl = rowControl:GetNamedChild(iconControlName)
+                if iconControl == nil then -- icon control not found! This can only happen when someone creates a list with a custom template that does not have the expected icon control or when the template of a standard list got overwritten by a theme that did no follow the guidelines in the README.md of the theme extension.
+                    self.logger:Warn("icon control '%s' not found in list '%s' row template", iconControlName, list.name)
+                    return -- exit out of the update hook because there is nothing we can do here
+                end
 
-            self:_createAnimationForUser(list.name, entryData.userId) -- create animation timeline for the user in the list if it does not already exist
-            self:_attachAnimationToControl(list.name, entryData.userId, iconControl) -- attach the animation to the icon control
-            usersWithAnimation[entryData.userId] = true
+                self:_createAnimationForUser(listName, entryData.userId) -- create animation timeline for the user in the list if it does not already exist
+                self:_attachAnimationToControl(listName, entryData.userId, iconControl) -- attach the animation to the icon control
+                usersWithAnimation[listName] = usersWithAnimation[listName] or {}
+                usersWithAnimation[listName][entryData.userId] = true
+            end
         end
     end
-    for userId, _ in pairs(self.animations[list.name] or {}) do
-        if not usersWithAnimation[userId] then
-            self.logger:Debug("user '%s' no longer in list '%s', removing animation", userId, list.name)
-            self:_removeAnimationForUser(list.name, userId)
+    for listName, _ in pairs(listTypes) do
+        for userId, _ in pairs(self.animations[listName] or {}) do
+            local uwa = usersWithAnimation[listName] or {}
+            if not uwa[userId] then
+                self.logger:Debug("user '%s' no longer in list '%s', removing animation", userId, listName)
+                self:_removeAnimationForUser(listName, userId)
+            end
         end
     end
 end
