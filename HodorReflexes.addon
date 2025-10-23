@@ -9,8 +9,8 @@
 ## SavedVariables: HodorReflexesSavedVars
 ## DependsOn: LibGroupCombatStats>=20250816 LibGroupBroadcast>=91 LibDebugLogger>=268
 ## PCDependsOn: LibAddonMenu-2.0>=40 LibCombat>=79
-## ConsoleDependsOn: LibHarvensAddonSettings>=20004 LibCombat2
-## OptionalDependsOn: LibCustomNames LibCustomIcons
+## ConsoleDependsOn: LibHarvensAddonSettings>=20004 LibCombat2>=8
+## OptionalDependsOn: LibCombat2 LibCustomNames LibCustomIcons
 
 ; This Add-on is not created by, affiliated with or sponsored by ZeniMax Media Inc. or its affiliates.
 ; The Elder Scrolls® and related logos are registered trademarks or trademarks of ZeniMax Media Inc. in the United States and/or other countries.
