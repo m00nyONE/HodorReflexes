@@ -98,6 +98,11 @@ modules/skilllines/lang/en.lua
 modules/skilllines/lang/$(language).lua
 modules/skilllines/main.lua
 
+modules/autoinvite/lang/en.lua
+modules/autoinvite/lang/$(language).lua
+modules/autoinvite/main.lua
+modules/autoinvite/menu.lua
+
 ; extensions
 extensions/seasons/main.lua
 extensions/seasons/aprilfools.lua
