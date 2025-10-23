@@ -41,15 +41,16 @@ end
 
 -- function is platform specific
 function core.GetCoreMenuOptions()
-    local options = core.CreateSectionHeader("General")
+    local options = {}
+    table.insert(options, core.CreateSectionHeader("General"))
     local general = {
         {
             type = LHAS.ST_CHECKBOX,
             label = "account wide settings",
             tooltip = "enable/disable account-wide settings.",
             default = true,
-            getFunc = function() return core.sw.accountWide end,
-            setFunc = function(value) core.sw.accountWide = value end,
+            getFunction = function() return core.sw.accountWide end,
+            setFunction = function(value) core.sw.accountWide = value end,
             default = true,
         },
         -- we do not need ui lock/unlock on console. They have no mouse anyway :D
@@ -65,8 +66,8 @@ function core.GetCoreMenuOptions()
             label = module.friendlyName or moduleName,
             tooltip = module.description or "",
             default = true,
-            getFunc = function() return core.sw.modules[moduleName] end,
-            setFunc = function(value)
+            getFunction = function() return core.sw.modules[moduleName] end,
+            setFunction = function(value)
                 core.sw.modules[moduleName] = value
             end,
         })
@@ -78,8 +79,8 @@ function core.GetCoreMenuOptions()
             label = extension.friendlyName or extensionName,
             tooltip = extension.description or "",
             default = true,
-            getFunc = function() return core.sw.extensions[extensionName] end,
-            setFunc = function(value)
+            getFunction = function() return core.sw.extensions[extensionName] end,
+            setFunction = function(value)
                 core.sw.extensions[extensionName] = value
             end,
         })

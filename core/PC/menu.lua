@@ -50,7 +50,8 @@ function core.CreateNewMenu(subName, options)
 end
 
 function core.GetCoreMenuOptions()
-    local options = core.CreateSectionHeader("General")
+    local options = {}
+    table.insert(options, core.CreateSectionHeader("General"))
     local general = {
         {
             type = "checkbox",
