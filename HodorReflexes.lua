@@ -33,6 +33,7 @@ local addon = {
                     ["exitinstance"] = true,
                     ["pull"] = true,
                     ["skilllines"] = true,
+                    ["autoinvite"] = false,
                     ["dps"] = true,
                     ["ult"] = true,
                 },
