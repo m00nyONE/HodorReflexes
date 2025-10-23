@@ -26,6 +26,7 @@ local addon = {
                     ["names"] = true,
                     ["icons"] = true,
                     ["animations"] = true,
+                    ["themes"] = false,
                 },
                 modules = {
                     ["readycheck"] = true,
