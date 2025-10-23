@@ -15,21 +15,20 @@ local module = addon_modules[module_name]
 function module:GetMainMenuOptions()
     return {
         {
-            type = "checkbox",
-            name = GetString(HR_MODULES_EXITINSTANCE_MENU_CONFIRM_EXIT),
+            type = LibHarvensAddonSettings.ST_CHECKBOX,
+            label = GetString(HR_MODULES_EXITINSTANCE_MENU_CONFIRM_EXIT),
             tooltip = GetString(HR_MODULES_EXITINSTANCE_MENU_CONFIRM_EXIT_TT),
+            getFunction = function() return self.sv.confirmExitInstance end,
+            setFunction = function(value) self.sv.confirmExitInstance = value end,
             default = true,
-            getFunc = function() return self.sv.confirmExitInstance end,
-            setFunc = function(value) self.sv.confirmExitInstance = value end
         },
         {
-            type = "checkbox",
-            name = GetString(HR_MODULES_EXITINSTANCE_MENU_IGNORE_REQUESTS),
+            type = LibHarvensAddonSettings.ST_CHECKBOX,
+            label = GetString(HR_MODULES_EXITINSTANCE_MENU_IGNORE_REQUESTS),
             tooltip = GetString(HR_MODULES_EXITINSTANCE_MENU_IGNORE_REQUESTS_TT),
+            getFunction = function() return self.sv.ignoreExitInstanceRequests end,
+            setFunction = function(value) self.sv.ignoreExitInstanceRequests = value end,
             default = false,
-            getFunc = function() return self.sv.ignoreExitInstanceRequests end,
-            setFunc = function(value) self.sv.ignoreExitInstanceRequests = value end
         },
-
     }
 end

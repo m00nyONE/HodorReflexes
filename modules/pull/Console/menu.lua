@@ -14,6 +14,18 @@ local module = addon_modules[module_name]
 
 function module:GetMainMenuOptions()
     return {
-
+        {
+            type = LibHarvensAddonSettings.ST_SLIDER,
+            label = GetString(HR_MODULES_PULL_COUNTDOWN_DURATION),
+            tooltip = GetString(HR_MODULES_PULL_COUNTDOWN_DURATION_TT),
+            min = self.minCountdownDuration,
+            max = self.maxCountdownDuration,
+            step = 1,
+            default = self.svDefault.countdownDuration,
+            format = "%.0f",
+            unit = " seconds",
+            getFunction = function() return self.sv.countdownDuration end,
+            setFunction = function(value) self.sv.countdownDuration = value end,
+        },
     }
 end

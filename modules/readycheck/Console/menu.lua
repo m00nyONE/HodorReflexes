@@ -15,12 +15,12 @@ local module = addon_modules[module_name]
 function module:GetMainMenuOptions()
     return {
         {
-            type = "checkbox",
-            name = GetString(HR_MODULES_READYCHECK_MENU_CHAT),
+            type = LibHarvensAddonSettings.ST_CHECKBOX,
+            label  = GetString(HR_MODULES_READYCHECK_MENU_CHAT),
             tooltip = GetString(HR_MODULES_READYCHECK_MENU_CHAT_TT),
             default = self.svDefault.enableChatMessages,
-            getFunc = function() return self.sw.enableChatMessages end,
-            setFunc = function(value) self.sw.enableChatMessages = value end,
+            getFunction = function() return self.sw.enableChatMessages end,
+            setFunction = function(value) self.sw.enableChatMessages = value end,
         },
     }
 end
