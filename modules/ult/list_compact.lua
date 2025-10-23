@@ -268,7 +268,7 @@ function module:compactListHornRowCreationFunction(rowControl, data, scrollList)
     local gainSeconds = nil
     if self:isHorn(data.ult1ID) then hornPercentage = data.ult1Percentage end
     if self:isHorn(data.ult2ID) then hornPercentage = data.ult2Percentage end
-    if data.hasSaxhleel then
+    if not data.hideSaxhleel and data.hasSaxhleel then
         hornPercentage = zo_min(data.ult1Percentage, data.ult2Percentage) -- we use the cheapest ult because saxhleel can be thrown at any time
         gainSeconds = zo_floor(data.ultValue / 15) -- 1s per 15 points of ult
     end
@@ -362,13 +362,13 @@ function module:UpdateCompactList()
     local cryptCannonList = {}
 
     for _, playerData in pairs(addon.playersData) do
-        if self.compactList.sw.showHorn and playerData.hasHorn or playerData.hasSaxhleel then
+        if (not playerData.hideHorn and self.compactList.sw.showHorn and playerData.hasHorn) or (not playerData.hideSaxhleel and playerData.hasSaxhleel) then
             table.insert(hornList, playerData)
         end
-        if self.compactList.sw.showColos and playerData.hasColos then
+        if not playerData.hideColos and self.compactList.sw.showColos and playerData.hasColos then
             table.insert(colosList, playerData)
         end
-        if self.compactList.sw.showAtro and playerData.hasAtro then
+        if not playerData.hideAtro and self.compactList.sw.showAtro and playerData.hasAtro then
             table.insert(atroList, playerData)
         end
         if self.compactList.sw.showSlayer and playerData.hasSlayer then

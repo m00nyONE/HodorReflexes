@@ -81,6 +81,8 @@ function module:Activate()
         dmg = 0,
         dps = 0,
         dmgType = DAMAGE_UNKNOWN,
+        -- hide from list preferences ( sent by HideMe module )
+        hideDamage = false,
     })
 
     self:RunOnce("CreateLists")

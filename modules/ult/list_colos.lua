@@ -136,7 +136,7 @@ function module:UpdateColosList()
 
     local playersDataList = {}
     for _, playerData in pairs(addon.playersData) do
-        if playerData.ultValue > 0 and playerData.hasColos then
+        if not playerData.hideColos and playerData.ultValue > 0 and playerData.hasColos then
             local lowestPossibleColosCost = 0
             if self:isColos(playerData.ult1ID) then lowestPossibleColosCost = playerData.ult1Cost end
             if self:isColos(playerData.ult2ID) then lowestPossibleColosCost = playerData.ult2Cost end

@@ -72,7 +72,7 @@ function module:CreateDamageList()
     local function damageRowCreationWrapper(wrappedFunction)
         return function(rowControl, data, scrollList)
             -- only create rows if conditions are met
-            if data.dmg > 0 and (self.isTestRunning or IsUnitOnline(data.tag)) then
+            if not data.hideDamage and data.dmg > 0 and (self.isTestRunning or IsUnitOnline(data.tag)) then
                 wrappedFunction(self, rowControl, data, scrollList)
             end
         end

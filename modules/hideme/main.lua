@@ -9,6 +9,8 @@ local core = internal.core
 local addon_modules = addon.modules
 local internal_modules = internal.modules
 
+local group = internal.group
+
 local localPlayer = "player"
 
 local moduleDefinition = {
@@ -32,5 +34,13 @@ local module = internal.moduleClass:New(moduleDefinition)
 
 function module:Activate()
     self.logger:Debug("activated Hide Me module")
+
+    group.RegisterPlayersDataFields({
+        hideDamage = false,
+        hideHorn = false,
+        hideColos = false,
+        hideAtro = false,
+        hideSaxhleel = false,
+    })
 end
 
