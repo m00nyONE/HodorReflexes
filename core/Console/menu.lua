@@ -8,7 +8,6 @@ local core = internal.core
 local logger = core.initSubLogger("menu")
 
 local util = addon.util
-
 local LHAS = LibHarvensAddonSettings
 
 -- function is platform specific

@@ -38,7 +38,7 @@ function core.CreateSectionHeader(name)
     }
 end
 
-function core.CreateMenu(subName, options)
+function core.CreateNewMenu(subName, options)
     local panel = core.GetPanelConfig(subName)
     local menuReference = addon_name .. "_menu"
     if subName then
@@ -93,7 +93,6 @@ function core.GetCoreMenuOptions()
             setFunc = function(value)
                 core.sw.modules[moduleName] = value
             end,
-            width = "half",
             requiresReload = true,
         })
     end
@@ -108,7 +107,6 @@ function core.GetCoreMenuOptions()
             setFunc = function(value)
                 core.sw.extensions[extensionName] = value
             end,
-            width = "half",
             requiresReload = true,
         })
     end
