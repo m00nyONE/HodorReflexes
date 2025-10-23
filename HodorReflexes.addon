@@ -75,6 +75,12 @@ modules/dps/list_damage.lua
 modules/dps/PC/menu.lua
 modules/dps/Console/menu.lua
 
+modules/hideme/lang/en.lua
+modules/hideme/lang/$(language).lua
+modules/hideme/main.lua
+modules/hideme/protocol.lua
+modules/hideme/menu.lua
+
 modules/readycheck/lang/en.lua
 modules/readycheck/lang/$(language).lua
 modules/readycheck/main.lua
