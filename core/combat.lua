@@ -31,7 +31,7 @@ local combat = {
     },
     logger = core.initSubLogger("combat"),
 }
-core.combat = combat
+addon.combat = combat -- expose combat class as it can be useful for others too
 
 function core.InitializeCombat()
     combat:Reset()
@@ -48,8 +48,10 @@ end
 function combat:Reset()
     self.data.dpstime = 0
     self.data.hpstime = 0
+
     self.data.groupDPSOut = 0
     self.data.damageOutTotalGroup = 0
+
     self.damageHistory = {}
     self.logger:Debug("Combat data reset")
 end

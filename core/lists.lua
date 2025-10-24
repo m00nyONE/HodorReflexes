@@ -9,6 +9,7 @@ local logger = core.logger.main
 
 local hud = core.hud
 local util = addon.util
+local combat = addon.combat
 
 local WM = GetWindowManager()
 local EM = GetEventManager()
@@ -278,7 +279,7 @@ end
 --- @return void
 function list.RenderCurrentFightTimeToControl(control)
     -- it would be more expensive here to check if the list is visible and prevent the rendering of the text than just rendering it anyways
-    local t = core.combat:GetCombatTime()
+    local t = combat:GetCombatTime()
     control:SetText(t > 0 and string.format("%d:%04.1f|u0:2::|u", t / 60, t % 60) or "")
 end
 
