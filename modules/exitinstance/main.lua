@@ -75,7 +75,6 @@ function M.Initialize()
     ZO_CreateStringId('SI_BINDING_NAME_HR_SEND_EXIT_INSTANCE', GetString(HR_BINDING_SEND_EXIT_INSTANCE))
     ZO_CreateStringId('SI_BINDING_NAME_HR_EXIT_INSTANCE', GetString(HR_BINDING_EXIT_INSTANCE))
 
-    -- Add hotkey to group window
     local function OnStateChanged(_, newState)
         if newState == SCENE_FRAGMENT_SHOWING and IsUnitGroupLeader('player') then
             KEYBIND_STRIP:AddKeybindButton(sendExitInstanceRequestButton)
@@ -83,6 +82,10 @@ function M.Initialize()
             KEYBIND_STRIP:RemoveKeybindButton(sendExitInstanceRequestButton)
         end
     end
-    KEYBOARD_GROUP_MENU_SCENE:RegisterCallback('StateChange', OnStateChanged)
-    GAMEPAD_GROUP_SCENE:RegisterCallback('StateChange', OnStateChanged)
+    if KEYBOARD_GROUP_MENU_SCENE then
+        KEYBOARD_GROUP_MENU_SCENE:RegisterCallback('StateChange', OnStateChanged)
+    end
+    if GAMEPAD_GROUP_SCENE then
+        GAMEPAD_GROUP_SCENE:RegisterCallback('StateChange', OnStateChanged)
+    end
 end

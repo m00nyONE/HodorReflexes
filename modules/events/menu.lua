@@ -6,7 +6,7 @@ local LAM = LibAddonMenu2
 
 function M.BuildMenu()
 
-    local panel = HodorReflexes.GetModulePanelConfig(GetString(HR_MENU_EVENTS))
+    local panel = HodorReflexes.GetModulePanelConfig("Events")
 
     local options = {}
     if HodorReflexes.modules.share.IsEnabled() then

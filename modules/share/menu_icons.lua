@@ -134,29 +134,39 @@ local function getCustomIconOptions()
 		local r1, g1, b1 = unpack(sv.myIconColor1)
 		local r2, g2, b2 = unpack(sv.myIconColor2)
 		local s = sv.myIconNameRaw
+		if not s or s == "" then return "" end
+		
 		local t = {} -- raw name split into single characters
 		local n = 0 -- number of non spaces
-		-- Split raw name into single utf8 characters.
-		for i = 1, utf8.len(s) do
-			t[i] = string.sub(s, utf8.offset(s, i), utf8.offset(s, i + 1) - 1)
-			if t[i] ~= " " then
+		
+		-- Split raw name into single characters (handle non-UTF8 gracefully)
+		local len = string.len(s)
+		if len == 0 then return "" end
+		
+		for i = 1, len do
+			local char = string.sub(s, i, i)
+			t[i] = char
+			if char ~= " " then
 				n = n + 1
 			end
 		end
+		
 		-- Don't color spaces.
 		if n > 0 then
 			local rdelta, gdelta, bdelta = (r2 - r1) / n, (g2 - g1) / n, (b2 - b1) / n
+			local colorStep = 0
 			for i = 1, #t do
 				if t[i] ~= " " then
-					r1 = r1 + rdelta
-					g1 = g1 + gdelta
-					b1 = b1 + bdelta
-					t[i] = strfmt('|c%s%s|r', RGB2Hex(r1, g1, b1), t[i])
+					local currentR = r1 + (rdelta * colorStep)
+					local currentG = g1 + (gdelta * colorStep)
+					local currentB = b1 + (bdelta * colorStep)
+					t[i] = strfmt('|c%s%s|r', RGB2Hex(currentR, currentG, currentB), t[i])
+					colorStep = colorStep + 1
 				end
 			end
 			return table.concat(t)
 		else
-			return ""
+			return s
 		end
 	end
 
@@ -171,12 +181,21 @@ local function getCustomIconOptions()
 
 	-- Generate formatted name based on raw name and selected colors.
 	local _generateName = function(updateControl)
+		-- Ensure colors exist
+		if not sv.myIconColor1 or #sv.myIconColor1 < 3 then
+			sv.myIconColor1 = {1, 1, 1}
+		end
+		if not sv.myIconColor2 or #sv.myIconColor2 < 3 then
+			sv.myIconColor2 = {1, 1, 1}
+		end
+		
 		if sv.myIconGradient then
 			sv.myIconNameFormatted = _generateGradient()
 		else
-			sv.myIconNameFormatted = strfmt('|c%s%s|r', RGB2Hex(unpack(sv.myIconColor1)), sv.myIconNameRaw)
+			sv.myIconNameFormatted = strfmt('|c%s%s|r', RGB2Hex(unpack(sv.myIconColor1)), sv.myIconNameRaw or "")
 		end
-		if updateControl then
+		
+		if updateControl and HodorReflexes_ShareIconsMenu_preview then
 			_generatePreview(true)
 		end
 		return sv.myIconNameFormatted
@@ -241,47 +260,12 @@ local function getCustomIconOptions()
 		},
 		{
 			type = "header",
-			name = strfmt("|cFFFACD1. %s|r", GetString(HR_MENU_ICONS_HEADER_ICONS))
-		},
-		{
-			type = "description",
-			text = GetString(HR_MENU_ICONS_README_2)
-		},
-
-		{
-			type = "header",
-			name = strfmt("|cFFFACD2. %s|r", GetString(HR_MENU_ICONS_HEADER_TIERS))
-		},
-		{
-			type = "description",
-			text = GetString(HR_MENU_ICONS_README_3)
-		},
-		{
-			type = "slider",
-			name = GetString(HR_MENU_ICONS_README_DONATION_TIER),
-			tooltip = GetString(HR_MENU_ICONS_README_DONATION_TIER_TT),
-			min = 1,
-			max = 3,
-			step = 1,
-			default = 1,
-			decimals = 0,
-			clampInput = true,
-			getFunc = function() return sv.selectedDonationTier end,
-			setFunc = function(value) sv.selectedDonationTier = value end,
-		},
-
-		{
-			type = "header",
-			name = strfmt("|cFFFACD3. %s|r", GetString(HR_MENU_ICONS_HEADER_CUSTOMIZE))
-		},
-		{
-			type = "description",
-			text = GetString(HR_MENU_ICONS_README_4)
+			name = strfmt("|cFFFACD%s|r", GetString(HR_MENU_ICONS_HEADER_CUSTOMIZE))
 		},
 		{
 			type = "editbox",
-			name = GetString(LCN_MENU_NAME_VAL),
-			tooltip = GetString(LCN_MENU_NAME_VAL_TT),
+			name = "Name",
+			tooltip = "Enter your custom display name.",
 			default = sv.myIconNameRaw,
 			getFunc = function() return sv.myIconNameRaw end,
 			setFunc = function(value)
@@ -293,8 +277,8 @@ local function getCustomIconOptions()
 		},
 		{
 			type = "checkbox",
-			name = GetString(LCN_MENU_GRADIENT),
-			tooltip = GetString(LCN_MENU_GRADIENT_TT),
+			name = "Gradient",
+			tooltip = "Apply a color gradient to your name.",
 			default = false,
 			getFunc = function() return sv.myIconGradient end,
 			setFunc = function(value)
@@ -304,35 +288,43 @@ local function getCustomIconOptions()
 		},
 		{
 			type = "colorpicker",
-			name = GetString(LCN_MENU_COLOR1),
+			name = "Color 1",
 			default = ZO_ColorDef:New(1, 1, 1, 1),
-			getFunc = function() return unpack(sv.myIconColor1) end,
-			setFunc = function(r2, g2, b2)
-				local r1, g1, b1 = unpack(sv.myIconColor1)
-				if r1 ~= r2 or g1 ~= g2 or b1 ~= b2 then
-					sv.myIconColor1 = {r2, g2, b2}
-					_generateName(true)
+			getFunc = function()
+				if not sv.myIconColor1 or #sv.myIconColor1 < 3 then
+					sv.myIconColor1 = {1, 1, 1}
 				end
+				return sv.myIconColor1[1], sv.myIconColor1[2], sv.myIconColor1[3]
+			end,
+			setFunc = function(r, g, b)
+				sv.myIconColor1 = {r, g, b}
+				zo_callLater(function()
+					_generateName(true)
+				end, 50)
 			end,
 			width = 'full',
 		},
 		{
 			type = "colorpicker",
-			name = GetString(LCN_MENU_COLOR2),
+			name = "Color 2",
 			default = ZO_ColorDef:New(1, 1, 1, 1),
-			getFunc = function() return unpack(sv.myIconColor2) end,
-			setFunc = function(r2, g2, b2)
-				local r1, g1, b1 = unpack(sv.myIconColor2)
-				if r1 ~= r2 or g1 ~= g2 or b1 ~= b2 then
-					sv.myIconColor2 = {r2, g2, b2}
-					_generateName(true)
+			getFunc = function()
+				if not sv.myIconColor2 or #sv.myIconColor2 < 3 then
+					sv.myIconColor2 = {1, 1, 1}
 				end
+				return sv.myIconColor2[1], sv.myIconColor2[2], sv.myIconColor2[3]
+			end,
+			setFunc = function(r, g, b)
+				sv.myIconColor2 = {r, g, b}
+				zo_callLater(function()
+					_generateName(true)
+				end, 50)
 			end,
 			width = 'full',
 		},
 		{
 			type = "description",
-			text = GetString(LCN_MENU_PREVIEW),
+			text = "Preview:",
 			width = "half",
 		},
 		{
@@ -341,69 +333,16 @@ local function getCustomIconOptions()
 			reference = "HodorReflexes_ShareIconsMenu_preview",
 			width = "half",
 		},
-
-		{
-			type = "header",
-			name = strfmt("|cFFFACD4. %s|r", GetString(HR_MENU_ICONS_HEADER_TICKET))
-		},
-		{
-			type = "description",
-			text = GetString(HR_MENU_ICONS_README_5),
-		},
-		{
-			type = "editbox",
-			tooltip = GetString(HR_MENU_ICONS_CONFIGURATOR_LUA_TT),
-			default = _generateCode(sv.selectedDonationTier),
-			getFunc = function() return _generateCode(sv.selectedDonationTier) end,
-			setFunc = function(value) end,
-			isMultiline = true,
-			isExtraWide = true,
-			reference = "HodorReflexes_ShareIconsMenu_Code",
-		},
-		{
-			type = "description",
-			text = GetString(HR_MENU_ICONS_README_6),
-		},
-		{
-			type = "button",
-			name = GetString(HR_MENU_ICONS_CONFIGURATOR_DISCORD),
-			tooltip = GetString(HR_MENU_ICONS_CONFIGURATOR_DISCORD_TT),
-			func = function() RequestOpenUnsafeURL(discordURL) end,
-			width = "full"
-		},
-		{
-			type = "header",
-			name = strfmt("|cFFFACD6. %s|r", GetString(HR_MENU_ICONS_HEADER_DONATION))
-		},
-		{
-			type = "description",
-			text = strfmt(GetString(HR_MENU_ICONS_README_7), LAM.util.L.DONATION),
-		},
-		{
-			type = "button",
-			name = LAM.util.L.DONATION,
-			tooltip = GetString(HR_MENU_ICONS_CONFIGURATOR_DONATE_TT),
-			func = HR.Donation,
-			width = "full"
-		},
-		{
-			type = "header",
-			name = strfmt("|cFFFACD%s|r", GetString(HR_MENU_ICONS_HEADER_INFO))
-		},
-		{
-			type = "description",
-			text = GetString(HR_MENU_ICONS_INFO),
-		},
 	}
 end
 
 
 function M.BuildIconsMenu()
-	local panel = HodorReflexes.GetModulePanelConfig(GetString(HR_MENU_ICONS))
+	local panel = HodorReflexes.GetModulePanelConfig("CustomNames")
 
 	local options = {}
 
-	if not LCI or not LCN then
+	if not LCN then
 		local noLibsInstalledOptions = getNoLibsInstalledOptions()
 		for _, entry in ipairs(noLibsInstalledOptions) do
 			table.insert(options, entry)

@@ -89,7 +89,6 @@ function M.Initialize()
 
     -- Bindings
     ZO_CreateStringId('SI_BINDING_NAME_HR_PULL_COUNTDOWN', GetString(HR_BINDING_PULL_COUNTDOWN))
-
     local function OnStateChanged(_, newState)
         if newState == SCENE_FRAGMENT_SHOWING and IsUnitGroupLeader('player') then
             KEYBIND_STRIP:AddKeybindButton(countdownButton)
@@ -98,11 +97,14 @@ function M.Initialize()
         end
     end
     -- Add hotkey to group window
-    KEYBOARD_GROUP_MENU_SCENE:RegisterCallback('StateChange', OnStateChanged)
-    GAMEPAD_GROUP_SCENE:RegisterCallback('StateChange', OnStateChanged)
+    if KEYBOARD_GROUP_MENU_SCENE then
+        KEYBOARD_GROUP_MENU_SCENE:RegisterCallback('StateChange', OnStateChanged)
+    end
+    if GAMEPAD_GROUP_SCENE then
+        GAMEPAD_GROUP_SCENE:RegisterCallback('StateChange', OnStateChanged)
+    end
 end
 
 SLASH_COMMANDS["/pull"] = function(duration)
     M.SendPullCountdown(tonumber(duration))
 end
-

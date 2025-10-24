@@ -10,18 +10,14 @@
             <Anchor point="LEFT" relativeTo="GuiRoot" relativePoint="LEFT" offsetX="750" offsetY="0" />
             <OnMoveStop>HodorReflexes.modules.share.MiscUltimatesOnMoveStop()</OnMoveStop>
             <Controls>
-                <Texture name="$(parent)_Icon" textureFile="/esoui/art/icons/ability_healer_012.dds">
-                    <Dimensions x="28" y="28"/>
-                    <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)" offsetX="4" offsetY="-8" />
-                </Texture>
-                <Label name="$(parent)_Text" horizontalAlignment="left" font="$(MEDIUM_FONT)|$(KB_22)|soft-shadow-thick" text="Ultimates" wrapMode="TRUNCATE">
-                    <Dimensions x="140" y="24"/>
-                    <Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$(parent)_Icon" offsetX="10" offsetY="0" />
+                <Label name="$(parent)_Heading" horizontalAlignment="LEFT" font="$(GAMEPAD_BOLD_FONT)|$(GP_22)|soft-shadow-thick" text="OTHER ULTIMATES" wrapMode="TRUNCATE">
+                    <Dimensions x="250" y="24"/>
+                    <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)" offsetX="4" offsetY="-24" />
                 </Label>
             </Controls>
         </TopLevelControl>
 
-        <Control name="HodorReflexes_Share_MiscUltimatesRow" virtual="true">
+        <Control name="HodorReflexes_Share_MiscUltimatesRow" virtual="true" resizeToFitDescendents="true" hidden="true">
             <Controls>
                 <Texture name="$(parent)_UltIconFrontbar" textureFile="esoui/art/icons/class/class_templar.dds">
                     <Dimensions x="24" y="24" />

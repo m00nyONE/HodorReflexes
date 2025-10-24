@@ -1,14 +1,14 @@
 ; SPDX-FileCopyrightText: 2025 andy.s m00nyONE
 ; SPDX-License-Identifier: Artistic-2.0
 
-## Title: HodorReflexes
+## Title: HodorReflexes - DPS & ULT tracker
 ## Version: dev
 ## Author: |cFFFF00@andy.s|r, |c76c3f4@m00nyONE|r, |c9b24bf@YoZoPoClo|r
 ## APIVersion: 101046 101047
 ## AddOnVersion: 99999999
 ## SavedVariables: HodorReflexesSV
-## DependsOn: LibAddonMenu-2.0>=40 LibCombat>=79 LibGroupCombatStats>=20250816 LibGroupBroadcast>=91
-## OptionalDependsOn: RuESO LibCustomNames LibCustomIcons
+## DependsOn: LibAddonMenu-2.0>=40 LibCombat2 LibGroupCombatStats>=20250816 LibGroupBroadcast>=91
+## OptionalDependsOn: RuESO LibCustomIcons LibCustomNames
 
 ; This Add-on is not created by, affiliated with or sponsored by ZeniMax Media Inc. or its affiliates.
 ; The Elder Scrolls® and related logos are registered trademarks or trademarks of ZeniMax Media Inc. in the United States and/or other countries.

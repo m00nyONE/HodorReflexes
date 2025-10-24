@@ -5,7 +5,7 @@ local M = HodorReflexes.modules.share
 
 function M.BuildStyleMenu()
 
-	local panel = HodorReflexes.GetModulePanelConfig(GetString(HR_MENU_STYLE))
+	local panel = HodorReflexes.GetModulePanelConfig("Style")
 
 	local options = {
 		{

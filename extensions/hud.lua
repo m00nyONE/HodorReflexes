@@ -28,8 +28,13 @@ function hud.AddSimpleFragment(control, condition)
 
 	local f = ZO_SimpleSceneFragment:New(control)
 	if condition then f:SetConditional(condition) end
-	HUD_SCENE:AddFragment(f)
-	HUD_UI_SCENE:AddFragment(f)
+	
+	-- Add to available HUD scenes
+	if HUD_SCENE then HUD_SCENE:AddFragment(f) end
+	if HUD_UI_SCENE then HUD_UI_SCENE:AddFragment(f) end
+	if GAMEPAD_HUD_SCENE then GAMEPAD_HUD_SCENE:AddFragment(f) end
+	if GAMEPAD_HUD_UI_SCENE then GAMEPAD_HUD_UI_SCENE:AddFragment(f) end
+	
 	return f
 
 end
@@ -39,8 +44,13 @@ function hud.AddFadeFragment(control, condition)
 
 	local f = ZO_HUDFadeSceneFragment:New(control)
 	if condition then f:SetConditional(condition) end
-	HUD_SCENE:AddFragment(f)
-	HUD_UI_SCENE:AddFragment(f)
+	
+	-- Add to available HUD scenes
+	if HUD_SCENE then HUD_SCENE:AddFragment(f) end
+	if HUD_UI_SCENE then HUD_UI_SCENE:AddFragment(f) end
+	if GAMEPAD_HUD_SCENE then GAMEPAD_HUD_SCENE:AddFragment(f) end
+	if GAMEPAD_HUD_UI_SCENE then GAMEPAD_HUD_UI_SCENE:AddFragment(f) end
+	
 	return f
 
 end

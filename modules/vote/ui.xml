@@ -9,13 +9,13 @@
             <Anchor point="CENTER" relativeTo="GuiRoot" relativePoint="CENTER" offsetX="0" offsetY="-150" />
             <OnMoveStop>HodorReflexes.modules.vote.MainOnMoveStop()</OnMoveStop>
 			<Controls>
-				<Label name="$(parent)_Title" horizontalAlignment="CENTER" font="ZoFontWinH1" text="Ready Check">
-					<Dimensions x="600" />
+				<Label name="$(parent)_Title" horizontalAlignment="CENTER" font="$(GAMEPAD_BOLD_FONT)|$(GP_42)|soft-shadow-thick" text="Ready Check">
+					<Dimensions x="800" />
 					<Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)" offsetX="0" offsetY="0" />
 				</Label>
-				<Label name="$(parent)_List" horizontalAlignment="CENTER" font="ZoFontWinH2" text="Player1, Player2, Player3, Player4">
-					<Dimensions x="600" />
-					<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$(parent)_Title" offsetX="0" offsetY="5" />
+				<Label name="$(parent)_List" horizontalAlignment="CENTER" font="$(GAMEPAD_MEDIUM_FONT)|$(GP_34)|soft-shadow-thick" text="Player1, Player2, Player3, Player4">
+					<Dimensions x="800" />
+					<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$(parent)_Title" offsetX="0" offsetY="10" />
 				</Label>
 			</Controls>
         </TopLevelControl>

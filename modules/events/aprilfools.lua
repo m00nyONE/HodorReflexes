@@ -14,7 +14,7 @@ end
 
 
 local function Initialize()
-    if M.date == "0104"then
+    if M.date == "0104" then
         overwriteDamageSorting()
     end
 end

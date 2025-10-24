@@ -92,9 +92,23 @@ local mockZones = {
 -- Function to handle changes in the Death Recap screen
 -- Displays mock messages when "toxicMode" is enabled.
 local function DeathRecapChanged(status)
-	if HR.sv.toxicMode and status and ZO_DeathRecapScrollContainerScrollChildHintsContainerHints1Text then
+	if HR.sv.toxicMode and status then
 		text = mockText[math.random(#mockText)]
-		ZO_DeathRecapScrollContainerScrollChildHintsContainerHints1Text:SetText(GetString(text))
+		local messageText = GetString(text)
+		
+		-- Access the first hint control from the hint pool (works on both PC and console)
+		if DEATH_RECAP and DEATH_RECAP.hintPool then
+			local activeHints = DEATH_RECAP.hintPool:GetActiveObjects()
+			if activeHints and #activeHints > 0 then
+				local firstHint = activeHints[1]
+				if firstHint then
+					local textControl = firstHint:GetNamedChild("Text")
+					if textControl then
+						textControl:SetText(messageText)
+					end
+				end
+			end
+		end
 	end
 end
 
@@ -122,7 +136,7 @@ local function GenerateMock()
 
 		-- Add zone-specific mock messages for zones with ID < 700
 		if zoneId < 700 then
-			text = table.insert(mockText, HR_MOCK_AA1)
+			table.insert(mockText, HR_MOCK_AA1)
 		end
 
 		-- Add region-specific mock messages for the EU Megaserver
@@ -226,7 +240,7 @@ function HR.PlayerActivated()
 	EM:RegisterForEvent(HR.name, EVENT_GROUP_MEMBER_CONNECTED_STATUS, OnGroupChangeDelayed)
 	OnGroupChangeDelayed()
 
-	--GenerateMock()
+	GenerateMock()
 
 end
 
@@ -325,7 +339,7 @@ function HR.GetModulePanelConfig(listName, panelName)
 		type = 'panel',
 		name = listName and string.format('Hodor Reflexes - %s', listName) or 'Hodor Reflexes',
 		displayName = panelName and string.format('Hodor Reflexes - |cFFFACD%s|r', panelName) or 'Hodor Reflexes',
-		author = '|cFFFF00@andy.s|r, |c76c3f4@m00nyONE|r, |c9b24bf@YoZoPoClo|r',
+		author = '|cFFFF00@andy.s|r, |c76c3f4@m00nyONE|r',
 		version = string.format('|c00FF00%s|r', HR.version),
 		website = 'https://www.esoui.com/downloads/info2311-HodorReflexes-DPSampUltimateShare.html#donate',
 		donation = HR.Donation,
@@ -334,13 +348,62 @@ function HR.GetModulePanelConfig(listName, panelName)
 end
 
 function HR.Donation()
-	SCENE_MANAGER:Show('mailSend')
-	zo_callLater(function() 
-		ZO_MailSendToField:SetText("@m00nyONE")
-		ZO_MailSendSubjectField:SetText("Donation for Hodor Reflexes")
-		ZO_MailSendBodyField:SetText("ticket-XXXX on Discord.")
-		ZO_MailSendBodyField:TakeFocus()
-	end, 250)
+	if IsInGamepadPreferredMode() then
+		-- Console/Gamepad mode - show mail UI first, then set fields
+		SCENE_MANAGER:Show('mailManagerGamepad')
+		
+		zo_callLater(function()
+			-- Try to access the gamepad mail send screen
+			if MAIL_MANAGER_GAMEPAD then
+				MAIL_MANAGER_GAMEPAD:ShowSend()
+				
+				zo_callLater(function()
+					local send = MAIL_MANAGER_GAMEPAD.send
+					if send then
+						-- Set recipient
+						if send.addressEdit then
+							send.addressEdit:SetText("@YoZoPoClo")
+						end
+						
+						-- Set subject
+						if send.subjectEdit then
+							send.subjectEdit:SetText("Donation for Hodor Reflexes")
+						end
+						
+						-- Set body
+						if send.bodyEdit then
+							send.bodyEdit:SetText("Thank you for this amazing addon port to console! Here's a donation to support your work on Xbox NA.")
+						end
+						
+						-- Show success message
+						d("|c00FF00Mail compose window opened!|r Send gold to |cFFD700@YoZoPoClo|r on Xbox NA to support Hodor Reflexes development!")
+					else
+						-- Fallback: just show the instruction
+						d("|cFFD700Hodor Reflexes Donation:|r\nSend gold via in-game mail to |cFFD700@YoZoPoClo|r on Xbox NA\nSubject: Donation for Hodor Reflexes\nThank you for your support! :)")
+					end
+				end, 500)
+			else
+				-- Fallback if mail manager doesn't exist
+				d("|cFFD700Hodor Reflexes Donation:|r\nSend gold via in-game mail to |cFFD700@YoZoPoClo|r on Xbox NA\nSubject: Donation for Hodor Reflexes\nThank you for your support! :)")
+			end
+		end, 100)
+	else
+		-- PC/Keyboard mode
+		SCENE_MANAGER:Show('mailSend')
+		zo_callLater(function()
+			if ZO_MailSendToField then
+				ZO_MailSendToField:SetText("@YoZoPoClo")
+			end
+			if ZO_MailSendSubjectField then
+				ZO_MailSendSubjectField:SetText("Donation for Hodor Reflexes")
+			end
+			if ZO_MailSendBodyField then
+				ZO_MailSendBodyField:SetText("Thank you for this amazing addon port to console! Here's a donation to support your work on Xbox NA.")
+				ZO_MailSendBodyField:TakeFocus()
+			end
+			d("|c00FF00Mail compose window opened!|r Send gold to |cFFD700@YoZoPoClo|r on Xbox NA")
+		end, 250)
+	end
 end
 
 function HR.GetOptionControls()

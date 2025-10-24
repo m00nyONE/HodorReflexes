@@ -100,8 +100,8 @@ local strings = {
 	HR_MENU_ICONS_VISIBILITY_ANIM_TT = "Spiele animierte Symbole ab. Achtung: die Deaktivierung dieser Funktion wird deine FPS nicht erhöhen.",
 
 	HR_MENU_ICONS_SECTION_CUSTOM = "Benutzerdefinierte Namen & Icons",
-	HR_MENU_ICONS_NOLIBSINSTALLED = "Für das volle Erlebnis von HodorReflexes stelle bitte sicher, dass die folgenden Bibliotheken installiert sind:\n\n - |cFFFF00LibCustomIcons|r – Ermöglicht personalisierte Spieler-Icons.\n - |cFFFF00LibCustomNames|r – Zeigt benutzerdefinierte Namen für Freunde, Gildenmitglieder und mehr an.\n\nDiese Bibliotheken verbessern das visuelle Erlebnis und erlauben mehr Personalisierung, sind aber für die grundlegende Funktionalität nicht erforderlich. Du entscheidest, ob du sie installieren möchtest oder nicht.",
-	HR_MENU_ICONS_README_1 = "Bevor du etwas konfigurierst, lies dir bitte diese Anleitung aufmerksam durch! Nur so stellst du sicher, dass du genau das bekommst, was du erwartest.\n",
+	HR_MENU_ICONS_NOLIBSINSTALLED = "Für das volle Erlebnis von HodorReflexes stelle bitte sicher, dass die folgende Bibliothek installiert ist:\n\n - |cFFFF00LibCustomNames|r – Zeigt benutzerdefinierte Namen für Freunde, Gildenmitglieder und mehr an.\n\nDiese Bibliothek verbessert das visuelle Erlebnis und erlaubt mehr Personalisierung, ist aber für die grundlegende Funktionalität nicht erforderlich. Du entscheidest, ob du sie installieren möchtest oder nicht.",
+	HR_MENU_ICONS_README_1 = "LibCustomNames\n\nBitte sende YoZoPoClo 500k auf Xbox NA für einen benutzerdefinierten Namen. Du musst den Namen und die Farbe angeben.\n",
 	HR_MENU_ICONS_HEADER_ICONS = "Icons & Animationen – Vorgaben:",
 	HR_MENU_ICONS_README_2 = "Bitte beachte folgende technische Einschränkungen für deine Dateien:\n\n- Maximale Größe: 32×32 Pixel\n- Animationen: maximal 50 Frames\n- Erlaubte Dateiformate: .dds, .jpg, .png, .gif, .webp\n",
 	HR_MENU_ICONS_HEADER_TIERS = "Donation-Stufen:",

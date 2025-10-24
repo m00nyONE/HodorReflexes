@@ -43,7 +43,7 @@ local function UpdateElection()
 	local names = {}
 	for GRI = 1, GetGroupSize() do
 		local unitTag = GetGroupUnitTagByIndex(GRI)
-		if unitTag == nil or unitTag == "nil" then return end
+		if unitTag == nil then return end
 		local choice = GetGroupElectionVoteByUnitTag(unitTag)
 		if IsUnitOnline(unitTag) then
 			local name = GetUnitDisplayName(unitTag)

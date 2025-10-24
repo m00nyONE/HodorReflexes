@@ -22,6 +22,39 @@ HodorReflexes.modules.share = {
 		hornCountdownType = 'horn_self',
 		hornCountdownColor = {1, 0.5, 0, 1},
 		hornIconScale = 1,
+		
+		-- UI Position and Scale (console-friendly slider values)
+		ultimateScale = 20,  -- Default scale (maps to 1.0x)
+		ultimateX = 100,
+		ultimateY = 100,
+		
+		miscUltimateScale = 20,
+		miscUltimateX = 100,
+		miscUltimateY = 150,
+		
+		damageScale = 20,
+		damageX = 100,
+		damageY = 200,
+		
+		colosScale = 20,
+		colosX = 100,
+		colosY = 250,
+		
+		atronachScale = 20,
+		atronachX = 100,
+		atronachY = 300,
+		
+		hornCountdownScale = 20,
+		hornCountdownX = 960,  -- Center screen (1920/2)
+		hornCountdownY = 640,  -- Center screen (1080/2) + 100 offset
+		
+		colosCountdownScale = 20,
+		colosCountdownX = 960,  -- Center screen
+		colosCountdownY = 580,  -- Center + 40 offset above horn
+		
+		hornIconScale = 20,
+		hornIconX = 1040, -- Center + 80 right offset
+		hornIconY = 540,  -- Center screen (1080/2)
 		enableUltimateIcons = true,
 		enableMiscUltimateIcons = true,
 		enableAtronachIcons = true,
@@ -32,6 +65,7 @@ HodorReflexes.modules.share = {
 		enableAnimations = true, -- animated messages
 		colosPriority = 'default',
 		colosSupportRange = true,
+		atronachSupportRange = false,
 		enableColosCountdown = true,
 		colosCountdownBossOnly = true,
 		colosCountdownColor = {1, 0, 1, 1},
@@ -75,7 +109,7 @@ HodorReflexes.modules.share = {
 	sv = nil, -- saved variables
 	sw = nil, -- account wide saved variables
 
-	refreshRateList = 700, -- time in ms between players list updates
+	refreshRateList = 500, -- time in ms between players list updates (reduced for better accuracy)
 
 	playersData = {}, -- see M.UpdatePlayerData
 }
@@ -90,7 +124,8 @@ local LCI = LibCustomIcons
 local LCN = LibCustomNames
 local EM = EVENT_MANAGER
 
-local controlsVisible = false -- current state of UI controls
+local controlsVisible = false -- current state of UI controls (group features)
+local controlsVisibleDPS = false -- current state of DPS tracker (works solo)
 --local countdownVisible = false
 
 -- Damage types.
@@ -159,6 +194,10 @@ local hud = HR.hud
 
 local ULT_FRAGMENT, DPS_FRAGMENT, CLS_FRAGMENT, CNT_FRAGMENT, HRN_FRAGMENT, HNT_FRAGMENT, MISCULT_FRAGMENT, ATRO_FRAGMENT -- HUD fragments
 
+-- Consider DPS data stale after this timeout (ms)
+-- Increased to 30000ms (30s) to prevent data from disappearing prematurely
+local DPS_STALE_MS = 30000
+
 local function getRealDisplayName(displayname)
 	for unit, _ in pairs(M.playersData) do
 		local found = strfind(displayname, unit)
@@ -206,6 +245,9 @@ local function CleanGroupData(force)
 				data.tag = newData[1]
 				-- Player is not in the group anymore or on another character, clear his data
 			else
+				if M.debug then
+					d(strformat("[HR] Removing player %s (name=%s, newData=%s)", tostring(userId), tostring(data.name), tostring(newData and newData[2] or "nil")))
+				end
 				-- Stop animations
 				HR.anim.UnregisterUser(userId)
 				-- Release controls
@@ -219,17 +261,42 @@ local function CleanGroupData(force)
 			end
 		end
 	else
-		-- Player is not grouped. Delete everyone!
-		-- Stop animations
-		for userId in pairs(M.playersData) do
-			HR.anim.UnregisterUser(userId)
+		-- Player is not grouped. Keep solo player's DPS data, but clear group members!
+		local localUserId = GetUnitDisplayName("player")
+		-- Stop animations and clear data for all non-local players
+		for userId, data in pairs(M.playersData) do
+			if userId ~= localUserId then
+				HR.anim.UnregisterUser(userId)
+				-- Release controls for group members
+				if data.ultRow then ultPool:ReleaseObject(data.ultRow.poolKey) end
+				if data.dpsRow then dpsPool:ReleaseObject(data.dpsRow.poolKey) end
+				if data.clsRow then clsPool:ReleaseObject(data.clsRow.poolKey) end
+				if data.miscUltRow then miscUltPool:ReleaseObject(data.miscUltRow.poolKey) end
+				if data.atronachRow then atronachPool:ReleaseObject(data.atronachRow.poolKey) end
+				M.playersData[userId] = nil
+			else
+				-- Keep solo player's DPS data but clear group-only features
+				if data.ultRow then 
+					ultPool:ReleaseObject(data.ultRow.poolKey)
+					data.ultRow = nil
+				end
+				if data.clsRow then 
+					clsPool:ReleaseObject(data.clsRow.poolKey)
+					data.clsRow = nil
+				end
+				if data.miscUltRow then 
+					miscUltPool:ReleaseObject(data.miscUltRow.poolKey)
+					data.miscUltRow = nil
+				end
+				if data.atronachRow then 
+					atronachPool:ReleaseObject(data.atronachRow.poolKey)
+					data.atronachRow = nil
+				end
+			end
 		end
-		-- Clear players data list
-		M.playersData = {}
-		-- Release all controls
+		-- Release any remaining group-only controls
 		ultPool:ReleaseAllObjects()
 		miscUltPool:ReleaseAllObjects()
-		dpsPool:ReleaseAllObjects()
 		clsPool:ReleaseAllObjects()
 		atronachPool:ReleaseAllObjects()
 
@@ -246,6 +313,20 @@ function M.UnregisterCustomDataCallback(callback)
 	M.cm:UnregisterCallback('CustomData', callback)
 end
 
+-- Convert slider scale value (0-100) to actual scale factor
+local function GetScaleFromSlider(sliderValue)
+	sliderValue = sliderValue or 20
+	if sliderValue == 20 then
+		return 1.0
+	elseif sliderValue < 20 then
+		local ratio = sliderValue / 20
+		return 0.75 + (1.0 - 0.75) * ratio
+	else
+		local ratio = (sliderValue - 20) / (100 - 20)
+		return 1.0 + (1.5 - 1.0) * ratio
+	end
+end
+
 local function CreateSceneFragments()
 
 	local function UltFragmentCondition()
@@ -257,7 +338,7 @@ local function CreateSceneFragments()
 	end
 
 	local function DpsFragmentCondition()
-		return M.IsDamageListVisible() and controlsVisible
+		return M.IsDamageListVisible() and controlsVisibleDPS
 	end
 
 	local function ClsFragmentCondition()
@@ -299,28 +380,35 @@ local function CreateSceneFragments()
 		elseif not M.uiLocked then -- unlocked UI, show default notification
 			HodorReflexes_Share_HornCountdown_Label:SetText(strformat("%s: |cFFFF003.0|r", GetString(HR_HORN)))
 			result = true
-		elseif IsUnitInCombat(localPlayer) and ((SV.hornCountdownType == 'horn_all' or SV.hornCountdownType == 'force_all') and anyHorn or (SV.hornCountdownType == 'horn_self' or SV.hornCountdownType == 'force_self') and myHorn and hornOrder == 1) then
-			local t = GetFrameTimeSeconds()
-			local count = 0
-			if SV.hornCountdownType == 'horn_all' or SV.hornCountdownType == 'horn_self' then
-				count = hornEnd - t
-			else
-				count = forceEnd - t
-			end
-			if count < 3.5 then
+		elseif IsUnitInCombat(localPlayer) then
+			-- Check if countdown should show for 'all' modes or 'self' modes
+			local showForAll = (SV.hornCountdownType == 'horn_all' or SV.hornCountdownType == 'force_all') and anyHorn
+			local showForSelf = (SV.hornCountdownType == 'horn_self' or SV.hornCountdownType == 'force_self') and myHorn and hornOrder == 1
+			if showForAll or showForSelf then
+				local t = GetFrameTimeSeconds()
+				local count = 0
+				if SV.hornCountdownType == 'horn_all' or SV.hornCountdownType == 'horn_self' then
+					count = hornEnd - t
+				else
+					count = forceEnd - t
+				end
+				if count < 3.5 and count > -2 then
 				if count > 0 then
 					HodorReflexes_Share_HornCountdown_Label:SetText(strformat("%s: |cFFFF00%0.1f|r", GetString(HR_HORN), count))
-				else
-					HodorReflexes_Share_HornCountdown_Label:SetText(strformat("%s: |cFF0000%s!|r", GetString(HR_HORN), GetString(HR_NOW)))
+					else
+						HodorReflexes_Share_HornCountdown_Label:SetText(strformat("%s: |cFF0000%s!|r", GetString(HR_HORN), GetString(HR_NOW)))
+					end
+					result = true
 				end
-				result = true
 			end
 		end
 		return result
 	end
 
 	local function HrnFragmentCondition()
-		return SV.enableHornIcon and (controlsVisible and myHorn and not forceActive or not M.uiLocked)
+		-- Show horn icon when horn is ready, regardless of major force status
+		-- Shows when: (UI unlocked for positioning) OR (horn ready and controls visible)
+		return SV.enableHornIcon and (not M.uiLocked or (controlsVisible and myHorn))
 	end
 
 	ULT_FRAGMENT = hud.AddSimpleFragment(HodorReflexes_Share_Ultimates, UltFragmentCondition)
@@ -434,6 +522,9 @@ end
 
 -- Create horn, damage and colossus rows.
 local function CreateControlsForUser(userId, playerData)
+	if M.debug then
+		d(strformat("[HR] Creating controls for %s (tag=%s, name=%s)", tostring(userId), tostring(playerData.tag), tostring(playerData.name)))
+	end
 	-- Set user name and icon
 	--local isPlayer = playerData.isPlayer
 	local userIcon = player.GetIconForUserId(userId)
@@ -498,10 +589,14 @@ local function CreateControlsForUser(userId, playerData)
 end
 
 local function onDPSDataReceived(tag, data)
-	if not IsUnitGrouped(tag) then return end
+	-- DPS tracking now works solo - only check if tag is valid
+	if not tag then return end
 	local dataTime = time()
 	local userId = GetUnitDisplayName(tag)
 	local playerData = M.playersData[userId]
+	if M.debug then
+		d(strformat("[HR] DPS recv %s dmg=%s dps=%s type=%s", tostring(userId), tostring(data.dmg), tostring(data.dps), tostring(data.dmgType)))
+	end
 
 	-- Player already exists, only update values
 	if playerData then
@@ -543,6 +638,9 @@ local function onULTDataReceived(tag, data)
 	local dataTime = time()
 	local userId = GetUnitDisplayName(tag)
 	local playerData = M.playersData[userId]
+	if M.debug then
+		d(strformat("[HR] ULT recv %s ultValue=%s ult1ID=%s ult2ID=%s", tostring(userId), tostring(data.ultValue), tostring(data.ult1ID), tostring(data.ult2ID)))
+	end
 
 	-- Player already exists, only update values
 	if playerData then
@@ -599,6 +697,12 @@ function M.Initialize()
 		d("Failed to register addon with LibGroupCombatStats.")
 		return
 	end
+	
+	-- Ensure pet damage is tracked and attributed to owner
+	if lgcs.SetIncludePetDamage then
+		lgcs:SetIncludePetDamage(true)
+	end
+	
 	lgcs:RegisterForEvent(EVENT_GROUP_ULT_UPDATE, onULTDataReceived)
 	lgcs:RegisterForEvent(EVENT_PLAYER_ULT_UPDATE, onULTDataReceived)
 	lgcs:RegisterForEvent(EVENT_GROUP_DPS_UPDATE, onDPSDataReceived)
@@ -620,9 +724,10 @@ function M.Initialize()
 	SV = M.sv
 	SW = M.sw
 
-	if (not LCI or not LCN) and not M.sv.libraryPopupDisabled then
-		ShowMissingLibsPopup()
-	end
+	-- Popup disabled for console version
+	-- if (not LCI or not LCN) and not M.sv.libraryPopupDisabled then
+	-- 	ShowMissingLibsPopup()
+	-- end
 
 	-- Set default values for custom name and color.
 	if not IsValidString(SW.myIconNameRaw) then
@@ -680,7 +785,7 @@ end
 
 function M.ToggleEnabled()
 	local colosIds = {122380, 122391, 122398} -- colossus ability cast
-	--local mvIds = {122177, 122397, 122389, 163060, 106754} -- major vuln applied (unmorphed, stam, mag, kynmarcher's cruelty effect, turning tide set)
+	local mvIds = {122177, 122397, 122389, 163060, 106754} -- major vuln applied (unmorphed, stam, mag, kynmarcher's cruelty effect, turning tide set)
 
 	---------------------------
 	-- Unregister everything --
@@ -697,8 +802,19 @@ function M.ToggleEnabled()
 		EM:UnregisterForEvent(M.name .. "ColosCast" .. i, EVENT_COMBAT_EVENT)
 	end
 
-	-- Major Vulnerability
-	EM:UnregisterForEvent(M.name .. "MV", EVENT_EFFECT_CHANGED)
+	-- Atronach cast
+	local atronachIds = {23634, 23492, 23495}
+	for i, _ in ipairs(atronachIds) do
+		EM:UnregisterForEvent(M.name .. "AtronachCast" .. i, EVENT_COMBAT_EVENT)
+	end
+
+	-- Major Vulnerability (unregister all)
+	for i = 1, 5 do
+		EM:UnregisterForEvent(M.name .. "MV" .. i, EVENT_EFFECT_CHANGED)
+	end
+
+	-- Major Berserk
+	EM:UnregisterForEvent(M.name .. "MajorBerserk", EVENT_EFFECT_CHANGED)
 
 	-- Duel
 	isDuel = GetDuelInfo() > 0
@@ -730,9 +846,12 @@ function M.ToggleEnabled()
 			EM:AddFilterForEvent(eventName, EVENT_COMBAT_EVENT, REGISTER_FILTER_COMBAT_RESULT, ACTION_RESULT_EFFECT_GAINED)
 		end
 
-		-- Vulnerability applied
-		EM:RegisterForEvent(M.name .. "MV", EVENT_EFFECT_CHANGED, M.MajorVulnerability)
-		EM:AddFilterForEvent(M.name .. "MV", EVENT_EFFECT_CHANGED, REGISTER_FILTER_ABILITY_ID, 106754)
+		-- Vulnerability applied (track ALL Major Vulnerability sources: Colossus morphs + sets)
+		for i, id in ipairs(mvIds) do
+			local eventName = strformat("%sMV%d", M.name, i)
+			EM:RegisterForEvent(eventName, EVENT_EFFECT_CHANGED, M.MajorVulnerability)
+			EM:AddFilterForEvent(eventName, EVENT_EFFECT_CHANGED, REGISTER_FILTER_ABILITY_ID, id)
+		end
 
 		-- major berserk applied
 		EM:RegisterForEvent(M.name .. "MajorBerserk", EVENT_EFFECT_CHANGED, M.MajorBerserk)
@@ -762,12 +881,10 @@ function M.GroupChanged()
 		CleanGroupData()
 	end
 
-	-- Update lists every M.refreshRateList if the player is grouped
+	-- Update lists every M.refreshRateList if the player is grouped OR if DPS tracking is enabled (works solo)
 	EM:UnregisterForUpdate(M.name .. "RefreshControls")
-	if IsUnitGrouped(localPlayer) then
-		if M.IsEnabled() then
-			EM:RegisterForUpdate(M.name .. "RefreshControls", M.refreshRateList, M.RefreshControls)
-		end
+	if M.IsEnabled() and (IsUnitGrouped(localPlayer) or M.IsDamageListVisible()) then
+		EM:RegisterForUpdate(M.name .. "RefreshControls", M.refreshRateList, M.RefreshControls)
 	end
 
 end
@@ -810,8 +927,8 @@ do
 		local t = GetFrameTimeSeconds()
 		local forceRemain = forceEnd - t
 		local hornRemain = hornEnd - t
-		hornActive = SW.styleTimerBlink and hornRemain > -2 or hornRemain > 0
-		forceActive = SW.styleTimerBlink and forceRemain > -2 or forceRemain > 0
+		hornActive = (SW.styleTimerBlink and hornRemain > -2) or (hornRemain > 0)
+		forceActive = (SW.styleTimerBlink and forceRemain > -2) or (forceRemain > 0)
 
 		if hornActive then
 			if hornRemain > 0 then
@@ -879,7 +996,7 @@ do
 
 	local function ColosTick()
 		local t = time()
-		if mvEnd < t - 2000 or not SW.styleTimerBlink and mvEnd <= t then
+		if mvEnd < t - 2000 or (not SW.styleTimerBlink and mvEnd <= t) then
 			EM:UnregisterForUpdate(eventNameTick)
 			HodorReflexes_Share_Colos_Duration:SetText('  0.0')
 			HodorReflexes_Share_Colos_Duration:SetAlpha(SW.styleZeroTimerOpacity)
@@ -901,10 +1018,11 @@ do
 		-- Don't do anything if colossus list is disabled
 		if not SV.enableColosList then return end
 
+		local unitTag
 		if displayName then
 			local userId = getRealDisplayName(displayName)
-			local unitTag = M.playersData.tag
 			local data = userId and M.playersData[userId]
+			unitTag = data and data.tag
 			if data and data.ultValue > 0 then -- reset ult % in the colossus list
 				data.ultValue = 1
 				M.UpdateUltimates()
@@ -919,7 +1037,7 @@ do
 
 	--function M.MajorVulnerability(_, changeType, _, _, _, beginTime, endTime, _, _, _, _, _, _, _, _, abilityId)
 	function M.MajorVulnerability(_, changeType, _, _, _, _, endTime, _, _, _, _, _, _, _, _, _)
-		if changeType == EFFECT_RESULT_GAINED or changeType == EFFECT_RESULT_UPDATED and endTime > 0 then
+		if (changeType == EFFECT_RESULT_GAINED or changeType == EFFECT_RESULT_UPDATED) and endTime > 0 then
 			-- Convert endTime to time() format
 			endTime = zo_ceil(endTime * 1000)
 			-- Prevent registering ColosTick multiple times within a short time span
@@ -944,7 +1062,7 @@ do
 	local function AtronachTick()
 		local t = time()
 
-		if atronachEnd < t - 2000 or not SW.styleTimerBlink and atronachEnd <= t then
+		if atronachEnd < t - 2000 or (not SW.styleTimerBlink and atronachEnd <= t) then
 			HodorReflexes_Share_Atronach_AtronachDuration:SetText('  0.0')
 			HodorReflexes_Share_Atronach_AtronachDuration:SetAlpha(SW.styleZeroTimerOpacity)
 			HodorReflexes_Share_Atronach_AtronachIcon:SetAlpha(SW.styleZeroTimerOpacity)
@@ -960,7 +1078,7 @@ do
 			atronachActive = true
 		end
 
-		if berserkEnd < t - 2000 or not SW.styleTimerBlink and berserkEnd <= t then
+		if berserkEnd < t - 2000 or (not SW.styleTimerBlink and berserkEnd <= t) then
 			HodorReflexes_Share_Atronach_BerserkDuration:SetText('  0.0')
 			HodorReflexes_Share_Atronach_BerserkDuration:SetAlpha(SW.styleZeroTimerOpacity)
 			HodorReflexes_Share_Atronach_BerserkIcon:SetAlpha(SW.styleZeroTimerOpacity)
@@ -986,10 +1104,11 @@ do
 		-- Don't do anything if colossus list is disabled
 		if not SV.enableAtronachList then return end
 
+		local unitTag
 		if displayName then
 			local userId = getRealDisplayName(displayName)
-			local unitTag = M.playersData.tag
 			local data = userId and M.playersData[userId]
+			unitTag = data and data.tag
 			if data and data.ultValue > 0 then -- reset ult % in the colossus list
 				data.ultValue = 1
 				M.UpdateUltimates()
@@ -1010,7 +1129,7 @@ do
 
 	--function M.MajorBerserk(_, changeType, _, _, _, beginTime, endTime, _, _, _, _, _, _, _, _, abilityId)
 	function M.MajorBerserk(_, changeType, _, _, _, _, endTime, _, _, _, _, _, _, _, _, _)
-		if changeType == EFFECT_RESULT_GAINED or changeType == EFFECT_RESULT_UPDATED and endTime > 0 then
+		if (changeType == EFFECT_RESULT_GAINED or changeType == EFFECT_RESULT_UPDATED) and endTime > 0 then
 			-- Convert endTime to time() format
 			endTime = zo_ceil(endTime * 1000)
 			-- Prevent registering ColosTick multiple times within a short time span
@@ -1028,25 +1147,27 @@ do
 end
 
 function M.RefreshControls()
-	if isUltControlRefresh then
-		if SV.enableUltimateList or SV.enableColosList or SV.enableMiscUltimateList then
-			M.UpdateUltimates()
-		else
-			-- if both lists are disabled, then make sure horn and colos notifications are hidden
-			myHorn = false
-			hornOrder = 10
-			colosOrder = 10
-		end
+	-- Update ultimates list every tick if any of the lists are enabled
+	if SV.enableUltimateList or SV.enableColosList or SV.enableMiscUltimateList then
+		M.UpdateUltimates()
 	else
-		if M.IsDamageListVisible() then
-			M.UpdateDamage()
-		end
+		-- if both lists are disabled, then make sure horn and colos notifications are hidden
+		myHorn = false
+		hornOrder = 10
+		colosOrder = 10
 	end
-	isUltControlRefresh = not isUltControlRefresh
+
+	-- Always refresh damage each tick when visible for smoother tracking
+	if M.IsDamageListVisible() then
+		M.UpdateDamage()
+	end
 end
 
 function M.RefreshVisibility()
+	-- Group features require grouping
 	controlsVisible = not M.uiLocked or M.IsEnabled() and IsUnitGrouped(localPlayer)
+	-- DPS tracker works solo or in group
+	controlsVisibleDPS = not M.uiLocked or M.IsEnabled()
 	-- Refresh fragments
 	ULT_FRAGMENT:Refresh()
 	MISCULT_FRAGMENT:Refresh()
@@ -1065,7 +1186,7 @@ function M.IsDamageListVisible()
 	elseif SV.enableDamageList == 2 then
 		return not IsUnitInCombat(localPlayer)
 	elseif SV.enableDamageList == 3 then
-		return not IsUnitInCombat(localPlayer) or not DoesUnitExist('boss1') and not DoesUnitExist('boss2')
+		return not IsUnitInCombat(localPlayer) or (not DoesUnitExist('boss1') and not DoesUnitExist('boss2'))
 	else
 		return false
 	end
@@ -1077,7 +1198,7 @@ function M.IsMiscUltimatesListVisible()
 	elseif SV.enableMiscUltimateList == 2 then
 		return not IsUnitInCombat(localPlayer)
 	elseif SV.enableMiscUltimateList == 3 then
-		return not IsUnitInCombat(localPlayer) or not DoesUnitExist('boss1') and not DoesUnitExist('boss2')
+		return not IsUnitInCombat(localPlayer) or (not DoesUnitExist('boss1') and not DoesUnitExist('boss2'))
 	else
 		return false
 	end
@@ -1085,8 +1206,6 @@ end
 
 -- return the ultimate in percent from 0-100. from 100-200 its scaled acordingly.
 function M.GetUltPercentage(raw, abilityCost)
-	local ultPercentage = 0
-
 	if raw <= abilityCost then
 		-- When ult is not ready, we show real %
 		return zo_floor(raw/abilityCost*100)
@@ -1094,8 +1213,6 @@ function M.GetUltPercentage(raw, abilityCost)
 		-- If ult is ready, then adjust % to show 200% only at 500 points
 		return zo_min(200, 100 + zo_floor(100 * (raw - abilityCost) / (500 - abilityCost)))
 	end
-
-	return zo_min(200, ultPercentage)
 end
 
 function M.GetDamageTypeName(t)
@@ -1124,7 +1241,9 @@ function M.IsUnitNearby(tag)
 				-- during boss fights everyone is ported to the same room
 				-- but on the last boss we need to exclude portal group
 				local _, hp = GetUnitPower('boss1', POWERTYPE_HEALTH)
-				if hp == 27266052 or hp == 103494192 or hp == 129367744 then -- normal, vet, hm TODO: Update values & include DSR & RG
+				-- Sunspire final boss HP values: normal, vet, hm
+				-- TODO: Add DSR (Dreadsail Reef) and RG (Rockgrove) boss HP values for accurate support range detection
+				if hp == 27266052 or hp == 103494192 or hp == 129367744 then
 					return false -- not in support range (already checked above)
 				else
 					return true
@@ -1193,36 +1312,41 @@ do
 
 	-- Calculate a number of players in 20m range.
 	local function UpdateHornIcon()
+		-- Update icon even when major force is active (removed forceActive check)
+		local n = 0 -- number of players in range
+		local all = true -- all dds are in range
+		local label = HodorReflexes_Share_HornIcon_Label
+		local bg = HodorReflexes_Share_HornIcon_BG
 
-		if not forceActive then
-			local n = 0 -- number of players in range
-			local all = true -- all dds are in range
-			local label = HodorReflexes_Share_HornIcon_Label
-			local bg = HodorReflexes_Share_HornIcon_BG
-
-			local _, x1, y1, z1 = GetUnitWorldPosition(localPlayer)
-			for i = 1, GetGroupSize() do
-				local tag = GetGroupUnitTagByIndex(i)
-				local distance = 21
-				if IsUnitInGroupSupportRange(tag) then -- check group range first to avoid unneeded calculations
-					local _, x2, y2, z2 = GetUnitWorldPosition(tag)
-					distance = zo_sqrt((x1 - x2) ^ 2 + (y1 - y2) ^ 2 + (z1 - z2) ^ 2) / 100
-				end
-				if distance < 20 then
-					n = n + 1
-				elseif GetGroupMemberSelectedRole(tag) == LFG_ROLE_DPS then
-					all = false
-				end
+		local _, x1, y1, z1 = GetUnitWorldPosition(localPlayer)
+		for i = 1, GetGroupSize() do
+			local tag = GetGroupUnitTagByIndex(i)
+			local distance = 21
+			if IsUnitInGroupSupportRange(tag) then -- check group range first to avoid unneeded calculations
+				local _, x2, y2, z2 = GetUnitWorldPosition(tag)
+				distance = zo_sqrt((x1 - x2) ^ 2 + (y1 - y2) ^ 2 + (z1 - z2) ^ 2) / 100
 			end
-
-			label:SetText(n > 0 and n or '')
-			if all then
-				label:SetColor(hornOrder == 1 and 0 or 1, 1, 0)
-				bg:SetColor(hornOrder == 1 and 0 or 1, 1, 0)
-			else
-				label:SetColor(1, 1, 1)
-				bg:SetColor(0, 0, 0)
+			if distance < 20 then
+				n = n + 1
+			elseif GetGroupMemberSelectedRole(tag) == LFG_ROLE_DPS then
+				all = false
 			end
+		end
+
+		label:SetText(n > 0 and n or '')
+		-- Show different color based on whether major force is active and horn priority
+		-- Note: Icon is grayed out when major force is active to indicate horn is not needed
+		-- This is intentional design to help players avoid wasting horn when force is already up
+		if forceActive then
+			-- Gray out the icon when major force is active
+			label:SetColor(0.5, 0.5, 0.5)
+			bg:SetColor(0.3, 0.3, 0.3)
+		elseif all then
+			label:SetColor(hornOrder == 1 and 0 or 1, 1, 0)
+			bg:SetColor(hornOrder == 1 and 0 or 1, 1, 0)
+		else
+			label:SetColor(1, 1, 1)
+			bg:SetColor(0, 0, 0)
 		end
 
 		HRN_FRAGMENT:Refresh()
@@ -1297,6 +1421,8 @@ do
 						ultRow:GetNamedChild('_Value'):SetScale(SV.showHornPercentValue)
 						ultRow:GetNamedChild('_RawValue'):SetText(strformat('|c%s%d|r', "FFFFFF", zo_min(500, data.ultValue)))
 						ultRow:GetNamedChild('_RawValue'):SetScale(SV.showHornRawValue)
+						ultRow:GetNamedChild('_UltIconFrontbar'):SetTexture(GetAbilityIcon(data.ult1ID))
+						ultRow:GetNamedChild('_UltIconBackbar'):SetTexture(GetAbilityIcon(data.ult2ID))
 						ultRow:SetHidden(false)
 						rowsHorn[#rowsHorn + 1] = {tag, horn, data}
 					else
@@ -1311,6 +1437,8 @@ do
 						clsRow:GetNamedChild('_Value'):SetScale(SV.showColosPercentValue)
 						clsRow:GetNamedChild('_RawValue'):SetText(strformat('|c%s%d|r', "FFFFFF", zo_min(500, data.ultValue)))
 						clsRow:GetNamedChild('_RawValue'):SetScale(SV.showColosRawValue)
+						clsRow:GetNamedChild('_UltIconFrontbar'):SetTexture(GetAbilityIcon(data.ult1ID))
+						clsRow:GetNamedChild('_UltIconBackbar'):SetTexture(GetAbilityIcon(data.ult2ID))
 						clsRow:SetHidden(false)
 						rowsColos[#rowsColos + 1] = {tag, colos, data}
 					else
@@ -1325,6 +1453,8 @@ do
 						atronachRow:GetNamedChild('_Value'):SetScale(SV.showAtronachPercentValue)
 						atronachRow:GetNamedChild('_RawValue'):SetText(strformat('|c%s%d|r', "FFFFFF", zo_min(500, data.ultValue)))
 						atronachRow:GetNamedChild('_RawValue'):SetScale(SV.showAtronachRawValue)
+						atronachRow:GetNamedChild('_UltIconFrontbar'):SetTexture(GetAbilityIcon(data.ult1ID))
+						atronachRow:GetNamedChild('_UltIconBackbar'):SetTexture(GetAbilityIcon(data.ult2ID))
 						atronachRow:SetHidden(false)
 						rowsAtronach[#rowsAtronach + 1] = {tag, atro, data}
 					else
@@ -1430,12 +1560,14 @@ end
 function M.UpdateDamage()
 	local rows = {}
 	local dmgType
+	local now = time()
 
 	-- Update rows
 	for name, data in pairs(M.playersData) do
 		local tag = data.tag
 		-- Only shows rows for online players with non empty damage
-		if data.dmg > 0 and (isTestRunning or IsUnitOnline(tag)) then
+		-- Hide stale DPS data (older than DPS_STALE_MS)
+		if data.dpsRow and data.dmg > 0 and (isTestRunning or IsUnitOnline(tag)) and (now - (data.dmgTime or 0) <= DPS_STALE_MS) then
 			-- Generate damage string
 			local dmgStr = ''
 			if data.dmgType == DAMAGE_TOTAL then
@@ -1452,7 +1584,7 @@ function M.UpdateDamage()
 			elseif dmgType ~= data.dmgType then
 				dmgType = -1
 			end
-		else
+		elseif data.dpsRow then
 			data.dpsRow:SetHidden(true)
 		end
 	end
@@ -1461,21 +1593,24 @@ function M.UpdateDamage()
 	-- Show rows
 	for i, row in ipairs(rows) do
 		local playerData = M.playersData[row[1]]
-		playerData.dpsRow:ClearAnchors()
-		playerData.dpsRow:SetAnchor(TOPLEFT, HodorReflexes_Share_Damage, TOPLEFT, 0, i*22)
-		playerData.dpsRow:SetAnchor(TOPRIGHT, HodorReflexes_Share_Damage, TOPRIGHT, 0, i*22)
-		playerData.dpsRow:SetHidden(false)
-		-- Row color
-		local customColor = false
-		if playerData.isPlayer then
-			local r, g, b, o = unpack(SW.damageRowColor)
-			if o ~= 0 then
-				customColor = true
-				playerData.dpsRow:GetNamedChild('_BG'):SetColor(r, g, b, o or 0.5)
+		-- Check if player data still exists (may have been cleaned up)
+		if playerData and playerData.dpsRow then
+			playerData.dpsRow:ClearAnchors()
+			playerData.dpsRow:SetAnchor(TOPLEFT, HodorReflexes_Share_Damage, TOPLEFT, 0, i*22)
+			playerData.dpsRow:SetAnchor(TOPRIGHT, HodorReflexes_Share_Damage, TOPRIGHT, 0, i*22)
+			playerData.dpsRow:SetHidden(false)
+			-- Row color
+			local customColor = false
+			if playerData.isPlayer then
+				local r, g, b, o = unpack(SW.damageRowColor)
+				if o ~= 0 then
+					customColor = true
+					playerData.dpsRow:GetNamedChild('_BG'):SetColor(r, g, b, o or 0.5)
+				end
 			end
-		end
-		if not customColor then
-			playerData.dpsRow:GetNamedChild('_BG'):SetColor(0, 0, 0, zo_mod(i, 2) == 0 and SW.styleDamageRowEvenOpacity or SW.styleDamageRowOddOpacity)
+			if not customColor then
+				playerData.dpsRow:GetNamedChild('_BG'):SetColor(0, 0, 0, zo_mod(i, 2) == 0 and SW.styleDamageRowEvenOpacity or SW.styleDamageRowOddOpacity)
+			end
 		end
 	end
 
@@ -1489,6 +1624,22 @@ function M.CombatStart()
 	-- Reset damage values, so the player won't send old dps to a new fight before he does new damage
 	combat.Reset()
 	M.ResetFight()
+	
+	-- Boost update frequency for first 5 seconds of combat to catch initial damage faster
+	-- This compensates for LibGroupCombatStats initialization delay
+	if M.IsEnabled() and (IsUnitGrouped(localPlayer) or M.IsDamageListVisible()) then
+		EM:UnregisterForUpdate(M.name .. "RefreshControls")
+		-- Ultra-fast updates (200ms) for first 5 seconds
+		EM:RegisterForUpdate(M.name .. "RefreshControls", 200, M.RefreshControls)
+		
+		-- Return to normal speed after 5 seconds
+		zo_callLater(function()
+			if M.IsEnabled() and (IsUnitGrouped(localPlayer) or M.IsDamageListVisible()) then
+				EM:UnregisterForUpdate(M.name .. "RefreshControls")
+				EM:RegisterForUpdate(M.name .. "RefreshControls", M.refreshRateList, M.RefreshControls)
+			end
+		end, 5000)
+	end
 end
 
 function M.CombatEnd(confirmed)
@@ -1497,6 +1648,11 @@ function M.CombatEnd(confirmed)
 		M.RefreshVisibility()
 	else
 		M.ResetFight()
+		-- Ensure timer returns to normal speed after combat
+		if M.IsEnabled() and (IsUnitGrouped(localPlayer) or M.IsDamageListVisible()) then
+			EM:UnregisterForUpdate(M.name .. "RefreshControls")
+			EM:RegisterForUpdate(M.name .. "RefreshControls", M.refreshRateList, M.RefreshControls)
+		end
 	end
 end
 
@@ -1519,71 +1675,45 @@ function M.LockUI()
 end
 
 function M.RestorePosition()
+	-- Ultimate List
+	HodorReflexes_Share_Ultimates:ClearAnchors()
+	HodorReflexes_Share_Ultimates:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, SV.ultimateX, SV.ultimateY)
+	HodorReflexes_Share_Ultimates:SetScale(GetScaleFromSlider(SV.ultimateScale))
 
-	local ultimateLeft = SV.ultimateLeft
-	local ultimateTop = SV.ultimateTop
+	-- Misc Ultimate List
+	HodorReflexes_Share_MiscUltimates:ClearAnchors()
+	HodorReflexes_Share_MiscUltimates:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, SV.miscUltimateX, SV.miscUltimateY)
+	HodorReflexes_Share_MiscUltimates:SetScale(GetScaleFromSlider(SV.miscUltimateScale))
 
-	local miscUltimateLeft = SV.miscUltimateLeft
-	local miscUltimateTop = SV.miscUltimateTop
+	-- Damage List
+	HodorReflexes_Share_Damage:ClearAnchors()
+	HodorReflexes_Share_Damage:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, SV.damageX, SV.damageY)
+	HodorReflexes_Share_Damage:SetScale(GetScaleFromSlider(SV.damageScale))
 
-	local damageLeft = SV.damageLeft
-	local damageTop = SV.damageTop
+	-- Colossus List
+	HodorReflexes_Share_Colos:ClearAnchors()
+	HodorReflexes_Share_Colos:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, SV.colosX, SV.colosY)
+	HodorReflexes_Share_Colos:SetScale(GetScaleFromSlider(SV.colosScale))
 
-	local colosLeft = SV.colosLeft
-	local colosTop = SV.colosTop
+	-- Atronach List
+	HodorReflexes_Share_Atronach:ClearAnchors()
+	HodorReflexes_Share_Atronach:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, SV.atronachX, SV.atronachY)
+	HodorReflexes_Share_Atronach:SetScale(GetScaleFromSlider(SV.atronachScale))
 
-	local atronachLeft = SV.atronachLeft
-	local atronachTop = SV.atronachTop
+	-- Horn Countdown
+	HodorReflexes_Share_HornCountdown:ClearAnchors()
+	HodorReflexes_Share_HornCountdown:SetAnchor(CENTER, GuiRoot, TOPLEFT, SV.hornCountdownX, SV.hornCountdownY)
+	HodorReflexes_Share_HornCountdown:SetScale(GetScaleFromSlider(SV.hornCountdownScale))
 
-	local hornCountdownCenterX = SV.hornCountdownCenterX
-	local hornCountdownCenterY = SV.hornCountdownCenterY
+	-- Colossus Countdown
+	HodorReflexes_Share_ColosCountdown:ClearAnchors()
+	HodorReflexes_Share_ColosCountdown:SetAnchor(CENTER, GuiRoot, TOPLEFT, SV.colosCountdownX, SV.colosCountdownY)
+	HodorReflexes_Share_ColosCountdown:SetScale(GetScaleFromSlider(SV.colosCountdownScale))
 
-	local colosCountdownCenterX = SV.colosCountdownCenterX
-	local colosCountdownCenterY = SV.colosCountdownCenterY
-
-	local hornIconCenterX = SV.hornIconCenterX
-	local hornIconCenterY = SV.hornIconCenterY
-
-	if ultimateLeft or ultimateTop then
-		HodorReflexes_Share_Ultimates:ClearAnchors()
-		HodorReflexes_Share_Ultimates:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, ultimateLeft, ultimateTop)
-	end
-
-	if miscUltimateLeft or miscUltimateTop then
-		HodorReflexes_Share_MiscUltimates:ClearAnchors()
-		HodorReflexes_Share_MiscUltimates:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, miscUltimateLeft, miscUltimateTop)
-	end
-
-	if damageLeft or damageTop then
-		HodorReflexes_Share_Damage:ClearAnchors()
-		HodorReflexes_Share_Damage:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, damageLeft, damageTop)
-	end
-
-	if colosLeft or colosTop then
-		HodorReflexes_Share_Colos:ClearAnchors()
-		HodorReflexes_Share_Colos:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, colosLeft, colosTop)
-	end
-
-	if atronachLeft or atronachTop then
-		HodorReflexes_Share_Atronach:ClearAnchors()
-		HodorReflexes_Share_Atronach:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, atronachLeft, atronachTop)
-	end
-
-	if hornCountdownCenterX or hornCountdownCenterY then
-		HodorReflexes_Share_HornCountdown:ClearAnchors()
-		HodorReflexes_Share_HornCountdown:SetAnchor(CENTER, GuiRoot, TOPLEFT, hornCountdownCenterX, hornCountdownCenterY)
-	end
-
-	if colosCountdownCenterX or colosCountdownCenterY then
-		HodorReflexes_Share_ColosCountdown:ClearAnchors()
-		HodorReflexes_Share_ColosCountdown:SetAnchor(CENTER, GuiRoot, TOPLEFT, colosCountdownCenterX, colosCountdownCenterY)
-	end
-
-	if hornIconCenterX or hornIconCenterY then
-		HodorReflexes_Share_HornIcon:ClearAnchors()
-		HodorReflexes_Share_HornIcon:SetAnchor(CENTER, GuiRoot, TOPLEFT, hornIconCenterX, hornIconCenterY)
-	end
-	HodorReflexes_Share_HornIcon:SetScale(SV.hornIconScale)
+	-- Horn Icon
+	HodorReflexes_Share_HornIcon:ClearAnchors()
+	HodorReflexes_Share_HornIcon:SetAnchor(CENTER, GuiRoot, TOPLEFT, SV.hornIconX, SV.hornIconY)
+	HodorReflexes_Share_HornIcon:SetScale(GetScaleFromSlider(SV.hornIconScale))
 
 end
 
@@ -1649,54 +1779,51 @@ function M.ToggleAnimations(enabled, updateSW)
 end
 
 function M.UltimatesOnMoveStop()
-	SV.ultimateLeft = HodorReflexes_Share_Ultimates:GetLeft()
-	SV.ultimateTop = HodorReflexes_Share_Ultimates:GetTop()
+	SV.ultimateX = HodorReflexes_Share_Ultimates:GetLeft()
+	SV.ultimateY = HodorReflexes_Share_Ultimates:GetTop()
 end
 
 function M.MiscUltimatesOnMoveStop()
-	SV.miscUltimateLeft = HodorReflexes_Share_MiscUltimates:GetLeft()
-	SV.miscUltimateTop = HodorReflexes_Share_MiscUltimates:GetTop()
+	SV.miscUltimateX = HodorReflexes_Share_MiscUltimates:GetLeft()
+	SV.miscUltimateY = HodorReflexes_Share_MiscUltimates:GetTop()
 end
 
 function M.DamageOnMoveStop()
-	SV.damageLeft = HodorReflexes_Share_Damage:GetLeft()
-	SV.damageTop = HodorReflexes_Share_Damage:GetTop()
+	SV.damageX = HodorReflexes_Share_Damage:GetLeft()
+	SV.damageY = HodorReflexes_Share_Damage:GetTop()
 end
 
 function M.ColosOnMoveStop()
-	SV.colosLeft = HodorReflexes_Share_Colos:GetLeft()
-	SV.colosTop = HodorReflexes_Share_Colos:GetTop()
+	SV.colosX = HodorReflexes_Share_Colos:GetLeft()
+	SV.colosY = HodorReflexes_Share_Colos:GetTop()
 end
 
 function M.AtronachOnMoveStop()
-	SV.atronachLeft = HodorReflexes_Share_Atronach:GetLeft()
-	SV.atronachTop = HodorReflexes_Share_Atronach:GetTop()
+	SV.atronachX = HodorReflexes_Share_Atronach:GetLeft()
+	SV.atronachY = HodorReflexes_Share_Atronach:GetTop()
 end
 
 function M.HornCountdownOnMoveStop()
-	SV.hornCountdownCenterX, SV.hornCountdownCenterY = HodorReflexes_Share_HornCountdown:GetCenter()
-
-	HodorReflexes_Share_HornCountdown:ClearAnchors()
-	HodorReflexes_Share_HornCountdown:SetAnchor(CENTER, GuiRoot, TOPLEFT, SV.hornCountdownCenterX, SV.hornCountdownCenterY)
+	local centerX, centerY = HodorReflexes_Share_HornCountdown:GetCenter()
+	SV.hornCountdownX = centerX
+	SV.hornCountdownY = centerY
 end
 
 function M.ColosCountdownOnMoveStop()
-	SV.colosCountdownCenterX, SV.colosCountdownCenterY = HodorReflexes_Share_ColosCountdown:GetCenter()
-
-	HodorReflexes_Share_ColosCountdown:ClearAnchors()
-	HodorReflexes_Share_ColosCountdown:SetAnchor(CENTER, GuiRoot, TOPLEFT, SV.colosCountdownCenterX, SV.colosCountdownCenterY)
+	local centerX, centerY = HodorReflexes_Share_ColosCountdown:GetCenter()
+	SV.colosCountdownX = centerX
+	SV.colosCountdownY = centerY
 end
 
 function M.HornIconOnMoveStop()
-	SV.hornIconCenterX, SV.hornIconCenterY = HodorReflexes_Share_HornIcon:GetCenter()
-
-	HodorReflexes_Share_HornIcon:ClearAnchors()
-	HodorReflexes_Share_HornIcon:SetAnchor(CENTER, GuiRoot, TOPLEFT, SV.hornIconCenterX, SV.hornIconCenterY)
+	local centerX, centerY = HodorReflexes_Share_HornIcon:GetCenter()
+	SV.hornIconX = centerX
+	SV.hornIconY = centerY
 end
 
 function M.HornIconOnMouseWheel(delta)
-	SV.hornIconScale = zo_max(0.5, zo_min(2, SV.hornIconScale + delta * 0.1))
-	HodorReflexes_Share_HornIcon:SetScale(SV.hornIconScale)
+	SV.hornIconScale = zo_max(10, zo_min(100, SV.hornIconScale + delta * 5))
+	HodorReflexes_Share_HornIcon:SetScale(GetScaleFromSlider(SV.hornIconScale))
 end
 
 -- Show a random list of players.

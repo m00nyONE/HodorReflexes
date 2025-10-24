@@ -6,7 +6,7 @@ local LAM = LibAddonMenu2
 
 function M.BuildMenu()
 
-	local panel = HodorReflexes.GetModulePanelConfig(GetString(HR_MENU_VOTE))
+	local panel = HodorReflexes.GetModulePanelConfig("Vote")
 
 	local options = {}
 	if HodorReflexes.modules.share.IsEnabled() then
