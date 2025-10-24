@@ -81,7 +81,7 @@ jobs:
           prerelease: true
           updateOnlyUnreleased: true
 
-      - name: Upload to ESOUI
+      - name: Test Upload to ESOUI
         uses: m00nyONE/esoui-upload@v2
         if: github.repository_owner == 'm00nyONE'
         with:
@@ -91,3 +91,15 @@ jobs:
           zip_file: ${{ env.ZIP_FULL_NAME }}
           changelog_file: 'CHANGELOG.md'
           test: true
+
+      - name: Upload to BNET (no publish)
+        uses: m00nyONE/bnet-upload@main
+        if: steps.check_changes.outputs.should_release == 'true'
+        with:
+          BNET_USERNAME: ${{ secrets.BNET_USERNAME }}
+          BNET_PASSWORD: ${{ secrets.BNET_PASSWORD }}
+          addon_id: "fef0db78-bc0e-4c89-b77e-f03d570d10a9"
+          version: ${{ env.ADDON_VERSION }}
+          zip_file: ${{ env.ZIP_FULL_NAME }}
+          release_notes_file: latest_changes.md
+          publish: false
