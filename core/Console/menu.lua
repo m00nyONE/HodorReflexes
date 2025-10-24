@@ -41,9 +41,8 @@ end
 
 -- function is platform specific
 function core.GetCoreMenuOptions()
-    local options = {}
-    table.insert(options, core.CreateSectionHeader("General"))
-    local general = {
+    local options = {
+        core.CreateSectionHeader("General"),
         {
             type = LHAS.ST_CHECKBOX,
             label = "account wide settings",
@@ -55,9 +54,6 @@ function core.GetCoreMenuOptions()
         },
         -- we do not need ui lock/unlock on console. They have no mouse anyway :D
     }
-    for _, option in ipairs(general) do
-        table.insert(options, option)
-    end
 
     table.insert(options, core.CreateSectionHeader("Modules"))
     for moduleName, module in util.Spairs(addon.modules, util.SortByPriority) do

@@ -50,9 +50,8 @@ function core.CreateNewMenu(subName, options)
 end
 
 function core.GetCoreMenuOptions()
-    local options = {}
-    table.insert(options, core.CreateSectionHeader("General"))
-    local general = {
+    local options = {
+        core.CreateSectionHeader("General"),
         {
             type = "checkbox",
             name = "account wide settings",
@@ -79,9 +78,6 @@ function core.GetCoreMenuOptions()
             end,
         }
     }
-    for _, option in ipairs(general) do
-        table.insert(options, option)
-    end
 
     table.insert(options, core.CreateSectionHeader("Modules"))
     for moduleName, module in util.Spairs(addon.modules, util.SortByPriority) do
