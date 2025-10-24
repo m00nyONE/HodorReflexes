@@ -115,6 +115,60 @@ function module:GetSubMenuOptions()
     local damageListSpecificOptions = {
         {
             type = "divider",
+        },
+        {
+            type = "checkbox",
+            name = "Show Summary",
+            tooltip = "toggle the display of the summary row in the damage list.",
+            default = self.damageList.svDefault.showSummary,
+            getFunc = function() return self.damageList.sw.showSummary end,
+            setFunc = function(value)
+                self.damageList.sw.showSummary = value
+                self.damageList:Update()
+            end,
+        },
+        {
+            type = "slider",
+            name = "Burst Window (s)",
+            tooltip = "set the time window (in seconds) for calculating burst damage.",
+            min = 5,
+            max = 60,
+            step = 1,
+            decimals = 0,
+            clampInput = true,
+            default = self.damageList.svDefault.burstWindowSeconds,
+            getFunc = function() return self.damageList.sw.burstWindowSeconds end,
+            setFunc = function(value)
+                self.damageList.sw.burstWindowSeconds = value
+                self.damageList:Update()
+            end,
+        },
+        {
+            type = "colorpicker",
+            name = "Group DPS Color",
+            tooltip = "color used to display the group DPS value.",
+            default = util.Hex2RGB(self.damageList.svDefault.colorGroupDPS),
+            getFunc = function() return util.Hex2RGB(self.damageList.sw.colorGroupDPS) end,
+            setFunc = function(r, g, b)
+                self.damageList.sw.colorGroupDPS = util.RGB2Hex(r, g, b)
+                self.damageList:Update()
+            end,
+            isAdvancedSetting = true,
+        },
+        {
+            type = "colorpicker",
+            name = "Group Burst DPS Color",
+            tooltip = "color used to display the group burst DPS value.",
+            default = util.Hex2RGB(self.damageList.svDefault.colorBurstDPS),
+            getFunc = function() return util.Hex2RGB(self.damageList.sw.colorBurstDPS) end,
+            setFunc = function(r, g, b)
+                self.damageList.sw.colorBurstDPS = util.RGB2Hex(r, g, b)
+                self.damageList:Update()
+            end,
+            isAdvancedSetting = true,
+        },
+        {
+            type = "divider",
             isAdvancedSetting = true,
         },
         {

@@ -55,6 +55,7 @@ function module:GetSubMenuOptions()
     local function GetComonListOptions(listName, list)
         return {
             core.CreateSectionHeader(listName),
+            -- TODO: positioning
             {
                 type = LHAS.ST_CHECKBOX,
                 label = "Disable in PvP",
@@ -107,6 +108,56 @@ function module:GetSubMenuOptions()
     local options = GetGeneralOptions()
     local damageList = GetComonListOptions("Damage List", self.damageList)
     local damageListSpecificOptions = {
+        {
+            type = LHAS.ST_CHECKBOX,
+            label = "Show Summary",
+            tooltip = "toggle the display of the summary row in the damage list.",
+            default = self.damageList.svDefault.showSummary,
+            getFunction = function() return self.damageList.sw.showSummary end,
+            setFunction = function(value)
+                self.damageList.sw.showSummary = value
+                self.damageList:Update()
+            end,
+        },
+        {
+            type = LHAS.ST_SLIDER,
+            label = "Burst Window (s)",
+            tooltip = "set the time window (in seconds) for calculating burst damage.",
+            min = 5,
+            max = 60,
+            step = 1,
+            format = "%.0f",
+            default = self.damageList.svDefault.burstWindowSeconds,
+            getFunction = function() return self.damageList.sw.burstWindowSeconds end,
+            setFunction = function(value)
+                self.damageList.sw.burstWindowSeconds = value
+                self.damageList:Update()
+            end,
+        },
+        {
+            type = LHAS.ST_COLOR,
+            label = "Group DPS Color",
+            tooltip = "color used to display the group DPS value.",
+            default = util.Hex2RGB(self.damageList.svDefault.colorGroupDPS),
+            getFunction = function() return util.Hex2RGB(self.damageList.sw.colorGroupDPS) end,
+            setFunction = function(r, g, b)
+                self.damageList.sw.colorGroupDPS = util.RGB2Hex(r, g, b)
+                self.damageList:Update()
+            end,
+            isAdvancedSetting = true,
+        },
+        {
+            type = LHAS.ST_COLOR,
+            label = "Group Burst DPS Color",
+            tooltip = "color used to display the group burst DPS value.",
+            default = util.Hex2RGB(self.damageList.svDefault.colorBurstDPS),
+            getFunction = function() return util.Hex2RGB(self.damageList.sw.colorBurstDPS) end,
+            setFunction = function(r, g, b)
+                self.damageList.sw.colorBurstDPS = util.RGB2Hex(r, g, b)
+                self.damageList:Update()
+            end,
+            isAdvancedSetting = true,
+        },
         {
             type = LHAS.ST_COLOR,
             label = "Total Damage Color",
