@@ -26,10 +26,7 @@ function module:GetSubMenuOptions()
 
     local function GetGeneralOptions()
         return {
-            {
-                type = "header",
-                name = string.format("|cFFFACD%s|r", "General")
-            },
+            core.CreateSectionHeader("General"),
             {
                 type = "checkbox",
                 name = "account wide settings",
@@ -56,10 +53,7 @@ function module:GetSubMenuOptions()
     end
     local function GetComonListOptions(listName, list)
         return {
-            {
-                type = "header",
-                name = string.format("|cFFFACD%s|r", listName)
-            },
+            core.CreateSectionHeader(listName),
             {
                 type = "checkbox",
                 name = "Disable in PvP",
