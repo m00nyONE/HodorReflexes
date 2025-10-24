@@ -94,8 +94,10 @@ end
 function module:hornListHeaderRowCreationFunction(rowControl, data, scrollList)
     if not rowControl._initialized or self.hornList._redrawHeaders then
         rowControl:GetNamedChild("_BG"):SetAlpha(self.hornList.sw.headerOpacity)
+        rowControl:GetNamedChild("_HornIcon"):SetTexture(self.hornIcon)
         rowControl:GetNamedChild("_HornDuration"):SetColor(unpack(self.hornList.sw.colorHorn))
         rowControl:GetNamedChild("_HornDuration"):SetAlpha(self.hornList.sw.zeroTimerOpacity)
+        rowControl:GetNamedChild("_ForceIcon"):SetTexture(self.forceIcon)
         rowControl:GetNamedChild("_ForceDuration"):SetColor(unpack(self.hornList.sw.colorForce))
         rowControl:GetNamedChild("_ForceDuration"):SetAlpha(self.hornList.sw.zeroTimerOpacity)
 

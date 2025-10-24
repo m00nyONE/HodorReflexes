@@ -92,8 +92,10 @@ end
 function module:atroListHeaderRowCreationFunction(rowControl, data, scrollList)
     if not rowControl._initialized or self.atroList._redrawHeaders then
         rowControl:GetNamedChild("_BG"):SetAlpha(self.atroList.sw.headerOpacity)
+        rowControl:GetNamedChild("_AtroIcon"):SetTexture(self.atroIcon)
         rowControl:GetNamedChild("_AtroDuration"):SetColor(unpack(self.atroList.sw.colorAtro))
         rowControl:GetNamedChild("_AtroDuration"):SetAlpha(self.atroList.sw.zeroTimerOpacity)
+        rowControl:GetNamedChild("_BerserkIcon"):SetTexture(GetAbilityIcon(self.majorBerserkId))
         rowControl:GetNamedChild("_BerserkDuration"):SetColor(unpack(self.atroList.sw.colorBerserk))
         rowControl:GetNamedChild("_BerserkDuration"):SetAlpha(self.atroList.sw.zeroTimerOpacity)
 

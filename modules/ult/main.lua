@@ -63,7 +63,7 @@ local moduleDefinition = {
     barrierIcon = GetAbilityIcon(40237),
     slayerIcon = GetAbilityIcon(93109),
     cryptCannonIcon = GetAbilityIcon(195031),
-    pillagerIcon = "esoui/art/icons/ability_healer_030.dds",
+    pillagerIcon = "esoui/art/icons/ability_healer_030.dds", -- sadly no API to get the icon for pillager cuz it does not have an icon :-(
 
     pillagerCooldownEndTime = 0,
 }
