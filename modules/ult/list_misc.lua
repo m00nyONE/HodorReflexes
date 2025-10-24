@@ -105,6 +105,7 @@ function module:miscListRowCreationFunction(rowControl, data, scrollList)
     local userIcon, tcLeft, tcRight, tcTop, tcBottom = util.GetUserIcon(data.userId, data.classId)
     if userIcon then
         local iconControl = rowControl:GetNamedChild('_Icon')
+        iconControl:SetTextureReleaseOption(RELEASE_TEXTURE_AT_ZERO_REFERENCES)
         iconControl:SetTexture(userIcon)
         iconControl:SetTextureCoords(tcLeft, tcRight, tcTop, tcBottom)
     end
