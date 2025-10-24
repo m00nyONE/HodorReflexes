@@ -36,10 +36,16 @@ local svDefault = {
     listRowOddOpacity = 0.45,
     listPlayerHighlightColor = {0, 1, 0, 0.36}, -- green
 
-    colorDamageTotal = "faffb2", -- light yellow
-    colorDamageBoss = "b2ffb2", -- light green
+    colorDamageTotal = "FAFFB2", -- light yellow
+    colorDamageBoss = "B2FFB2", -- light green
 
     timerUpdateInterval = 100, -- ms
+
+    showSummary = true,
+    burstWindowSeconds = 10,
+
+    colorGroupDPS = "F4D17B", -- light orange
+    colorBurstDPS = "BDFF7B", -- light green
 }
 
 --- initializes the damage list
@@ -167,9 +173,11 @@ function module:summaryRowCreationFunction(rowControl, data, scrollList)
     local value = ""
     if data.dmgType == DAMAGE_BOSS then
         --title = string.format("dps (10sBurst) [ttk]:")
-        --value = string.format("%0.1fK (%0.1fK) [%0.1s]", data.groupDPS / 1000, data.groupDPS10sec / 1000, data.timeToKillMainBoss and data.timeToKillMainBoss > 0 and data.timeToKillMainBoss or "-")
-        title = "Group Total: "
-        value = self.getDamageRowFormat(data.dmgType, (data.damageOutTotalGroup / 100) / data.fightTime, data.groupDPS / 1000, self.damageList.sw.colorDamageBoss, self.damageList.sw.colorDamageTotal)
+        --value = string.format("%0.1fK (%0.1fK) [%0.1s]", data.groupDPS / 1000, data.groupDPSBurst / 1000, data.timeToKillMainBoss and data.timeToKillMainBoss > 0 and data.timeToKillMainBoss or "-")
+        title = string.format("|c%sGroup DPS|r |c%s(%ds)|r", self.damageList.sw.colorGroupDPS, self.damageList.sw.colorBurstDPS, self.damageList.sw.burstWindowSeconds)
+        value = string.format("|c%s%0.2fM|r |c%s(%0.2fM)|r", self.damageList.sw.colorGroupDPS, data.groupDPS / 1000000, self.damageList.sw.colorBurstDPS, data.groupDPSBurst / 1000000 or "-")
+        --title = "Group Total: "
+        --value = self.getDamageRowFormat(data.dmgType, (data.damageOutTotalGroup / 100) / data.fightTime, data.groupDPS / 1000, self.damageList.sw.colorDamageBoss, self.damageList.sw.colorDamageTotal)
     else
         title = "Group Total: "
         value = self.getDamageRowFormat(data.dmgType, data.damageOutTotalGroup / 10000, data.groupDPS / 1000, self.damageList.sw.colorDamageBoss, self.damageList.sw.colorDamageTotal)
@@ -208,14 +216,14 @@ function module:UpdateDamageList()
         table.insert(dataList, ZO_ScrollList_CreateDataEntry(self.damageList.ROW_TYPE, playerData))
     end
 
-    if #playersDataList > 0 then
+    if self.damageList.sw.showSummary and #playersDataList > 0 then
         table.insert(dataList, ZO_ScrollList_CreateDataEntry(self.damageList.SUMMARY_TYPE, {
             dmgType = dmgType,
             fightTime = combat:GetCombatTime(),
             damageOutTotalGroup = combat:GetDamageOutTotalGroup(),
             --timeToKillMainBoss = combat:GetTimeToKill(localBoss1), -- TODO: implement
             groupDPS = combat:GetGroupDPSOut(),
-            groupDPS10sec = combat:GetGroupDPSOverTime(10),
+            groupDPSBurst = combat:GetGroupDPSOverTime(self.damageList.sw.burstWindowSeconds),
         }))
     end
 
