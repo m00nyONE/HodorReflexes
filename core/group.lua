@@ -180,6 +180,7 @@ local function onGroupChanged()
     if isTestRunning then
         cleanPlayersData(true)
         isTestRunning = false
+        EM:UnregisterForUpdate(addon_name .. "_TestUpdate")
         CM:FireCallbacks(HR_EVENT_TEST_STOPPED)
         CM:FireCallbacks(HR_EVENT_LOCKUI)
         return
