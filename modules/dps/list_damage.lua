@@ -41,7 +41,7 @@ local svDefault = {
 
     timerUpdateInterval = 100, -- ms
 
-    showSummary = true,
+    showSummary = false,
     burstWindowSeconds = 10,
 
     colorGroupDPS = "F4D17B", -- light orange
