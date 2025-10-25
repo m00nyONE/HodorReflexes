@@ -91,21 +91,21 @@ function extension:_listUpdatePostHook(list, iconControlName)
     local contents = list.listControl:GetNamedChild("Contents")
     for childId = 1, contents:GetNumChildren() do
         local rowControl = contents:GetChild(childId)
-        local entryData = ZO_ScrollList_GetData(rowControl)
-        if entryData and entryData.userId then -- only process player rows
-            local listName = string.format("%s_%s", list.name, entryData.dataEntry.typeId) -- we create a "sub list" for each data type in the list to avoid conflicts when the same user is present in multiple data types
+        local data = ZO_ScrollList_GetData(rowControl)
+        if data and data.userId then -- only process player rows
+            local listName = string.format("%s_%s", list.name, rowControl.dataEntry.typeId) -- we create a "sub list" for each data type in the list to avoid conflicts when the same user is present in multiple data types
             listTypes[listName] = true
-            if LCI.HasAnimated(entryData.userId) then -- find users with animations
+            if LCI.HasAnimated(data.userId) then -- find users with animations
                 local iconControl = rowControl:GetNamedChild(iconControlName)
                 if iconControl == nil then -- icon control not found! This can only happen when someone creates a list with a custom template that does not have the expected icon control or when the template of a standard list got overwritten by a theme that did no follow the guidelines in the README.md of the theme extension.
                     self.logger:Warn("icon control '%s' not found in list '%s' row template", iconControlName, list.name)
                     return -- exit out of the update hook because there is nothing we can do here
                 end
 
-                self:_createAnimationForUser(listName, entryData.userId) -- create animation timeline for the user in the list if it does not already exist
-                self:_attachAnimationToControl(listName, entryData.userId, iconControl) -- attach the animation to the icon control
+                self:_createAnimationForUser(listName, data.userId) -- create animation timeline for the user in the list if it does not already exist
+                self:_attachAnimationToControl(listName, data.userId, iconControl) -- attach the animation to the icon control
                 usersWithAnimation[listName] = usersWithAnimation[listName] or {}
-                usersWithAnimation[listName][entryData.userId] = true
+                usersWithAnimation[listName][data.userId] = true
             end
         end
     end
@@ -126,8 +126,8 @@ end
 --- @param userId string the user id
 --- @return void
 function extension:_createAnimationForUser(listName, userId)
-    local animations = self.animations[listName] or {} -- create a list entry if it does not exist
-    self.animations[listName] = animations
+    self.animations[listName] = self.animations[listName] or {}  -- create a list entry if it does not exist
+    local animations = self.animations[listName]
 
     if animations[userId] then
         return -- animation already exists for this user in this list
@@ -160,11 +160,7 @@ end
 --- @param iconControl TextureControl the icon control to attach the animation to
 --- @return void
 function extension:_attachAnimationToControl(listName, userId, iconControl)
-    local animations = self.animations[listName]
-    if animations == nil then
-        self.logger:Warn("no animations found for list '%s'", listName) -- sanity check (should never happen because we always create the animation entry before attaching it in _listUpdatePostHook)
-        return
-    end
+    local animations = self.animations[listName] or {}
 
     local a = animations[userId]
     if a == nil then
