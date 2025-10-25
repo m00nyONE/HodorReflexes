@@ -340,7 +340,7 @@ function list.RenderTimeToControl(control, timeMS, opacity)
 end
 
 function list:ApplySupportRangeStyle(rowControl, unitTag)
-    if self.sw.supportRangeOnly and IsUnitInGroupSupportRange(unitTag) then
+    if self.sw.supportRangeOnly and not IsUnitInGroupSupportRange(unitTag) then
         rowControl:SetAlpha(0.2)
     else
         rowControl:SetAlpha(1.0)
