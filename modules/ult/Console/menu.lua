@@ -144,6 +144,17 @@ function module:GetSubMenuOptions()
                 end,
             },
             {
+                type = LHAS.ST_CHECKBOX,
+                label = "Support Range Only",
+                tooltip = "only show players that are in range for support ultimates.",
+                default = list.svDefault.supportRangeOnly,
+                getFunction = function() return list.sw.supportRangeOnly end,
+                setFunction = function(value)
+                    list.sw.supportRangeOnly = value
+                    list:Update()
+                end,
+            },
+            {
                 type = LHAS.ST_SLIDER,
                 label = "List width",
                 min = list.svDefault.windowWidth,

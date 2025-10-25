@@ -38,6 +38,8 @@ local svDefault = {
     headerOpacity = 0.0,
     zeroTimerOpacity = 0.35,
 
+    supportRangeOnly = false,
+
     showHorn = true,
     showColos = true,
     showAtro = true,
@@ -227,6 +229,8 @@ function module:compactListHeaderRowCreationFunction(rowControl, data, scrollLis
 end
 
 function module:applyUserStyles(rowControl, data, scrollList)
+    self.compactList:ApplySupportRangeStyle(rowControl, data.tag)
+
     local userName = util.GetUserName(data.userId, true)
     if userName then
         local nameControl = rowControl:GetNamedChild('_Name')

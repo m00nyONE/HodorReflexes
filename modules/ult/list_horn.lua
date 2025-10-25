@@ -34,6 +34,8 @@ local svDefault = {
     headerOpacity = 0.0,
     zeroTimerOpacity = 0.35,
 
+    supportRangeOnly = false,
+
     colorHorn = {0, 1, 1}, -- cyan
     colorForce = {1, 1, 0}, -- yellow
     highlightSaxhleel = true,
@@ -118,6 +120,8 @@ function module:hornListHeaderRowCreationFunction(rowControl, data, scrollList)
 end
 
 function module:hornListRowCreationFunction(rowControl, data, scrollList)
+    self.hornList:ApplySupportRangeStyle(rowControl, data.tag)
+
     local userName = util.GetUserName(data.userId, true)
     if userName then
         local nameControl = rowControl:GetNamedChild('_Name')

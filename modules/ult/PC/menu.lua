@@ -105,6 +105,17 @@ function module:GetSubMenuOptions()
                 end,
             },
             {
+                type = "checkbox",
+                name = "Support Range Only",
+                tooltip = "only show players that are in range for support ultimates.",
+                default = list.svDefault.supportRangeOnly,
+                getFunc = function() return list.sw.supportRangeOnly end,
+                setFunc = function(value)
+                    list.sw.supportRangeOnly = value
+                    list:Update()
+                end,
+            },
+            {
                 type = "divider",
                 isAdvancedSetting = true,
             },

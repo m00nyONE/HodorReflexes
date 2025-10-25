@@ -33,6 +33,8 @@ local svDefault = {
     headerOpacity = 0.0,
     zeroTimerOpacity = 0.35,
 
+    supportRangeOnly = false,
+
     colorVuln = {1, 1, 0}, -- yellow
 }
 
@@ -106,6 +108,8 @@ function module:colosListHeaderRowCreationFunction(rowControl, data, scrollList)
 end
 
 function module:colosListRowCreationFunction(rowControl, data, scrollList)
+    self.colosList:ApplySupportRangeStyle(rowControl, data.tag)
+
     local userName = util.GetUserName(data.userId, true)
     if userName then
         local nameControl = rowControl:GetNamedChild('_Name')

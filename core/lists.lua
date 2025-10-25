@@ -132,6 +132,10 @@ function list:Initialize(listDefinition)
     addon.RegisterCallback(HR_EVENT_PLAYERSDATA_UPDATED, function(...) self:UpdateDebounced(...) end)
     addon.RegisterCallback(HR_EVENT_PLAYERSDATA_CLEANED, function(...) self:UpdateDebounced(...) end)
 
+    EM:RegisterForEvent(self._Id .. "_SupportRangeUpdate", EVENT_GROUP_SUPPORT_RANGE_UPDATE, function()
+        self:UpdateDebounced()
+    end)
+
     self.logger:Debug("initialized in %d ms", GetGameTimeMilliseconds() - beginTime)
     self.Initialize = nil -- prevent re-initialization
 
@@ -203,6 +207,7 @@ function list:CreateSavedVariables()
     self.svDefault.windowPosLeft = self.svDefault.windowPosLeft or 0
     self.svDefault.windowPosTop = self.svDefault.windowPosTop or 0
     self.svDefault.windowWidth = self.svDefault.windowWidth or 220
+    self.svDefault.supportRangeOnly = self.svDefault.supportRangeOnly or false
 
     local svNamespace = string.format("list_%s", self.name)
     local svVersion = core.svVersion + self.svVersion
@@ -331,6 +336,14 @@ function list.RenderTimeToControl(control, timeMS, opacity)
     control:SetText(string.format("%0.1f|u0:2::|u", timeS) or "")
     if opacity then
         control:SetAlpha(opacity)
+    end
+end
+
+function list:ApplySupportRangeStyle(rowControl, unitTag)
+    if self.sw.supportRangeOnly and IsUnitInGroupSupportRange(unitTag) then
+        rowControl:SetAlpha(0.2)
+    else
+        rowControl:SetAlpha(1.0)
     end
 end
 

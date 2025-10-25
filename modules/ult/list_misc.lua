@@ -30,6 +30,8 @@ local svDefault = {
     headerOpacity = 0.0,
     zeroTimerOpacity = 0.35, -- not used yet, but here for consistency
 
+    supportRangeOnly = false,
+
     excludeSpecialUlts = true,
 }
 
@@ -95,6 +97,8 @@ function module:miscListHeaderRowCreationFunction(rowControl, data, scrollList)
 end
 
 function module:miscListRowCreationFunction(rowControl, data, scrollList)
+    self.miscList:ApplySupportRangeStyle(rowControl, data.tag)
+
     local userName = util.GetUserName(data.userId, true)
     if userName then
         local nameControl = rowControl:GetNamedChild('_Name')
