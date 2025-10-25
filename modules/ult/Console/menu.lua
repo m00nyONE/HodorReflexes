@@ -15,6 +15,9 @@ local module = addon_modules[module_name]
 local LHAS = LibHarvensAddonSettings
 
 function module:GetSubMenuOptions()
+    local SCREEN_WIDTH = GuiRoot:GetWidth()
+    local SCREEN_HEIGHT = GuiRoot:GetHeight()
+
     local function mergeOptions(source, destination)
         for _, option in ipairs(source) do
             if not option.isAdvancedSetting or self.sw.advancedSettings then
@@ -52,6 +55,38 @@ function module:GetSubMenuOptions()
     local function GetComonListOptions(listName, list)
         return {
             core.CreateSectionHeader(listName),
+            {
+                type = LHAS.ST_SLIDER,
+                label = "horizontal position",
+                tooltip = "set the horizontal position of the list.",
+                min = 0,
+                max = SCREEN_WIDTH - list.sw.windowWidth,
+                step = 10,
+                format = "%.0f",
+                unit = " px",
+                default = list.svDefault.windowPosLeft,
+                getFunction = function() return list.sw.windowPosLeft end,
+                setFunction = function(value)
+                    list.sw.windowPosLeft = value
+                    list.window:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, list.sw.windowPosLeft, list.sw.windowPosTop)
+                end,
+            },
+            {
+                type = LHAS.ST_SLIDER,
+                label = "vertical position",
+                tooltip = "set the vertical position of the list.",
+                min = 0,
+                max = SCREEN_HEIGHT - (list.listHeaderHeight + (list.listRowHeight * 4)),
+                step = 10,
+                format = "%.0f",
+                unit = " px",
+                default = list.svDefault.windowPosTop,
+                getFunction = function() return list.sw.windowPosTop end,
+                setFunction = function(value)
+                    list.sw.windowPosTop = value
+                    list.window:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, list.sw.windowPosLeft, list.sw.windowPosTop)
+                end,
+            },
             {
                 type = LHAS.ST_CHECKBOX,
                 label = "Disable in PvP",
