@@ -245,22 +245,16 @@ function module:applyUserStyles(rowControl, data, scrollList)
         iconControl:SetTexture(userIcon)
         iconControl:SetTextureCoords(tcLeft, tcRight, tcTop, tcBottom)
     end
-
-    local percentageColor = self:getUltPercentageColor(data.lowestUltPercentage, 'FFFFFF')
-    local percentageControl = rowControl:GetNamedChild("_PctValue")
-    percentageControl:SetText(string.format('|c%s%d%%|r', percentageColor, zo_min(200, data.lowestUltPercentage)))
-    percentageControl:SetScale(self.compactList.sw.showPercentValue)
-    local rawValueControl = rowControl:GetNamedChild("_RawValue")
-    rawValueControl:SetText(string.format('%s', data.ultValue))
-    rawValueControl:SetScale(self.compactList.sw.showRawValue)
 end
 
 function module:applyValues(rowControl, data, scrollList, percentage, gain, gainUnit)
     local percentageColor = self:getUltPercentageColor(percentage, 'FFFFFF')
     rowControl:GetNamedChild("_PctValue"):SetText(string.format('|c%s%d%%|r', percentageColor, percentage))
+    rowControl:GetNamedChild("_PctValue"):SetScale(self.compactList.sw.showPercentValue)
     local gainString = "-"
     if gain ~= nil then gainString = string.format('%d%s', gain, gainUnit or "|u0:2:: |u") end
     rowControl:GetNamedChild("_RawValue"):SetText(gainString)
+    rowControl:GetNamedChild("_RawValue"):SetScale(self.compactList.sw.showRawValue)
 end
 
 function module:compactListHornRowCreationFunction(rowControl, data, scrollList)
