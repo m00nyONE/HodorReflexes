@@ -74,9 +74,14 @@ function module:GetSubMenuOptions()
                     {name = GetString(HR_VISIBILITY_SHOW_OUT_OF_COMBAT), data = 2},
                     {name = GetString(HR_VISIBILITY_SHOW_NON_BOSSFIGHTS), data = 3},
                 },
-                getFunction = function() return list.sw.enabled end,
-                setFunction = function(value)
-                    list.sw.enabled = value
+                getFunction = function()
+                    if list.sv.enabled == 0 then return GetString(HR_VISIBILITY_SHOW_NEVER) end
+                    if list.sv.enabled == 1 then return GetString(HR_VISIBILITY_SHOW_ALWAYS) end
+                    if list.sv.enabled == 2 then return GetString(HR_VISIBILITY_SHOW_OUT_OF_COMBAT) end
+                    if list.sv.enabled == 3 then return GetString(HR_VISIBILITY_SHOW_NON_BOSSFIGHTS) end
+                end,
+                setFunction = function(control, itemName, itemData)
+                    list.sv.enabled = itemData.data
                     list:RefreshVisibility()
                 end,
                 width = "full",
@@ -127,6 +132,7 @@ function module:GetSubMenuOptions()
                 max = 1,
                 step = 0.05,
                 format = "%.2f",
+                unit = " ",
                 default = list.svDefault.headerOpacity,
                 getFunction = function() return list.sw.headerOpacity end,
                 setFunction = function(value)
@@ -144,6 +150,7 @@ function module:GetSubMenuOptions()
                 max = 1,
                 step = 0.05,
                 format = "%.2f",
+                unit = " ",
                 default = list.svDefault.zeroTimerOpacity,
                 getFunction = function() return list.sw.zeroTimerOpacity end,
                 setFunction = function(value)
@@ -354,6 +361,7 @@ function module:GetSubMenuOptions()
             max = 1,
             step = 0.05,
             format = "%.2f",
+            unit = " ",
             default = self.compactList.svDefault.backgroundAlpha,
             getFunction = function() return self.compactList.sw.backgroundAlpha end,
             setFunction = function(value)

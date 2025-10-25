@@ -78,9 +78,14 @@ function module:GetSubMenuOptions()
                     {name = GetString(HR_VISIBILITY_SHOW_OUT_OF_COMBAT), data = 2},
                     {name = GetString(HR_VISIBILITY_SHOW_NON_BOSSFIGHTS), data = 3},
                 },
-                getFunction = function() return list.sw.enabled end,
-                setFunction = function(value)
-                    list.sw.enabled = value
+                getFunction = function()
+                    if list.sv.enabled == 0 then return GetString(HR_VISIBILITY_SHOW_NEVER) end
+                    if list.sv.enabled == 1 then return GetString(HR_VISIBILITY_SHOW_ALWAYS) end
+                    if list.sv.enabled == 2 then return GetString(HR_VISIBILITY_SHOW_OUT_OF_COMBAT) end
+                    if list.sv.enabled == 3 then return GetString(HR_VISIBILITY_SHOW_NON_BOSSFIGHTS) end
+                end,
+                setFunction = function(control, itemName, itemData)
+                    list.sv.enabled = itemData.data
                     list:RefreshVisibility()
                 end,
                 width = "full",
