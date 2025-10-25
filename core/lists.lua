@@ -240,6 +240,11 @@ function list:CreateControls()
         self.sv.windowPosLeft = window:GetLeft()
         self.sv.windowPosTop = window:GetTop()
     end)
+    -- this here is for debugging - it draws an red background for all the lists
+    --local bg = window:CreateControl(windowName .. "_highLight", CT_TEXTURE)
+    --bg:SetAnchorFill(window)
+    --bg:SetColor(1, 0, 0, 0.5)
+    --bg:SetMouseEnabled(false)
     self.windowName = windowName
     self.window = window
     self.logger:Debug("created main window '%s'", windowName)
