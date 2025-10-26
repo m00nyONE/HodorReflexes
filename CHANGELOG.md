@@ -1,6 +1,6 @@
 [SIZE="2"][B]IMPORTANT:[/B] You need LibCustomNames and LibCustomIcons now if you want to have names and icons displayed.[/SIZE]
 
-## 2025.10.26
+## 2025.10.26 - @m00nyONE
 HodorReflexes got a complete rewrite from scratch! All code has been replaced and modernized to current ESO API standards.
 The old legacy version will not be updated anymore and will not receive any support in the future!
 
