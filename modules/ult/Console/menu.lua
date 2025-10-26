@@ -20,6 +20,9 @@ function module:GetSubMenuOptions()
 
     local function mergeOptions(source, destination)
         for _, option in ipairs(source) do
+            if option.requiresReload == true then
+                option.label = string.format("|c00FF00%s|r", option.label)
+            end
             if not option.isAdvancedSetting or self.sw.advancedSettings then
                 table.insert(destination, option)
             end

@@ -45,7 +45,7 @@ function core.GetCoreMenuOptions()
         core.CreateSectionHeader("General"),
         {
             type = LHAS.ST_CHECKBOX,
-            label = "account wide settings",
+            label = string.format("|c00FF00%s|r", "account wide settings"),
             tooltip = "enable/disable account-wide settings.",
             default = true,
             getFunction = function() return core.sw.accountWide end,
@@ -59,7 +59,7 @@ function core.GetCoreMenuOptions()
     for moduleName, module in util.Spairs(addon.modules, util.SortByPriority) do
         table.insert(options, {
             type = LHAS.ST_CHECKBOX,
-            label = module.friendlyName or moduleName,
+            label = string.format("|c00FF00%s|r", module.friendlyName or moduleName),
             tooltip = module.description or "",
             default = true,
             getFunction = function() return core.sw.modules[moduleName] end,
@@ -72,7 +72,7 @@ function core.GetCoreMenuOptions()
     for extensionName, extension in util.Spairs(addon.extensions, util.SortByPriority) do
         table.insert(options, {
             type = LHAS.ST_CHECKBOX,
-            label = extension.friendlyName or extensionName,
+            label = string.format("|c00FF00%s|r", extension.friendlyName or extensionName),
             tooltip = extension.description or "",
             default = true,
             getFunction = function() return core.sw.extensions[extensionName] end,
