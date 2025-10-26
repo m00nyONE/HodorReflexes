@@ -1,9 +1,6 @@
-name: ESOUI Release
+name: Addon Release
 
 on:
-  #schedule:
-    # every saturday at 05:07am
-  #  - cron: "7 5 * * 0"
   push:
     branches:
       - release # to be changed to main with schedule
@@ -26,6 +23,9 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
+      - name: get repo name
+        run: echo "REPO_NAME=${{ github.event.repository.name }}" >> $GITHUB_ENV
+
       - name: Get current year, month and day
         run: |
           echo "BUILD_DATE_YEAR=$(date -u +'%Y')" >> $GITHUB_ENV
@@ -37,7 +37,7 @@ jobs:
 
       - name: Create env variables
         run: |
-          addon_name="HodorReflexes"
+          addon_name="{{ env.REPO_NAME }}"
           version="${{ env.BUILD_DATE_WITH_HYPHEN }}"
           
           echo "ADDON_NAME=$addon_name" >> $GITHUB_ENV
@@ -86,7 +86,8 @@ jobs:
           makeLatest: true
 
       - name: Test Upload to ESOUI
-        uses: m00nyONE/esoui-upload@v2
+        uses: m00nyONE/esoui-upload@main
+        if: github.repository_owner == 'm00nyONE'
         with:
           api_key: ${{ secrets.ESOUI_API_KEY }}
           addon_id: '2311'
@@ -96,7 +97,8 @@ jobs:
           test: true
 
       - name: Upload to ESOUI
-        uses: m00nyONE/esoui-upload@v2
+        uses: m00nyONE/esoui-upload@main
+        if: github.repository_owner == 'm00nyONE'
         with:
           api_key: ${{ secrets.ESOUI_API_KEY }}
           addon_id: '2311'
@@ -106,7 +108,7 @@ jobs:
 
       - name: Upload to BNET
         uses: m00nyONE/bnet-upload@main
-        if: steps.check_changes.outputs.should_release == 'true'
+        if: github.repository_owner == 'm00nyONE'
         with:
           BNET_USERNAME: ${{ secrets.BNET_USERNAME }}
           BNET_PASSWORD: ${{ secrets.BNET_PASSWORD }}
