@@ -30,7 +30,7 @@ jobs:
 
       - name: Create env variables
         run: |
-          addon_name="{{ env.REPO_NAME }}"
+          addon_name="${{ env.REPO_NAME }}"
           version="${{ env.BUILD_DATE_WITH_HYPHEN }}-dev"
           
           echo "ADDON_NAME=$addon_name" >> $GITHUB_ENV
