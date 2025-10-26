@@ -172,6 +172,7 @@ function module:GetSubMenuOptions()
                 self.damageList.sw.burstWindowSeconds = value
                 self.damageList:Update()
             end,
+            disable = function() return not self.damageList.sw.showSummary end,
         },
         {
             type = LHAS.ST_COLOR,
@@ -183,6 +184,7 @@ function module:GetSubMenuOptions()
                 self.damageList.sw.colorGroupDPS = util.RGB2Hex(r, g, b)
                 self.damageList:Update()
             end,
+            disable = function() return not self.damageList.sw.showSummary end,
             isAdvancedSetting = true,
         },
         {
@@ -195,6 +197,7 @@ function module:GetSubMenuOptions()
                 self.damageList.sw.colorBurstDPS = util.RGB2Hex(r, g, b)
                 self.damageList:Update()
             end,
+            disable = function() return not self.damageList.sw.showSummary end,
             isAdvancedSetting = true,
         },
         {
