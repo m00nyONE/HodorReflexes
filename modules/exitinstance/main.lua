@@ -1,88 +1,133 @@
 -- SPDX-FileCopyrightText: 2025 m00nyONE
 -- SPDX-License-Identifier: Artistic-2.0
 
-HodorReflexes.modules.exitinstance = {
-    name = "HodorReflexes_ExitInstance",
-    version = "1.0.0",
+local addon_name = "HodorReflexes"
+local addon = _G[addon_name]
+local internal = addon.internal
+local core = internal.core
 
-    default = {
-        enabled = true,
+local addon_modules = addon.modules
+local internal_modules = internal.modules
+
+local localPlayer = "player"
+
+local moduleDefinition = {
+    name = "exitinstance",
+    friendlyName = GetString(HR_MODULES_EXITINSTANCE_FRIENDLYNAME),
+    description = GetString(HR_MODULES_EXITINSTANCE_DESCRIPTION),
+    version = "1.0.0",
+    priority = 10,
+    enabled = false,
+    svVersion = 1,
+    svDefault = {
+        ignoreExitInstanceRequests = false,
+        confirmExitInstance = true,
     },
 
-    sv = nil, -- saved variables
+    dialogExitInstance = string.format("%s_ExitInstance", addon_name),
+    dialogSendExitInstance = string.format("%s_SendExitInstance", addon_name),
 }
 
-local HR = HodorReflexes
-local M = HR.modules.exitinstance
-local LGB = LibGroupBroadcast
-local LAM = LibAddonMenu2
-local EVENT_ID_EXITINSTANCEREQUEST = 3
-local EVENT_EXIT_INSTANCE_REQUEST_NAME = "ExitInstanceRequest"
-local _sendExitInstanceRequest
-local localPlayer = "player"
-local localEM = ZO_CallbackObject:New()
+local module = internal.moduleClass:New(moduleDefinition)
 
-
-function M.SendExitInstanceRequest()
-    if not IsUnitGroupLeader(localPlayer) then return end
-
-    _sendExitInstanceRequest()
-end
-
-function M.ExitInstance()
-    if CanExitInstanceImmediately() then
-        if HR.sv.confirmExitInstance and not ZO_Dialogs_IsShowingDialog() then
-            LAM.util.ShowConfirmationDialog(GetString(HR_EXIT_INSTANCE), GetString(HR_EXIT_INSTANCE_CONFIRM), ExitInstanceImmediately)
-        else
-            ExitInstanceImmediately()
-        end
-    end
-end
-
-local function onExitInstanceRequestEventReceived(unitTag)
-    if not IsUnitGroupLeader(unitTag) then return end
-
-    if CanExitInstanceImmediately() then
-        if HR.sv.confirmExitInstance and not ZO_Dialogs_IsShowingDialog() then
-            LAM.util.ShowConfirmationDialog(GetString(HR_BINDING_SEND_EXIT_INSTANCE), GetString(HR_SEND_EXIT_INSTANCE_CONFIRM), ExitInstanceImmediately)
-        else
-            ExitInstanceImmediately()
-        end
-    end
-end
-
-
-local sendExitInstanceRequestButton = {
-    name = GetString(HR_SEND_EXIT_INSTANCE),
-    keybind = 'HR_SEND_EXIT_INSTANCE',
-    callback = function() M.SendExitInstanceRequest() end,
-    alignment = KEYBIND_STRIP_ALIGN_CENTER,
-}
-
-function M.DeclareLGBProtocols(handler)
-    _sendExitInstanceRequest = handler:DeclareCustomEvent(EVENT_ID_EXITINSTANCEREQUEST, EVENT_EXIT_INSTANCE_REQUEST_NAME)
-    local success = LGB:RegisterForCustomEvent(EVENT_EXIT_INSTANCE_REQUEST_NAME, onExitInstanceRequestEventReceived)
-    if not success then
-        d("error registering for EXIT_INSTANCE_EVENT")
-    end
-end
-
-function M.Initialize()
-    -- Retrieve savedVariables
-    M.sv = ZO_SavedVars:NewAccountWide(HR.svName, HR.svVersion, 'exitinstance', M.default)
+function module:Activate()
+    self.logger:Debug("activated exitInstance module")
 
     -- Bindings
-    ZO_CreateStringId('SI_BINDING_NAME_HR_SEND_EXIT_INSTANCE', GetString(HR_BINDING_SEND_EXIT_INSTANCE))
-    ZO_CreateStringId('SI_BINDING_NAME_HR_EXIT_INSTANCE', GetString(HR_BINDING_EXIT_INSTANCE))
+    ZO_CreateStringId('SI_BINDING_NAME_HR_MODULES_EXITINSTANCE_BINDING_SENDEJECT', GetString(HR_MODULES_EXITINSTANCE_BINDING_SENDEJECT))
+    ZO_CreateStringId('SI_BINDING_NAME_HR_MODULES_EXITINSTANCE_BINDING_EXITINSTANCE', GetString(HR_MODULES_EXITINSTANCE_BINDING_EXITINSTANCE))
 
-    -- Add hotkey to group window
+    local exitInstanceRequestButton = {
+        name = GetString(HR_MODULES_EXITINSTANCE_BINDING_SENDEJECT),
+        keybind = 'HR_MODULES_EXITINSTANCE_BINDING_SENDEJECT',
+        callback = function(...) self:SendExitInstanceRequest(...) end,
+        alignment = KEYBIND_STRIP_ALIGN_CENTER,
+    }
+
     local function OnStateChanged(_, newState)
-        if newState == SCENE_FRAGMENT_SHOWING and IsUnitGroupLeader('player') then
-            KEYBIND_STRIP:AddKeybindButton(sendExitInstanceRequestButton)
+        if newState == SCENE_FRAGMENT_SHOWING and IsUnitGroupLeader(localPlayer) then
+            KEYBIND_STRIP:AddKeybindButton(exitInstanceRequestButton)
         elseif newState == SCENE_FRAGMENT_HIDING then
-            KEYBIND_STRIP:RemoveKeybindButton(sendExitInstanceRequestButton)
+            KEYBIND_STRIP:RemoveKeybindButton(exitInstanceRequestButton)
         end
     end
-    KEYBOARD_GROUP_MENU_SCENE:RegisterCallback('StateChange', OnStateChanged)
-    GAMEPAD_GROUP_SCENE:RegisterCallback('StateChange', OnStateChanged)
+    -- Add hotkey to group window
+    if KEYBOARD_GROUP_MENU_SCENE then
+        KEYBOARD_GROUP_MENU_SCENE:RegisterCallback("StateChange", OnStateChanged)
+    end
+    if GAMEPAD_GROUP_SCENE then
+        GAMEPAD_GROUP_SCENE:RegisterCallback("StateChange", OnStateChanged)
+    end
+
+    -- register custom dialog
+    self:registerExitInstanceRequestDialog()
+    self.registerExitInstanceRequestDialog = nil -- only once
+
+
+    -- register "eject" subcommand
+    core.RegisterSubCommand("eject", GetString(HR_MODULES_EXITINSTANCE_COMMAND_HELP), function(...) self:SendExitInstanceRequest(...) end)
+end
+
+function module:ExitInstance()
+    if not CanExitInstanceImmediately() then return end
+
+    if not self.sv.confirmExitInstance then
+        ExitInstanceImmediately()
+        return
+    end
+    if not ZO_Dialogs_IsShowingDialog() then
+        ZO_Dialogs_ShowDialog(self.dialogExitInstance, nil, nil, IsInGamepadPreferredMode())
+        return
+    end
+end
+
+function module:registerExitInstanceRequestDialog()
+    ZO_Dialogs_RegisterCustomDialog(self.dialogExitInstance, {
+        title = {
+            text = GetString(HR_MODULES_EXITINSTANCE_EXITINSTANCE_DIALOG_TITLE),
+        },
+        mainText = {
+            text = GetString(HR_MODULES_EXITINSTANCE_EXITINSTANCE_DIALOG_TEXT),
+        },
+        buttons = {
+            {
+                text = SI_DIALOG_YES,
+                callback = function() ExitInstanceImmediately() end,
+            },
+            {
+                text = SI_DIALOG_NO,
+                callback = function() end, -- do nothing on escape or no button
+            },
+        },
+        noChoiceCallback = function() end, -- do nothing on escape or no button
+        canQueue = false,
+        allowShowOnDead = true,
+        gamepadInfo = {
+            dialogType = GAMEPAD_DIALOGS.BASIC,
+        },
+    })
+    ZO_Dialogs_RegisterCustomDialog(self.dialogSendExitInstance, {
+        title = {
+            text = GetString(HR_MODULES_EXITINSTANCE_SENDEXITINSTANCE_DIALOG_TITLE),
+        },
+        mainText = {
+            text = GetString(HR_MODULES_EXITINSTANCE_SENDEXITINSTANCE_DIALOG_TEXT),
+        },
+        buttons = {
+            {
+                text = SI_DIALOG_YES,
+                callback = function() self:_sendExitInstanceRequestEvent() end,
+            },
+            {
+                text = SI_DIALOG_NO,
+                callback = function() end, -- do nothing on escape or no button
+            },
+        },
+        noChoiceCallback = function() end, -- do nothing on escape or no button
+        canQueue = false,
+        allowShowOnDead = true,
+        gamepadInfo = {
+            dialogType = GAMEPAD_DIALOGS.BASIC,
+        },
+    })
 end

@@ -3,12 +3,14 @@
 
 ## Title: HodorReflexes
 ## Version: dev
-## Author: |cFFFF00@andy.s|r, |c76c3f4@m00nyONE|r, |c9b24bf@YoZoPoClo|r
+## Author: |cFFFF00@andy.s|r, |c76c3f4@m00nyONE|r
 ## APIVersion: 101046 101047
 ## AddOnVersion: 99999999
-## SavedVariables: HodorReflexesSV
-## DependsOn: LibAddonMenu-2.0>=40 LibCombat>=79 LibGroupCombatStats>=20250816 LibGroupBroadcast>=91
-## OptionalDependsOn: RuESO LibCustomNames LibCustomIcons
+## SavedVariables: HodorReflexesSavedVars
+## DependsOn: LibGroupCombatStats>=20250816 LibGroupBroadcast>=91 LibDebugLogger>=268
+## PCDependsOn: LibAddonMenu-2.0>=40 LibCombat>=84
+## ConsoleDependsOn: LibHarvensAddonSettings>=20004 LibCombat2>=8
+## OptionalDependsOn: LibCombat2 LibCustomNames LibCustomIcons
 
 ; This Add-on is not created by, affiliated with or sponsored by ZeniMax Media Inc. or its affiliates.
 ; The Elder Scrolls® and related logos are registered trademarks or trademarks of ZeniMax Media Inc. in the United States and/or other countries.
@@ -16,39 +18,98 @@
 ;
 ; You can read the full terms at https://account.elderscrollsonline.com/add-on-terms
 
+; core
 lang/en.lua
 lang/$(language).lua
-
 HodorReflexes.lua
+core/logging.lua
+core/util.lua
+core/cmd.lua
+core/events.lua
+core/LGBHandler.lua
+core/diagnostic.lua
+core/hud.lua
+core/group.lua
+core/combat.lua
+core/lists.lua
+core/menu.lua
+core/donate.lua
+core/LibCheck.lua
+core/PC/menu.lua
+core/PC/donate.lua
+core/PC/LibCheck.lua
+core/Console/menu.lua
+core/Console/donate.lua
+core/Console/LibCheck.lua
 
-extensions/util.lua
-extensions/player.lua
-extensions/combat.lua
-extensions/anim.lua
-extensions/hud.lua
+core/modules.lua
+core/extensions.lua
 
-HodorReflexesMenu.lua
+; modules
+modules/ult/lang/en.lua
+modules/ult/lang/$(language).lua
+modules/ult/ui/horn.xml
+modules/ult/ui/colos.xml
+modules/ult/ui/atro.xml
+modules/ult/ui/misc.xml
+modules/ult/ui/compact.xml
+modules/ult/main.lua
+modules/ult/util.lua
+modules/ult/trackers.lua
+modules/ult/list_horn.lua
+modules/ult/list_colos.lua
+modules/ult/list_atro.lua
+modules/ult/list_misc.lua
+modules/ult/list_compact.lua
+modules/ult/test.lua
+modules/ult/PC/menu.lua
+modules/ult/Console/menu.lua
 
-modules/share/main.lua
-modules/share/menu.lua
-modules/share/menu_icons.lua
-modules/share/menu_style.lua
-modules/share/ui/horn.xml
-modules/share/ui/colos.xml
-modules/share/ui/atronach.xml
-modules/share/ui/miscUltimates.xml
-modules/share/ui/damage.xml
+modules/dps/lang/en.lua
+modules/dps/lang/$(language).lua
+modules/dps/ui/damage.xml
+modules/dps/main.lua
+modules/dps/util.lua
+modules/dps/test.lua
+modules/dps/list_damage.lua
+modules/dps/PC/menu.lua
+modules/dps/Console/menu.lua
 
-modules/vote/main.lua
-modules/vote/menu.lua
-modules/vote/ui.xml
+modules/readycheck/lang/en.lua
+modules/readycheck/lang/$(language).lua
+modules/readycheck/main.lua
+modules/readycheck/PC/menu.lua
+modules/readycheck/Console/menu.lua
+
+modules/pull/Bindings.xml
+modules/pull/lang/en.lua
+modules/pull/lang/$(language).lua
 modules/pull/main.lua
-modules/pull/bindings.xml
-modules/exitinstance/main.lua
-modules/exitinstance/bindings.xml
+modules/pull/protocol.lua
+modules/pull/PC/menu.lua
+modules/pull/Console/menu.lua
 
-modules/events/main.lua
-modules/events/menu.lua
-modules/events/christmas.lua
-modules/events/aprilfools.lua
-modules/events/valentine.lua
+modules/exitinstance/Bindings.xml
+modules/exitinstance/lang/en.lua
+modules/exitinstance/lang/$(language).lua
+modules/exitinstance/main.lua
+modules/exitinstance/protocol.lua
+modules/exitinstance/PC/menu.lua
+modules/exitinstance/Console/menu.lua
+
+modules/skilllines/lang/en.lua
+modules/skilllines/lang/$(language).lua
+modules/skilllines/main.lua
+
+; extensions
+extensions/seasons/main.lua
+extensions/seasons/aprilfools.lua
+extensions/seasons/PC/christmas.lua
+extensions/seasons/PC/valentines.lua
+extensions/names/main.lua
+extensions/icons/PC/main.lua
+extensions/animations/PC/main.lua
+extensions/configurator/PC/lang/en.lua
+extensions/configurator/PC/lang/$(language).lua
+extensions/configurator/PC/main.lua
+extensions/configurator/PC/menu.lua

@@ -9,7 +9,7 @@ jobs:
         uses: actions/checkout@v4
       - name: Generate doc.lua file
         run: |
-          python3 .github/scripts/generate-docs.py HodorReflexes.addon docs-lua
+          python3 .github/scripts/docs/generate-docs.py HodorReflexes.addon docs-lua
       - name: Generate docs with emmylua_doc_cli
         run: |
           URL=$(curl -s https://api.github.com/repos/EmmyLuaLs/emmylua-analyzer-rust/releases/latest | jq -r '.assets[] | select(.name? | match("emmylua_doc_cli-linux-x64.tar.gz$")) | .browser_download_url')

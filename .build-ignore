@@ -2,5 +2,7 @@
 .github
 .gitignore
 .build-ignore
+docs-lua
+README_CONSOLE.txt
+README_ESOUI.txt
 TODO.md
-config.ld

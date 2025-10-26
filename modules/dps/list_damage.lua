@@ -1,0 +1,237 @@
+-- SPDX-FileCopyrightText: 2025 m00nyONE
+-- SPDX-License-Identifier: Artistic-2.0
+
+local addon_name = "HodorReflexes"
+local addon = _G[addon_name]
+local internal = addon.internal
+local core = internal.core
+
+local addon_modules = addon.modules
+local internal_modules = internal.modules
+
+local module_name = "dps"
+local module = addon_modules[module_name]
+
+local combat = addon.combat
+local util = addon.util
+
+local LGCS = LibGroupCombatStats
+local DAMAGE_UNKNOWN = LGCS.DAMAGE_UNKNOWN
+local DAMAGE_BOSS = LGCS.DAMAGE_BOSS
+local DAMAGE_TOTAL = LGCS.DAMAGE_TOTAL
+
+local localBoss1 = "boss1"
+
+local svVersion = 1
+local svDefault = {
+    enabled =  1, -- 1=always, 2=out of combat, 3=non bossfights, 0=off
+    disableInPvP = true,
+
+    windowPosLeft = 10,
+    windowPosTop = 50,
+    windowWidth = 227,
+
+    listHeaderOpacity = 0.8,
+    listRowEvenOpacity = 0.65,
+    listRowOddOpacity = 0.45,
+    listPlayerHighlightColor = {0, 1, 0, 0.36}, -- green
+
+    colorDamageTotal = "FAFFB2", -- light yellow
+    colorDamageBoss = "B2FFB2", -- light green
+
+    timerUpdateInterval = 100, -- ms
+
+    showSummary = false,
+    burstWindowSeconds = 10,
+
+    colorGroupDPS = "F4D17B", -- light orange
+    colorBurstDPS = "BDFF7B", -- light green
+}
+
+--- initializes the damage list
+--- @return void
+function module:CreateDamageList()
+    local listDefinition = {
+        name = "damage",
+        svVersion = svVersion,
+        svDefault = svDefault,
+        Update = function() self:UpdateDamageList() end,
+        listHeaderHeight = 22,
+        listRowHeight = 22,
+    }
+    self.damageList = addon.listClass:New(listDefinition)
+    local list = self.damageList
+
+    list.HEADER_TYPE = list:GetNextDataTypeId() -- type id for header
+    list.ROW_TYPE = list:GetNextDataTypeId()   -- type id for rows
+    list.SUMMARY_TYPE = list:GetNextDataTypeId() -- type id for summary
+    list.HEADER_TEMPLATE = "HodorReflexes_Dps_DamageList_Header"
+    list.ROW_TEMPLATE = "HodorReflexes_Dps_DamageList_DamageRow"
+    list.SUMMARY_TEMPLATE = "HodorReflexes_Dps_DamageList_Summary"
+
+    local function headerRowCreationWrapper(wrappedFunction)
+        return function(rowControl, data, scrollList)
+            wrappedFunction(self, rowControl, data, scrollList)
+        end
+    end
+
+    local function damageRowCreationWrapper(wrappedFunction)
+        return function(rowControl, data, scrollList)
+            -- only create rows if conditions are met
+            if data.dmg > 0 and (self.isTestRunning or IsUnitOnline(data.tag)) then
+                wrappedFunction(self, rowControl, data, scrollList)
+            end
+        end
+    end
+
+    local function summaryRowCreationWrapper(wrappedFunction)
+        return function(rowControl, data, scrollList)
+            if data.groupDPS > 0 then
+                wrappedFunction(self, rowControl, data, scrollList)
+            end
+        end
+    end
+
+    ZO_ScrollList_AddDataType(
+            list.listControl,
+            list.HEADER_TYPE,
+            list.HEADER_TEMPLATE,
+            list.listHeaderHeight,
+            headerRowCreationWrapper(self.headerRowCreationFunction)
+    )
+    ZO_ScrollList_SetTypeCategoryHeader(list.listControl, list.HEADER_TYPE, true)
+    list.logger:Debug("added header row type '%d' with template '%s'", list.HEADER_TYPE, list.HEADER_TEMPLATE)
+
+    ZO_ScrollList_AddDataType(
+            list.listControl,
+            list.ROW_TYPE,
+            list.ROW_TEMPLATE,
+            list.listRowHeight,
+            damageRowCreationWrapper(self.damageRowCreationFunction)
+    )
+    list.logger:Debug("added player row type '%d' with template '%s'", list.ROW_TYPE, list.ROW_TEMPLATE)
+
+    ZO_ScrollList_AddDataType(
+            list.listControl,
+            list.SUMMARY_TYPE,
+            list.SUMMARY_TEMPLATE,
+            list.listRowHeight,
+            summaryRowCreationWrapper(self.summaryRowCreationFunction)
+    )
+    ZO_ScrollList_SetTypeCategoryHeader(list.listControl, list.SUMMARY_TYPE, true)
+    list.logger:Debug("added summary row type '%d' with template '%s'", list.SUMMARY_TYPE, list.SUMMARY_TEMPLATE)
+end
+
+--- creation function for the header row. This can be overwritten if using a custom theme
+function module:headerRowCreationFunction(rowControl, data, scrollList)
+    if not rowControl._initialized then
+        rowControl:GetNamedChild("_Title"):SetText(self.getDamageHeaderFormat(data.dmgType, self.damageList.sw.colorDamageBoss, self.damageList.sw.colorDamageTotal))
+        rowControl:GetNamedChild("_BG"):SetAlpha(self.damageList.sw.listHeaderOpacity)
+        local timeControl = rowControl:GetNamedChild("_Time")
+        self.damageList:CreateFightTimeUpdaterOnControl(timeControl)
+
+        rowControl._initialized = true
+    end
+end
+
+--- creation function for the damage rows. This can be overwritten if using a custom theme
+function module:damageRowCreationFunction(rowControl, data, scrollList)
+    local userName = util.GetUserName(data.userId, true)
+    if userName then
+        local nameControl = rowControl:GetNamedChild('_Name')
+        nameControl:SetText(userName)
+        nameControl:SetColor(1, 1, 1)
+    end
+
+    local userIcon, tcLeft, tcRight, tcTop, tcBottom = util.GetUserIcon(data.userId, data.classId)
+    if userIcon then
+        local iconControl = rowControl:GetNamedChild('_Icon')
+        iconControl:SetTextureReleaseOption(RELEASE_TEXTURE_AT_ZERO_REFERENCES)
+        iconControl:SetTexture(userIcon)
+        iconControl:SetTextureCoords(tcLeft, tcRight, tcTop, tcBottom)
+    end
+
+    local valueControl = rowControl:GetNamedChild("_Value")
+    valueControl:SetText(self.getDamageRowFormat(data.dmgType, data.dmg, data.dps, self.damageList.sw.colorDamageBoss, self.damageList.sw.colorDamageTotal))
+    valueControl:SetFont("$(GAMEPAD_MEDIUM_FONT)|$(KB_19)|outline")
+
+    local customColor = false
+    if data.isPlayer then
+        local r, g, b, o = unpack(self.damageList.sw.listPlayerHighlightColor)
+        if o ~= 0 then
+            customColor = true
+            rowControl:GetNamedChild('_BG'):SetColor(r, g, b, o or 0.5)
+        end
+    end
+    if not customColor then
+        rowControl:GetNamedChild('_BG'):SetColor(0, 0, 0, zo_mod(data.orderIndex, 2) == 0 and self.damageList.sw.listRowEvenOpacity or self.damageList.sw.listRowOddOpacity)
+    end
+end
+
+--- creation function for the summary row. This can be overwritten if using a custom theme
+function module:summaryRowCreationFunction(rowControl, data, scrollList)
+    local title = "Group Total: "
+    local value = ""
+    if data.dmgType == DAMAGE_BOSS then
+        --title = string.format("dps (10sBurst) [ttk]:")
+        --value = string.format("%0.1fK (%0.1fK) [%0.1s]", data.groupDPS / 1000, data.groupDPSBurst / 1000, data.timeToKillMainBoss and data.timeToKillMainBoss > 0 and data.timeToKillMainBoss or "-")
+        title = string.format("|c%sGroup DPS|r |c%s(%ds)|r", self.damageList.sw.colorGroupDPS, self.damageList.sw.colorBurstDPS, self.damageList.sw.burstWindowSeconds)
+        value = string.format("|c%s%0.2fM|r |c%s(%0.2fM)|r", self.damageList.sw.colorGroupDPS, data.groupDPS / 1000000, self.damageList.sw.colorBurstDPS, data.groupDPSBurst / 1000000 or "-")
+        --title = "Group Total: "
+        --value = self.getDamageRowFormat(data.dmgType, (data.damageOutTotalGroup / 100) / data.fightTime, data.groupDPS / 1000, self.damageList.sw.colorDamageBoss, self.damageList.sw.colorDamageTotal)
+    else
+        title = "Group Total: "
+        value = self.getDamageRowFormat(data.dmgType, data.damageOutTotalGroup / 10000, data.groupDPS / 1000, self.damageList.sw.colorDamageBoss, self.damageList.sw.colorDamageTotal)
+    end
+
+    rowControl:GetNamedChild("_Title"):SetText(title)
+    rowControl:GetNamedChild("_Value"):SetText(value)
+end
+
+--- update function to refresh the damage list. This should usually not be overwritten by a custom theme unless absolutely necessary.
+function module:UpdateDamageList()
+    local listControl = self.damageList.listControl
+
+    local dmgType = DAMAGE_UNKNOWN
+
+    ZO_ScrollList_Clear(listControl)
+    local dataList = ZO_ScrollList_GetDataList(listControl)
+
+    local playersDataList = {}
+    for _, playerData in pairs(addon.playersData) do
+        if playerData.dmg > 0 then
+            dmgType = playerData.dmgType
+            table.insert(playersDataList, playerData)
+        end
+    end
+    table.sort(playersDataList, self.sortByDamageType)
+
+    -- insert header row
+    table.insert(dataList, ZO_ScrollList_CreateDataEntry(self.damageList.HEADER_TYPE, {
+        dmgType = dmgType,
+    }))
+
+    -- insert damageRows
+    for i, playerData in ipairs(playersDataList) do
+        playerData.orderIndex = i
+        table.insert(dataList, ZO_ScrollList_CreateDataEntry(self.damageList.ROW_TYPE, playerData))
+    end
+
+    if self.damageList.sw.showSummary and #playersDataList > 0 then
+        table.insert(dataList, ZO_ScrollList_CreateDataEntry(self.damageList.SUMMARY_TYPE, {
+            dmgType = dmgType,
+            fightTime = combat:GetCombatTime(),
+            damageOutTotalGroup = combat:GetDamageOutTotalGroup(),
+            --timeToKillMainBoss = combat:GetTimeToKill(localBoss1), -- TODO: implement
+            groupDPS = combat:GetGroupDPSOut(),
+            groupDPSBurst = combat:GetGroupDPSOverTime(self.damageList.sw.burstWindowSeconds),
+        }))
+    end
+
+    self.damageList.window:SetHeight(
+            self.damageList.listHeaderHeight +
+            (#playersDataList * self.damageList.listRowHeight) +
+            (#playersDataList > 0 and self.damageList.listRowHeight or 0) -- summary row
+    )
+    ZO_ScrollList_Commit(listControl)
+end

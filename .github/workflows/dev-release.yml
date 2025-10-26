@@ -1,14 +1,13 @@
 name: Dev Release
 
 on:
-  #schedule:
-  # every saturday at 05:07am
-  #  - cron: "7 5 * * 0"
   push:
     branches:
       - main
 
 jobs:
+  test:
+    uses: ./.github/workflows/_tests.yml
   release:
     name: "dev release"
     runs-on: ubuntu-latest
@@ -16,6 +15,9 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+
+      - name: get repo name
+        run: echo "REPO_NAME=${{ github.event.repository.name }}" >> $GITHUB_ENV
 
       - name: Get current year, month and day
         run: |
@@ -28,7 +30,7 @@ jobs:
 
       - name: Create env variables
         run: |
-          addon_name="HodorReflexes"
+          addon_name="{{ env.REPO_NAME }}"
           version="${{ env.BUILD_DATE_WITH_HYPHEN }}-dev"
           
           echo "ADDON_NAME=$addon_name" >> $GITHUB_ENV
@@ -68,7 +70,7 @@ jobs:
       - name: Create GitHub Release
         uses: ncipollo/release-action@v1
         with:
-          name: "latest"
+          name: "${{ env.ADDON_VERSION }}"
           commit: ${{ github.ref }}
           tag: "${{ env.ADDON_VERSION }}"
           artifacts: "${{ env.ZIP_FULL_NAME }}"
@@ -79,8 +81,8 @@ jobs:
           prerelease: true
           updateOnlyUnreleased: true
 
-      - name: Upload to ESOUI
-        uses: m00nyONE/esoui-upload@v2
+      - name: Test Upload to ESOUI
+        uses: m00nyONE/esoui-upload@main
         if: github.repository_owner == 'm00nyONE'
         with:
           api_key: ${{ secrets.ESOUI_API_KEY }}
