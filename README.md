@@ -9,18 +9,15 @@ Hodor Reflexes allows you to view shared DPS and Ult data from group members.
 
 Originally written by @andy.s, this is a complete rewrite and rebrand of the addon to use modern libraries and APIs.
 
-Install guide:
+# Install Guide
+1. Download the required libraries (`LibAddonMenu-2.0`, `LibGroupCombatStats`, `LibGroupBroadcast`, `LibCombat`, `LibDebugLogger`, `LibCustomNames`, `LibCustomIcons`) and place them in the AddOns folder. (or just use Minion)
+2. Install and enable the addon in the in-game add-ons list, ensuring all dependencies are up-to-date.
+3. Join a group using HodorReflexes or a similar addon built upon LibGroupCombatStats to start viewing shared data.
 
-1. Download the following libraries and put them into your AddOns folder (or just use Minion): `LibAddonMenu-2.0`, `LibGroupCombatStats`, `LibGroupBroadcast`, `LibCombat`, `LibDebugLogger`, `LibCustomNames`, `LibCustomIcons`. Most likely you already have them installed.
-2. Install this addon, make sure it's enabled and all dependencies are up-to-date in the in-game add-ons list.
-3. Once you've joined a group that also uses HodorReflexes or a similar addon built upon LibGroupCombatStats, you'll start seeing ultimate/dps data.
 
-To reposition the lists you need to unlock UI in the addon settings.
+# Usage
+- Unlock and reposition UI elements via the addon settings or by typing `/hodor test` when not in a group.
 
-Q&A:
-
-1. How does this addon work?
-   - it uses LibGroupCombatStats to get it's data. LibGroupCombatStats shares the ultimate/dps/hps data with your group members. It uses ZoS new Broadcast API introduced in U45 which replaces the old hacky way of sending MapPings back and forth between group members to share small amounts of data.
-
-2. Does it conflict with Raid Notifier or other addons sharing DPS or ULT data?
-   - no
+# Technical Details
+- The addon relies on `LibGroupCombatStats` to view ultimate/DPS/HPS data among group members. If you use a different addon that also uses this library, you'll be able to see each other's data.
+- It uses the ZoS Broadcast API, which replaces older hacky methods like MapPings for data sharing.
