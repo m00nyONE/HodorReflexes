@@ -50,6 +50,15 @@ function core.CreateNewMenu(subName, options)
             ReloadUI()
         end
     })
+    panel:AddSetting({
+        type = LHAS.ST_BUTTON,
+        label = "Toggle Test Mode",
+        buttonText = "Toggle Test Mode",
+        tooltip = "Toggles the test mode for the addon. This does NOT work when you are in a group.",
+        clickHandler = function(control)
+            SLASH_COMMANDS[string.format("/%s", addon.slashCmd)]("test")
+        end
+    })
     for _, option in ipairs(options) do
         panel:AddSetting(option)
     end
@@ -79,7 +88,6 @@ function core.GetCoreMenuOptions()
             default = true,
             requiresReload = true,
         },
-        -- we do not need ui lock/unlock on console. They have no mouse anyway :D
     }
     mergeOptions(generalOptions, options)
 
