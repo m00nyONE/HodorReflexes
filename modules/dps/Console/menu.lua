@@ -22,8 +22,13 @@ function module:GetSubMenuOptions()
 
     local function mergeOptions(source, destination)
         for _, option in ipairs(source) do
-            if option.requiresReload == true then
-                option.label = string.format("|c00FF00%s|r", option.label)
+            if option.requiresReload then
+                option.label = string.format("|cffff00%s|r", option.label)
+                --local originalSetFunction = option.setFunction
+                --option.setFunction = function()
+                --    originalSetFunction()
+                --    ZO_ERROR_FRAME:OnUIError("You changed a setting that requires you to reload the UI", nil)
+                --end
             end
             if not option.isAdvancedSetting or self.sw.advancedSettings then
                 table.insert(destination, option)
@@ -146,8 +151,8 @@ function module:GetSubMenuOptions()
         }
     end
 
-
-    local options = GetGeneralOptions()
+    local options = {}
+    local generalOptions = GetGeneralOptions()
     local damageList = GetComonListOptions("Damage List", self.damageList)
     local damageListSpecificOptions = {
         {
@@ -181,7 +186,7 @@ function module:GetSubMenuOptions()
             type = LHAS.ST_COLOR,
             label = "Group DPS Color",
             tooltip = "color used to display the group DPS value.",
-            default = util.Hex2RGB(self.damageList.svDefault.colorGroupDPS),
+            default = { util.Hex2RGB(self.damageList.svDefault.colorGroupDPS) },
             getFunction = function() return util.Hex2RGB(self.damageList.sw.colorGroupDPS) end,
             setFunction = function(r, g, b)
                 self.damageList.sw.colorGroupDPS = util.RGB2Hex(r, g, b)
@@ -194,7 +199,7 @@ function module:GetSubMenuOptions()
             type = LHAS.ST_COLOR,
             label = "Group Burst DPS Color",
             tooltip = "color used to display the group burst DPS value.",
-            default = util.Hex2RGB(self.damageList.svDefault.colorBurstDPS),
+            default = { util.Hex2RGB(self.damageList.svDefault.colorBurstDPS) },
             getFunction = function() return util.Hex2RGB(self.damageList.sw.colorBurstDPS) end,
             setFunction = function(r, g, b)
                 self.damageList.sw.colorBurstDPS = util.RGB2Hex(r, g, b)
@@ -207,7 +212,7 @@ function module:GetSubMenuOptions()
             type = LHAS.ST_COLOR,
             label = "Total Damage Color",
             tooltip = "",
-            default = util.Hex2RGB(self.damageList.svDefault.colorDamageTotal),
+            default = { util.Hex2RGB(self.damageList.svDefault.colorDamageTotal) },
             getFunction = function() return util.Hex2RGB(self.damageList.sw.colorDamageTotal) end,
             setFunction = function(r, g, b)
                 self.damageList.sw.colorDamageTotal = util.RGB2Hex(r, g, b)
@@ -219,7 +224,7 @@ function module:GetSubMenuOptions()
             type = LHAS.ST_COLOR,
             label = "Boss Damage Color",
             tooltip = "",
-            default = util.Hex2RGB(self.damageList.svDefault.colorDamageBoss),
+            default = { util.Hex2RGB(self.damageList.svDefault.colorDamageBoss) },
             getFunction = function() return util.Hex2RGB(self.damageList.sw.colorDamageBoss) end,
             setFunction = function(r, g, b)
                 self.damageList.sw.colorDamageBoss = util.RGB2Hex(r, g, b)
@@ -231,7 +236,7 @@ function module:GetSubMenuOptions()
             type = LHAS.ST_COLOR,
             label = "player row highlight color",
             tooltip = "highlight color for the player's row in the damage list.",
-            default = unpack(self.damageList.svDefault.listPlayerHighlightColor),
+            default = self.damageList.svDefault.listPlayerHighlightColor,
             getFunction = function() return unpack(self.damageList.sw.listPlayerHighlightColor) end,
             setFunction = function(r, g, b, o)
                 self.damageList.sw.listPlayerHighlightColor = {r, g, b, o}
@@ -306,6 +311,7 @@ function module:GetSubMenuOptions()
         },
     }
 
+    mergeOptions(generalOptions, options)
     mergeOptions(damageListSpecificOptions, damageList)
     mergeOptions(damageList, options)
 

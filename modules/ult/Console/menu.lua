@@ -20,20 +20,26 @@ function module:GetSubMenuOptions()
 
     local function mergeOptions(source, destination)
         for _, option in ipairs(source) do
-            if option.requiresReload == true then
-                option.label = string.format("|c00FF00%s|r", option.label)
+            if option.requiresReload then
+                option.label = string.format("|cffff00%s|r", option.label)
+                --local originalSetFunction = option.setFunction
+                --option.setFunction = function()
+                --    originalSetFunction()
+                --    ZO_ERROR_FRAME:OnUIError("You changed a setting that requires you to reload the UI", nil)
+                --end
             end
             if not option.isAdvancedSetting or self.sw.advancedSettings then
                 table.insert(destination, option)
             end
         end
     end
+
     local function getGeneralOptions()
         return {
             core.CreateSectionHeader("General"),
             {
                 type = LHAS.ST_CHECKBOX,
-                label = "account wide settings",
+                label = string.format("|cffff00%s|r", "account wide settings"),
                 tooltip = "enable/disable account-wide settings.",
                 default = true,
                 getFunction = function() return self.sw.accountWide end,
@@ -44,7 +50,7 @@ function module:GetSubMenuOptions()
             },
             {
                 type = LHAS.ST_CHECKBOX,
-                label = "Advanced Settings",
+                label = string.format("|cffff00%s|r", "Advanced Settings"),
                 tooltip = "allows you to customize more advanced settings for the lists.",
                 default = false,
                 getFunction = function() return self.sw.advancedSettings end,
@@ -212,7 +218,9 @@ function module:GetSubMenuOptions()
         }
     end
 
-    local options = getGeneralOptions()
+    local options = {}
+    local generalOptions = getGeneralOptions()
+    mergeOptions(generalOptions, options)
 
     local hornList = GetComonListOptions("Horn List", self.hornList)
     local hornListSpecificOptions = {
@@ -232,7 +240,7 @@ function module:GetSubMenuOptions()
             label = "Saxhleel Highlight Color",
             tooltip = "set the highlight color for saxhleel players.",
             disabled = function() return not self.hornList.sw.highlightSaxhleel end,
-            default = unpack(self.hornList.svDefault.highlightSaxhleelColor),
+            default = self.hornList.svDefault.highlightSaxhleelColor,
             getFunction = function() return unpack(self.hornList.sw.highlightSaxhleelColor) end,
             setFunction = function(r, g, b, a)
                 self.hornList.sw.highlightSaxhleelColor = {r, g, b, a}
@@ -244,7 +252,7 @@ function module:GetSubMenuOptions()
             type = LHAS.ST_COLOR,
             label = "Horn Countdown Color",
             tooltip = "set the color the horn buff countdown.",
-            default = unpack(self.hornList.svDefault.colorHorn),
+            default = self.hornList.svDefault.colorHorn,
             getFunction = function() return unpack(self.hornList.sw.colorHorn) end,
             setFunction = function(r, g, b)
                 self.hornList.sw.colorHorn = {r, g, b}
@@ -256,7 +264,7 @@ function module:GetSubMenuOptions()
             type = LHAS.ST_COLOR,
             label = "Force Countdown Color",
             tooltip = "set the color the force buff countdown.",
-            default = unpack(self.hornList.svDefault.colorForce),
+            default = self.hornList.svDefault.colorForce,
             getFunction = function() return unpack(self.hornList.sw.colorForce) end,
             setFunction = function(r, g, b)
                 self.hornList.sw.colorForce = {r, g, b}
@@ -274,7 +282,7 @@ function module:GetSubMenuOptions()
             type = LHAS.ST_COLOR,
             label = "Vulnerability Countdown Color",
             tooltip = "set the color the vulnerability debuff countdown.",
-            default = unpack(self.colosList.svDefault.colorVuln),
+            default = self.colosList.svDefault.colorVuln,
             getFunction = function() return unpack(self.colosList.sw.colorVuln) end,
             setFunction = function(r, g, b)
                 self.colosList.sw.colorVuln = {r, g, b}
@@ -293,7 +301,7 @@ function module:GetSubMenuOptions()
             type = LHAS.ST_COLOR,
             label = "Atronach Countdown Color",
             tooltip = "set the color of the Atronach ultimate countdown.",
-            default = unpack(self.atroList.svDefault.colorAtro),
+            default = self.atroList.svDefault.colorAtro,
             getFunction = function() return unpack(self.atroList.sw.colorAtro) end,
             setFunction = function(r, g, b)
                 self.atroList.sw.colorAtro = {r, g, b}
@@ -305,7 +313,7 @@ function module:GetSubMenuOptions()
             type = LHAS.ST_COLOR,
             label = "Berserk Countdown Color",
             tooltip = "set the color of the Berserk countdown.",
-            default = unpack(self.atroList.svDefault.colorBerserk),
+            default = self.atroList.svDefault.colorBerserk,
             getFunction = function() return unpack(self.atroList.sw.colorBerserk) end,
             setFunction = function(r, g, b)
                 self.atroList.sw.colorBerserk = {r, g, b}
@@ -423,7 +431,7 @@ function module:GetSubMenuOptions()
             type = LHAS.ST_COLOR,
             label = "horn background color",
             tooltip = "set the background color for horn ults.",
-            default = unpack(self.compactList.svDefault.colorHornBG),
+            default = self.compactList.svDefault.colorHornBG,
             getFunction = function() return unpack(self.compactList.sw.colorHornBG) end,
             setFunction = function(r, g, b)
                 self.compactList.sw.colorHornBG = {r, g, b}
@@ -435,7 +443,7 @@ function module:GetSubMenuOptions()
             type = LHAS.ST_COLOR,
             label = "colos background color",
             tooltip = "set the background color for colos ults.",
-            default = unpack(self.compactList.svDefault.colorColosBG),
+            default = self.compactList.svDefault.colorColosBG,
             getFunction = function() return unpack(self.compactList.sw.colorColosBG) end,
             setFunction = function(r, g, b)
                 self.compactList.sw.colorColosBG = {r, g, b}
@@ -447,7 +455,7 @@ function module:GetSubMenuOptions()
             type = LHAS.ST_COLOR,
             label = "atro background color",
             tooltip = "set the background color for atro ults.",
-            default = unpack(self.compactList.svDefault.colorAtroBG),
+            default = self.compactList.svDefault.colorAtroBG,
             getFunction = function() return unpack(self.compactList.sw.colorAtroBG) end,
             setFunction = function(r, g, b)
                 self.compactList.sw.colorAtroBG = {r, g, b}
@@ -459,7 +467,7 @@ function module:GetSubMenuOptions()
             type = LHAS.ST_COLOR,
             label = "slayer background color",
             tooltip = "set the background color for slayer ults.",
-            default = unpack(self.compactList.svDefault.colorSlayerBG),
+            default = self.compactList.svDefault.colorSlayerBG,
             getFunction = function() return unpack(self.compactList.sw.colorSlayerBG) end,
             setFunction = function(r, g, b)
                 self.compactList.sw.colorSlayerBG = {r, g, b}
@@ -471,7 +479,7 @@ function module:GetSubMenuOptions()
             type = LHAS.ST_COLOR,
             label = "pillager background color",
             tooltip = "set the background color for pillager ults.",
-            default = unpack(self.compactList.svDefault.colorPillagerBG),
+            default = self.compactList.svDefault.colorPillagerBG,
             getFunction = function() return unpack(self.compactList.sw.colorPillagerBG) end,
             setFunction = function(r, g, b)
                 self.compactList.sw.colorPillagerBG = {r, g, b}
@@ -483,7 +491,7 @@ function module:GetSubMenuOptions()
             type = LHAS.ST_COLOR,
             label = "crypt cannon background color",
             tooltip = "set the background color for crypt cannon ults.",
-            default = unpack(self.compactList.svDefault.colorCryptCannonBG),
+            default = self.compactList.svDefault.colorCryptCannonBG,
             getFunction = function() return unpack(self.compactList.sw.colorCryptCannonBG) end,
             setFunction = function(r, g, b)
                 self.compactList.sw.colorCryptCannonBG = {r, g, b}
@@ -506,7 +514,7 @@ function module:GetSubMenuOptions()
             type = LHAS.ST_COLOR,
             label = "ult percentage color",
             tooltip = "set the color for marking ults on cooldown.",
-            default = unpack(self.compactList.svDefault.markOnCooldownColor),
+            default = self.compactList.svDefault.markOnCooldownColor,
             getFunction = function() return unpack(self.compactList.sw.markOnCooldownColor) end,
             setFunction = function(r, g, b)
                 self.compactList.sw.markOnCooldownColor = {r, g, b}
@@ -518,7 +526,7 @@ function module:GetSubMenuOptions()
             type = LHAS.ST_COLOR,
             label = "Duration Color",
             tooltip = "set the color of the ultimate durations.",
-            default = unpack(self.compactList.svDefault.colorDurations),
+            default = self.compactList.svDefault.colorDurations,
             getFunction = function() return unpack(self.compactList.sw.colorDurations) end,
             setFunction = function(r, g, b)
                 self.compactList.sw.colorDurations = {r, g, b}
@@ -531,7 +539,7 @@ function module:GetSubMenuOptions()
             type = LHAS.ST_COLOR,
             label = "Cooldown Color",
             tooltip = "set the color of the ultimate cooldowns.",
-            default = unpack(self.compactList.svDefault.colorCooldowns),
+            default = self.compactList.svDefault.colorCooldowns,
             getFunction = function() return unpack(self.compactList.sw.colorCooldowns) end,
             setFunction = function(r, g, b)
                 self.compactList.sw.colorCooldowns = {r, g, b}

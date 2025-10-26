@@ -20,6 +20,9 @@ function core.GetPanelConfig(subName)
     return LHAS:AddAddon(name, {
         allowDefaults = true,
         allowRefresh = true,
+        defaultsFunction = function()
+            d("Reset complete! Some changes might require a /reloadui to take effect.")
+        end
     })
 end
 
@@ -34,6 +37,19 @@ end
 -- function is platform specific
 function core.CreateNewMenu(subName, options)
     local panel = core.GetPanelConfig(subName)
+    panel:AddSetting({
+        type = LHAS.ST_LABEL,
+        label = "Settings highlighted in |cffff00yellow|r require a reload.",
+    })
+    panel:AddSetting({
+        type = LHAS.ST_BUTTON,
+        label = "Reload UI",
+        buttonText = "Reload UI",
+        tooltip = "Reloads the UI",
+        clickHandler = function(control)
+            ReloadUI()
+        end
+    })
     for _, option in ipairs(options) do
         panel:AddSetting(option)
     end
@@ -41,46 +57,67 @@ end
 
 -- function is platform specific
 function core.GetCoreMenuOptions()
-    local options = {
+    local function mergeOptions(source, destination)
+        for _, option in ipairs(source) do
+            if option.requiresReload then
+                option.label = string.format("|cffff00%s|r", option.label)
+            end
+            table.insert(destination, option)
+        end
+    end
+
+    local options = {}
+    local generalOptions = {
         core.CreateSectionHeader("General"),
         {
             type = LHAS.ST_CHECKBOX,
-            label = string.format("|c00FF00%s|r", "account wide settings"),
+            label = "account wide settings",
             tooltip = "enable/disable account-wide settings.",
             default = true,
             getFunction = function() return core.sw.accountWide end,
             setFunction = function(value) core.sw.accountWide = value end,
             default = true,
+            requiresReload = true,
         },
         -- we do not need ui lock/unlock on console. They have no mouse anyway :D
     }
+    mergeOptions(generalOptions, options)
 
-    table.insert(options, core.CreateSectionHeader("Modules"))
+    local moduleOptions = {
+        core.CreateSectionHeader("Modules"),
+    }
     for moduleName, module in util.Spairs(addon.modules, util.SortByPriority) do
-        table.insert(options, {
+        table.insert(moduleOptions, {
             type = LHAS.ST_CHECKBOX,
-            label = string.format("|c00FF00%s|r", module.friendlyName or moduleName),
+            label = module.friendlyName or moduleName,
             tooltip = module.description or "",
             default = true,
             getFunction = function() return core.sw.modules[moduleName] end,
             setFunction = function(value)
                 core.sw.modules[moduleName] = value
             end,
+            requiresReload = true,
         })
     end
-    table.insert(options, core.CreateSectionHeader("Extensions"))
+    mergeOptions(moduleOptions, options)
+
+    local extensionOptions = {
+        core.CreateSectionHeader("Extensions"),
+    }
     for extensionName, extension in util.Spairs(addon.extensions, util.SortByPriority) do
-        table.insert(options, {
+        table.insert(extensionOptions, {
             type = LHAS.ST_CHECKBOX,
-            label = string.format("|c00FF00%s|r", extension.friendlyName or extensionName),
+            label = extension.friendlyName or extensionName,
             tooltip = extension.description or "",
             default = true,
             getFunction = function() return core.sw.extensions[extensionName] end,
             setFunction = function(value)
                 core.sw.extensions[extensionName] = value
             end,
+            requiresReload = true,
         })
     end
+    mergeOptions(extensionOptions, options)
 
     return options
 end
