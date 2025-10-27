@@ -85,17 +85,9 @@ function module:CreateCompactList()
     list.HEADER_TEMPLATE = "HodorReflexes_Ult_CompactList_Header"
     list.ROW_TEMPLATE = "HodorReflexes_Ult_CompactList_PlayerRow"
 
-    local function headerRowCreationWrapper(wrappedFunction)
+    local function rowCreationWrapper(wrappedFunction)
         return function(rowControl, data, scrollList)
             wrappedFunction(self, rowControl, data, scrollList)
-        end
-    end
-
-    local function playerRowCreationWrapper(wrappedFunction)
-        return function(rowControl, data, scrollList)
-            if (self.isTestRunning or IsUnitOnline(data.tag)) then
-                wrappedFunction(self, rowControl, data, scrollList)
-            end
         end
     end
 
@@ -104,7 +96,7 @@ function module:CreateCompactList()
             list.HEADER_TYPE,
             list.HEADER_TEMPLATE,
             list.listHeaderHeight,
-            headerRowCreationWrapper(self.compactListHeaderRowCreationFunction)
+            rowCreationWrapper(self.compactListHeaderRowCreationFunction)
     )
     ZO_ScrollList_SetTypeCategoryHeader(list.listControl, list.HEADER_TYPE, true)
     list.logger:Debug("added header row type '%d' with template '%s'", list.HEADER_TYPE, list.HEADER_TEMPLATE)
@@ -114,7 +106,7 @@ function module:CreateCompactList()
             list.ROW_TYPE_HORN,
             list.ROW_TEMPLATE,
             list.listRowHeight,
-            playerRowCreationWrapper(self.compactListHornRowCreationFunction)
+            rowCreationWrapper(self.compactListHornRowCreationFunction)
     )
     list.logger:Debug("added horn player row type '%d' with template '%s'", list.ROW_TYPE_HORN, list.ROW_TEMPLATE)
     ZO_ScrollList_AddDataType(
@@ -122,7 +114,7 @@ function module:CreateCompactList()
             list.ROW_TYPE_COLOS,
             list.ROW_TEMPLATE,
             list.listRowHeight,
-            playerRowCreationWrapper(self.compactListColosRowCreationFunction)
+            rowCreationWrapper(self.compactListColosRowCreationFunction)
     )
     list.logger:Debug("added colos player row type '%d' with template '%s'", list.ROW_TYPE_COLOS, list.ROW_TEMPLATE)
     ZO_ScrollList_AddDataType(
@@ -130,7 +122,7 @@ function module:CreateCompactList()
             list.ROW_TYPE_ATRO,
             list.ROW_TEMPLATE,
             list.listRowHeight,
-            playerRowCreationWrapper(self.compactListAtroRowCreationFunction)
+            rowCreationWrapper(self.compactListAtroRowCreationFunction)
     )
     list.logger:Debug("added atro player row type '%d' with template '%s'", list.ROW_TYPE_ATRO, list.ROW_TEMPLATE)
     ZO_ScrollList_AddDataType(
@@ -138,7 +130,7 @@ function module:CreateCompactList()
             list.ROW_TYPE_SLAYER,
             list.ROW_TEMPLATE,
             list.listRowHeight,
-            playerRowCreationWrapper(self.compactListSlayerRowCreationFunction)
+            rowCreationWrapper(self.compactListSlayerRowCreationFunction)
     )
     list.logger:Debug("added slayer player row type '%d' with template '%s'", list.ROW_TYPE_SLAYER, list.ROW_TEMPLATE)
     ZO_ScrollList_AddDataType(
@@ -146,7 +138,7 @@ function module:CreateCompactList()
             list.ROW_TYPE_PILLAGER,
             list.ROW_TEMPLATE,
             list.listRowHeight,
-            playerRowCreationWrapper(self.compactListPillagerRowCreationFunction)
+            rowCreationWrapper(self.compactListPillagerRowCreationFunction)
     )
     list.logger:Debug("added pillager player row type '%d' with template '%s'", list.ROW_TYPE_PILLAGER, list.ROW_TEMPLATE)
     ZO_ScrollList_AddDataType(
@@ -154,7 +146,7 @@ function module:CreateCompactList()
             list.ROW_TYPE_CRYPTCANNON,
             list.ROW_TEMPLATE,
             list.listRowHeight,
-            playerRowCreationWrapper(self.compactListCryptCannonRowCreationFunction)
+            rowCreationWrapper(self.compactListCryptCannonRowCreationFunction)
     )
     list.logger:Debug("added cryptcannon player row type '%d' with template '%s'", list.ROW_TYPE_CRYPTCANNON, list.ROW_TEMPLATE)
 
