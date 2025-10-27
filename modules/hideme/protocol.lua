@@ -9,7 +9,7 @@ local core = internal.core
 local addon_modules = addon.modules
 local internal_modules = internal.modules
 
-local group = internal.group
+local group = core.group
 
 local module_name = "hideme"
 local module = addon_modules[module_name]
