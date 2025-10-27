@@ -149,6 +149,11 @@ function module:Activate()
         hasSlayer = false,
         hasPillager = false,
         ultActivatedSetID = 0, -- TODO: remove after reworking LGCS later
+        -- hide from list preferences ( sent by HideMe module )
+        hideHorn = false,
+        hideColos = false,
+        hideAtro = false,
+        hideSaxhleel = false,
     })
 
     self:RunOnce("registerTrackers")

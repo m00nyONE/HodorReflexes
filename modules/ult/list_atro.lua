@@ -144,7 +144,7 @@ function module:UpdateAtroList()
 
     local playersDataList = {}
     for _, playerData in pairs(addon.playersData) do
-        if playerData.ultValue > 0 and playerData.hasAtro then
+        if not playerData.hideAtro and playerData.ultValue > 0 and playerData.hasAtro then
             local lowestPossibleAtroCost = 0
             if self:isAtro(playerData.ult1ID) then lowestPossibleAtroCost = playerData.ult1Cost end
             if self:isAtro(playerData.ult2ID) then lowestPossibleAtroCost = playerData.ult2Cost end
