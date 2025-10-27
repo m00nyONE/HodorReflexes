@@ -79,7 +79,8 @@ modules/hideme/lang/en.lua
 modules/hideme/lang/$(language).lua
 modules/hideme/main.lua
 modules/hideme/protocol.lua
-modules/hideme/menu.lua
+modules/hideme/PC/menu.lua
+modules/hideme/Console/menu.lua
 
 modules/readycheck/lang/en.lua
 modules/readycheck/lang/$(language).lua
