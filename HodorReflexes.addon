@@ -4,7 +4,7 @@
 ## Title: HodorReflexes
 ## Version: dev
 ## Author: |cFFFF00@andy.s|r, |c76c3f4@m00nyONE|r
-## APIVersion: 101046 101047
+## APIVersion: 101047 101048
 ## AddOnVersion: 99999999
 ## SavedVariables: HodorReflexesSavedVars
 ## DependsOn: LibGroupCombatStats>=20250816 LibGroupBroadcast>=91 LibDebugLogger>=268
