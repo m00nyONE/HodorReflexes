@@ -7,6 +7,8 @@ local internal = addon.internal
 local core = internal.core
 local logger = core.GetLogger("core/util")
 
+local localPlayer = "player"
+
 local util = {}
 addon.util = util
 
@@ -19,14 +21,45 @@ end
 
 --[[ doc.lua begin ]]
 
---- calculate the distance between two points
---- @param x1 number x coordinate of point 1
---- @param y1 number y coordinate of point 1
---- @param x2 number x coordinate of point 2
---- @param y2 number y coordinate of point 2
---- @return number distance between point 1 and point 2
-function util.GetDistance(x1, y1, x2, y2)
-    return zo_sqrt((x2 - x1) ^ 2 + (y2 - y1) ^ 2)
+--- calculate the distance between two units.
+--- @param unitTag1 string unit tag of the first unit
+--- @param unitTag2 string unit tag of the second unit
+--- @return number|nil distance in meters, or nil if units are in different zones
+function util.GetUnitDistanceToUnit(unitTag1, unitTag2)
+    local zone1, x1, y1, z1 = GetUnitWorldPosition(unitTag1)
+    local zone2, x2, y2, z2 = GetUnitWorldPosition(unitTag2)
+    if zone1 == zone2 then
+        return zo_distance3D(x1, y1, z1, x2, y2, z2) / 100
+    end
+end
+--- calculate the distance between the local player and another unit.
+--- @param unitTag string unit tag of the unit to measure distance to
+--- @return number|nil distance in meters, or nil if units are in different zones
+function util.GetPlayerDistanceToUnit(unitTag)
+    return util.GetUnitDistanceToUnit(localPlayer, unitTag)
+end
+--- check if a unit is within a certain range of the player.
+--- @param unitTag string unit tag of the unit to check
+--- @param range number range in meters
+--- @return boolean true if the unit is within range, false otherwise
+function util.IsUnitInPlayersRange(unitTag, range)
+    local distance = util.GetPlayerDistanceToUnit(unitTag)
+    if distance and distance <= range then
+        return true
+    end
+    return false
+end
+--- check if two units are within a certain range of each other.
+--- @param unitTag1 string unit tag of the first unit
+--- @param unitTag2 string unit tag of the second unit
+--- @param range number range in meters
+--- @return boolean true if the units are within range, false otherwise
+function util.IsUnitInUnitsRange(unitTag1, unitTag2, range)
+    local distance = util.GetUnitDistanceToUnit(unitTag1, unitTag2)
+    if distance and distance <= range then
+        return true
+    end
+    return false
 end
 
 --- Convert FFFFFF to 1, 1, 1
