@@ -1,6 +1,6 @@
 [SIZE="2"][B]IMPORTANT:[/B] You need LibCustomNames and LibCustomIcons now if you want to have names and icons displayed.[/SIZE]
 
-## 2025.10.26 - @m00nyONE
+## 2025.10.27 - @m00nyONE
 HodorReflexes got a complete rewrite from scratch! All code has been replaced and modernized to current ESO API standards.
 The old legacy version will not be updated anymore and will not receive any support in the future!
 
@@ -16,6 +16,7 @@ New Features:
 - Every List now has the option to show/hide the percentage and/or raw ult points separately.
 - Every List now has the option to be visible "never", "always", "out of combat" or on "non boss fights" only.
 - Saxhleel can now be highlighted in the horn list.
+- You can now finaly hide your own ultimates from others lists by using the "Hide Me" option in the settings menu.
 - The "misc ultimates" list does now have an option to include all special ults like Horn, Colossus, and Atro. This way you can have a single list for all ultimates if you want to.
 - New CLI commands for easier access to certain functions. To get a list of all commands, type "/hodor" in chat.
 
@@ -39,7 +40,6 @@ Noteworthy changes:
 Known Issues:
 - sometimes there are glitches with the animation extension that cause icons to not animate properly. A reloadui fixes this. I haven't completely figured out why this happens yet.
 - Localization is not finished yet. Only English and partially German is done. And because I'm not a native english speaker, there might be some grammar/spelling mistakes here and there. If you want to help with translations, feel free to open a PullRequest on github or message me on discord.
-- There is no option to control what other players can see. You can not hide your colossus or horn from others lists yet. This will come in a future update by introducing a new module called "HideMe".
 - The lists only update when new data is received from LibGroupCombatStats. If the data does not change, the lists do not update. This can lead to situations where the data is stale and not up to date. That's all good and intentional but i thought i might add it here so you are aware of it.
 - The new summary feature for the DPS list is not always reliable. It depends on what the client can get from ESO API. So sometimes it might be off by a few percent. I will try to improve this in the future.
 
