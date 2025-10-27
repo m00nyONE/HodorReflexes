@@ -9,6 +9,7 @@ local logger = core.logger.main
 
 local hud = core.hud
 local util = addon.util
+local combat = addon.combat
 
 local WM = GetWindowManager()
 local EM = GetEventManager()
@@ -131,6 +132,10 @@ function list:Initialize(listDefinition)
     addon.RegisterCallback(HR_EVENT_PLAYERSDATA_UPDATED, function(...) self:UpdateDebounced(...) end)
     addon.RegisterCallback(HR_EVENT_PLAYERSDATA_CLEANED, function(...) self:UpdateDebounced(...) end)
 
+    EM:RegisterForEvent(self._Id .. "_SupportRangeUpdate", EVENT_GROUP_SUPPORT_RANGE_UPDATE, function()
+        self:UpdateDebounced()
+    end)
+
     self.logger:Debug("initialized in %d ms", GetGameTimeMilliseconds() - beginTime)
     self.Initialize = nil -- prevent re-initialization
 
@@ -202,6 +207,7 @@ function list:CreateSavedVariables()
     self.svDefault.windowPosLeft = self.svDefault.windowPosLeft or 0
     self.svDefault.windowPosTop = self.svDefault.windowPosTop or 0
     self.svDefault.windowWidth = self.svDefault.windowWidth or 220
+    self.svDefault.supportRangeOnly = self.svDefault.supportRangeOnly or false
 
     local svNamespace = string.format("list_%s", self.name)
     local svVersion = core.svVersion + self.svVersion
@@ -234,11 +240,16 @@ function list:CreateControls()
     window:SetHidden(true)
     window:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, self.sv.windowPosLeft, self.sv.windowPosTop)
     window:SetWidth(self.sv.windowWidth)
-    window:SetHeight(self.listHeaderHeight + (self.listRowHeight * GROUP_SIZE_MAX) + self.listRowHeight) -- header + rows + extraRow for padding
+    window:SetHeight(self.listHeaderHeight + (self.listRowHeight * MAX_GROUP_SIZE_THRESHOLD) + self.listRowHeight) -- header + rows + extraRow for padding
     window:SetHandler( "OnMoveStop", function()
         self.sv.windowPosLeft = window:GetLeft()
         self.sv.windowPosTop = window:GetTop()
     end)
+    -- this here is for debugging - it draws an red background for all the lists
+    --local bg = window:CreateControl(windowName .. "_highLight", CT_TEXTURE)
+    --bg:SetAnchorFill(window)
+    --bg:SetColor(1, 0, 0, 0.5)
+    --bg:SetMouseEnabled(false)
     self.windowName = windowName
     self.window = window
     self.logger:Debug("created main window '%s'", windowName)
@@ -248,7 +259,7 @@ function list:CreateControls()
     local listControl = WM:CreateControlFromVirtual(listControlName, window, "ZO_ScrollList")
     listControl:SetAnchor(TOPLEFT, window, TOPLEFT, 0, 0, ANCHOR_CONSTRAINS_XY)
     listControl:SetAnchor(TOPRIGHT, window, TOPRIGHT, ZO_SCROLL_BAR_WIDTH, 0, ANCHOR_CONSTRAINS_X)
-    listControl:SetHeight(self.listHeaderHeight + (self.listRowHeight * GROUP_SIZE_MAX) + self.listRowHeight) -- header + rows + extraRow for padding
+    listControl:SetHeight(self.listHeaderHeight + (self.listRowHeight * MAX_GROUP_SIZE_THRESHOLD) + self.listRowHeight) -- header + rows + extraRow for padding
     listControl:SetMouseEnabled(false)
     listControl:GetNamedChild("Contents"):SetMouseEnabled(false)
     self.listControlName = listControlName
@@ -278,7 +289,7 @@ end
 --- @return void
 function list.RenderCurrentFightTimeToControl(control)
     -- it would be more expensive here to check if the list is visible and prevent the rendering of the text than just rendering it anyways
-    local t = core.combat:GetCombatTime()
+    local t = combat:GetCombatTime()
     control:SetText(t > 0 and string.format("%d:%04.1f|u0:2::|u", t / 60, t % 60) or "")
 end
 
@@ -325,6 +336,14 @@ function list.RenderTimeToControl(control, timeMS, opacity)
     control:SetText(string.format("%0.1f|u0:2::|u", timeS) or "")
     if opacity then
         control:SetAlpha(opacity)
+    end
+end
+
+function list:ApplySupportRangeStyle(rowControl, unitTag)
+    if self.sw.supportRangeOnly and not IsUnitInGroupSupportRange(unitTag) then
+        rowControl:SetAlpha(0.2)
+    else
+        rowControl:SetAlpha(1.0)
     end
 end
 

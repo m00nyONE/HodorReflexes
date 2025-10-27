@@ -1,9 +1,11 @@
 [B]Hodor Reflexes[/B] Hodor Reflexes allows you to view shared DPS and Ult data from group members.
 
+Originally written by @andy.s, this is a complete rewrite and rebrand of the addon to use modern libraries and APIs.
+
 [SIZE="4"]Install guide:[/SIZE]
 
 1. Download the following libraries and put them into your AddOns folder (or just use Minion): [URL="https://www.esoui.com/downloads/info7-LibAddonMenu.html"]LibAddonMenu-2.0[/URL], [URL="https://www.esoui.com/downloads/info4024-LibGroupCombatStats.html"]LibGroupCombatStats[/URL],
-[URL=https://www.esoui.com/downloads/info1337-LibGroupBroadcastformerlyLibGroupSocket.html]LibGroupBroadcast[/URL], [URL="https://www.esoui.com/downloads/info2528-LibCombat.html"]LibCombat[/URL], [URL="https://www.esoui.com/downloads/info4161-LibCustomIcons.html"]LibCustomIcons[/URL], [URL="https://www.esoui.com/downloads/fileinfo.php?id=4155#info"]LibCustomNames[/URL].
+[URL=https://www.esoui.com/downloads/info1337-LibGroupBroadcastformerlyLibGroupSocket.html]LibGroupBroadcast[/URL], [URL="https://www.esoui.com/downloads/info2528-LibCombat.html"]LibCombat[/URL], [URL="https://www.esoui.com/downloads/info2275-LibDebugLogger.html"]LibDebugLogger[/URL], [URL="https://www.esoui.com/downloads/info4161-LibCustomIcons.html"]LibCustomIcons[/URL], [URL="https://www.esoui.com/downloads/fileinfo.php?id=4155#info"]LibCustomNames[/URL].
 Most likely you already have most of them installed.
 2. Install this addon, make sure it's enabled and all dependencies are up-to-date in the in-game add-ons list.
 3. Once you've joined a group that also uses HodorReflexes or a similar addon built upon LibGroupCombatStats, you'll start seeing ultimate/dps data.

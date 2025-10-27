@@ -30,6 +30,5 @@ function module:GetMainMenuOptions()
             getFunc = function() return self.sv.ignoreExitInstanceRequests end,
             setFunc = function(value) self.sv.ignoreExitInstanceRequests = value end
         },
-
     }
 end

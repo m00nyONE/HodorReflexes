@@ -19,8 +19,8 @@ function module:GetMainMenuOptions()
             name = GetString(HR_MODULES_READYCHECK_MENU_CHAT),
             tooltip = GetString(HR_MODULES_READYCHECK_MENU_CHAT_TT),
             default = self.svDefault.enableChatMessages,
-            getFunc = function() return self.sv.enableChatMessages end,
-            setFunc = function(value) self.sv.enableChatMessages = value end,
+            getFunc = function() return self.sw.enableChatMessages end,
+            setFunc = function(value) self.sw.enableChatMessages = value end,
         },
     }
 end

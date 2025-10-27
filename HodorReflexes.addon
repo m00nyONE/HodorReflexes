@@ -3,14 +3,14 @@
 
 ## Title: HodorReflexes
 ## Version: dev
-## Author: |cFFFF00@andy.s|r, |c76c3f4@m00nyONE|r, |c9b24bf@YoZoPoClo|r
+## Author: |cFFFF00@andy.s|r, |c76c3f4@m00nyONE|r
 ## APIVersion: 101046 101047
 ## AddOnVersion: 99999999
 ## SavedVariables: HodorReflexesSavedVars
 ## DependsOn: LibGroupCombatStats>=20250816 LibGroupBroadcast>=91 LibDebugLogger>=268
-## PCDependsOn: LibAddonMenu-2.0>=40 LibCombat>=79
-## ConsoleDependsOn: LibHarvensAddonSettings>=20004 LibCombat2
-## OptionalDependsOn: LibCustomNames LibCustomIcons
+## PCDependsOn: LibAddonMenu-2.0>=40 LibCombat>=84
+## ConsoleDependsOn: LibHarvensAddonSettings>=20004 LibCombat2>=8
+## OptionalDependsOn: LibCombat2 LibCustomNames LibCustomIcons
 
 ; This Add-on is not created by, affiliated with or sponsored by ZeniMax Media Inc. or its affiliates.
 ; The Elder Scrolls® and related logos are registered trademarks or trademarks of ZeniMax Media Inc. in the United States and/or other countries.
@@ -85,21 +85,24 @@ modules/hideme/Console/menu.lua
 modules/readycheck/lang/en.lua
 modules/readycheck/lang/$(language).lua
 modules/readycheck/main.lua
-modules/readycheck/menu.lua
+modules/readycheck/PC/menu.lua
+modules/readycheck/Console/menu.lua
 
 modules/pull/Bindings.xml
 modules/pull/lang/en.lua
 modules/pull/lang/$(language).lua
 modules/pull/main.lua
 modules/pull/protocol.lua
-modules/pull/menu.lua
+modules/pull/PC/menu.lua
+modules/pull/Console/menu.lua
 
 modules/exitinstance/Bindings.xml
 modules/exitinstance/lang/en.lua
 modules/exitinstance/lang/$(language).lua
 modules/exitinstance/main.lua
 modules/exitinstance/protocol.lua
-modules/exitinstance/menu.lua
+modules/exitinstance/PC/menu.lua
+modules/exitinstance/Console/menu.lua
 
 modules/skilllines/lang/en.lua
 modules/skilllines/lang/$(language).lua

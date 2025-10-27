@@ -34,6 +34,8 @@ local svDefault = {
     headerOpacity = 0.0,
     zeroTimerOpacity = 0.35,
 
+    supportRangeOnly = false,
+
     colorAtro = {0, 1, 1}, -- cyan
     colorBerserk = {1, 1, 0}, -- yellow
 }
@@ -92,8 +94,10 @@ end
 function module:atroListHeaderRowCreationFunction(rowControl, data, scrollList)
     if not rowControl._initialized or self.atroList._redrawHeaders then
         rowControl:GetNamedChild("_BG"):SetAlpha(self.atroList.sw.headerOpacity)
+        rowControl:GetNamedChild("_AtroIcon"):SetTexture(self.atroIcon)
         rowControl:GetNamedChild("_AtroDuration"):SetColor(unpack(self.atroList.sw.colorAtro))
         rowControl:GetNamedChild("_AtroDuration"):SetAlpha(self.atroList.sw.zeroTimerOpacity)
+        rowControl:GetNamedChild("_BerserkIcon"):SetTexture(GetAbilityIcon(self.majorBerserkId))
         rowControl:GetNamedChild("_BerserkDuration"):SetColor(unpack(self.atroList.sw.colorBerserk))
         rowControl:GetNamedChild("_BerserkDuration"):SetAlpha(self.atroList.sw.zeroTimerOpacity)
 
@@ -114,6 +118,8 @@ function module:atroListHeaderRowCreationFunction(rowControl, data, scrollList)
 end
 
 function module:atroListRowCreationFunction(rowControl, data, scrollList)
+    self.atroList:ApplySupportRangeStyle(rowControl, data.tag)
+
     local userName = util.GetUserName(data.userId, true)
     if userName then
         local nameControl = rowControl:GetNamedChild('_Name')
@@ -124,6 +130,7 @@ function module:atroListRowCreationFunction(rowControl, data, scrollList)
     local userIcon, tcLeft, tcRight, tcTop, tcBottom = util.GetUserIcon(data.userId, data.classId)
     if userIcon then
         local iconControl = rowControl:GetNamedChild('_Icon')
+        iconControl:SetTextureReleaseOption(RELEASE_TEXTURE_AT_ZERO_REFERENCES)
         iconControl:SetTexture(userIcon)
         iconControl:SetTextureCoords(tcLeft, tcRight, tcTop, tcBottom)
     end

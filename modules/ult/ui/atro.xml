@@ -11,7 +11,7 @@
                 <Texture name="$(parent)_BG" color="000000" alpha="0.0" hidden="false">
                     <AnchorFill />
                 </Texture>
-                <Texture name="$(parent)_AtroIcon" textureFile="HodorReflexes/assets/ui/atronach.dds">
+                <Texture name="$(parent)_AtroIcon" textureFile="/esoui/art/icons/ability_sorcerer_greater_storm_atronach.dds">
                     <Dimensions x="28" y="28"/>
                     <Anchor point="LEFT" relativePoint="LEFT" relativeTo="$(parent)" offsetX="4"/>
                 </Texture>
@@ -19,7 +19,7 @@
                     <Dimensions x="50" y="24"/>
                     <Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$(parent)_AtroIcon" offsetX="2"/>
                 </Label>
-                <Texture name="$(parent)_BerserkIcon" textureFile="HodorReflexes/assets/ui/major_berserk.dds">
+                <Texture name="$(parent)_BerserkIcon" textureFile="/esoui/art/icons/ability_buff_major_berserk.dds">
                     <Dimensions x="28" y="28"/>
                     <Anchor point="LEFT" relativePoint="LEFT" relativeTo="$(parent)" offsetX="90"/>
                 </Texture>

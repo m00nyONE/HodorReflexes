@@ -34,6 +34,8 @@ local svDefault = {
     headerOpacity = 0.0,
     zeroTimerOpacity = 0.35,
 
+    supportRangeOnly = false,
+
     colorHorn = {0, 1, 1}, -- cyan
     colorForce = {1, 1, 0}, -- yellow
     highlightSaxhleel = true,
@@ -94,8 +96,10 @@ end
 function module:hornListHeaderRowCreationFunction(rowControl, data, scrollList)
     if not rowControl._initialized or self.hornList._redrawHeaders then
         rowControl:GetNamedChild("_BG"):SetAlpha(self.hornList.sw.headerOpacity)
+        rowControl:GetNamedChild("_HornIcon"):SetTexture(self.hornIcon)
         rowControl:GetNamedChild("_HornDuration"):SetColor(unpack(self.hornList.sw.colorHorn))
         rowControl:GetNamedChild("_HornDuration"):SetAlpha(self.hornList.sw.zeroTimerOpacity)
+        rowControl:GetNamedChild("_ForceIcon"):SetTexture(self.forceIcon)
         rowControl:GetNamedChild("_ForceDuration"):SetColor(unpack(self.hornList.sw.colorForce))
         rowControl:GetNamedChild("_ForceDuration"):SetAlpha(self.hornList.sw.zeroTimerOpacity)
 
@@ -116,6 +120,8 @@ function module:hornListHeaderRowCreationFunction(rowControl, data, scrollList)
 end
 
 function module:hornListRowCreationFunction(rowControl, data, scrollList)
+    self.hornList:ApplySupportRangeStyle(rowControl, data.tag)
+
     local userName = util.GetUserName(data.userId, true)
     if userName then
         local nameControl = rowControl:GetNamedChild('_Name')
@@ -126,6 +132,7 @@ function module:hornListRowCreationFunction(rowControl, data, scrollList)
     local userIcon, tcLeft, tcRight, tcTop, tcBottom = util.GetUserIcon(data.userId, data.classId)
     if userIcon then
         local iconControl = rowControl:GetNamedChild('_Icon')
+        iconControl:SetTextureReleaseOption(RELEASE_TEXTURE_AT_ZERO_REFERENCES)
         iconControl:SetTexture(userIcon)
         iconControl:SetTextureCoords(tcLeft, tcRight, tcTop, tcBottom)
     end

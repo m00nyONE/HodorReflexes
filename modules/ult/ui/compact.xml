@@ -21,7 +21,7 @@
                     <Anchor point="TOP" relativePoint="BOTTOM" relativeTo="$(parent)_HornIcon" offsetX="0" offsetY="2" />
                 </Label>
 
-                <Texture name="$(parent)_ForceIcon" textureFile="/esoui/art/icons/ability_ava_003.dds">
+                <Texture name="$(parent)_ForceIcon" textureFile="/esoui/art/icons/ability_buff_major_force.dds">
                     <Dimensions x="28" y="28"/>
                     <Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$(parent)_HornIcon" offsetX="10"/>
                 </Texture>

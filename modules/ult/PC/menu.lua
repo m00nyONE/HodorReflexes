@@ -22,10 +22,7 @@ function module:GetSubMenuOptions()
     end
     local function getGeneralOptions()
         return {
-            {
-                type = "header",
-                name = string.format("|cFFFACD%s|r", "General")
-            },
+            core.CreateSectionHeader("General"),
             {
                 type = "checkbox",
                 name = "account wide settings",
@@ -52,10 +49,7 @@ function module:GetSubMenuOptions()
     end
     local function GetComonListOptions(listName, list)
         return {
-            {
-                type = "header",
-                name = string.format("|cFFFACD%s|r", listName)
-            },
+            core.CreateSectionHeader(listName),
             {
                 type = "checkbox",
                 name = "Disable in PvP",
@@ -107,6 +101,17 @@ function module:GetSubMenuOptions()
                 getFunc = function() return list.sw.showRawValue == 1.0 end,
                 setFunc = function(value)
                     list.sw.showRawValue = value and 1.0 or 0.0
+                    list:Update()
+                end,
+            },
+            {
+                type = "checkbox",
+                name = "Support Range Only",
+                tooltip = "only show players that are in range for support ultimates.",
+                default = list.svDefault.supportRangeOnly,
+                getFunc = function() return list.sw.supportRangeOnly end,
+                setFunc = function(value)
+                    list.sw.supportRangeOnly = value
                     list:Update()
                 end,
             },

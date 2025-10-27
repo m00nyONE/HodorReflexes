@@ -31,8 +31,10 @@ local combat = {
     },
     logger = core.initSubLogger("combat"),
 }
-core.combat = combat
+addon.combat = combat -- expose combat class as it can be useful for others too
 
+--- initializes the combat class.
+--- @return void
 function core.InitializeCombat()
     combat:Reset()
     LC:RegisterCallbackType(LIBCOMBAT_EVENT_FIGHTRECAP, function(...) combat:FightRecapCallback(...) end, addon_name .. "_Combat")
@@ -45,14 +47,23 @@ function core.InitializeCombat()
     addon.RegisterCallback(HR_EVENT_TEST_TICK, function(...) combat:updateTest(...) end)
 end
 
+--- resets the combat data.
+--- @return void
 function combat:Reset()
     self.data.dpstime = 0
     self.data.hpstime = 0
+
     self.data.groupDPSOut = 0
     self.data.damageOutTotalGroup = 0
+
     self.damageHistory = {}
     self.logger:Debug("Combat data reset")
 end
+
+--- For internal use only!
+--- Fight recap callback to update combat data.
+--- @param _ any unused
+--- @param data table the fight recap data
 function combat:FightRecapCallback(_, data)
     self.data.dpstime = data.dpstime or 0
     self.data.hpstime = data.hpstime or 0
@@ -65,15 +76,27 @@ function combat:FightRecapCallback(_, data)
     })
 end
 
+--- gets the current combat time in seconds.
+--- @return number the current combat time in seconds, rounded to nearest 0.1s
 function combat:GetCombatTime()
     return zo_roundToNearest(zo_max(self.data.dpstime, self.data.hpstime), 0.1)
 end
+
+--- gets the current group DPS out.
+--- @return number the current group DPS out.
 function combat:GetGroupDPSOut()
     return self.data.groupDPSOut
 end
+
+--- gets the total damage done by the group in the current combat.
+--- @return number the total damage done by the group in the current combat.
 function combat:GetDamageOutTotalGroup()
     return self.data.damageOutTotalGroup
 end
+
+--- calculates the group DPS over a given time frame.
+--- @param seconds number the time frame in seconds
+--- @return number the calculated group DPS over the given time frame. If not enough data is available, returns the current group DPS out.
 function combat:GetGroupDPSOverTime(seconds)
     local now = GetGameTimeMilliseconds()
     local cutoff = now - (seconds * 1000) -- convert to milliseconds
@@ -91,6 +114,7 @@ function combat:GetGroupDPSOverTime(seconds)
         end
     end
 
+    -- calculate DPS
     if oldest and newest and newest.timestamp > oldest.timestamp then
         local damageDiff = newest.damage - oldest.damage
         local timeDiff = newest.timestamp - oldest.timestamp
@@ -98,9 +122,15 @@ function combat:GetGroupDPSOverTime(seconds)
     end
     return self:GetGroupDPSOut()
 end
+
+--- estimates the time to kill for a given unit based on current health and group DPS.
+--- this is absolutely NOT accurate when not used on bosses or in situations where there are a lot of adds involved.
+--- it also does not work well when the unit has invulnerability phases or healing.
+--- @param unitTag string the unit tag of the target unit
+--- @return number time to kill in seconds, rounded to nearest 0.1s. Returns 0 if group DPS is 0.
 function combat:GetTimeToKill(unitTag)
     local current, max, _ = GetUnitPower(unitTag, POWERTYPE_HEALTH)
-    local groupDPS = self:GetGroupDPSOut()
+    local groupDPS = self:GetGroupDPSOverTime(15) -- use last 15 seconds for better accuracy
     if groupDPS > 0 then
         return zo_roundToNearest(current / groupDPS, 0.1)
     end
@@ -118,11 +148,17 @@ function combat:startTest()
         CM:FireCallbacks(HR_EVENT_COMBAT_START)
     end, 100)
 
-    -- TODO: implement when summary works correctly
-    --for _, data in pairs(addon.playersData) do
-    --    self.data.groupDPSOut = self.data.groupDPSOut + (data.dps * 100 or 0)
-    --    self.data.damageOutTotalGroup = self.data.damageOutTotalGroup + (data.dmg * 100 or 0)
-    --end
+    -- initial calculation of group DPS and total damage from mock data
+    for _, data in pairs(addon.playersData) do
+        self.data.groupDPSOut = self.data.groupDPSOut + (data.dps * 1000 or 0)
+        self.data.damageOutTotalGroup = self.data.damageOutTotalGroup + (data.dps * 1000 * self.data.dpstime) or 0
+    end
+
+    -- save history
+    table.insert(self.damageHistory, {
+        timestamp = GetGameTimeMilliseconds(),
+        damage = self.data.damageOutTotalGroup
+    })
 end
 function combat:stopTest()
     self.logger:Debug("Stopping combat test")
@@ -133,14 +169,18 @@ end
 function combat:updateTest()
     self.data.dpstime = (GetGameTimeMilliseconds() - self._testBeginTime) / 1000
 
-    -- TODO: implement when summary works correctly
-    --self.data.groupDPSOut = 0
-    --for _, data in pairs(addon.playersData) do
-    --    self.data.groupDPSOut = self.data.groupDPSOut + (data.dps * 100 or 0)
-    --    self.data.damageOutTotalGroup = self.data.damageOutTotalGroup + (data.dmg * 100 or 0)
-    --end
-    --table.insert(self.damageHistory, {
-    --    timestamp = GetGameTimeMilliseconds(),
-    --    damage = self.data.damageOutTotalGroup
-    --})
+    self.data.groupDPSOut = 0
+    self.data.damageOutTotalGroup = 0
+
+    -- recalculate group DPS and total damage from mock data
+    for _, data in pairs(addon.playersData) do
+        self.data.groupDPSOut = self.data.groupDPSOut + (data.dps * 1000 or 0)
+        self.data.damageOutTotalGroup = self.data.damageOutTotalGroup + (data.dps * 1000 * self.data.dpstime) or 0
+    end
+
+    -- save history
+    table.insert(self.damageHistory, {
+        timestamp = GetGameTimeMilliseconds(),
+        damage = self.data.damageOutTotalGroup
+    })
 end

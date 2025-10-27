@@ -33,6 +33,8 @@ local svDefault = {
     headerOpacity = 0.0,
     zeroTimerOpacity = 0.35,
 
+    supportRangeOnly = false,
+
     colorVuln = {1, 1, 0}, -- yellow
 }
 
@@ -90,6 +92,7 @@ end
 function module:colosListHeaderRowCreationFunction(rowControl, data, scrollList)
     if not rowControl._initialized or self.colosList._redrawHeaders then
         rowControl:GetNamedChild("_BG"):SetAlpha(self.colosList.sw.headerOpacity)
+        rowControl:GetNamedChild("_Icon"):SetTexture(self.colosIcon)
         rowControl:GetNamedChild("_Duration"):SetColor(unpack(self.colosList.sw.colorVuln))
         rowControl:GetNamedChild("_Duration"):SetAlpha(self.colosList.sw.zeroTimerOpacity)
 
@@ -105,6 +108,8 @@ function module:colosListHeaderRowCreationFunction(rowControl, data, scrollList)
 end
 
 function module:colosListRowCreationFunction(rowControl, data, scrollList)
+    self.colosList:ApplySupportRangeStyle(rowControl, data.tag)
+
     local userName = util.GetUserName(data.userId, true)
     if userName then
         local nameControl = rowControl:GetNamedChild('_Name')
@@ -115,6 +120,7 @@ function module:colosListRowCreationFunction(rowControl, data, scrollList)
     local userIcon, tcLeft, tcRight, tcTop, tcBottom = util.GetUserIcon(data.userId, data.classId)
     if userIcon then
         local iconControl = rowControl:GetNamedChild('_Icon')
+        iconControl:SetTextureReleaseOption(RELEASE_TEXTURE_AT_ZERO_REFERENCES)
         iconControl:SetTexture(userIcon)
         iconControl:SetTextureCoords(tcLeft, tcRight, tcTop, tcBottom)
     end

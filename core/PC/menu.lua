@@ -10,7 +10,7 @@ local logger = core.initSubLogger("menu")
 local util = addon.util
 local LAM = LibAddonMenu2
 
-local function GetPanelConfig(subName)
+function core.GetPanelConfig(subName)
     local name = addon.friendlyName
     local displayName = string.format('|cFFFACD%s|r', addon.friendlyName)
     if subName then
@@ -31,8 +31,15 @@ local function GetPanelConfig(subName)
     }
 end
 
-local function createMenu(subName, options)
-    local panel = GetPanelConfig(subName)
+function core.CreateSectionHeader(name)
+    return {
+        type = "header",
+        name = string.format("|cFFFACD%s|r", name)
+    }
+end
+
+function core.CreateNewMenu(subName, options)
+    local panel = core.GetPanelConfig(subName)
     local menuReference = addon_name .. "_menu"
     if subName then
         menuReference = string.format("%s_module_%s_menu", addon_name, subName)
@@ -42,12 +49,9 @@ local function createMenu(subName, options)
     LAM:RegisterOptionControls(menuReference, options)
 end
 
-local function getCoreMenuOptions()
+function core.GetCoreMenuOptions()
     local options = {
-        {
-            type = "header",
-            name = string.format("|cFFFACD%s|r", "General")
-        },
+        core.CreateSectionHeader("General"),
         {
             type = "checkbox",
             name = "account wide settings",
@@ -74,10 +78,8 @@ local function getCoreMenuOptions()
             end,
         }
     }
-    table.insert(options, {
-        type = "header",
-        name = string.format("|cFFFACD%s|r", "Modules")
-    })
+
+    table.insert(options, core.CreateSectionHeader("Modules"))
     for moduleName, module in util.Spairs(addon.modules, util.SortByPriority) do
         table.insert(options, {
             type = "checkbox",
@@ -88,14 +90,10 @@ local function getCoreMenuOptions()
             setFunc = function(value)
                 core.sw.modules[moduleName] = value
             end,
-            width = "half",
             requiresReload = true,
         })
     end
-    table.insert(options, {
-        type = "header",
-        name = string.format("|cFFFACD%s|r", "Extensions")
-    })
+    table.insert(options, core.CreateSectionHeader("Extensions"))
     for extensionName, extension in util.Spairs(addon.extensions, util.SortByPriority) do
         table.insert(options, {
             type = "checkbox",
@@ -106,31 +104,9 @@ local function getCoreMenuOptions()
             setFunc = function(value)
                 core.sw.extensions[extensionName] = value
             end,
-            width = "half",
             requiresReload = true,
         })
     end
 
     return options
-end
-
---- build the menu for PC platform
---- @return void
-function core.BuildMenu()
-    logger:Debug("Building menu for PC")
-    local options = getCoreMenuOptions()
-    for _, data in ipairs(core.mainMenuOptions) do
-        table.insert(options, {
-            type = "header",
-            name = string.format("|cFFFACD%s|r", data.header)
-        })
-        for _, option in ipairs(data.options) do
-            table.insert(options, option)
-        end
-    end
-    createMenu(nil, options)
-
-    for _, data in ipairs(core.subMenuOptions) do
-        createMenu(data.header, data.options)
-    end
 end
