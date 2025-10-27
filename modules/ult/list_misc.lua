@@ -52,17 +52,9 @@ function module:CreateMiscList()
     list.HEADER_TEMPLATE = "HodorReflexes_Ult_MiscList_Header"
     list.ROW_TEMPLATE = "HodorReflexes_Ult_MiscList_PlayerRow"
 
-    local function headerRowCreationWrapper(wrappedFunction)
+    local function rowCreationWrapper(wrappedFunction)
         return function(rowControl, data, scrollList)
             wrappedFunction(self, rowControl, data, scrollList)
-        end
-    end
-
-    local function playerRowCreationWrapper(wrappedFunction)
-        return function(rowControl, data, scrollList)
-            if data.ultValue > 0 and (self.isTestRunning or IsUnitOnline(data.tag)) then
-                wrappedFunction(self, rowControl, data, scrollList)
-            end
         end
     end
 
@@ -71,7 +63,7 @@ function module:CreateMiscList()
             list.HEADER_TYPE,
             list.HEADER_TEMPLATE,
             list.listHeaderHeight,
-            headerRowCreationWrapper(self.miscListHeaderRowCreationFunction)
+            rowCreationWrapper(self.miscListHeaderRowCreationFunction)
     )
     ZO_ScrollList_SetTypeCategoryHeader(list.listControl, list.HEADER_TYPE, true)
     list.logger:Debug("added header row type '%d' with template '%s'", list.HEADER_TYPE, list.HEADER_TEMPLATE)
@@ -81,7 +73,7 @@ function module:CreateMiscList()
             list.ROW_TYPE,
             list.ROW_TEMPLATE,
             list.listRowHeight,
-            playerRowCreationWrapper(self.miscListRowCreationFunction)
+            rowCreationWrapper(self.miscListRowCreationFunction)
     )
     list.logger:Debug("added player row type '%d' with template '%s'", list.ROW_TYPE, list.ROW_TEMPLATE)
 end

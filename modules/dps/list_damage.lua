@@ -69,26 +69,9 @@ function module:CreateDamageList()
     list.ROW_TEMPLATE = "HodorReflexes_Dps_DamageList_DamageRow"
     list.SUMMARY_TEMPLATE = "HodorReflexes_Dps_DamageList_Summary"
 
-    local function headerRowCreationWrapper(wrappedFunction)
+    local function rowCreationWrapper(wrappedFunction)
         return function(rowControl, data, scrollList)
             wrappedFunction(self, rowControl, data, scrollList)
-        end
-    end
-
-    local function damageRowCreationWrapper(wrappedFunction)
-        return function(rowControl, data, scrollList)
-            -- only create rows if conditions are met
-            if not data.hideDamage and data.dmg > 0 and (self.isTestRunning or IsUnitOnline(data.tag)) then
-                wrappedFunction(self, rowControl, data, scrollList)
-            end
-        end
-    end
-
-    local function summaryRowCreationWrapper(wrappedFunction)
-        return function(rowControl, data, scrollList)
-            if data.groupDPS > 0 then
-                wrappedFunction(self, rowControl, data, scrollList)
-            end
         end
     end
 
@@ -97,7 +80,7 @@ function module:CreateDamageList()
             list.HEADER_TYPE,
             list.HEADER_TEMPLATE,
             list.listHeaderHeight,
-            headerRowCreationWrapper(self.headerRowCreationFunction)
+            rowCreationWrapper(self.headerRowCreationFunction)
     )
     ZO_ScrollList_SetTypeCategoryHeader(list.listControl, list.HEADER_TYPE, true)
     list.logger:Debug("added header row type '%d' with template '%s'", list.HEADER_TYPE, list.HEADER_TEMPLATE)
@@ -107,7 +90,7 @@ function module:CreateDamageList()
             list.ROW_TYPE,
             list.ROW_TEMPLATE,
             list.listRowHeight,
-            damageRowCreationWrapper(self.damageRowCreationFunction)
+            rowCreationWrapper(self.damageRowCreationFunction)
     )
     list.logger:Debug("added player row type '%d' with template '%s'", list.ROW_TYPE, list.ROW_TEMPLATE)
 
@@ -116,7 +99,7 @@ function module:CreateDamageList()
             list.SUMMARY_TYPE,
             list.SUMMARY_TEMPLATE,
             list.listRowHeight,
-            summaryRowCreationWrapper(self.summaryRowCreationFunction)
+            rowCreationWrapper(self.summaryRowCreationFunction)
     )
     ZO_ScrollList_SetTypeCategoryHeader(list.listControl, list.SUMMARY_TYPE, true)
     list.logger:Debug("added summary row type '%d' with template '%s'", list.SUMMARY_TYPE, list.SUMMARY_TEMPLATE)

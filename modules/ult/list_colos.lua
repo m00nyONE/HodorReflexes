@@ -55,17 +55,9 @@ function module:CreateColosList()
     list.HEADER_TEMPLATE = "HodorReflexes_Ult_ColosList_Header"
     list.ROW_TEMPLATE = "HodorReflexes_Ult_ColosList_PlayerRow"
 
-    local function headerRowCreationWrapper(wrappedFunction)
+    local function rowCreationWrapper(wrappedFunction)
         return function(rowControl, data, scrollList)
             wrappedFunction(self, rowControl, data, scrollList)
-        end
-    end
-
-    local function playerRowCreationWrapper(wrappedFunction)
-        return function(rowControl, data, scrollList)
-            if data.ultValue > 0 and (self.isTestRunning or IsUnitOnline(data.tag)) then
-                wrappedFunction(self, rowControl, data, scrollList)
-            end
         end
     end
 
@@ -74,7 +66,7 @@ function module:CreateColosList()
             list.HEADER_TYPE,
             list.HEADER_TEMPLATE,
             list.listHeaderHeight,
-            headerRowCreationWrapper(self.colosListHeaderRowCreationFunction)
+            rowCreationWrapper(self.colosListHeaderRowCreationFunction)
     )
     ZO_ScrollList_SetTypeCategoryHeader(list.listControl, list.HEADER_TYPE, true)
     list.logger:Debug("added header row type '%d' with template '%s'", list.HEADER_TYPE, list.HEADER_TEMPLATE)
@@ -84,7 +76,7 @@ function module:CreateColosList()
             list.ROW_TYPE,
             list.ROW_TEMPLATE,
             list.listRowHeight,
-            playerRowCreationWrapper(self.colosListRowCreationFunction)
+            rowCreationWrapper(self.colosListRowCreationFunction)
     )
     list.logger:Debug("added player row type '%d' with template '%s'", list.ROW_TYPE, list.ROW_TEMPLATE)
 end
