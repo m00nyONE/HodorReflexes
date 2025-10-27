@@ -163,7 +163,7 @@ function module:UpdateHornList()
 
     local playersDataList = {}
     for _, playerData in pairs(addon.playersData) do
-        if (not playerData.hideHorn and playerData.ultValue > 0 and playerData.hasHorn) or (not playerData.hideSaxhleel and playerData.hasSaxhleel) then
+        if playerData.ultValue > 0 and ((not playerData.hideHorn and playerData.hasHorn) or (not playerData.hideSaxhleel and playerData.hasSaxhleel)) then
             local lowestPossibleHornCost = 0
             if not playerData.hideSaxhleel and playerData.hasSaxhleel then
                 lowestPossibleHornCost = zo_max(zo_min(playerData.ult1Cost, playerData.ult2Cost), 250)

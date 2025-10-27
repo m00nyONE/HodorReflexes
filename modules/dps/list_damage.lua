@@ -199,7 +199,7 @@ function module:UpdateDamageList()
 
     local playersDataList = {}
     for _, playerData in pairs(addon.playersData) do
-        if playerData.dmg > 0 then
+        if not playerData.hideDamage and playerData.dmg > 0 then
             dmgType = playerData.dmgType
             table.insert(playersDataList, playerData)
         end
