@@ -39,22 +39,22 @@ local moduleDefinition = {
         [2] = {
             name = "hideHorn",
             label = "Hide Horn",
-            description = "Hide your horn from from horn and compact list.",
+            description = "Hide your horn from the lists.",
         },
         [3] = {
             name = "hideColos",
             label = "Hide Colossus",
-            description = "Hide your colossus from colos & compact list.",
+            description = "Hide your colossus from the lists.",
         },
         [4] = {
             name = "hideAtro",
             label = "Hide Atro",
-            description = "Hide your atronach from atro and compact list.",
+            description = "Hide your atronach from the lists.",
         },
         [5] = {
             name = "hideSaxhleel",
             label = "Hide Saxhleel",
-            description = "Hide your saxhleel from horn and compact list.",
+            description = "Hide your saxhleel from the lists.",
         },
     }
 }
