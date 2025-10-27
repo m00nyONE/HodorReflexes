@@ -5,7 +5,7 @@ local addon_name = "HodorReflexes"
 local addon = _G[addon_name]
 local internal = addon.internal
 local core = internal.core
-local logger = core.initSubLogger("events")
+local logger = core.GetLogger("core/events")
 
 local CM = core.CM
 local EM = GetEventManager()

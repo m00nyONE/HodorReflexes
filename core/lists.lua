@@ -5,7 +5,7 @@ local addon_name = "HodorReflexes"
 local addon = _G[addon_name]
 local internal = addon.internal
 local core = internal.core
-local logger = core.logger.main
+local logger = core.GetLogger("core/lists")
 
 local hud = core.hud
 local util = addon.util
@@ -89,7 +89,7 @@ function list:Initialize(listDefinition)
         error(string.format("A list with the name '%s' is already registered!", self.name), 2)
     end
 
-    self.logger = core.initSubLogger("list/" .. self.name)
+    self.logger = core.GetLogger("list/" .. self.name)
     self.logger:Debug("initializing")
 
     self.listHeaderHeight = self.listHeaderHeight or 22

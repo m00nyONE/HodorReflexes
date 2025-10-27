@@ -5,7 +5,7 @@ local addon_name = "HodorReflexes"
 local addon = _G[addon_name]
 local internal = addon.internal
 local core = internal.core
-local logger = core.initSubLogger("modules")
+local logger = core.GetLogger("core/modules")
 
 local util = addon.util
 
@@ -140,7 +140,7 @@ function module:Initialize(moduleDefinition)
     end
 
     -- Create a new subLogger for the module
-    self.logger = core.initSubLogger(self.name)
+    self.logger = core.GetLogger("modules/" .. self.name)
 
     -- Register the module to the core
     core.RegisterModule(self)

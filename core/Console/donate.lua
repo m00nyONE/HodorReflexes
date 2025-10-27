@@ -5,7 +5,7 @@ local addon_name = "HodorReflexes"
 local addon = _G[addon_name]
 local internal = addon.internal
 local core = internal.core
-local logger = core.initSubLogger("donate")
+local logger = core.GetLogger("core/donate")
 
 --- mock function that does nothing on Console
 --- @return void
