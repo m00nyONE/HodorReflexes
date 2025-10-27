@@ -29,7 +29,7 @@ local combat = {
         groupDPSOut = 0,
         damageOutTotalGroup = 0,
     },
-    logger = core.initSubLogger("combat"),
+    logger = core.GetLogger("core/combat"),
 }
 addon.combat = combat -- expose combat class as it can be useful for others too
 

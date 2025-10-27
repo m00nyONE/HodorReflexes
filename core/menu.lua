@@ -5,6 +5,7 @@ local addon_name = "HodorReflexes"
 local addon = _G[addon_name]
 local internal = addon.internal
 local core = internal.core
+local logger = core.GetLogger("core/menu")
 core.mainMenuOptions = {}
 core.subMenuOptions = {}
 

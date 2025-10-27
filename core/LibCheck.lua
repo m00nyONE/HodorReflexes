@@ -5,7 +5,7 @@ local addon_name = "HodorReflexes"
 local addon = _G[addon_name]
 local internal = addon.internal
 local core = internal.core
-local logger = core.logger.main
+local logger = core.GetLogger("core/LibCheck")
 
 -- function needs to be implemented platform specific
 function core.OptionalLibrariesCheck()

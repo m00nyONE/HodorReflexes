@@ -5,7 +5,7 @@ local addon_name = "HodorReflexes"
 local addon = _G[addon_name]
 local internal = addon.internal
 local core = internal.core
-local logger = core.initSubLogger("extensions")
+local logger = core.GetLogger("core/extensions")
 
 local util = addon.util
 
@@ -131,7 +131,7 @@ function extension:Initialize(extensionDefinition)
     end
 
     -- Create a new subLogger for the extension
-    self.logger = core.initSubLogger(self.name)
+    self.logger = core.GetLogger("extensions/" .. self.name)
 
     -- Register the extension to the core
     core.RegisterExtension(self)
