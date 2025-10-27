@@ -15,7 +15,10 @@ local HR_EVENT_UNLOCKUI = addon.HR_EVENT_UNLOCKUI
 local HR_EVENT_TEST_STARTED = addon.HR_EVENT_TEST_STARTED
 local HR_EVENT_TEST_STOPPED = addon.HR_EVENT_TEST_STOPPED
 local HR_EVENT_PLAYER_ACTIVATED = addon.HR_EVENT_PLAYER_ACTIVATED
+local HR_EVENT_COMBAT_START = addon.HR_EVENT_COMBAT_START
+local HR_EVENT_COMBAT_END = addon.HR_EVENT_COMBAT_END
 
+local localPlayer = "player"
 
 local EM = GetEventManager()
 local WM = GetWindowManager()
@@ -63,6 +66,8 @@ function module:Activate()
     addon.RegisterCallback(HR_EVENT_UNLOCKUI, function(...) self:unlockUI(...) end)
     addon.RegisterCallback(HR_EVENT_TEST_STARTED, function(...) self:startTest(...) end)
     addon.RegisterCallback(HR_EVENT_TEST_STOPPED, function(...) self:stopTest(...) end)
+    addon.RegisterCallback(HR_EVENT_COMBAT_START, function(...) self:refreshVisibility(...) end)
+    addon.RegisterCallback(HR_EVENT_COMBAT_END, function(...) self:refreshVisibility(...) end)
 
     local eventName = addon_name .. self.name
     EM:RegisterForEvent(eventName, EVENT_GROUP_ELECTION_REQUESTED, function(...) self:startElection(...) end) -- when player starts the vote
@@ -111,7 +116,7 @@ function module:CreateReadyCheckUI()
     self.readycheckWindow = readycheckWindow
 
     local function readycheckFragmentCondition()
-        return self.isPollActive or not self.uiLocked
+        return (self.isPollActive or not self.uiLocked) and not IsUnitInCombat(localPlayer)
     end
 
     self.READYCHECK_FRAGMENT = hud.AddFadeFragment(readycheckWindow, readycheckFragmentCondition)
