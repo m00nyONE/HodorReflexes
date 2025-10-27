@@ -36,28 +36,35 @@ function module:RegisterLGBProtocols(handler)
     protocolHideMe:AddField(CreateFlagField("syncRequest", {
         defaultValue = false,
     }))
-    protocolHideMe:AddField(CreateArrayField("hideIds", CreateNumericField("id", {
+    protocolHideMe:AddField(CreateArrayField(CreateNumericField("ids", {
         minValue = 1,
         maxValue = 15,
-    })))
+    }),{
+        minLength = 0,
+        maxLength = 15
+    }))
     protocolHideMe:OnData(function(...) self:onHideMeMessageReceived(...) end)
     protocolHideMe:Finalize(protocolOptions)
 end
 
 function module:onHideMeMessageReceived(unitTag, data)
-    if AreUnitsEqual(unitTag, localPlayer) then return end -- don't receive own messages
-
-    if data.syncRequest then
+    if data.syncRequest and not AreUnitsEqual(unitTag, localPlayer) then
+        self.logger:Debug("Received HideMe sync request from %s, sending current preferences.", GetUnitName(unitTag))
         self:SendHideMeMessageDebounced()
     end
+    self.logger:Debug("Received HideMe message from %s with IDs: %s", GetUnitName(unitTag), table.concat(data.ids, ", "))
 
     local playerData = {
         name     = GetUnitName(unitTag),
         tag      = unitTag,
     }
 
-    for _, id in ipairs(data.hideIds) do
-        local hideOptionName = self.hideIds[id.id] and self.hideIds[id.id].name
+    for id, hideId in pairs(self.hideIds) do
+        playerData[hideId.name] = false
+    end
+
+    for _, id in pairs(data.ids) do
+        local hideOptionName = self.hideIds[id] and self.hideIds[id].name
         if hideOptionName then
             playerData[hideOptionName] = true
         end
@@ -70,12 +77,13 @@ function module:SendHideMeMessage(syncRequest)
     local data = {}
     for id, enabled in pairs(self.sv.preferences) do -- intentionally use pairs instead of ipairs to avoid sending empty IDs
         if enabled then
-            table.insert(data, {id = id})
+            table.insert(data, id)
         end
     end
+    self.logger:Debug("Sending HideMe message with IDs: %s", table.concat(data, ", "))
     protocolHideMe:Send({
         syncRequest = syncRequest or false,
-        hideIds = data
+        ids = data
     })
 end
 
