@@ -217,6 +217,31 @@ function module:GetSubMenuOptions()
             },
         }
     end
+    local function getCommonCounterOptions(counterName, counter)
+        return {
+            {
+                type = LHAS.ST_DROPDOWN,
+                label = "enable "..counterName.." counter",
+                tooltip = "set the visibility of the counter.",
+                default = GetString(HR_VISIBILITY_SHOW_NEVER),
+                items = {
+                    {name = GetString(HR_VISIBILITY_SHOW_NEVER), data = 0},
+                    {name = GetString(HR_VISIBILITY_SHOW_ALWAYS), data = 1},
+                    {name = GetString(HR_VISIBILITY_SHOW_IN_COMBAT), data = 2},
+                },
+                getFunction = function()
+                    if counter.sv.enabled == 0 then return GetString(HR_VISIBILITY_SHOW_NEVER) end
+                    if counter.sv.enabled == 1 then return GetString(HR_VISIBILITY_SHOW_ALWAYS) end
+                    if counter.sv.enabled == 2 then return GetString(HR_VISIBILITY_SHOW_IN_COMBAT) end
+                end,
+                setFunction = function(control, itemName, itemData)
+                    counter.sv.enabled = itemData.data
+                    counter:RefreshVisibility()
+                end,
+                width = "full",
+            },
+        }
+    end
 
     local options = {}
     local generalOptions = getGeneralOptions()
@@ -552,6 +577,13 @@ function module:GetSubMenuOptions()
     mergeOptions(compactListSpecificOptions, compactList)
     mergeOptions(compactList, options)
 
+    local counterOptions = {
+        core.CreateSectionHeader("Counters"),
+    }
+    mergeOptions(counterOptions, options)
+    mergeOptions(getCommonCounterOptions("Horn", self.hornCounter), options)
+    mergeOptions(getCommonCounterOptions("Pillager", self.pillagerCounter), options)
+    mergeOptions(getCommonCounterOptions("Slayer", self.slayerCounter), options)
 
     return options
 end

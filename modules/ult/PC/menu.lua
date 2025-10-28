@@ -173,6 +173,30 @@ function module:GetSubMenuOptions()
             },
         }
     end
+    local function getCommonCounterOptions(counterName, counter)
+        return {
+            {
+                type = "dropdown",
+                name = "enable "..counterName.." counter",
+                tooltip = "set the visibility of the counter.",
+                default = counter.svDefault.enabled,
+                choices = {
+                    GetString(HR_VISIBILITY_SHOW_NEVER),
+                    GetString(HR_VISIBILITY_SHOW_ALWAYS),
+                    GetString(HR_VISIBILITY_SHOW_IN_COMBAT),
+                },
+                choicesValues = {
+                    0, 1, 2,
+                },
+                getFunc = function() return counter.sw.enabled end,
+                setFunc = function(value)
+                    counter.sw.enabled = value
+                    counter:RefreshVisibility()
+                end,
+                width = "full",
+            },
+        }
+    end
 
     local options = getGeneralOptions()
 
@@ -537,6 +561,14 @@ function module:GetSubMenuOptions()
     }
     mergeOptions(compactListSpecificOptions, compactList)
     mergeOptions(compactList, options)
+
+    local counterOptions = {
+        core.CreateSectionHeader("Counters"),
+    }
+    mergeOptions(counterOptions, options)
+    mergeOptions(getCommonCounterOptions("Horn", self.hornCounter), options)
+    mergeOptions(getCommonCounterOptions("Pillager", self.pillagerCounter), options)
+    mergeOptions(getCommonCounterOptions("Slayer", self.slayerCounter), options)
 
 
     return options
