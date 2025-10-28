@@ -43,7 +43,7 @@ function module:CreateHornCounter()
         updateInterval = 100,
         svDefault = {
             accountWide = false,
-            enabled = 1, -- 1=always, 2=only in combat, 0=off
+            enabled = 0, -- 1=always, 2=only in combat, 0=off
             windowPosLeft = 400,
             windowPosTop = 200,
             scale = 1.0,
@@ -89,7 +89,7 @@ function module:CreatePillagerCounter()
         updateInterval = 100,
         svDefault = {
             accountWide = false,
-            enabled = 2, -- 1=always, 2=only in combat, 0=off
+            enabled = 0, -- 1=always, 2=only in combat, 0=off
             windowPosLeft = 500,
             windowPosTop = 200,
             scale = 1.0,
@@ -136,7 +136,7 @@ function module:CreateSlayerCounter()
         updateInterval = 100,
         svDefault = {
             accountWide = false,
-            enabled = 1, -- 1=always, 2=only in combat, 0=off
+            enabled = 0, -- 1=always, 2=only in combat, 0=off
             windowPosLeft = 500,
             windowPosTop = 200,
             scale = 1.0,
