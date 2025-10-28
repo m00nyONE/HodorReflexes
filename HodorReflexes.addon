@@ -32,6 +32,7 @@ core/hud.lua
 core/group.lua
 core/combat.lua
 core/lists.lua
+core/counter.lua
 core/menu.lua
 core/donate.lua
 core/LibCheck.lua
