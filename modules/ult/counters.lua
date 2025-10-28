@@ -119,19 +119,62 @@ end
 
 function module:CreateSlayerCounter()
     local function updateFunc()
-        local count = 0
-        local ready = false
+        local unitsWithoutSlayer = {}
+        local unitWithSlayer = nil
+        local unitsAlreadyInOtherGroup = {}
+        local overlap = 0
+        local count = 0 -- not include ourselves. I know, looks weird but we need to be in the unitsWithoutSlayer table to check for overlap later
+
+        local distancesToOtherSlayerHolder = {}
+        local distancesToUs = {}
+
+        -- pre calc units with and without slayer
         for i = 1, GetGroupSize() do
             local unitTag = GetGroupUnitTagByIndex(i)
-            if util.IsUnitInPlayersRange(unitTag, 28) then
-                count = count + 1
-            end
-            if count == 6 then
-                return 6, true
+            local playerData = addon.playersData[GetUnitName(unitTag)] or {}
+            local hasSlayer = playerData.hasSlayer or false
+            if hasSlayer and not AreUnitsEqual(unitTag, localPlayer) then -- we only include OTHER slayer holders.
+                unitWithSlayer = unitTag -- we do not care if there are multiple slayer holders, just take the last one found. We inlcude ourselves later anyway. And if there are more than two in total, the group needs to probably rethink their strategy :D
+            else
+                table.insert(unitsWithoutSlayer, unitTag)
             end
         end
 
-        return count, ready
+        -- calculate the distances to us and the potenial other slayer player.
+        for _, unitTagWithoutSlayer in ipairs(unitsWithoutSlayer) do
+            if unitWithSlayer then
+                local distance = util.GetUnitDistanceToUnit(unitWithSlayer, unitTagWithoutSlayer)
+                if distance <= 28 then -- only consider players within 28m of the other slayer holder
+                    table.insert(distancesToOtherSlayerHolder, {unitTag = unitTagWithoutSlayer, distance = distance})
+                end
+            end
+            local distance = util.GetPlayerDistanceToUnit(unitTagWithoutSlayer)
+            if distance <= 28 then -- only consider players within 28m of us
+                table.insert(distancesToUs, {unitTag = unitTagWithoutSlayer, distance = distance})
+            end
+
+        end
+        -- sort the units by distance
+        local sortFunc = function(a, b) return a.distance < b.distance end
+        table.sort(distancesToOtherSlayerHolder, sortFunc)
+        table.sort(distancesToUs, sortFunc)
+
+        -- now we take the closest 5 players to the other slayer holder and put them in the "unitsAlreadyInOtherGroup" table. We only do this if unitWithSlayer exists
+        for i = 1, math.min(5, #distancesToOtherSlayerHolder) do
+            local unitTag = distancesToOtherSlayerHolder[i].unitTag
+            unitsAlreadyInOtherGroup[unitTag] = true
+        end
+        -- now we calculate the ranges for ourselves. note: we check the closest 6 players to us, because we are also in the unitsWithoutSlayer table. If we encounter someone who is already in the other slayer stack, we increase the overlap by 1. Otherwise we increase the count by 1.
+        for i = 1, math.min(6, #distancesToUs) do
+            local unitTag = distancesToUs[i].unitTag
+            if unitsAlreadyInOtherGroup[unitTag] then
+                overlap = overlap + 1
+            else
+                count = count + 1
+            end
+        end
+
+        return count, overlap == 0
     end
 
     self.slayerCounter = counterClass:New({
