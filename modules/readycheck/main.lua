@@ -41,7 +41,7 @@ local moduleDefinition = {
         accountWide = true,
         enableChatMessages = true,
         windowCenterX = GuiRoot:GetWidth() / 2,
-        windowCenterY = GuiRoot:GetHeight() / 4,
+        windowCenterY = GuiRoot:GetHeight() / 6,
     },
 
     uiLocked = true,
