@@ -27,10 +27,12 @@ function module:CreateHornCounter()
         local ready = true
         for i = 1, GetGroupSize() do
             local unitTag = GetGroupUnitTagByIndex(i)
-            if util.IsUnitInPlayersRange(unitTag, 20) then
-                count = count + 1
-            elseif GetGroupMemberSelectedRole(unitTag) == LFG_ROLE_DPS then
-                ready = false
+            if IsUnitOnline(unitTag) then
+                if util.IsUnitInPlayersRange(unitTag, 20) then
+                    count = count + 1
+                elseif GetGroupMemberSelectedRole(unitTag) == LFG_ROLE_DPS then
+                    ready = false
+                end
             end
         end
 
@@ -73,10 +75,12 @@ function module:CreatePillagerCounter()
         local ready = true
         for i = 1, GetGroupSize() do
             local unitTag = GetGroupUnitTagByIndex(i)
-            if util.IsUnitInPlayersRange(unitTag, 12) then
-                count = count + 1
-            elseif GetGroupMemberSelectedRole(unitTag) == LFG_ROLE_DPS then
-                ready = false
+            if IsUnitOnline(unitTag) then
+                if util.IsUnitInPlayersRange(unitTag, 12) then
+                    count = count + 1
+                elseif GetGroupMemberSelectedRole(unitTag) == LFG_ROLE_DPS then
+                    ready = false
+                end
             end
         end
 
