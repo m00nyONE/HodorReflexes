@@ -18,7 +18,7 @@ local util = addon.util
 
 local localPlayer = "player"
 
-local HR_EVENT_PLAYER_DATA_UPDATED = addon.HR_EVENT_PLAYER_DATA_UPDATED
+local HR_EVENT_PLAYERSDATA_UPDATED = addon.HR_EVENT_PLAYERSDATA_UPDATED
 local HR_EVENT_GROUP_CHANGED = addon.HR_EVENT_GROUP_CHANGED
 
 function module:CreateHornCounter()
@@ -51,7 +51,7 @@ function module:CreateHornCounter()
         updateFunc = updateFunc,
     })
 
-    addon.RegisterCallback(HR_EVENT_PLAYER_DATA_UPDATED, function(playerData)
+    addon.RegisterCallback(HR_EVENT_PLAYERSDATA_UPDATED, function(playerData)
         if not playerData.isPlayer then return end
 
         if playerData.hasHorn or playerData.hasSaxhleel then
@@ -97,7 +97,7 @@ function module:CreatePillagerCounter()
         updateFunc = updateFunc,
     })
 
-    addon.RegisterCallback(HR_EVENT_PLAYER_DATA_UPDATED, function(playerData)
+    addon.RegisterCallback(HR_EVENT_PLAYERSDATA_UPDATED, function(playerData)
         if not playerData.isPlayer then return end
 
         if playerData.hasPillager then
@@ -144,7 +144,7 @@ function module:CreateSlayerCounter()
         updateFunc = updateFunc,
     })
 
-    addon.RegisterCallback(HR_EVENT_PLAYER_DATA_UPDATED, function(playerData)
+    addon.RegisterCallback(HR_EVENT_PLAYERSDATA_UPDATED, function(playerData)
         if not playerData.isPlayer then return end
 
         if playerData.hasSlayer then
