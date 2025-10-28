@@ -39,8 +39,7 @@ function module:CreateHornCounter()
 
     local def = {
         name = "horn",
-        texture = "esoui/art/icons/ability_ava_003_a.dds",
-        distance = 20,
+        texture = self.hornIcon,
         updateInterval = 100,
         svDefault = {
             accountWide = false,
