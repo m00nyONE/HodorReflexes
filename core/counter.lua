@@ -91,7 +91,7 @@ function counter:Initialize(counterDefinition)
     assert(type(counterDefinition.name) == "string" and counterDefinition.name ~= "", "counter must have a valid name")
     assert(type(counterDefinition.texture) == "string" and counterDefinition.texture ~= "", "counter must have a valid texture")
     assert(type(counterDefinition.updateInterval) == "number", "counter must have a valid updateInterval")
-    assert(type(counterDefinition.enableConditionFunc) == "function", "counter must have a valid enableConditionFunc method")
+    assert(type(counterDefinition.updateFunc) == "function", "counter must have a valid updateFunc method")
 
     for k, v in pairs(counterDefinition) do
         self[k] = v
