@@ -112,3 +112,50 @@ function module:CreatePillagerCounter()
         end
     end)
 end
+
+function module:CreateSlayerCounter()
+    local function updateFunc()
+        local count = 0
+        local ready = false
+        for i = 1, GetGroupSize() do
+            local unitTag = GetGroupUnitTagByIndex(i)
+            if util.IsUnitInPlayersRange(unitTag, 28) then
+                count = count + 1
+            end
+            if count == 6 then
+                return 6, true
+            end
+        end
+
+        return count, ready
+    end
+
+    self.slayerCounter = counterClass:New({
+        name = "slayer",
+        texture = self.slayerIcon,
+        updateInterval = 100,
+        svDefault = {
+            accountWide = false,
+            enabled = 1, -- 1=always, 2=only in combat, 0=off
+            windowPosLeft = 500,
+            windowPosTop = 200,
+            scale = 1.0,
+        },
+        updateFunc = updateFunc,
+    })
+
+    addon.RegisterCallback(HR_EVENT_PLAYER_DATA_UPDATED, function(playerData)
+        if not playerData.isPlayer then return end
+
+        if playerData.hasSlayer then
+            self.slayerCounter:SetActive(true)
+        else
+            self.slayerCounter:SetActive(false)
+        end
+    end)
+    addon.RegisterCallback(HR_EVENT_GROUP_CHANGED, function()
+        if not IsUnitGrouped(localPlayer) then
+            self.slayerCounter:SetActive(false)
+        end
+    end)
+end
