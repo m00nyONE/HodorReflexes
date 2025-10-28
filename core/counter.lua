@@ -16,7 +16,6 @@ local localPlayer = "player"
 local HR_EVENT_LOCKUI = addon.HR_EVENT_LOCKUI
 local HR_EVENT_UNLOCKUI = addon.HR_EVENT_UNLOCKUI
 local HR_EVENT_GROUP_CHANGED = addon.HR_EVENT_GROUP_CHANGED
-local HR_EVENT_PLAYERSDATA_UPDATED = addon.HR_EVENT_PLAYERSDATA_UPDATED
 
 local counter = ZO_InitializingObject:Subclass()
 internal.counterClass = counter
@@ -29,9 +28,8 @@ counter.animation = {}
 counter.distance = 0
 counter.texture = "esoui/art/icons/ability_ultimate_001.dds"
 counter.updateInterval = 200 -- milliseconds
-counter.targetUnitCount = 12
-counter.enableConditionFunc = function() return true end -- default condition function always returns true
-counter.readyConditionFunc = function() return true end -- default ready condition function always returns true
+counter.updateFunc = nil -- function to call to update the counter -- should return count and ready state
+counter.active = false
 
 --- NOT for manual use! this is a helper function that runs a function only once and then removes it from the counter instance.
 --- If you use it on a still needed function, it will be gone after the first call and thus break your counter!
@@ -78,6 +76,9 @@ function counter:WindowFragmentCondition()
     if not self.uiLocked and isEnabled then
         return true -- always show when ui is unlocked
     end
+    if not self.active then
+        return false
+    end
     if not IsUnitGrouped(localPlayer) then
         return false -- never show when not in a group
     end
@@ -89,7 +90,6 @@ function counter:Initialize(counterDefinition)
     assert(type(counterDefinition) == "table", "counterDefinition must be a table")
     assert(type(counterDefinition.name) == "string" and counterDefinition.name ~= "", "counter must have a valid name")
     assert(type(counterDefinition.texture) == "string" and counterDefinition.texture ~= "", "counter must have a valid texture")
-    assert(type(counterDefinition.distance) == "number", "counter must have a valid distance")
     assert(type(counterDefinition.updateInterval) == "number", "counter must have a valid updateInterval")
     assert(type(counterDefinition.enableConditionFunc) == "function", "counter must have a valid enableConditionFunc method")
 
@@ -119,29 +119,16 @@ function counter:Initialize(counterDefinition)
         self.uiLocked = true
         self:RefreshVisibility()
         hud.LockControls(self.window)
-        self:StopUpdate()
     end
     local function unlockUI()
         self.uiLocked = false
         self:RefreshVisibility()
         hud.UnlockControls(self.window)
-        self:StartUpdate()
     end
 
     addon.RegisterCallback(HR_EVENT_LOCKUI, lockUI)
     addon.RegisterCallback(HR_EVENT_UNLOCKUI, unlockUI)
     addon.RegisterCallback(HR_EVENT_GROUP_CHANGED, onGroupChanged)
-
-    local function probeCondition()
-        if self:enableConditionFunc() then
-            self:StartUpdate()
-        else
-            self:StopUpdate()
-        end
-    end
-
-    addon.RegisterCallback(HR_EVENT_GROUP_CHANGED, probeCondition)
-    addon.RegisterCallback(HR_EVENT_PLAYERSDATA_UPDATED, probeCondition)
 end
 
 --- NOT for manual use! this gets called once when the counter is initialized.
@@ -149,13 +136,23 @@ end
 --- @return void
 function counter:CreateFragment()
     local function windowFragmentConditionWrapper()
-        return self:WindowFragmentCondition()
+        local isVisible = self:WindowFragmentCondition()
+        if isVisible then
+            self:StartUpdate()
+        else
+            self:StopUpdate()
+        end
+
+        return isVisible
     end
 
     self.windowFragment = hud.AddFadeFragment(self.window, windowFragmentConditionWrapper)
     self.logger:Debug("created window fragment")
 end
 
+--- NOT for manual use! this gets called once when the counter is initialized.
+--- creates the controls for the counter window.
+--- @return void
 function counter:CreateControls()
     local window = WM:CreateTopLevelWindow(self.windowName)
     window:SetClampedToScreen(true)
@@ -228,24 +225,21 @@ function counter:CreateSavedVariables()
     end
 end
 
+--- NOT for manual use! this gets called periodically to update the counter.
+--- calls the update function and updates the counter display.
+--- @return void
 function counter:Update()
     if not self:WindowFragmentCondition() then return end
 
     local labelControl = self.window:GetNamedChild("_Label")
     local bgControl = self.window:GetNamedChild("_BG")
-    local count = 0
 
-    for i = 1, GetGroupSize() do
-        local unitTag = GetGroupUnitTagByIndex(i)
-        if util.IsUnitInPlayersRange(unitTag, self.distance) then
-            count = count + 1
-        end
-    end
-
-    local readyConditionMet = self:readyConditionFunc(count, self.distance)
+    local count, ready = self:updateFunc(count, self.distance)
+    count = count or 0
+    ready = ready or false
 
     labelControl:SetText(tostring(count))
-    if readyConditionMet then
+    if ready then
         labelControl:SetColor(0, 1, 0)
         bgControl:SetColor(0, 1, 0)
         self:RunAnimation()
@@ -255,22 +249,39 @@ function counter:Update()
         self:StopAnimation()
     end
 end
-
+--- Starts the update of the counter.
+--- @return void
 function counter:StartUpdate()
+    if self.isUpdating then return end
     EM:RegisterForUpdate(self._updateEventName, self.updateInterval, function()
         self:Update()
     end)
+    self.isUpdating = true
 end
-
+--- Stops the update of the counter.
+--- @return void
 function counter:StopUpdate()
     EM:UnregisterForUpdate(self._updateEventName)
+    self.isUpdating = false
 end
 
+--- Runs the counter animation.
+--- @return void
 function counter:RunAnimation()
     if self.animation:GetTimeline():IsPlaying() then return end
 
     self.animation:GetTimeline():PlayFromStart()
 end
+--- Stops the counter animation.
+--- @return void
 function counter:StopAnimation()
     self.animation:GetTimeline():Stop()
+end
+
+--- Sets the active state of the counter.
+--- @param active boolean true to activate the counter, false to deactivate it.
+--- @return void
+function counter:SetActive(active)
+    self.active = active
+    self:RefreshVisibility()
 end
