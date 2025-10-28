@@ -37,7 +37,7 @@ function module:CreateHornCounter()
         return count, ready
     end
 
-    local def = {
+    self.hornCounter = counterClass:New({
         name = "horn",
         texture = self.hornIcon,
         updateInterval = 100,
@@ -49,8 +49,7 @@ function module:CreateHornCounter()
             scale = 1.0,
         },
         updateFunc = updateFunc,
-    }
-    self.hornCounter = counterClass:New(def)
+    })
 
     addon.RegisterCallback(HR_EVENT_PLAYER_DATA_UPDATED, function(playerData)
         if not playerData.isPlayer then return end
@@ -84,7 +83,7 @@ function module:CreatePillagerCounter()
         return count, ready
     end
 
-    local def = {
+    self.pillagerCounter = counterClass:New({
         name = "pillager",
         texture = self.pillagerIcon,
         updateInterval = 100,
@@ -96,8 +95,7 @@ function module:CreatePillagerCounter()
             scale = 1.0,
         },
         updateFunc = updateFunc,
-    }
-    self.pillagerCounter = counterClass:New(def)
+    })
 
     addon.RegisterCallback(HR_EVENT_PLAYER_DATA_UPDATED, function(playerData)
         if not playerData.isPlayer then return end
