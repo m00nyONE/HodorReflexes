@@ -67,3 +67,50 @@ function module:CreateHornCounter()
         end
     end)
 end
+
+function module:CreatePillagerCounter()
+    local function updateFunc()
+        local count = 0
+        local ready = true
+        for i = 1, GetGroupSize() do
+            local unitTag = GetGroupUnitTagByIndex(i)
+            if util.IsUnitInPlayersRange(unitTag, 12) then
+                count = count + 1
+            elseif GetGroupMemberSelectedRole(unitTag) == LFG_ROLE_DPS then
+                ready = false
+            end
+        end
+
+        return count, ready
+    end
+
+    local def = {
+        name = "pillager",
+        texture = self.pillagerIcon,
+        updateInterval = 100,
+        svDefault = {
+            accountWide = false,
+            enabled = 2, -- 1=always, 2=only in combat, 0=off
+            windowPosLeft = 500,
+            windowPosTop = 200,
+            scale = 1.0,
+        },
+        updateFunc = updateFunc,
+    }
+    self.pillagerCounter = counterClass:New(def)
+
+    addon.RegisterCallback(HR_EVENT_PLAYER_DATA_UPDATED, function(playerData)
+        if not playerData.isPlayer then return end
+
+        if playerData.hasPillager then
+            self.pillagerCounter:SetActive(true)
+        else
+            self.pillagerCounter:SetActive(false)
+        end
+    end)
+    addon.RegisterCallback(HR_EVENT_GROUP_CHANGED, function()
+        if not IsUnitGrouped(localPlayer) then
+            self.pillagerCounter:SetActive(false)
+        end
+    end)
+end

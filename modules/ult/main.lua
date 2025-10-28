@@ -172,5 +172,6 @@ end
 
 function module:CreateCounters()
     self:RunOnce("CreateHornCounter")
+    self:RunOnce("CreatePillagerCounter")
 end
 
