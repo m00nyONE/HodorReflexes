@@ -234,7 +234,7 @@ function counter:Update()
     local labelControl = self.window:GetNamedChild("_Label")
     local bgControl = self.window:GetNamedChild("_BG")
 
-    local count, ready = self:updateFunc(count, self.distance)
+    local count, ready = self.updateFunc()
     count = count or 0
     ready = ready or false
 
