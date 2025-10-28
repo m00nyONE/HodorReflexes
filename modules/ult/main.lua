@@ -167,5 +167,8 @@ function module:CreateLists()
     self:RunOnce("CreateAtroList")
     self:RunOnce("CreateMiscList")
     self:RunOnce("CreateCompactList")
+
+
+    self:RunOnce("CreateHornCounter")
 end
 
