@@ -45,7 +45,7 @@ local moduleDefinition = {
     majorBerserkId = 61745,
     majorSlayerId = 93109,
     hornBuffIds = {38564, 40221, 40224},
-    pillagerBuffId = 17055,
+    pillagerBuffId = 172055,
     --pillagerCooldownId = 172056,
 
     hornAbilityIds = {40223, 38563, 40220},
