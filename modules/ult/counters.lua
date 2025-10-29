@@ -144,12 +144,12 @@ function module:CreateSlayerCounter()
         for _, unitTagWithoutSlayer in ipairs(unitsWithoutSlayer) do
             if unitWithSlayer then
                 local distance = util.GetUnitDistanceToUnit(unitWithSlayer, unitTagWithoutSlayer)
-                if distance <= 28 then -- only consider players within 28m of the other slayer holder
+                if distance and distance <= 28 then -- only consider players within 28m of the other slayer holder
                     table.insert(distancesToOtherSlayerHolder, {unitTag = unitTagWithoutSlayer, distance = distance})
                 end
             end
             local distance = util.GetPlayerDistanceToUnit(unitTagWithoutSlayer)
-            if distance <= 28 then -- only consider players within 28m of us
+            if distance and distance <= 28 then -- only consider players within 28m of us
                 table.insert(distancesToUs, {unitTag = unitTagWithoutSlayer, distance = distance})
             end
 
