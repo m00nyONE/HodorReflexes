@@ -38,9 +38,10 @@ local moduleDefinition = {
     enabled = false,
     svVersion = 1,
     svDefault = {
+        accountWide = true,
         enableChatMessages = true,
-        readycheckWindowPosLeft = 0,
-        readycheckWindowPosTop = 200,
+        windowCenterX = GuiRoot:GetWidth() / 2,
+        windowCenterY = GuiRoot:GetHeight() / 6,
     },
 
     uiLocked = true,
@@ -85,10 +86,9 @@ function module:CreateReadyCheckUI()
     readycheckWindow:SetClampedToScreen(true)
     readycheckWindow:SetResizeToFitDescendents(true)
     readycheckWindow:SetHidden(true)
-    readycheckWindow:SetAnchor(TOP, GuiRoot, TOP, self.sv.readycheckWindowPosLeft, self.sv.readycheckWindowPosTop)
+    readycheckWindow:SetAnchor(CENTER, GuiRoot, TOPLEFT, self.sw.windowCenterX, self.sw.windowCenterY)
     readycheckWindow:SetHandler("OnMoveStop", function()
-        self.sv.readycheckWindowPosLeft = readycheckWindow:GetLeft()
-        self.sv.readycheckWindowPosTop = readycheckWindow:GetTop()
+        self.sw.windowCenterX, self.sw.windowCenterY = readycheckWindow:GetCenter()
     end)
 
     local readycheckTitle = WM:CreateControl(readycheckWindowName .. "_Title", readycheckWindow, CT_LABEL)
@@ -207,12 +207,12 @@ function module:groupElectionResult(_, electionResult, _)
     if self.isPollActive then
         if electionResult == GROUP_ELECTION_RESULT_ELECTION_WON then
             self.readycheckWindow:GetNamedChild("_Title"):SetText(GetString(HR_MODULES_READYCHECK_READY))
-            if self.sv.enableChatMessages then
+            if self.sw.enableChatMessages then
                 df("|c00FF00%s", GetString(HR_MODULES_READYCHECK_READY))
             end
         else
             self.readycheckWindow:GetNamedChild("_Title"):SetText(GetString(HR_MODULES_READYCHECK_NOT_READY))
-            if self.sv.enableChatMessages then
+            if self.sw.enableChatMessages then
                 local g1, g2, g3, g4, g5, g6, g7, g8, g9, g10, g11, g12 = GetGroupElectionUnreadyUnitTags()
                 local unreadyPlayers = { g1, g2, g3, g4, g5, g6, g7, g8, g9, g10, g11, g12 }
                 for _, unitTag in pairs(unreadyPlayers) do
