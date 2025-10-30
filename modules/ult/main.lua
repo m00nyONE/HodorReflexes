@@ -158,6 +158,7 @@ function module:Activate()
 
     self:RunOnce("registerTrackers")
     self:RunOnce("CreateLists")
+    self:RunOnce("CreateCounters")
 end
 
 --- create scrollLists for the module
@@ -167,5 +168,11 @@ function module:CreateLists()
     self:RunOnce("CreateAtroList")
     self:RunOnce("CreateMiscList")
     self:RunOnce("CreateCompactList")
+end
+
+function module:CreateCounters()
+    self:RunOnce("CreateHornCounter")
+    self:RunOnce("CreatePillagerCounter")
+    --self:RunOnce("CreateSlayerCounter") -- experimental, disabled for now
 end
 

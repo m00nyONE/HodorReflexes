@@ -32,6 +32,7 @@ core/hud.lua
 core/group.lua
 core/combat.lua
 core/lists.lua
+core/counter.lua
 core/menu.lua
 core/donate.lua
 core/LibCheck.lua
@@ -61,6 +62,7 @@ modules/ult/list_colos.lua
 modules/ult/list_atro.lua
 modules/ult/list_misc.lua
 modules/ult/list_compact.lua
+modules/ult/counters.lua
 modules/ult/test.lua
 modules/ult/PC/menu.lua
 modules/ult/Console/menu.lua
