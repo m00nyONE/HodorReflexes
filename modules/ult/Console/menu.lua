@@ -257,6 +257,38 @@ function module:GetSubMenuOptions()
                 end,
                 width = "full",
             },
+            {
+                type = LHAS.ST_SLIDER,
+                label = counterName .. " counter horizontal position",
+                tooltip = "set the horizontal position of the counter.",
+                min = 0,
+                max = SCREEN_WIDTH,
+                step = 10,
+                format = "%.0f",
+                unit = " px",
+                default = counter.svDefault.windowPosLeft,
+                getFunction = function() return counter.sw.windowPosLeft end,
+                setFunction = function(value)
+                    counter.sw.windowPosLeft = value
+                    counter.window:SetAnchor(CENTER, GuiRoot, TOPLEFT, counter.sw.windowPosLeft, counter.sw.windowPosTop)
+                end,
+            },
+            {
+                type = LHAS.ST_SLIDER,
+                label = counterName .. " counter vertical position",
+                tooltip = "set the vertical position of the counter.",
+                min = 0,
+                max = SCREEN_HEIGHT,
+                step = 10,
+                format = "%.0f",
+                unit = " px",
+                default = counter.svDefault.windowPosTop,
+                getFunction = function() return counter.sw.windowPosTop end,
+                setFunction = function(value)
+                    counter.sw.windowPosTop = value
+                    counter.window:SetAnchor(CENTER, GuiRoot, TOPLEFT, counter.sw.windowPosLeft, counter.sw.windowPosTop)
+                end,
+            },
         }
     end
 
