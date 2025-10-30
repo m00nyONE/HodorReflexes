@@ -20,6 +20,7 @@ function module:GetSubMenuOptions()
             if option.requiresReload then
                 option.label = string.format("|cffff00%s|r", option.label)
             end
+            table.insert(destination, option)
         end
     end
 
