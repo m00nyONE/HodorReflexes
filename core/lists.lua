@@ -140,6 +140,20 @@ function list:Initialize(listDefinition)
     internal.registeredLists[self.name] = self -- register the list
 end
 
+--- NOT for manual use! this gets called to resize the list window based on the current data.
+--- calculates the total height of the list based on the data types and their heights.
+--- @return void
+function list:ResizeList()
+    local height = 0
+    local dataList = ZO_ScrollList_GetDataList(self.listControl)
+    for _, entry in pairs(dataList) do
+        local type = ZO_ScrollList_GetDataTypeTable(self.listControl, entry.typeId)
+        height = height + type.height
+    end
+    self.window:SetHeight(height)
+end
+
+
 --- NOT for manual use! this gets called to update the list with a debounce.
 --- debounce the update calls to prevent excessive updates
 --- @return void
@@ -148,6 +162,7 @@ function list:UpdateDebounced()
     EM:RegisterForUpdate(self.updateDebouncedEventName, self.updateDebounceDelayMS, function()
         EM:UnregisterForUpdate(self.updateDebouncedEventName)
         self:Update()
+        self:ResizeList()
     end)
 end
 
@@ -240,11 +255,9 @@ function list:CreateControls()
     local windowName = string.format("%s_%s", addon_name, self._Id)
     local window = WM:CreateTopLevelWindow(windowName)
     window:SetClampedToScreen(true)
-    window:SetResizeToFitDescendents(true)
     window:SetHidden(true)
     window:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, self.sv.windowPosLeft, self.sv.windowPosTop)
     window:SetWidth(self.sv.windowWidth)
-    window:SetHeight(self.listHeaderHeight + (self.listRowHeight * MAX_GROUP_SIZE_THRESHOLD) + self.listRowHeight) -- header + rows + extraRow for padding
     window:SetHandler( "OnMoveStop", function()
         self.sv.windowPosLeft = window:GetLeft()
         self.sv.windowPosTop = window:GetTop()
@@ -253,9 +266,11 @@ function list:CreateControls()
     self.window = window
     self.logger:Debug("created main window '%s'", windowName)
 
+    -- create a background for the body of the list
     local backgroundName = string.format("%s_%s", windowName, "Background")
     local backgroundControl = window:CreateControl(backgroundName, CT_TEXTURE)
-    backgroundControl:SetAnchorFill(window)
+    backgroundControl:SetAnchor(TOPLEFT, window, TOPLEFT, 0, self.listHeaderHeight, ANCHOR_CONSTRAINS_XY)
+    backgroundControl:SetAnchor(BOTTOMRIGHT, window, BOTTOMRIGHT, 0, 0, ANCHOR_CONSTRAINS_XY)
     backgroundControl:SetColor(0, 0, 0, self.sw.backgroundOpacity)
     backgroundControl:SetMouseEnabled(false)
     self.backgroundName = backgroundName
@@ -267,7 +282,7 @@ function list:CreateControls()
     local listControl = WM:CreateControlFromVirtual(listControlName, window, "ZO_ScrollList")
     listControl:SetAnchor(TOPLEFT, window, TOPLEFT, 0, 0, ANCHOR_CONSTRAINS_XY)
     listControl:SetAnchor(TOPRIGHT, window, TOPRIGHT, ZO_SCROLL_BAR_WIDTH, 0, ANCHOR_CONSTRAINS_X)
-    listControl:SetHeight(self.listHeaderHeight + (self.listRowHeight * MAX_GROUP_SIZE_THRESHOLD) + self.listRowHeight) -- header + rows + extraRow for padding
+    listControl:SetHeight(600) -- we need to set a fixed height here to make the scroll list work properly when it gets scaled. don't ask me why :D
     listControl:SetMouseEnabled(false)
     listControl:GetNamedChild("Contents"):SetMouseEnabled(false)
     self.listControlName = listControlName

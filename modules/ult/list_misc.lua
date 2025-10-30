@@ -144,10 +144,5 @@ function module:UpdateMiscList()
         table.insert(dataList, ZO_ScrollList_CreateDataEntry(self.miscList.ROW_TYPE, playerData))
     end
 
-    self.miscList.window:SetHeight(
-        self.miscList.listHeaderHeight +
-        (#playersDataList * self.miscList.listRowHeight)
-    )
-
     ZO_ScrollList_Commit(listControl)
 end

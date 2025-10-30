@@ -166,10 +166,5 @@ function module:UpdateAtroList()
         table.insert(dataList, ZO_ScrollList_CreateDataEntry(self.atroList.ROW_TYPE, playerData))
     end
 
-    self.atroList.window:SetHeight(
-        self.atroList.listHeaderHeight +
-        (#playersDataList * self.atroList.listRowHeight)
-    )
-
     ZO_ScrollList_Commit(listControl)
 end

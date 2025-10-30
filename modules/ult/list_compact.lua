@@ -411,10 +411,5 @@ function module:UpdateCompactList()
         table.insert(dataList, ZO_ScrollList_CreateDataEntry(self.compactList.ROW_TYPE_CRYPTCANNON, playerData))
     end
 
-    self.compactList.window:SetHeight(
-        self.compactList.listHeaderHeight +
-        (entryCount * self.compactList.listRowHeight)
-    )
-
     ZO_ScrollList_Commit(listControl)
 end

@@ -156,10 +156,5 @@ function module:UpdateColosList()
         table.insert(dataList, ZO_ScrollList_CreateDataEntry(self.colosList.ROW_TYPE, playerData))
     end
 
-    self.colosList.window:SetHeight(
-        self.colosList.listHeaderHeight +
-        (#playersDataList * self.colosList.listRowHeight)
-    )
-
     ZO_ScrollList_Commit(listControl)
 end

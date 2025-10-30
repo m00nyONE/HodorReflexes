@@ -181,10 +181,5 @@ function module:UpdateHornList()
         table.insert(dataList, ZO_ScrollList_CreateDataEntry(self.hornList.ROW_TYPE, playerData))
     end
 
-    self.hornList.window:SetHeight(
-            self.hornList.listHeaderHeight +
-            (#playersDataList * self.hornList.listRowHeight)
-    )
-
     ZO_ScrollList_Commit(listControl)
 end

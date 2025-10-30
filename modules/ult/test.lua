@@ -156,10 +156,15 @@ function module:startTest()
 
     -- manually force updates on lists without the usual debounce to initialize them early during the test
     self.hornList:Update()
+    self.hornList:ResizeList()
     self.colosList:Update()
+    self.colosList:ResizeList()
     self.atroList:Update()
+    self.atroList:ResizeList()
     self.miscList:Update()
+    self.miscList:ResizeList()
     self.compactList:Update()
+    self.compactList:ResizeList()
 
     -- fire some buff/debuff events for testing purposes
     CM:FireCallbacks(HR_EVENT_HORN_BUFF_GAINED, localPlayer, 30 * 1000)
