@@ -11,9 +11,22 @@ core.logger = {}
 --- @class Logger
 core.logger.main = LibDebugLogger:Create(addon_name)
 
+local function noLog(self, ...)
+    --df(...)
+end
+local noLogger = {
+    Debug = noLog,
+    Info = noLog,
+    Warn = noLog,
+    Error = noLog,
+}
+
 --- Initialize a sub logger
 --- @param name string the name of the sub logger
 --- @return table the sub logger
 function core.GetLogger(name)
+    if IsConsoleUI() then
+        return noLogger
+    end
     return core.logger.main:Create(name)
 end
