@@ -22,6 +22,7 @@ local addon = {
             sw = nil, -- global accountwide saved variables
             svDefault = {
                 accountWide = true,
+                enableExperimentalFeatures = false,
                 extensions = {
                     ["seasons"] = true,
                     ["names"] = true,
