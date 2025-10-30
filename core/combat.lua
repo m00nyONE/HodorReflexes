@@ -32,6 +32,8 @@ local combat = {
         damageOutTotalGroup = 0,
     },
     logger = core.GetLogger("core/combat"),
+
+    saveHistory = false, -- will be set to true if a function gets called that needs that feature. Until then, lets save some memory :-)
 }
 addon.combat = combat -- expose combat class as it can be useful for others too
 
@@ -72,6 +74,7 @@ function combat:FightRecapCallback(_, data)
     self.data.groupDPSOut = data.groupDPSOut or 0
     self.data.damageOutTotalGroup = data.damageOutTotalGroup or 0
     -- save history
+    if self.saveHistory == false then return end
     table.insert(self.damageHistory, {
         timestamp = GetGameTimeMilliseconds(),
         damage = data.damageOutTotalGroup
@@ -100,6 +103,8 @@ end
 --- @param seconds number the time frame in seconds
 --- @return number the calculated group DPS over the given time frame. If not enough data is available, returns the current group DPS out.
 function combat:GetGroupDPSOverTime(seconds)
+    self.saveHistory = true -- enable history saving as this function needs it
+
     if IsUnitInCombat(localPlayer) or self._testBeginTime ~= nil then -- we do not want the value to shrink after beeing out of combat
         self._lastCombatTime = GetGameTimeMilliseconds()
     end
@@ -158,7 +163,7 @@ function combat:startTest()
         self.data.damageOutTotalGroup = self.data.damageOutTotalGroup + (data.dps * 1000 * self.data.dpstime) or 0
     end
 
-    -- save history
+    -- save history -- here we do not check for saveHistory as we want to have that initial entry at the start. if this feature is not needed, then it's only one entry that gets deleted after the test anyways
     table.insert(self.damageHistory, {
         timestamp = GetGameTimeMilliseconds(),
         damage = self.data.damageOutTotalGroup
@@ -183,6 +188,7 @@ function combat:updateTest()
     end
 
     -- save history
+    if self.saveHistory == false then return end
     table.insert(self.damageHistory, {
         timestamp = GetGameTimeMilliseconds(),
         damage = self.data.damageOutTotalGroup
