@@ -117,6 +117,7 @@ function module:CreatePillagerCounter()
     end)
 end
 
+-- experimental, disabled for now
 function module:CreateSlayerCounter()
     local function updateFunc()
         local unitsWithoutSlayer = {}

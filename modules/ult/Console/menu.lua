@@ -583,7 +583,7 @@ function module:GetSubMenuOptions()
     mergeOptions(counterOptions, options)
     mergeOptions(getCommonCounterOptions("Horn", self.hornCounter), options)
     mergeOptions(getCommonCounterOptions("Pillager", self.pillagerCounter), options)
-    mergeOptions(getCommonCounterOptions("Slayer", self.slayerCounter), options)
+    --mergeOptions(getCommonCounterOptions("Slayer", self.slayerCounter), options) -- experimental, disabled for now
 
     return options
 end
