@@ -100,7 +100,7 @@ end
 --- @param seconds number the time frame in seconds
 --- @return number the calculated group DPS over the given time frame. If not enough data is available, returns the current group DPS out.
 function combat:GetGroupDPSOverTime(seconds)
-    if IsUnitInCombat(localPlayer) then -- we do not want the value to shrink after beeing out of combat
+    if IsUnitInCombat(localPlayer) or self._testBeginTime ~= nil then -- we do not want the value to shrink after beeing out of combat
         self._lastCombatTime = GetGameTimeMilliseconds()
     end
     local cutoff = self._lastCombatTime - (seconds * 1000) -- convert to milliseconds
