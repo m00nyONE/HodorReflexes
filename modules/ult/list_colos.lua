@@ -26,6 +26,7 @@ local svDefault = {
     windowPosLeft = 550,
     windowPosTop = 50,
     windowWidth = 262,
+    backgroundOpacity = 0.0,
 
     showPercentValue = 1.0,
     showRawValue = 0.0,

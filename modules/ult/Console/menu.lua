@@ -199,6 +199,23 @@ function module:GetSubMenuOptions()
             },
             {
                 type = LHAS.ST_SLIDER,
+                label = "Background Opacity",
+                tooltip = "set the background opacity of the list.",
+                min = 0,
+                max = 1,
+                step = 0.05,
+                format = "%.2f",
+                unit = " ",
+                default = list.svDefault.backgroundOpacity,
+                getFunction = function() return list.sw.backgroundOpacity end,
+                setFunction = function(value)
+                    list.sw.backgroundOpacity = value
+                    list:SetBackgroundOpacity(value)
+                end,
+                isAdvancedSetting = true,
+            },
+            {
+                type = LHAS.ST_SLIDER,
                 label = "Zero Timer Opacity",
                 tooltip = "set the opacity of the timers when at zero.",
                 min = 0.05,

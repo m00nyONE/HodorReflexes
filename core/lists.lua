@@ -173,6 +173,10 @@ function list:IsEnabled()
     end
 end
 
+function list:SetBackgroundOpacity(opacity)
+    self.backgroundControl:SetAlpha(opacity)
+end
+
 --- NOT for manual use! this gets called to refresh the visibility of the list.
 --- refresh the visibility of the list based on the current conditions
 --- @return void
@@ -207,6 +211,7 @@ function list:CreateSavedVariables()
     self.svDefault.windowPosLeft = self.svDefault.windowPosLeft or 0
     self.svDefault.windowPosTop = self.svDefault.windowPosTop or 0
     self.svDefault.windowWidth = self.svDefault.windowWidth or 220
+    self.svDefault.backgroundOpacity = self.svDefault.backgroundOpacity or 0.0
     self.svDefault.supportRangeOnly = self.svDefault.supportRangeOnly or false
 
     local svNamespace = string.format("list_%s", self.name)
@@ -245,14 +250,18 @@ function list:CreateControls()
         self.sv.windowPosLeft = window:GetLeft()
         self.sv.windowPosTop = window:GetTop()
     end)
-    -- this here is for debugging - it draws an red background for all the lists
-    --local bg = window:CreateControl(windowName .. "_highLight", CT_TEXTURE)
-    --bg:SetAnchorFill(window)
-    --bg:SetColor(1, 0, 0, 0.5)
-    --bg:SetMouseEnabled(false)
     self.windowName = windowName
     self.window = window
     self.logger:Debug("created main window '%s'", windowName)
+
+    local backgroundName = string.format("%s_%s", windowName, "Background")
+    local backgroundControl = window:CreateControl(backgroundName, CT_TEXTURE)
+    backgroundControl:SetAnchorFill(window)
+    backgroundControl:SetColor(0, 0, 0, self.sw.backgroundOpacity)
+    backgroundControl:SetMouseEnabled(false)
+    self.backgroundName = backgroundName
+    self.background = backgroundControl
+    self.logger:Debug("created background control '%s'", backgroundName)
 
     -- create the list control
     local listControlName = string.format("%s_%s", windowName, "List")

@@ -155,6 +155,23 @@ function module:GetSubMenuOptions()
             },
             {
                 type = "slider",
+                name = "Background Opacity",
+                tooltip = "set the background opacity of the list.",
+                min = 0,
+                max = 1,
+                step = 0.05,
+                decimals = 2,
+                clampInput = true,
+                default = list.svDefault.backgroundOpacity,
+                getFunc = function() return list.sw.backgroundOpacity end,
+                setFunc = function(value)
+                    list.sw.backgroundOpacity = value
+                    list:SetBackgroundOpacity(value)
+                end,
+                isAdvancedSetting = true,
+            },
+            {
+                type = "slider",
                 name = "Zero Timer Opacity",
                 tooltip = "set the opacity of the timers when at zero.",
                 min = 0.05,
