@@ -261,6 +261,8 @@ function list:CreateControls()
     window:SetHandler( "OnMoveStop", function()
         self.sv.windowPosLeft = window:GetLeft()
         self.sv.windowPosTop = window:GetTop()
+        window:ClearAnchors()
+        window:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, self.sv.windowPosLeft, self.sv.windowPosTop)
     end)
     window:SetScale(self.sw.windowScale)
     self.windowName = windowName
