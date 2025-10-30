@@ -260,7 +260,7 @@ function list:CreateControls()
     backgroundControl:SetColor(0, 0, 0, self.sw.backgroundOpacity)
     backgroundControl:SetMouseEnabled(false)
     self.backgroundName = backgroundName
-    self.background = backgroundControl
+    self.backgroundControl = backgroundControl
     self.logger:Debug("created background control '%s'", backgroundName)
 
     -- create the list control
