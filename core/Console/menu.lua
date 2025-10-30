@@ -43,20 +43,20 @@ function core.CreateNewMenu(subName, options)
     })
     panel:AddSetting({
         type = LHAS.ST_BUTTON,
-        label = "Reload UI",
-        buttonText = "Reload UI",
-        tooltip = "Reloads the UI",
-        clickHandler = function(control)
-            ReloadUI()
-        end
-    })
-    panel:AddSetting({
-        type = LHAS.ST_BUTTON,
         label = "Toggle Test Mode",
         buttonText = "Toggle Test Mode",
         tooltip = "Toggles the test mode for the addon. This does NOT work when you are in a group.",
         clickHandler = function(control)
             SLASH_COMMANDS[string.format("/%s", addon.slashCmd)]("test")
+        end
+    })
+    panel:AddSetting({
+        type = LHAS.ST_BUTTON,
+        label = "Reload UI",
+        buttonText = "Reload UI",
+        tooltip = "Reloads the UI",
+        clickHandler = function(control)
+            ReloadUI()
         end
     })
     for _, option in ipairs(options) do
