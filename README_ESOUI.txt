@@ -1,23 +1,98 @@
-[B]Hodor Reflexes[/B] Hodor Reflexes allows you to view shared DPS and Ult data from group members.
+[center][size=7][color=#FFA500][b]HodorReflexes[/b][/color][/size][/center]
 
-Originally written by @andy.s, this is a complete rewrite and rebrand of the addon to use modern libraries and APIs.
+[url=https://github.com/m00nyONE/HodorReflexes/actions/workflows/release.yml][img]https://github.com/m00nyONE/HodorReflexes/actions/workflows/release.yml/badge.svg?branch=release[/img][/url]
+[url=https://github.com/m00nyONE/HodorReflexes/actions/workflows/dev-release.yml][img]https://github.com/m00nyONE/HodorReflexes/actions/workflows/dev-release.yml/badge.svg?branch=main[/img][/url]
 
-[SIZE="4"]Install guide:[/SIZE]
+[size=3][color=#00BFFF][b]Github:[/b][/color][/size] [url=https://m00nyone.github.io/HodorReflexes/]https://m00nyone.github.io/HodorReflexes/[/url]
+[size=3][color=#7289DA][b]Discord:[/b][/color][/size] [url=https://discord.gg/8YpvXJhAyz]https://discord.gg/8YpvXJhAyz[/url]
 
-1. Download the following libraries and put them into your AddOns folder (or just use Minion): [URL="https://www.esoui.com/downloads/info7-LibAddonMenu.html"]LibAddonMenu-2.0[/URL], [URL="https://www.esoui.com/downloads/info4024-LibGroupCombatStats.html"]LibGroupCombatStats[/URL],
-[URL=https://www.esoui.com/downloads/info1337-LibGroupBroadcastformerlyLibGroupSocket.html]LibGroupBroadcast[/URL], [URL="https://www.esoui.com/downloads/info2528-LibCombat.html"]LibCombat[/URL], [URL="https://www.esoui.com/downloads/info2275-LibDebugLogger.html"]LibDebugLogger[/URL], [URL="https://www.esoui.com/downloads/info4161-LibCustomIcons.html"]LibCustomIcons[/URL], [URL="https://www.esoui.com/downloads/fileinfo.php?id=4155#info"]LibCustomNames[/URL].
-Most likely you already have most of them installed.
-2. Install this addon, make sure it's enabled and all dependencies are up-to-date in the in-game add-ons list.
-3. Once you've joined a group that also uses HodorReflexes or a similar addon built upon LibGroupCombatStats, you'll start seeing ultimate/dps data.
+[size=2][color=#FFFFFF]Hodor Reflexes allows you to view shared DPS and Ult data from group members.[/color][/size]
+[size=2][color=#FFFFFF]Originally written by @andy.s, this is a complete rewrite and rebrand of the addon to use modern libraries and APIs.[/color][/size]
+[size=2][color=#FFFFFF]Compatible with PC and Console versions of ESO.[/color][/size]
 
-To reposition the lists you need to unlock UI in the addon settings.
+[size=4][color=#FFA500][b]Install Guide[/b][/color][/size]
+[list=1]
+[*][color=#FFFFFF]Download the required libraries ([i]LibAddonMenu-2.0[/i], [i]LibGroupCombatStats[/i], [i]LibGroupBroadcast[/i], [i]LibCombat[/i], [i]LibDebugLogger[/i], [i]LibCustomNames[/i], [i]LibCustomIcons[/i]) and place them in the AddOns folder. (or just use Minion)[/color]
+[*][color=#FFFFFF]Install and enable the addon in the in-game add-ons list, ensuring all dependencies are up-to-date.[/color]
+[*][color=#FFFFFF]Join a group using HodorReflexes or a similar addon built upon LibGroupCombatStats to start viewing shared data.[/color]
+[/list]
 
-[B]Q&A:[/B]
-1. How can I get a custom name / icon like on the screenshots?
-- Click "Donate!" above.
+[size=4][color=#FFA500][b]Usage[/b][/color][/size]
+[list]
+[*][color=#FFFFFF]Unlock and reposition UI elements via the addon settings or by typing [i]/hodor test[/i] when not in a group.[/color]
+[/list]
 
-2. How does this addon work?
-- it uses LibGroupCombatStats to get it's data. LibGroupCombatStats shares the ultimate/dps/hps data with your group members. It uses ZoS new Broadcast API introduced in U45 which replaces the old hacky way of sending MapPings back and forth between group members to share small amounts of data.
+[size=4][color=#FFA500][b]Features[/b][/color][/size]
 
-3. Does it conflict with Raid Notifier or other addons sharing DPS or ULT data?
-- no
+[size=3][color=#00FF00][b]Ultimates[/b][/color][/size]
+[list]
+[*][color=#FFFFFF]Individual lists for the most used support ultimates in raids[/color]
+[*][color=#FFFFFF]New "compact" list that shows all ultimates together (each one can be individually turned on & off)[/color]
+[*][color=#FFFFFF]New support for Slayer, Pillager and CryptCannon[/color]
+[*][color=#FFFFFF]Display of ultimates from DPS players[/color]
+[*][color=#FFFFFF]Calculation of how much benefit an activated ultimate set would bring to the group[/color]
+[*][color=#FFFFFF]Individual counters & icons for Horn & Pillager to see if everyone is in range[/color]
+[*][color=#FFFFFF]Cooldown timer for important raid buffs[/color]
+[/list]
+
+[size=3][color=#00FF00][b]DPS[/b][/color][/size]
+[list]
+[*][color=#FFFFFF]DPS list[/color]
+[*][color=#FFFFFF]Combat timer[/color]
+[*][color=#FFFFFF]Group overview including burst damage of the last 10 seconds[/color]
+[/list]
+
+[size=3][color=#00FF00][b]Hide Me[/b][/color][/size]
+[list]
+[*][color=#FFFFFF]New module to hide certain ultimates or DPS from other players' lists[/color]
+[*][color=#FFFFFF]Simply choose what you want to hide in the settings. Everyone who also has that module enabled will then no longer see the hidden data.[/color]
+[/list]
+
+[size=3][color=#00FF00][b]Pull Countdown[/b][/color][/size]
+[list]
+[*][color=#FFFFFF]Module for pull countdowns[/color]
+[*][color=#FFFFFF]use /pull <seconds> to start a countdown[/color]
+[*][color=#FFFFFF]Visual and audio notification when the countdown ends[/color]
+[/list]
+
+[size=3][color=#00FF00][b]Readycheck[/b][/color][/size]
+[list]
+[*][color=#FFFFFF]Extended readycheck for the group.[/color]
+[*][color=#FFFFFF]See who has voted and who hasn't yet.[/color]
+[/list]
+
+[size=3][color=#00FF00][b]Exit Instance[/b][/color][/size]
+[list]
+[*][color=#FFFFFF]Remove all group members from the instance with one click[/color]
+[*][color=#FFFFFF]Confirmation dialog to prevent accidental or misuse[/color]
+[/list]
+
+[size=3][color=#00FF00][b]Skill Lines[/b][/color][/size]
+[list]
+[*][color=#FFFFFF]Display of skill lines of all group members (not fully implemented yet)[/color]
+[/list]
+
+[size=3][color=#00FF00][b]Settings[/b][/color][/size]
+[list]
+[*][color=#FFFFFF]Clear and easy-to-understand settings menu[/color]
+[*][color=#FFFFFF]Only the most important and frequently used options are shown[/color]
+[*][color=#FFFFFF]Advanced mode available to customize everything individually[/color]
+[/list]
+
+[size=3][color=#00FF00][b]Extension System[/b][/color][/size]
+[list]
+[*][color=#FFFFFF]New system that can override existing functions (e.g. display of icons, names, and small gimmicks on certain days of the year)[/color]
+[/list]
+
+[size=3][color=#00FF00][b]Developer friendly[/b][/color][/size]
+[list]
+[*][color=#FFFFFF]there are a lot of internal features exposed for other addon developers to use like creating custom lists or counters without a hassle.[/color]
+[*][color=#FFFFFF]HodorReflexes modules are "examples" on how to use the internal API. everything inside there is documented.[/color]
+[*][color=#FFFFFF]If there is thing that you are missing, let me know.[/color]
+[/list]
+
+[size=4][color=#FFA500][b]Technical Details[/b][/color][/size]
+[list]
+[*][color=#FFFFFF]The addon relies on [i]LibGroupCombatStats[/i] to view ultimate/DPS/HPS data among group members. If you use a different addon that also uses this library, you'll be able to see each other's data.[/color]
+[*][color=#FFFFFF]It uses the ZoS Broadcast API, which replaces older hacky methods like MapPings for data sharing.[/color]
+[/list]
