@@ -14,6 +14,8 @@ local HR_EVENT_TEST_STARTED = addon.HR_EVENT_TEST_STARTED
 local HR_EVENT_TEST_STOPPED = addon.HR_EVENT_TEST_STOPPED
 local HR_EVENT_TEST_TICK = addon.HR_EVENT_TEST_TICK
 
+local localPlayer = "player"
+
 local CM = core.CM
 
 local combat = {
@@ -98,14 +100,16 @@ end
 --- @param seconds number the time frame in seconds
 --- @return number the calculated group DPS over the given time frame. If not enough data is available, returns the current group DPS out.
 function combat:GetGroupDPSOverTime(seconds)
-    local now = GetGameTimeMilliseconds()
-    local cutoff = now - (seconds * 1000) -- convert to milliseconds
+    if IsUnitInCombat(localPlayer) then -- we do not want the value to shrink after beeing out of combat
+        self._lastCombatTime = GetGameTimeMilliseconds()
+    end
+    local cutoff = self._lastCombatTime - (seconds * 1000) -- convert to milliseconds
     local oldest, newest
 
     -- find oldest and newest entries within the time frame
     for i = #self.damageHistory, 1, -1 do
         local entry = self.damageHistory[i]
-        if not newest and entry.timestamp <= now then
+        if not newest and entry.timestamp <= self._lastCombatTime then
             newest = entry
         end
         if entry.timestamp <= cutoff then

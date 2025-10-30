@@ -199,6 +199,23 @@ function module:GetSubMenuOptions()
             },
             {
                 type = LHAS.ST_SLIDER,
+                label = "Background Opacity",
+                tooltip = "set the background opacity of the list.",
+                min = 0,
+                max = 1,
+                step = 0.05,
+                format = "%.2f",
+                unit = " ",
+                default = list.svDefault.backgroundOpacity,
+                getFunction = function() return list.sw.backgroundOpacity end,
+                setFunction = function(value)
+                    list.sw.backgroundOpacity = value
+                    list:SetBackgroundOpacity(value)
+                end,
+                isAdvancedSetting = true,
+            },
+            {
+                type = LHAS.ST_SLIDER,
                 label = "Zero Timer Opacity",
                 tooltip = "set the opacity of the timers when at zero.",
                 min = 0.05,
@@ -239,6 +256,38 @@ function module:GetSubMenuOptions()
                     counter:RefreshVisibility()
                 end,
                 width = "full",
+            },
+            {
+                type = LHAS.ST_SLIDER,
+                label = counterName .. " counter horizontal position",
+                tooltip = "set the horizontal position of the counter.",
+                min = 0,
+                max = SCREEN_WIDTH,
+                step = 10,
+                format = "%.0f",
+                unit = " px",
+                default = counter.svDefault.windowPosLeft,
+                getFunction = function() return counter.sw.windowPosLeft end,
+                setFunction = function(value)
+                    counter.sw.windowPosLeft = value
+                    counter.window:SetAnchor(CENTER, GuiRoot, TOPLEFT, counter.sw.windowPosLeft, counter.sw.windowPosTop)
+                end,
+            },
+            {
+                type = LHAS.ST_SLIDER,
+                label = counterName .. " counter vertical position",
+                tooltip = "set the vertical position of the counter.",
+                min = 0,
+                max = SCREEN_HEIGHT,
+                step = 10,
+                format = "%.0f",
+                unit = " px",
+                default = counter.svDefault.windowPosTop,
+                getFunction = function() return counter.sw.windowPosTop end,
+                setFunction = function(value)
+                    counter.sw.windowPosTop = value
+                    counter.window:SetAnchor(CENTER, GuiRoot, TOPLEFT, counter.sw.windowPosLeft, counter.sw.windowPosTop)
+                end,
             },
         }
     end

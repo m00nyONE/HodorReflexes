@@ -30,6 +30,7 @@ local svDefault = {
     windowPosLeft = 10,
     windowPosTop = 50,
     windowWidth = 227,
+    backgroundOpacity = 0.0,
 
     listHeaderOpacity = 0.8,
     listRowEvenOpacity = 0.65,
