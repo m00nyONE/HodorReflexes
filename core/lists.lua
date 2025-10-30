@@ -208,6 +208,7 @@ function list:CreateSavedVariables()
     if not self.svVersion then self.svVersion = 1 end
     self.svDefault.enabled = self.svDefault.enabled or 1 -- 1=always, 2=out of combat, 3=non bossfights, 0=off
     self.svDefault.disableInPvP = self.svDefault.disableInPvP or true
+    self.svDefault.windowScale = self.svDefault.windowScale or 1.0
     self.svDefault.windowPosLeft = self.svDefault.windowPosLeft or 0
     self.svDefault.windowPosTop = self.svDefault.windowPosTop or 0
     self.svDefault.windowWidth = self.svDefault.windowWidth or 220
@@ -278,6 +279,8 @@ function list:CreateControls()
     ZO_ScrollList_SetHideScrollbarOnDisable(listControl, true)
     ZO_ScrollList_SetUseScrollbar(listControl, false)
     ZO_ScrollList_SetScrollbarEthereal(listControl, true)
+
+    self.window:SetScale(self.sw.windowScale)
 end
 
 --- NOT for manual use! this gets called once when the list is initialized.

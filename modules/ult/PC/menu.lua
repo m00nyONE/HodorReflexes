@@ -121,6 +121,22 @@ function module:GetSubMenuOptions()
             },
             {
                 type = "slider",
+                name = "scale",
+                min = 60,
+                max = 160,
+                step = 1,
+                decimals = 0,
+                default = list.svDefault.windowScale * 100,
+                clampInput = true,
+                getFunc = function() return list.sw.windowScale * 100 end,
+                setFunc = function(value)
+                    list.sw.windowScale = value / 100
+                    list.window:SetScale(list.sw.windowScale)
+                end,
+                isAdvancedSetting = true,
+            },
+            {
+                type = "slider",
                 name = "List width",
                 min = list.svDefault.windowWidth,
                 max = list.svDefault.windowWidth + 150,

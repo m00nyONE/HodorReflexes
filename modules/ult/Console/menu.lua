@@ -97,6 +97,22 @@ function module:GetSubMenuOptions()
                 end,
             },
             {
+                type = LHAS.ST_SLIDER,
+                label = "scale",
+                tooltip = "set the scale of the list.",
+                min = 60,
+                max = 160,
+                step = 1,
+                format = "%.0f",
+                unit = " %",
+                default = list.svDefault.windowScale * 100,
+                getFunction = function() return list.sw.windowScale * 100 end,
+                setFunction = function(value)
+                    list.sw.windowScale = value / 100
+                    list.window:SetScale(list.sw.windowScale)
+                end,
+            },
+            {
                 type = LHAS.ST_CHECKBOX,
                 label = "Disable in PvP",
                 tooltip = "disable the list when in PvP.",
