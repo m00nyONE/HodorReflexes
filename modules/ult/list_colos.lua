@@ -24,8 +24,8 @@ local svDefault = {
     disableInPvP = true,
 
     windowScale = 1.0,
-    windowPosLeft = 550,
-    windowPosTop = 50,
+    windowPosLeft = 10,
+    windowPosTop = 660,
     windowWidth = 262,
     backgroundOpacity = 0.0,
 

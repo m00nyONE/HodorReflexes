@@ -29,7 +29,7 @@ local svDefault = {
 
     windowScale = 1.0,
     windowPosLeft = 10,
-    windowPosTop = 50,
+    windowPosTop = 260,
     windowWidth = 227,
     backgroundOpacity = 0.0,
 
