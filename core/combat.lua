@@ -58,7 +58,7 @@ function combat:Reset()
     self.data.groupDPSOut = 0
     self.data.damageOutTotalGroup = 0
 
-    self.damageHistory = {}
+    ZO_ClearTable(self.damageHistory)
     self.logger:Debug("Combat data reset")
 end
 
