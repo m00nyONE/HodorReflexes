@@ -20,6 +20,7 @@ local svDefault = {
     enabled =  1, -- 1=always, 2=out of combat, 3=non bossfights, 0=off
     disableInPvP = false,
 
+    windowScale = 1.0,
     windowPosLeft = 550,
     windowPosTop = 200,
     windowWidth = 262,

@@ -262,6 +262,7 @@ function list:CreateControls()
         self.sv.windowPosLeft = window:GetLeft()
         self.sv.windowPosTop = window:GetTop()
     end)
+    window:SetScale(self.sw.windowScale)
     self.windowName = windowName
     self.window = window
     self.logger:Debug("created main window '%s'", windowName)
@@ -293,7 +294,6 @@ function list:CreateControls()
     ZO_ScrollList_SetUseScrollbar(listControl, false)
     ZO_ScrollList_SetScrollbarEthereal(listControl, true)
 
-    self.window:SetScale(self.sw.windowScale)
 end
 
 --- NOT for manual use! this gets called once when the list is initialized.
