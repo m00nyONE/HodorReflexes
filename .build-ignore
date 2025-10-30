@@ -3,6 +3,6 @@
 .gitignore
 .build-ignore
 docs-lua
-README_CONSOLE.txt
-README_ESOUI.txt
+README_CONSOLE.md
+README_ESOUI.bbcode
 TODO.md
