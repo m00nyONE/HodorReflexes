@@ -22,13 +22,15 @@ local HR_EVENT_PLAYERSDATA_UPDATED = addon.HR_EVENT_PLAYERSDATA_UPDATED
 local HR_EVENT_GROUP_CHANGED = addon.HR_EVENT_GROUP_CHANGED
 
 function module:CreateHornCounter()
+    local effectRange = 20
+
     local function updateFunc()
         local count = 0
         local ready = true
         for i = 1, GetGroupSize() do
             local unitTag = GetGroupUnitTagByIndex(i)
             if IsUnitOnline(unitTag) then
-                if util.IsUnitInPlayersRange(unitTag, 20) then
+                if util.IsUnitInPlayersRange(unitTag, effectRange) then
                     count = count + 1
                 elseif GetGroupMemberSelectedRole(unitTag) == LFG_ROLE_DPS then
                     ready = false
@@ -70,13 +72,15 @@ function module:CreateHornCounter()
 end
 
 function module:CreatePillagerCounter()
+    local effectRange = 12
+
     local function updateFunc()
         local count = 0
         local ready = true
         for i = 1, GetGroupSize() do
             local unitTag = GetGroupUnitTagByIndex(i)
             if IsUnitOnline(unitTag) then
-                if util.IsUnitInPlayersRange(unitTag, 12) then
+                if util.IsUnitInPlayersRange(unitTag, effectRange) then
                     count = count + 1
                 elseif GetGroupMemberSelectedRole(unitTag) == LFG_ROLE_DPS then
                     ready = false
@@ -119,6 +123,8 @@ end
 
 -- experimental, disabled for now
 function module:CreateSlayerCounter()
+    local effectRange = 28
+
     local function updateFunc()
         local unitsWithoutSlayer = {}
         local unitWithSlayer = nil
@@ -145,12 +151,12 @@ function module:CreateSlayerCounter()
         for _, unitTagWithoutSlayer in ipairs(unitsWithoutSlayer) do
             if unitWithSlayer then
                 local distance = util.GetUnitDistanceToUnit(unitWithSlayer, unitTagWithoutSlayer)
-                if distance and distance <= 28 then -- only consider players within 28m of the other slayer holder
+                if distance and distance <= effectRange then -- only consider players within 28m of the other slayer holder
                     table.insert(distancesToOtherSlayerHolder, {unitTag = unitTagWithoutSlayer, distance = distance})
                 end
             end
             local distance = util.GetPlayerDistanceToUnit(unitTagWithoutSlayer)
-            if distance and distance <= 28 then -- only consider players within 28m of us
+            if distance and distance <= effectRange then -- only consider players within 28m of us
                 table.insert(distancesToUs, {unitTag = unitTagWithoutSlayer, distance = distance})
             end
 
