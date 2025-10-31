@@ -24,7 +24,7 @@ function core.OptionalLibrariesCheck()
             },
             buttons = {
                 {
-                    text = GetString(HR_MISSING_LIBS_OK),
+                    text = SI_OK,
                     keybind = "DIALOG_PRIMARY",
                     callback = function() end,
                 },
