@@ -42,7 +42,7 @@ function module:SendExitInstanceRequest()
     end
 
     if not ZO_Dialogs_IsShowingDialog() then
-        ZO_Dialogs_ShowDialog(self.dialogSendExitInstance, nil, nil, IsInGamepadPreferredMode())
+        ZO_Dialogs_ShowPlatformDialog(self.dialogSendExitInstance)
         return
     end
 end

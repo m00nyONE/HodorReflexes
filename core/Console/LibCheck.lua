@@ -7,15 +7,13 @@ local internal = addon.internal
 local core = internal.core
 local logger = core.GetLogger("core/LibCheck")
 
-local LCN = LibCustomNames
-
 --- checks if optional libraries are loaded, if not show a reminder dialog
 --- @return void
 function core.OptionalLibrariesCheck()
     local sw = core.sw
     local dialogName = string.format("%s_MISSING_LIBS", addon_name)
 
-    if (not LCN) and not sw.libraryPopupDisabled then
+    if (not LibCustomNames) and (not sw.libraryPopupDisabled) then
         logger:Warn("LibCustomNames is missing. Some features will be disabled.")
         ZO_Dialogs_RegisterCustomDialog(dialogName, {
             title = {
@@ -26,7 +24,7 @@ function core.OptionalLibrariesCheck()
             },
             buttons = {
                 {
-                    text = GetString(HR_MISSING_LIBS_OK),
+                    text = SI_OK,
                     keybind = "DIALOG_PRIMARY",
                     callback = function() end,
                 },
@@ -46,7 +44,7 @@ function core.OptionalLibrariesCheck()
             },
         })
 
-        ZO_Dialogs_ShowDialog(dialogName, nil, nil, IsInGamepadPreferredMode())
+        ZO_Dialogs_ShowPlatformDialog(dialogName)
     end
 
 end

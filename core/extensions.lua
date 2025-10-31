@@ -29,7 +29,7 @@ function core.InitializeExtensions()
             isEnabled = true
         end
         if isEnabled then
-            logger:Info("Initializing extension: %s", extensionName)
+            logger:Debug("Initializing extension: %s", extensionName)
             extension:RunOnce("CreateSavedVariables") -- Create saved variables for the extension
 
             extension:RunOnce("Activate") -- Run the extension's activation function

@@ -58,8 +58,8 @@ core.CM = CM -- make the callback manager available to other parts of the addon
 
 -- initialize addon
 local function initialize()
-    core.logger.main:Info("version: %s", addon.version)
-    core.logger.main:Info("svVersion: %d", core.svVersion)
+    core.logger.main:Debug("version: %s", addon.version)
+    core.logger.main:Debug("svVersion: %d", core.svVersion)
     -- we use a combination of accountWide saved variables and per character saved variables. This little swappi swappi allows us to switch between them without defining new variables
     core.sw = ZO_SavedVars:NewAccountWide(core.svName, core.svVersion, nil, core.svDefault)
     if not core.sw.accountWide then
@@ -77,7 +77,10 @@ local function initialize()
     core.InitializeExtensions()
     core.BuildMenu()
 
-    core.OptionalLibrariesCheck()
+    EM:RegisterForEvent(addon_name .. "_LIB_CHECK", EVENT_PLAYER_ACTIVATED, function()
+        EM:UnregisterForEvent(addon_name .. "_LIB_CHECK", EVENT_PLAYER_ACTIVATED)
+        core.OptionalLibrariesCheck()
+    end)
 
     addon.internal = nil
 end

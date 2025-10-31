@@ -1,6 +1,6 @@
 # HodorReflexes
 
-Github: https://m00nyone.github.io/HodorReflexes/
+Github: https://github.com/m00nyONE/HodorReflexes/
 Discord: https://discord.gg/8YpvXJhAyz
 
 Hodor Reflexes allows you to view shared DPS and Ult data from group members.
