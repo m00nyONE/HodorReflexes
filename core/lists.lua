@@ -132,7 +132,7 @@ function list:Initialize(listDefinition)
     addon.RegisterCallback(HR_EVENT_PLAYERSDATA_UPDATED, function(...) self:UpdateDebounced(...) end)
     addon.RegisterCallback(HR_EVENT_PLAYERSDATA_CLEANED, function(...) self:UpdateDebounced(...) end)
 
-    EM:RegisterForEvent(self._Id .. "_SupportRangeUpdate", EVENT_GROUP_SUPPORT_RANGE_UPDATE, self.UpdateDebounced)
+    EM:RegisterForEvent(self._Id .. "_SupportRangeUpdate", EVENT_GROUP_SUPPORT_RANGE_UPDATE, function(...) self:UpdateDebounced(...) end)
 
     self.logger:Debug("initialized in %d ms", GetGameTimeMilliseconds() - beginTime)
     self.Initialize = nil -- prevent re-initialization
