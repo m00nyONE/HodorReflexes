@@ -1,8 +1,5 @@
 # HodorReflexes
 
-[![Create ESOUI Release](https://github.com/m00nyONE/HodorReflexes/actions/workflows/release.yml/badge.svg?branch=release)](https://github.com/m00nyONE/HodorReflexes/actions/workflows/release.yml)
-[![Create Dev Release on Push](https://github.com/m00nyONE/HodorReflexes/actions/workflows/dev-release.yml/badge.svg?branch=main)](https://github.com/m00nyONE/HodorReflexes/actions/workflows/dev-release.yml)
-
 Github: https://m00nyone.github.io/HodorReflexes/
 Discord: https://discord.gg/8YpvXJhAyz
 
