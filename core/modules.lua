@@ -31,7 +31,7 @@ function core.InitializeModules()
             isEnabled = true
         end
         if isEnabled then
-            logger:Info("Initializing module: %s", moduleName)
+            logger:Debug("Initializing module: %s", moduleName)
             module:RunOnce("CreateSavedVariables") -- Create saved variables for the module
             module:RunOnce("RegisterLGBProtocols", core.LGBHandler) -- Register LibGroupBroadcast protocols if available
 
