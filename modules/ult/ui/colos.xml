@@ -15,7 +15,7 @@
                     <Dimensions x="28" y="28"/>
                     <Anchor point="LEFT" relativePoint="LEFT" relativeTo="$(parent)" offsetX="4"/>
                 </Texture>
-                <Label name="$(parent)_Duration" horizontalAlignment="left" font="$(MEDIUM_FONT)|$(KB_22)|soft-shadow-thick" text="  0.0" wrapMode="TRUNCATE">
+                <Label name="$(parent)_Duration" horizontalAlignment="left" font="$(MEDIUM_FONT)|$(KB_22)|outline" text="  0.0" wrapMode="TRUNCATE">
                     <Dimensions x="50" y="24"/>
                     <Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$(parent)_Icon" offsetX="2"/>
                 </Label>
@@ -27,11 +27,11 @@
                 <Texture name="$(parent)_BG" color="000000" alpha="0.0" hidden="false">
                     <AnchorFill />
                 </Texture>
-                <Label name="$(parent)_PctValue" horizontalAlignment="RIGHT" font="$(BOLD_FONT)|$(KB_19)|soft-shadow-thick" text="0%">
+                <Label name="$(parent)_PctValue" horizontalAlignment="RIGHT" font="$(BOLD_FONT)|$(KB_19)|outline" text="0%">
                     <Dimensions x="50" y="24" />
                     <Anchor point="LEFT" relativePoint="LEFT" relativeTo="$(parent)" offsetX="0" offsetY="0" />
                 </Label>
-                <Label name="$(parent)_RawValue" horizontalAlignment="RIGHT" font="$(MEDIUM_FONT)|$(KB_19)|soft-shadow-thick" text="0">
+                <Label name="$(parent)_RawValue" horizontalAlignment="RIGHT" font="$(MEDIUM_FONT)|$(KB_19)|outline" text="0">
                     <Dimensions x="30" y="24" />
                     <Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$(parent)_PctValue" offsetX="4" offsetY="0" />
                 </Label>
@@ -39,9 +39,9 @@
                     <Dimensions x="24" y="24" />
                     <Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$(parent)_RawValue" offsetX="10" offsetY="0" />
                 </Texture>
-                <Label name="$(parent)_Name" horizontalAlignment="LEFT" font="$(BOLD_FONT)|$(KB_19)|soft-shadow-thick" text="@Player" wrapMode="TRUNCATE" maxLineCount="1">
+                <Label name="$(parent)_Name" horizontalAlignment="LEFT" font="$(BOLD_FONT)|$(KB_19)|outline" text="@Player" wrapMode="TRUNCATE" maxLineCount="1">
                     <Dimensions x="105" y="24" />
-                    <Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$(parent)_Icon" offsetX="3" offsetY="0" />
+                    <Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$(parent)_Icon" offsetX="5" offsetY="0" />
                 </Label>
             </Controls>
         </Control>

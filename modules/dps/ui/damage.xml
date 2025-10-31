@@ -11,10 +11,10 @@
                 <Texture name="$(parent)_BG" color="000000" alpha="0.8" hidden="false">
                     <AnchorFill />
                 </Texture>
-                <Label name="$(parent)_Title" horizontalAlignment="LEFT" font="$(MEDIUM_FONT)|$(KB_16)|shadow" text="title" wrapMode="TRUNCATE">
+                <Label name="$(parent)_Title" horizontalAlignment="LEFT" font="$(MEDIUM_FONT)|$(KB_16)|outline" text="title" wrapMode="TRUNCATE">
                     <Anchor point="LEFT" relativePoint="LEFT" relativeTo="$(parent)" offsetX="2"/>
                 </Label>
-                <Label name="$(parent)_Time" horizontalAlignment="RIGHT" font="$(MEDIUM_FONT)|$(KB_16)|shadow" text="0:00.0" wrapMode="TRUNCATE">
+                <Label name="$(parent)_Time" horizontalAlignment="RIGHT" font="$(MEDIUM_FONT)|$(KB_16)|outline" text="0:00.0" wrapMode="TRUNCATE">
                     <Anchor point="RIGHT" relativePoint="RIGHT" relativeTo="$(parent)" offsetX="-2"/>
                 </Label>
             </Controls>
@@ -25,10 +25,10 @@
                 <Texture name="$(parent)_BG" color="000000" alpha="0.8" hidden="false">
                     <AnchorFill />
                 </Texture>
-                <Label name="$(parent)_Title" horizontalAlignment="LEFT" font="$(MEDIUM_FONT)|$(KB_16)|shadow" text="Group total:" wrapMode="TRUNCATE">
+                <Label name="$(parent)_Title" horizontalAlignment="LEFT" font="$(MEDIUM_FONT)|$(KB_16)|outline" text="Group total:" wrapMode="TRUNCATE">
                     <Anchor point="LEFT" relativePoint="LEFT" relativeTo="$(parent)" offsetX="2"/>
                 </Label>
-                <Label name="$(parent)_Value" horizontalAlignment="RIGHT" font="$(MEDIUM_FONT)|$(KB_16)|shadow" text="0.0K (0.0K)" wrapMode="TRUNCATE">
+                <Label name="$(parent)_Value" horizontalAlignment="RIGHT" font="$(MEDIUM_FONT)|$(KB_16)|outline" text="0.0K (0.0K)" wrapMode="TRUNCATE">
                     <Anchor point="RIGHT" relativePoint="RIGHT" relativeTo="$(parent)" offsetX="-2"/>
                 </Label>
             </Controls>
@@ -47,8 +47,8 @@
                     <Dimensions x="95" y="22" />
                     <Anchor point="RIGHT" relativePoint="RIGHT" relativeTo="$(parent)" offsetX="-2"/>
                 </Label>
-                <Label name="$(parent)_Name" horizontalAlignment="LEFT" font="$(MEDIUM_FONT)|$(KB_18)|shadow" text="@Player" wrapMode="TRUNCATE" maxLineCount="1">
-                    <Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$(parent)_Icon" offsetX="3"/>
+                <Label name="$(parent)_Name" horizontalAlignment="LEFT" font="$(MEDIUM_FONT)|$(KB_18)|outline" text="@Player" wrapMode="TRUNCATE" maxLineCount="1">
+                    <Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$(parent)_Icon" offsetX="5"/>
                     <Anchor point="RIGHT" relativePoint="LEFT" relativeTo="$(parent)_Value" offsetX="-3"/>
                 </Label>
             </Controls>
