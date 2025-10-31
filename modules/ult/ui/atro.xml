@@ -17,7 +17,7 @@
                 </Texture>
                 <Label name="$(parent)_AtroDuration" horizontalAlignment="left" font="$(MEDIUM_FONT)|$(KB_22)|outline" text="  0.0" wrapMode="TRUNCATE">
                     <Dimensions x="50" y="24"/>
-                    <Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$(parent)_AtroIcon" offsetX="2"/>
+                    <Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$(parent)_AtroIcon" offsetX="6"/>
                 </Label>
                 <Texture name="$(parent)_BerserkIcon" textureFile="/esoui/art/icons/ability_buff_major_berserk.dds">
                     <Dimensions x="28" y="28"/>
@@ -25,7 +25,7 @@
                 </Texture>
                 <Label name="$(parent)_BerserkDuration" horizontalAlignment="left" font="$(MEDIUM_FONT)|$(KB_22)|outline" text="  0.0" wrapMode="TRUNCATE">
                     <Dimensions x="50" y="24"/>
-                    <Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$(parent)_BerserkIcon" offsetX="2"/>
+                    <Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$(parent)_BerserkIcon" offsetX="6"/>
                 </Label>
             </Controls>
         </Control>

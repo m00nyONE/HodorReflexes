@@ -17,7 +17,7 @@
                 </Texture>
                 <Label name="$(parent)_Duration" horizontalAlignment="left" font="$(MEDIUM_FONT)|$(KB_22)|outline" text="  0.0" wrapMode="TRUNCATE">
                     <Dimensions x="50" y="24"/>
-                    <Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$(parent)_Icon" offsetX="2"/>
+                    <Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$(parent)_Icon" offsetX="6"/>
                 </Label>
             </Controls>
         </Control>

@@ -17,7 +17,7 @@
                 </Texture>
                 <Label name="$(parent)_HornDuration" horizontalAlignment="left" font="$(MEDIUM_FONT)|$(KB_22)|outline" text="  0.0" wrapMode="TRUNCATE">
                     <Dimensions x="50" y="24"/>
-                    <Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$(parent)_HornIcon" offsetX="2"/>
+                    <Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$(parent)_HornIcon" offsetX="6"/>
                 </Label>
                 <Texture name="$(parent)_ForceIcon" textureFile="/esoui/art/icons/ability_buff_major_force.dds">
                     <Dimensions x="28" y="28"/>
@@ -25,7 +25,7 @@
                 </Texture>
                 <Label name="$(parent)_ForceDuration" horizontalAlignment="left" font="$(MEDIUM_FONT)|$(KB_22)|outline" text="  0.0" wrapMode="TRUNCATE">
                     <Dimensions x="50" y="24"/>
-                    <Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$(parent)_ForceIcon" offsetX="2"/>
+                    <Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$(parent)_ForceIcon" offsetX="6"/>
                 </Label>
             </Controls>
         </Control>
