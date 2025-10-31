@@ -47,7 +47,7 @@
                     <Dimensions x="95" y="22" />
                     <Anchor point="RIGHT" relativePoint="RIGHT" relativeTo="$(parent)" offsetX="-2"/>
                 </Label>
-                <Label name="$(parent)_Name" horizontalAlignment="LEFT" font="$(MEDIUM_FONT)|$(KB_18)|outline" text="@Player" wrapMode="TRUNCATE" maxLineCount="1">
+                <Label name="$(parent)_Name" horizontalAlignment="LEFT" font="$(BOLD_FONT)|$(KB_18)|outline" text="@Player" wrapMode="TRUNCATE" maxLineCount="1">
                     <Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$(parent)_Icon" offsetX="5"/>
                     <Anchor point="RIGHT" relativePoint="LEFT" relativeTo="$(parent)_Value" offsetX="-3"/>
                 </Label>
