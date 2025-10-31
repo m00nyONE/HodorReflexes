@@ -108,6 +108,7 @@ function combat:GetGroupDPSOverTime(seconds)
     if IsUnitInCombat(localPlayer) or self._testBeginTime ~= nil then -- we do not want the value to shrink after beeing out of combat
         self._lastCombatTime = GetGameTimeMilliseconds()
     end
+    self._lastCombatTime = self._lastCombatTime or GetGameTimeMilliseconds() -- we sadly need this because the IsUnitInCombat check above will not be true if this function is called "outside of combat"  and no test is running even tho we are already in combat
     local cutoff = self._lastCombatTime - (seconds * 1000) -- convert to milliseconds
     local oldest, newest
 
