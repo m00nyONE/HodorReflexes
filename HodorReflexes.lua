@@ -77,7 +77,10 @@ local function initialize()
     core.InitializeExtensions()
     core.BuildMenu()
 
-    zo_callLater(core.OptionalLibrariesCheck, 2000) -- delay popup give the UI enough time to properly load
+    EM:RegisterForEvent(addon_name .. "_LIB_CHECK", EVENT_PLAYER_ACTIVATED, function()
+        EM:UnregisterForEvent(addon_name .. "_LIB_CHECK", EVENT_PLAYER_ACTIVATED)
+        core.OptionalLibrariesCheck()
+    end)
 
     addon.internal = nil
 end

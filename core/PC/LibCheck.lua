@@ -7,16 +7,13 @@ local internal = addon.internal
 local core = internal.core
 local logger = core.GetLogger("core/LibCheck")
 
-local LCN = LibCustomNames
-local LCI = LibCustomIcons
-
 --- checks if optional libraries are loaded, if not show a reminder dialog
 --- @return void
 function core.OptionalLibrariesCheck()
     local sw = core.sw
     local dialogName = string.format("%s_MISSING_LIBS", addon_name)
 
-    if (not LCI or not LCN) and not sw.libraryPopupDisabled then
+    if (not LibCustomIcons or not LibCustomNames) and not sw.libraryPopupDisabled then
         logger:Warn("LibCustomNames and/or LibCustomIcons are missing. Some features will be disabled.")
         ZO_Dialogs_RegisterCustomDialog(dialogName, {
             title = {
@@ -47,7 +44,7 @@ function core.OptionalLibrariesCheck()
             },
         })
 
-        ZO_Dialogs_ShowDialog(dialogName, nil, nil, IsInGamepadPreferredMode())
+        ZO_Dialogs_ShowPlatformDialog(dialogName)
     end
 
 end
