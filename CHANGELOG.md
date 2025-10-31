@@ -2,7 +2,7 @@
 
 ## 2025.11.01 - @m00nyONE
 Day one patch:
-- fixed locked UI when trying to move controls more than once by clearing all anchors before reanchoring
+- fixed locked UI when trying to move controls more than once per /reloadui. Now clearing all anchors before reanchoring.
 - fixed an issue where the gamepad UI (PC & Console) gets buggy when optional depenencies are not installed. This was caused by displaying a dialog at load time instead of at runtime.
 - fixed atro not getting tracked properly when casted
 - fixed an error that can pop up when the IsUnitInCombat check returns false even tho you are in combat. Just ZoS Things :D
