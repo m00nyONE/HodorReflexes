@@ -112,6 +112,7 @@ jobs:
           version: ${{ env.ADDON_VERSION }}
           zip_file: ${{ env.ZIP_FULL_NAME_PC }}
           changelog_file: 'CHANGELOG.md'
+          description_file: 'README_ESOUI.bbcode'
           test: true
 
       - name: Upload to ESOUI
@@ -123,6 +124,7 @@ jobs:
           version: ${{ env.ADDON_VERSION }}
           zip_file: ${{ env.ZIP_FULL_NAME_PC }}
           changelog_file: 'CHANGELOG.md'
+          description_file: 'README_ESOUI.bbcode'
 
       - name: Upload to BNET
         uses: m00nyONE/bnet-upload@main
