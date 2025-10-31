@@ -1,0 +1,12 @@
+-- SPDX-FileCopyrightText: 2025 m00nyONE
+-- SPDX-License-Identifier: Artistic-2.0
+
+local strings = {
+    HR_MODULES_ULT_FRIENDLYNAME = "Ultimates",
+    HR_MODULES_ULT_DESCRIPTION = "Позволяет видеть статистику ультимейтов группы.",
+}
+
+for id, val in pairs(strings) do
+    ZO_CreateStringId(id, val)
+    SafeAddVersion(id, 1)
+end
