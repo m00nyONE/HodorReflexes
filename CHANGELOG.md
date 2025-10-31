@@ -1,5 +1,16 @@
 [SIZE="2"][B]IMPORTANT:[/B] You need LibCustomNames and LibCustomIcons now if you want to have names and icons displayed.[/SIZE]
 
+## 2025.11.01 - @m00nyONE
+Day one patch:
+- fixed locked UI when trying to move controls more than once by clearing all anchors before reanchoring
+- fixed an issue where the gamepad UI (PC & Console) gets buggy when optional depenencies are not installed. This was caused by displaying a dialog at load time instead of at runtime.
+- fixed atro not getting tracked properly when casted
+- fixed an error that can pop up when the IsUnitInCombat check returns false even tho you are in combat. Just ZoS Things :D
+- fixed readme having a wrong link to the github page
+
+- adjusting dialogs to be delayed and use default language strings instead of hardcoded ones
+- switch from logger:Info() to logger:Debug() in some parts of the addon.
+
 ## 2025.10.27 - @m00nyONE
 HodorReflexes got a complete rewrite from scratch! All code has been replaced and modernized to current ESO API standards.
 The old legacy version will not be updated anymore and will not receive any support in the future!
