@@ -77,6 +77,7 @@ function module:GetSubMenuOptions()
                 getFunction = function() return list.sw.windowPosLeft end,
                 setFunction = function(value)
                     list.sw.windowPosLeft = value
+                    list.window:ClearAnchors()
                     list.window:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, list.sw.windowPosLeft, list.sw.windowPosTop)
                 end,
             },
@@ -93,6 +94,7 @@ function module:GetSubMenuOptions()
                 getFunction = function() return list.sw.windowPosTop end,
                 setFunction = function(value)
                     list.sw.windowPosTop = value
+                    list.window:ClearAnchors()
                     list.window:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, list.sw.windowPosLeft, list.sw.windowPosTop)
                 end,
             },
@@ -286,6 +288,7 @@ function module:GetSubMenuOptions()
                 getFunction = function() return counter.sw.windowPosLeft end,
                 setFunction = function(value)
                     counter.sw.windowPosLeft = value
+                    counter.window:ClearAnchors()
                     counter.window:SetAnchor(CENTER, GuiRoot, TOPLEFT, counter.sw.windowPosLeft, counter.sw.windowPosTop)
                 end,
             },
@@ -302,6 +305,7 @@ function module:GetSubMenuOptions()
                 getFunction = function() return counter.sw.windowPosTop end,
                 setFunction = function(value)
                     counter.sw.windowPosTop = value
+                    counter.window:ClearAnchors()
                     counter.window:SetAnchor(CENTER, GuiRoot, TOPLEFT, counter.sw.windowPosLeft, counter.sw.windowPosTop)
                 end,
             },

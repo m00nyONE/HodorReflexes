@@ -89,6 +89,8 @@ function module:CreateReadyCheckUI()
     readycheckWindow:SetAnchor(CENTER, GuiRoot, TOPLEFT, self.sw.windowCenterX, self.sw.windowCenterY)
     readycheckWindow:SetHandler("OnMoveStop", function()
         self.sw.windowCenterX, self.sw.windowCenterY = readycheckWindow:GetCenter()
+        readycheckWindow:ClearAnchors()
+        readycheckWindow:SetAnchor(CENTER, GuiRoot, TOPLEFT, self.sw.windowCenterX, self.sw.windowCenterY)
     end)
 
     local readycheckTitle = WM:CreateControl(readycheckWindowName .. "_Title", readycheckWindow, CT_LABEL)
