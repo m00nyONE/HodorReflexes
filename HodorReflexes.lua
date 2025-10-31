@@ -77,7 +77,7 @@ local function initialize()
     core.InitializeExtensions()
     core.BuildMenu()
 
-    core.OptionalLibrariesCheck()
+    zo_callLater(core.OptionalLibrariesCheck, 2000) -- delay popup give the UI enough time to properly load
 
     addon.internal = nil
 end
