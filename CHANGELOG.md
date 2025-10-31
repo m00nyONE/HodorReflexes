@@ -11,7 +11,7 @@ Day one patch:
 - adjusting dialogs to be delayed and use default language strings instead of hardcoded ones
 - switch from logger:Info() to logger:Debug() in some parts of the addon.
 
-## 2025.10.27 - @m00nyONE
+## 2025.10.31 - @m00nyONE
 HodorReflexes got a complete rewrite from scratch! All code has been replaced and modernized to current ESO API standards.
 The old legacy version will not be updated anymore and will not receive any support in the future!
 
