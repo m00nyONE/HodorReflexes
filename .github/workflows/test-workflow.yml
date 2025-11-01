@@ -9,6 +9,8 @@ jobs:
   create-addon-zip:
     needs: test
     uses: ./.github/workflows/_create-zip.yml
+    with:
+      dev_version: true
   create-release-notes:
     uses: ./.github/workflows/_create-release-notes.yml
   release:
@@ -19,21 +21,14 @@ jobs:
       - create-addon-zip
       - create-release-notes
     steps:
-      - name: set vars from previous jobs
-        env:
-            ADDON_NAME: ${{ needs.create-addon-zip.outputs.addon_name }}
-            ADDON_VERSION: ${{ needs.create-addon-zip.outputs.addon_version }}
-            RELEASE_NOTES_FILE: ${{ needs.create-release-notes.outputs.release_notes }}
-            ZIP_MULTI: ${{ needs.create-addon-zip.outputs.zip_multi }}
-            ZIP_PC: ${{ needs.create-addon-zip.outputs.zip_pc }}
-            ZIP_CONSOLE: ${{ needs.create-addon-zip.outputs.zip_console }}
+      - name: Print debug info
         run: |
-            echo "${{ env.ADDON_NAME }}"
-            echo "${{ env.ADDON_VERSION }}"
-            echo "${{ env.RELEASE_NOTES_FILE }}"
-            echo "${{ env.ZIP_MULTI }}"
-            echo "${{ env.ZIP_PC }}"
-            echo "${{ env.ZIP_CONSOLE }}"
+          echo "Addon Name: ${{ needs.create-addon-zip.outputs.addon_name }}"
+          echo "Addon Version: ${{ needs.create-addon-zip.outputs.addon_version }}"
+          echo "ZIP Multi: ${{ needs.create-addon-zip.outputs.zip_multi }}"
+          echo "ZIP PC: ${{ needs.create-addon-zip.outputs.zip_pc }}"
+          echo "ZIP Console: ${{ needs.create-addon-zip.outputs.zip_console }}"
+          echo "Release Notes File: ${{ needs.create-release-notes.outputs.release_notes }}"
 
       - name: Download ZIP Multi
         uses: actions/download-artifact@v4
@@ -50,11 +45,12 @@ jobs:
         with:
           name: ${{ needs.create-addon-zip.outputs.zip_console }}
 
-      - name: Print debug info
+      - name: Download Release Notes
+        uses: actions/download-artifact@v4
+        with:
+          name: RELEASE_NOTES.md
+
+      - name: verify artifacts
         run: |
-          echo "Addon Name: ${{ needs.create-addon-zip.outputs.addon_name }}"
-          echo "Addon Version: ${{ needs.create-addon-zip.outputs.addon_version }}"
-          echo "Release Notes File: ${{ needs.create-release-notes.outputs.release_notes }}"
-          echo "ZIP Multi: ${{ needs.create-addon-zip.outputs.zip_multi }}"
-          echo "ZIP PC: ${{ needs.create-addon-zip.outputs.zip_pc }}"
-          echo "ZIP Console: ${{ needs.create-addon-zip.outputs.zip_console }}"
+          ls -la
+          cat RELEASE_NOTES.md

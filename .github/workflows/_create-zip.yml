@@ -1,13 +1,34 @@
 name: Create ZIP Files
 on:
   workflow_call:
+    inputs:
+      dev_version:
+        required: false
+        type: boolean
+        default: false
+    outputs:
+      zip_multi:
+        description: 'The name of the created multi ZIP file'
+        value: ${{ jobs.create-addon-zip.outputs.zip_multi }}
+      zip_pc:
+        description: 'The name of the created PC ZIP file'
+        value: ${{ jobs.create-addon-zip.outputs.zip_pc }}
+      zip_console:
+        description: 'The name of the created Console ZIP file'
+        value: ${{ jobs.create-addon-zip.outputs.zip_console }}
+      addon_name:
+        description: 'The name of the addon'
+        value: ${{ jobs.create-addon-zip.outputs.addon_name }}
+      addon_version:
+        description: 'The version of the addon'
+        value: ${{ jobs.create-addon-zip.outputs.addon_version }}
 jobs:
   create-addon-zip:
     runs-on: ubuntu-latest
     outputs:
-      zip-multi: ${{ steps.set_outputs.outputs.zip_multi }}
-      zip-pc: ${{ steps.set_outputs.outputs.zip_pc }}
-      zip-console: ${{ steps.set_outputs.outputs.zip_console }}
+      zip_multi: ${{ steps.set_outputs.outputs.zip_multi }}
+      zip_pc: ${{ steps.set_outputs.outputs.zip_pc }}
+      zip_console: ${{ steps.set_outputs.outputs.zip_console }}
       addon_name: ${{ steps.set_outputs.outputs.addon_name }}
       addon_version: ${{ steps.set_outputs.outputs.addon_version }}
     steps:
@@ -29,7 +50,10 @@ jobs:
       - name: Create env variables
         run: |
           addon_name="${{ env.REPO_NAME }}"
-          version="${{ env.BUILD_DATE_WITH_DOT }}-dev"
+          version="${{ env.BUILD_DATE_WITH_DOT }}"
+          if [ "${{ inputs.dev_version }}" = "true" ]; then
+            version="${version}-dev"
+          fi
 
           echo "ADDON_NAME=$addon_name" >> $GITHUB_ENV
           echo "ADDON_VERSION=$version" >> $GITHUB_ENV
