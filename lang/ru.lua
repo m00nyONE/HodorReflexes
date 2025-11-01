@@ -131,7 +131,7 @@ local strings = {
     --HR_EXTENSIONS_ICONS_DESCRIPTION = "Extension to provide static user icons via LibCustomIcons.",
     -- NAMES
     --HR_EXTENSIONS_NAMES_FRIENDLYNAME = "Names",
-    --HR_EXTENSIONS_NAMES_DESCRIPTION = "Adds various name customizations to HodorReflexes.",
+    --HR_EXTENSIONS_NAMES_DESCRIPTION = "Extension to provide custom user names via LibCustomNames.",
     -- SEASONS
     --HR_EXTENSIONS_SEASONS_FRIENDLYNAME = "Seasons",
     --HR_EXTENSIONS_SEASONS_DESCRIPTION = "Seasonal events which change some behaviors of the addon on specific dates.",
