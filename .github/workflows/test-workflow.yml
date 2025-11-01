@@ -1,0 +1,44 @@
+name: Test Workflow
+
+on:
+  push:
+
+jobs:
+  test:
+    uses: ./.github/workflows/_tests.yml
+  create-addon-zip:
+    needs: test
+    uses: ./.github/workflows/_create-zip.yml
+  create-release-notes:
+    uses: ./.github/workflows/_create-release-notes.yml
+  release:
+    name: "dev release"
+    runs-on: ubuntu-latest
+    permissions: write-all
+    needs:
+      - create-addon-zip
+      - create-release-notes
+    steps:
+      - name: Download ZIP Multi
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ needs.create-addon-zip.outputs.zip_multi }}
+
+      - name: Download ZIP PC
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ needs.create-addon-zip.outputs.zip_pc }}
+
+      - name: Download ZIP Console
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ needs.create-addon-zip.outputs.zip_console }}
+
+      - name: Print debug info
+        run: |
+          echo "Addon Name: ${{ needs.create-addon-zip.outputs.addon_name }}"
+          echo "Addon Version: ${{ needs.create-addon-zip.outputs.addon_version }}"
+          echo "Release Notes File: ${{ needs.create-release-notes.outputs.release_notes }}"
+          echo "ZIP Multi: ${{ needs.create-addon-zip.outputs.zip_multi }}"
+          echo "ZIP PC: ${{ needs.create-addon-zip.outputs.zip_pc }}"
+          echo "ZIP Console: ${{ needs.create-addon-zip.outputs.zip_console }}"
