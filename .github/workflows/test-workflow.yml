@@ -1,4 +1,4 @@
-name: Test Workflow
+name: Dev Release
 
 on:
   push:
@@ -13,44 +13,50 @@ jobs:
       dev_version: true
   create-release-notes:
     uses: ./.github/workflows/_create-release-notes.yml
-  release:
-    name: "dev release"
+
+  create-github-release:
+    name: "Create Github Release"
     runs-on: ubuntu-latest
     permissions: write-all
     needs:
       - create-addon-zip
       - create-release-notes
     steps:
-      - name: Print debug info
-        run: |
-          echo "Addon Name: ${{ needs.create-addon-zip.outputs.addon_name }}"
-          echo "Addon Version: ${{ needs.create-addon-zip.outputs.addon_version }}"
-          echo "ZIP Multi: ${{ needs.create-addon-zip.outputs.zip_multi }}"
-          echo "ZIP PC: ${{ needs.create-addon-zip.outputs.zip_pc }}"
-          echo "ZIP Console: ${{ needs.create-addon-zip.outputs.zip_console }}"
-          echo "Release Notes File: ${{ needs.create-release-notes.outputs.release_notes }}"
-
       - name: Download ZIP Multi
         uses: actions/download-artifact@v4
+      - name: Create GitHub Release
+        uses: ncipollo/release-action@v1
         with:
-          name: ${{ needs.create-addon-zip.outputs.zip_multi }}
+          name: "${{ needs.create-addon-zip.outputs.addon_version }}"
+          commit: ${{ github.ref }}
+          tag: "${{ needs.create-addon-zip.outputs.addon_version }}"
+          artifacts: "${{ needs.create-addon-zip.outputs.zip_multi }},${{ needs.create-addon-zip.outputs.zip_pc }},${{ needs.create-addon-zip.outputs.zip_console }}"
+          artifactContentType: application/zip
+          bodyFile: ${{ needs.create-release-notes.outputs.release_notes }}
+          allowUpdates: true
+          makeLatest: true
+          prerelease: true
+          updateOnlyUnreleased: true
 
+  create-esoui-release:
+    name: "ESOUI Release (TEST)"
+    runs-on: ubuntu-latest
+    needs: create-addon-zip
+    if: github.repository_owner == 'm00nyONE'
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
       - name: Download ZIP PC
         uses: actions/download-artifact@v4
         with:
           name: ${{ needs.create-addon-zip.outputs.zip_pc }}
-
-      - name: Download ZIP Console
-        uses: actions/download-artifact@v4
+      - name: Upload to ESOUI
+        uses: m00nyONE/esoui-upload@main
         with:
-          name: ${{ needs.create-addon-zip.outputs.zip_console }}
-
-      - name: Download Release Notes
-        uses: actions/download-artifact@v4
-        with:
-          name: RELEASE_NOTES.md
-
-      - name: verify artifacts
-        run: |
-          ls -la
-          cat RELEASE_NOTES.md
+          api_key: ${{ secrets.ESOUI_API_KEY }}
+          addon_id: '2311'
+          version: ${{ needs.create-addon-zip.outputs.addon_version }}
+          zip_file: ${{ needs.create-addon-zip.outputs.zip_pc }}
+          changelog_file: 'CHANGELOG.md'
+          description_file: 'README_ESOUI.bbcode'
+          test: true
