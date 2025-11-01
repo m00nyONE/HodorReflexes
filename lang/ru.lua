@@ -92,7 +92,21 @@ local strings = {
     HR_MODULES_ULT_DESCRIPTION = "Позволяет видеть статистику ультимейтов группы.",
 
     ------------------------- EXTENSIONS -------------------------
+    -- ANIMATIONS
+    --HR_EXTENSIONS_ANIMATIONS_FRIENDLYNAME = "Animations",
+    --HR_EXTENSIONS_ANIMATIONS_DESCRIPTION = "Provides animated user icon support for lists via LibCustomIcons.",
+    -- ICONS
+    --HR_EXTENSIONS_ICONS_FRIENDLYNAME = "Icons",
+    --HR_EXTENSIONS_ICONS_DESCRIPTION = "Extension to provide static user icons via LibCustomIcons.",
+    -- NAMES
+    --HR_EXTENSIONS_NAMES_FRIENDLYNAME = "Names",
+    --HR_EXTENSIONS_NAMES_DESCRIPTION = "Adds various name customizations to HodorReflexes.",
+    -- SEASONS
+    --HR_EXTENSIONS_SEASONS_FRIENDLYNAME = "Seasons",
+    --HR_EXTENSIONS_SEASONS_DESCRIPTION = "Seasonal events which change some behaviors of the addon on specific dates.",
     -- CONFIGURATOR
+    --HR_EXTENSIONS_CONFIGURATOR_FRIENDLYNAME = "Configurator",
+    --HR_EXTENSIONS_CONFIGURATOR_DESCRIPTION = "Allows you to request a custom name/icon yourself with an easy to use editor.",
     --HR_MENU_ICONS_SECTION_CUSTOM = "Custom names & icons",
     --HR_MENU_ICONS_NOLIBSINSTALLED = "For the full experience of HodorReflexes, please make sure the following libraries are installed:\n\n - |cFFFF00LibCustomIcons|r – Enables personalized icons for players.\n - |cFFFF00LibCustomNames|r – Displays custom names for friends, guildmates, and more.\n\nThese libraries enhance the visual experience and allow for more personalization but are not required for basic functionality. It's your choice if you want to have them installed or not.",
     --HR_MENU_ICONS_README_1 = "Before doing anything, please read this guide carefully! This ensures that you receive exactly what you expect.\n",

@@ -31,8 +31,8 @@ end
 local extensionDefinition = {
     name = "seasons",
     version = "1.0.0",
-    friendlyName = "Seasons",
-    description = "Seasonal events which change some behaviors of the addon on specific dates.",
+    friendlyName = GetString(HR_EXTENSIONS_SEASONS_FRIENDLYNAME),
+    description = GetString(HR_EXTENSIONS_SEASONS_DESCRIPTION),
     priority = 10,
     svVersion = 1,
     svDefault = {}, -- per-season settings are created dynamically

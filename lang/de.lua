@@ -92,7 +92,21 @@ local strings = {
     HR_MODULES_ULT_DESCRIPTION = "Ermöglicht es dir, die Ultimate-Statistiken deiner Gruppe zu sehen.",
 
     ------------------------- EXTENSIONS -------------------------
+    -- ANIMATIONS
+    HR_EXTENSIONS_ANIMATIONS_FRIENDLYNAME = "Animationen",
+    HR_EXTENSIONS_ANIMATIONS_DESCRIPTION = "Erweiterung zur Bereitstellung von benutzerdefinierten animierten Icons über LibCustomIcons.",
+    -- ICONS
+    HR_EXTENSIONS_ICONS_FRIENDLYNAME = "Icons",
+    HR_EXTENSIONS_ICONS_DESCRIPTION = "Erweiterung zur Bereitstellung von benutzerdefinierten statischen Icons über LibCustomIcons.",
+    -- NAMES
+    HR_EXTENSIONS_NAMES_FRIENDLYNAME = "Namen",
+    HR_EXTENSIONS_NAMES_DESCRIPTION = "Erweiterung zur Bereitstellung von benutzerdefinierten Namen über LibCustomNames.",
+    -- SEASONS
+    HR_EXTENSIONS_SEASONS_FRIENDLYNAME = "Saisons",
+    HR_EXTENSIONS_SEASONS_DESCRIPTION = "Schaltet einige saisonale Ereignisse frei, die im Laufe des Jahres verfügbar sind.",
     -- CONFIGURATOR
+    HR_EXTENSIONS_CONFIGURATOR_FRIENDLYNAME = "Configurator",
+    HR_EXTENSIONS_CONFIGURATOR_DESCRIPTION = "Allows you to request a custom name/icon yourself with an easy to use editor.",
     HR_MENU_ICONS_SECTION_CUSTOM = "Benutzerdefinierte Namen & Icons",
     HR_MENU_ICONS_NOLIBSINSTALLED = "Für das volle Erlebnis von HodorReflexes stelle bitte sicher, dass die folgenden Bibliotheken installiert sind:\n\n - |cFFFF00LibCustomIcons|r – Ermöglicht personalisierte Spieler-Icons.\n - |cFFFF00LibCustomNames|r – Zeigt benutzerdefinierte Namen für Freunde, Gildenmitglieder und mehr an.\n\nDiese Bibliotheken verbessern das visuelle Erlebnis und erlauben mehr Personalisierung, sind aber für die grundlegende Funktionalität nicht erforderlich. Du entscheidest, ob du sie installieren möchtest oder nicht.",
     HR_MENU_ICONS_README_1 = "Bevor du etwas konfigurierst, lies dir bitte diese Anleitung aufmerksam durch! Nur so stellst du sicher, dass du genau das bekommst, was du erwartest.\n",
