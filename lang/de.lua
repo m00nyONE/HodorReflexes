@@ -39,6 +39,8 @@ local strings = {
     HR_MENU_LOCKUI_TT = "Sperrt/Entsperrt die HUD-Benutzeroberfläche",
     HR_MENU_ACCOUNTWIDE = "Accountweite Einstellungen",
     HR_MENU_ACCOUNTWIDE_TT = "Wenn aktiviert, werden die Einstellungen für alle Charaktere auf diesem Account übernommen.",
+    -- general strings
+    HR_UNIT_SECONDS = "Sekunden",
 
     ------------------------- MODULES -------------------------
     -- DPS

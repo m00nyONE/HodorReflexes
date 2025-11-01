@@ -39,6 +39,8 @@ local strings = {
     --HR_MENU_LOCKUI_TT = "Locks/Unlocks the addon UI.",
     --HR_MENU_ACCOUNTWIDE = "Account Wide Settings",
     --HR_MENU_ACCOUNTWIDE_TT = "If enabled, your settings will be saved account wide instead of per character.",
+    -- general strings
+    --HR_UNIT_SECONDS = "seconds",
 
     ------------------------- MODULES -------------------------
     -- DPS
