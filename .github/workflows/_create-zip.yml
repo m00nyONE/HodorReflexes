@@ -22,6 +22,9 @@ on:
       addon_version:
         description: 'The version of the addon'
         value: ${{ jobs.create-addon-zip.outputs.addon_version }}
+      artifact_name:
+        description: 'The name of the uploaded artifact containing the ZIP files'
+        value: 'addon_zip_files'
 jobs:
   create-addon-zip:
     runs-on: ubuntu-latest
@@ -102,23 +105,14 @@ jobs:
           # create zip for Console
           (cd /tmp/console && zip -r --quiet "$REPO_FOLDER/${{ env.ZIP_FULL_NAME_CONSOLE }}" "${{ env.ADDON_NAME }}")
 
-      - name: Upload ZIP Multi
+      - name: Upload ZIP Files as Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.ZIP_FULL_NAME_MULTI }}
-          path: ${{ env.ZIP_FULL_NAME_MULTI }}
-
-      - name: Upload ZIP PC
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ env.ZIP_FULL_NAME_PC }}
-          path: ${{ env.ZIP_FULL_NAME_PC }}
-
-      - name: Upload ZIP Console
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ env.ZIP_FULL_NAME_CONSOLE }}
-          path: ${{ env.ZIP_FULL_NAME_CONSOLE }}
+          name: "addon_zip_files"
+          path: |
+            ${{ env.ZIP_FULL_NAME_MULTI }}
+            ${{ env.ZIP_FULL_NAME_PC }}
+            ${{ env.ZIP_FULL_NAME_CONSOLE }}
 
       - name: Set outputs
         id: set_outputs
