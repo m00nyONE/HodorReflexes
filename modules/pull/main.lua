@@ -39,7 +39,7 @@ function module:Activate()
     local countdownButton = {
         name = GetString(HR_MODULES_PULL_BINDING_COUNTDOWN),
         keybind = 'HR_MODULES_PULL_BINDING_COUNTDOWN',
-        callback = function(...) self:SendPullCountdown(...) end,
+        callback = function() self:SendPullCountdown() end,
         alignment = KEYBIND_STRIP_ALIGN_CENTER,
     }
 

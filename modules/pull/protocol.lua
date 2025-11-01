@@ -46,7 +46,7 @@ function module:onPullCountdownMessageReceived(unitTag, data)
 end
 
 function module:SendPullCountdown(duration)
-    duration = tonumber(duration) or 0
+    duration = tonumber(duration) or self.sv.countdownDuration
     self.logger:Debug("SendPullCountdown called with duration: %s", tostring(duration))
 
     if not IsUnitGroupLeader(localPlayer) then
