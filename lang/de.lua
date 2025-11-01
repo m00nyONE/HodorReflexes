@@ -65,7 +65,19 @@ local strings = {
     HR_MODULES_EXITINSTANCE_MENU_IGNORE_REQUESTS = "Anfragen ignorieren",
     HR_MODULES_EXITINSTANCE_MENU_IGNORE_REQUESTS_TT = "Wenn aktiviert, ignorierst du alle Instanz-verlassen-Anfragen deines Gruppenleiters.",
     -- HIDEME
-
+    HR_MODULES_HIDEME_FRIENDLYNAME = "Hide Me",
+    HR_MODULES_HIDEME_DESCRIPTION = "Erlaubt es dir einige deiner Statistiken von den Listen anderer Gruppenmitglieder zu verbergen.",
+    HR_MODULES_HIDEME_HIDEDAMAGE_LABEL = "Verberge Schaden",
+    HR_MODULES_HIDEME_HIDEDAMAGE_DESCRIPTION = "Verberge deine Schadenszahlen von der DPS-Liste anderer Gruppenmitglieder.",
+    HR_MODULES_HIDEME_HIDEHORN_LABEL = "Verberge Horn",
+    HR_MODULES_HIDEME_HIDEHORN_DESCRIPTION = "Verberge dein Horn von den Listen.",
+    HR_MODULES_HIDEME_HIDECOLOS_LABEL = "Verberge Koloss",
+    HR_MODULES_HIDEME_HIDECOLOS_DESCRIPTION = "Verberge deinen Koloss von den Listen.",
+    HR_MODULES_HIDEME_HIDEATRO_LABEL = "Verberge Atronach",
+    HR_MODULES_HIDEME_HIDEATRO_DESCRIPTION = "Verberge deinen Atronach von den Listen.",
+    HR_MODULES_HIDEME_HIDESAXHLEEL_LABEL = "Verberge Saxhleel",
+    HR_MODULES_HIDEME_HIDESAXHLEEL_DESCRIPTION = "Verberge dein Saxhleel von den Listen.",
+    HR_MODULES_HIDEME_MENU_HEADER = "Hide Me Einstellungen",
     -- PULL
     HR_MODULES_PULL_FRIENDLYNAME = "Pull Countdown",
     HR_MODULES_PULL_DESCRIPTION = "Erlaubt es dir pull countdowns an deine Gruppe zu senden.",

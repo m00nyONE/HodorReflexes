@@ -65,7 +65,19 @@ local strings = {
     HR_MODULES_EXITINSTANCE_MENU_IGNORE_REQUESTS = "Игнорировать запросы",
     HR_MODULES_EXITINSTANCE_MENU_IGNORE_REQUESTS_TT = "Если включено, вы будете игнорировать все запросы на выход из локации от лидера вашей группы.",
     -- HIDEME
-
+    --HR_MODULES_HIDEME_FRIENDLYNAME = "Hide Me",
+    --HR_MODULES_HIDEME_DESCRIPTION = "Allows you to hide some of your stats from other group members lists.",
+    --HR_MODULES_HIDEME_HIDEDAMAGE_LABEL = "Hide Damage",
+    --HR_MODULES_HIDEME_HIDEDAMAGE_DESCRIPTION = "Hide your damage numbers from other group members dps list.",
+    --HR_MODULES_HIDEME_HIDEHORN_LABEL = "Hide Horn",
+    --HR_MODULES_HIDEME_HIDEHORN_DESCRIPTION = "Hide your horn from the lists.",
+    --HR_MODULES_HIDEME_HIDECOLOS_LABEL = "Hide Colossus",
+    --HR_MODULES_HIDEME_HIDECOLOS_DESCRIPTION = "Hide your colossus from the lists.",
+    --HR_MODULES_HIDEME_HIDEATRO_LABEL = "Hide Atro",
+    --HR_MODULES_HIDEME_HIDEATRO_DESCRIPTION = "Hide your atronach from the lists.",
+    --HR_MODULES_HIDEME_HIDESAXHLEEL_LABEL = "Hide Saxhleel",
+    --HR_MODULES_HIDEME_HIDESAXHLEEL_DESCRIPTION = "Hide your saxhleel from the lists.",
+    --HR_MODULES_HIDEME_MENU_HEADER = "Hide Me Options",
     -- PULL
     HR_MODULES_PULL_FRIENDLYNAME = "Pull Countdown",
     HR_MODULES_PULL_DESCRIPTION = "Позволяет отправлять обратный отсчёт перед пулом вашей группе.",

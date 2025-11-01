@@ -26,11 +26,11 @@ function module:GetSubMenuOptions()
 
     local function GetGeneralOptions()
         return {
-            core.CreateSectionHeader("General"),
+            core.CreateSectionHeader(GetString(HR_MENU_GENERAL)),
             {
                 type = LHAS.ST_CHECKBOX,
-                label = "account wide settings",
-                tooltip = "enable/disable account-wide settings.",
+                label = GetString(HR_MENU_ACCOUNTWIDE),
+                tooltip = GetString(HR_MENU_ACCOUNTWIDE_TT),
                 default = true,
                 getFunction = function() return self.sw.accountWide end,
                 setFunction = function(value)
@@ -60,7 +60,7 @@ function module:GetSubMenuOptions()
     mergeOptions(generalOptions, options)
 
     local hideMeOptions = {
-        core.CreateSectionHeader("Hide Me Options")
+        core.CreateSectionHeader(GetString(HR_MODULES_HIDEME_MENU_HEADER))
     }
     for id, hideId in pairs(self.hideIds) do
         table.insert(hideMeOptions, generateHideOption(id, hideId.label, hideId.description))

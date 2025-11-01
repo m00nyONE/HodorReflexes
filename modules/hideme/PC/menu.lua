@@ -15,11 +15,11 @@ local module = addon_modules[module_name]
 function module:GetSubMenuOptions()
     local function GetGeneralOptions()
         return {
-            core.CreateSectionHeader("General"),
+            core.CreateSectionHeader(GetString(HR_MENU_GENERAL)),
             {
                 type = "checkbox",
-                name = "account wide settings",
-                tooltip = "enable/disable account-wide settings.",
+                name = GetString(HR_MENU_ACCOUNTWIDE),
+                tooltip = GetString(HR_MENU_ACCOUNTWIDE_TT),
                 default = true,
                 getFunc = function() return self.sw.accountWide end,
                 setFunc = function(value)
@@ -45,7 +45,7 @@ function module:GetSubMenuOptions()
     end
 
     local options = GetGeneralOptions()
-    table.insert(options, core.CreateSectionHeader("Hide Me Options"))
+    table.insert(options, core.CreateSectionHeader(GetString(HR_MODULES_HIDEME_MENU_HEADER)))
     for id, hideId in pairs(self.hideIds) do
         table.insert(options, generateHideOption(id, hideId.label, hideId.description))
     end
