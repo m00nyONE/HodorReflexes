@@ -9,12 +9,15 @@ jobs:
   test:
     uses: ./.github/workflows/_tests.yml
   create-addon-zip:
-    needs: test
     uses: ./.github/workflows/_create-zip.yml
     with:
       dev_version: true
+    needs:
+      - test
   create-release-notes:
     uses: ./.github/workflows/_create-release-notes.yml
+    needs:
+      - test
 
   create-github-release:
     name: "Create Github Release"
@@ -58,8 +61,9 @@ jobs:
   create-esoui-release:
     name: "ESOUI Release (TEST)"
     runs-on: ubuntu-latest
-    needs: create-addon-zip
     if: github.repository_owner == 'm00nyONE'
+    needs:
+      - create-addon-zip
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
