@@ -11,6 +11,7 @@ Day one patch:
 - use force icon instead of horn icon for saxhleel players in compact list. Thanks to @STUDLETON for that suggestion!
 - fixed cryptCannon not being calculated properly in the compact list. Thanks to @sheumais for creating a PR for that :-)
 - added RU translation by @NeBioNik :-) Thank you!
+- combined all language files to reduce the amount of files in the addon. We were already at the cap of BNET's 100 File limit :D
 
 - adjusting dialogs to be delayed and use default language strings instead of hardcoded ones
 - switch from logger:Info() to logger:Debug() in some parts of the addon.
