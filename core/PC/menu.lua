@@ -51,11 +51,11 @@ end
 
 function core.GetCoreMenuOptions()
     local options = {
-        core.CreateSectionHeader("General"),
+        core.CreateSectionHeader(GetString(HR_MENU_GENERAL)),
         {
             type = "checkbox",
-            name = "account wide settings",
-            tooltip = "enable/disable account-wide settings.",
+            name = GetString(HR_MENU_ACCOUNTWIDE),
+            tooltip = GetString(HR_MENU_ACCOUNTWIDE_TT),
             default = true,
             getFunc = function() return core.sw.accountWide end,
             setFunc = function(value)
@@ -65,8 +65,8 @@ function core.GetCoreMenuOptions()
         },
         {
             type = "checkbox",
-            name = "Lock UI",
-            tooltip = "lock/unlock the addon UI for repositioning.",
+            name = GetString(HR_MENU_LOCKUI),
+            tooltip = GetString(HR_MENU_LOCKUI_TT),
             default = true,
             getFunc = core.hud.IsUILocked,
             setFunc = function(value)
@@ -79,7 +79,7 @@ function core.GetCoreMenuOptions()
         }
     }
 
-    table.insert(options, core.CreateSectionHeader("Modules"))
+    table.insert(options, core.CreateSectionHeader(GetString(HR_MENU_MODULES)))
     for moduleName, module in util.Spairs(addon.modules, util.SortByPriority) do
         table.insert(options, {
             type = "checkbox",
@@ -93,7 +93,7 @@ function core.GetCoreMenuOptions()
             requiresReload = true,
         })
     end
-    table.insert(options, core.CreateSectionHeader("Extensions"))
+    table.insert(options, core.CreateSectionHeader(GetString(HR_MENU_EXTENSIONS)))
     for extensionName, extension in util.Spairs(addon.extensions, util.SortByPriority) do
         table.insert(options, {
             type = "checkbox",

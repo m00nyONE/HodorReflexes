@@ -21,7 +21,7 @@ function core.GetPanelConfig(subName)
         allowDefaults = true,
         allowRefresh = true,
         defaultsFunction = function()
-            d("Reset complete! Some changes might require a /reloadui to take effect.")
+            d(GetString(HR_MENU_RESET_MESSAGE))
         end
     })
 end
@@ -39,22 +39,22 @@ function core.CreateNewMenu(subName, options)
     local panel = core.GetPanelConfig(subName)
     panel:AddSetting({
         type = LHAS.ST_LABEL,
-        label = "Settings highlighted in |cffff00yellow|r require a reload.",
+        label = GetString(HR_MENU_RELOAD_HIGHLIGHT),
     })
     panel:AddSetting({
         type = LHAS.ST_BUTTON,
-        label = "Toggle Test Mode",
-        buttonText = "Toggle Test Mode",
-        tooltip = "Toggles the test mode for the addon. This does NOT work when you are in a group.",
+        label = GetString(HR_MENU_TESTMODE),
+        buttonText = GetString(HR_MENU_TESTMODE),
+        tooltip = GetString(HR_MENU_TESTMODE_TT),
         clickHandler = function(control)
             SLASH_COMMANDS[string.format("/%s", addon.slashCmd)]("test")
         end
     })
     panel:AddSetting({
         type = LHAS.ST_BUTTON,
-        label = "Reload UI",
-        buttonText = "Reload UI",
-        tooltip = "Reloads the UI",
+        label = GetString(HR_MENU_RELOAD),
+        buttonText = GetString(HR_MENU_RELOAD),
+        tooltip = GetString(HR_MENU_RELOAD_TT),
         clickHandler = function(control)
             ReloadUI()
         end
@@ -77,11 +77,11 @@ function core.GetCoreMenuOptions()
 
     local options = {}
     local generalOptions = {
-        core.CreateSectionHeader("General"),
+        core.CreateSectionHeader(GetString(HR_MENU_GENERAL)),
         {
             type = LHAS.ST_CHECKBOX,
-            label = "account wide settings",
-            tooltip = "enable/disable account-wide settings.",
+            label = GetString(HR_MENU_ACCOUNTWIDE),
+            tooltip = GetString(HR_MENU_ACCOUNTWIDE_TT),
             default = true,
             getFunction = function() return core.sw.accountWide end,
             setFunction = function(value) core.sw.accountWide = value end,
@@ -92,7 +92,7 @@ function core.GetCoreMenuOptions()
     mergeOptions(generalOptions, options)
 
     local moduleOptions = {
-        core.CreateSectionHeader("Modules"),
+        core.CreateSectionHeader(GetString(HR_MENU_MODULES)),
     }
     for moduleName, module in util.Spairs(addon.modules, util.SortByPriority) do
         table.insert(moduleOptions, {
@@ -110,7 +110,7 @@ function core.GetCoreMenuOptions()
     mergeOptions(moduleOptions, options)
 
     local extensionOptions = {
-        core.CreateSectionHeader("Extensions"),
+        core.CreateSectionHeader(GetString(HR_MENU_EXTENSIONS)),
     }
     for extensionName, extension in util.Spairs(addon.extensions, util.SortByPriority) do
         table.insert(extensionOptions, {

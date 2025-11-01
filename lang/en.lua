@@ -25,6 +25,20 @@ local strings = {
     HR_MISSING_LIBS_TEXT = "|c00FF00You're missing out on the full HodorReflexes experience!|r\n\nInstall |cFFFF00LibCustomIcons|r and |cFFFF00LibCustomNames|r to see custom icons, nicknames, and styles from other Hodor users including your friends and guildmates. Transform the battlefield into something personal and full of character!\n\nThis is entirely optional and not required for HodorReflexes to function.",
     HR_MISSING_LIBS_TEXT_CONSOLE = "|c00FF00You're missing out on the full HodorReflexes experience!|r\n\nInstall |cFFFF00LibCustomNames|r to see custom nicknames, and styles from other Hodor users including your friends and guildmates. Transform the battlefield into something personal and full of character!\n\nThis is entirely optional and not required for HodorReflexes to function.",
     HR_MISSING_LIBS_DONTSHOWAGAIN = "Don't show again",
+    -- Menu
+    HR_MENU_GENERAL = "General",
+    HR_MENU_MODULES = "Modules",
+    HR_MENU_EXTENSIONS = "Extensions",
+    HR_MENU_RESET_MESSAGE = "Reset complete! Some changes might require a /reloadui to take effect.",
+    HR_MENU_RELOAD = "Reload UI",
+    HR_MENU_RELOAD_TT = "Reloads the UI",
+    HR_MENU_RELOAD_HIGHLIGHT = "Settings highlighted in |cffff00yellow|r require a reload.",
+    HR_MENU_TESTMODE = "Toggle Test Mode",
+    HR_MENU_TESTMODE_TT = "Toggles the test mode for the addon. This does NOT work when you are in a group.",
+    HR_MENU_LOCKUI = "Lock UI",
+    HR_MENU_LOCKUI_TT = "Locks/Unlocks the addon UI.",
+    HR_MENU_ACCOUNTWIDE = "Account Wide Settings",
+    HR_MENU_ACCOUNTWIDE_TT = "If enabled, your settings will be saved account wide instead of per character.",
 
     ------------------------- MODULES -------------------------
     -- DPS

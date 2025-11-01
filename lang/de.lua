@@ -25,7 +25,20 @@ local strings = {
     HR_MISSING_LIBS_TEXT = "|c00FF00Du verpasst das volle HodorReflexes-Erlebnis!|r\n\nInstalliere |cFFFF00LibCustomIcons|r und |cFFFF00LibCustomNames|r, um benutzerdefinierte Icons, Spitznamen und Stile von anderen Hodor-Nutzern – einschließlich deiner Freunde und Gildenmitglieder – zu sehen. Verwandle das Schlachtfeld in etwas Persönliches und Charaktervolles!\n\nDas ist vollkommen optional und nicht erforderlich, damit HodorReflexes funktioniert.",
     HR_MISSING_LIBS_TEXT_CONSOLE = "|c00FF00Du verpasst das volle HodorReflexes-Erlebnis!|r\n\nInstalliere |cFFFF00LibCustomNames|r, um benutzerdefinierte Spitznamen und Stile von anderen Hodor-Nutzern – einschließlich deiner Freunde und Gildenmitglieder – zu sehen. Verwandle das Schlachtfeld in etwas Persönliches und Charaktervolles!\n\nDas ist vollkommen optional und nicht erforderlich, damit HodorReflexes funktioniert.",
     HR_MISSING_LIBS_DONTSHOWAGAIN = "Nicht noch einmal anzeigen",
-
+    -- Menu
+    HR_MENU_GENERAL = "Allgemein",
+    HR_MENU_MODULES = "Module",
+    HR_MENU_EXTENSIONS = "Erweiterungen",
+    HR_MENU_RESET_MESSAGE = "Einstellungen wurden zurückgesetzt! Manches benötigt vielleicht ein /reloadui",
+    HR_MENU_RELOAD = "Reload UI",
+    HR_MENU_RELOAD_TT = "Lädt die Benutzeroberfläche neu, um Änderungen zu übernehmen.",
+    HR_MENU_RELOAD_HIGHLIGHT = "|cffff00Gelb|r markierte Einstellungen benötigen ein neuladen der Benutzeroberfläche",
+    HR_MENU_TESTMODE = "Test Modus umschalten",
+    HR_MENU_TESTMODE_TT = "Schaltet den Testmodus ein oder aus. Das funktioniert NICHT wenn du in einer Gruppe bist!",
+    HR_MENU_LOCKUI = "UI Sperren",
+    HR_MENU_LOCKUI_TT = "Sperrt/Entsperrt die HUD-Benutzeroberfläche",
+    HR_MENU_ACCOUNTWIDE = "Accountweite Einstellungen",
+    HR_MENU_ACCOUNTWIDE_TT = "Wenn aktiviert, werden die Einstellungen für alle Charaktere auf diesem Account übernommen.",
 
     ------------------------- MODULES -------------------------
     -- DPS
