@@ -131,13 +131,13 @@ function module:hornListRowCreationFunction(rowControl, data, scrollList)
         iconControl:SetTextureCoords(tcLeft, tcRight, tcTop, tcBottom)
     end
 
+    local _BG = rowControl:GetNamedChild("_BG")
     if self.hornList.sw.highlightSaxhleel then
-        local _BG = rowControl:GetNamedChild("_BG")
         if data.hasSaxhleel then
             _BG:SetColor(unpack(self.hornList.sw.highlightSaxhleelColor))
-        else
-            _BG:SetColor(1, 1, 1, 0)
         end
+    else
+        _BG:SetColor(1, 1, 1, 0)
     end
 
     local percentageColor = self:getUltPercentageColor(data.hornPercentage, 'FFFFFF')
