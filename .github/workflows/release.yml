@@ -136,3 +136,4 @@ jobs:
           version: ${{ env.ADDON_VERSION }}
           zip_file: ${{ env.ZIP_FULL_NAME_CONSOLE }}
           release_notes_file: latest_changes.md
+          cli_uploader_version: 1.1.0
