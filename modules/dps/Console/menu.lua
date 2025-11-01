@@ -173,7 +173,7 @@ function module:GetSubMenuOptions()
 
     local options = {}
     local generalOptions = GetGeneralOptions()
-    local damageList = GetComonListOptions("Damage List", self.damageList)
+    local damageList = GetComonListOptions(GetString(HR_MODULES_DPS_MENU_HEADER), self.damageList)
     local damageListSpecificOptions = {
         {
             type = LHAS.ST_CHECKBOX,
