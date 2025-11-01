@@ -7,6 +7,8 @@ Day one patch:
 - fixed atro not getting tracked properly when casted
 - fixed an error that can pop up when the IsUnitInCombat check returns false even tho you are in combat. Just ZoS Things :D
 - fixed readme having a wrong link to the github page
+- fixed cryptCannon not being calculated properly in the compact list. Thanks to @sheumais for creating a PR for that :-)
+- added RU translation by @NeBioNik :-) Thank you!
 
 - adjusting dialogs to be delayed and use default language strings instead of hardcoded ones
 - switch from logger:Info() to logger:Debug() in some parts of the addon.
