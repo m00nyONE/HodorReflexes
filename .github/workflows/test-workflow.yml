@@ -22,20 +22,22 @@ jobs:
       - create-addon-zip
       - create-release-notes
     steps:
-      - name: Download ZIP Files
+      - name: Download ZIP Multi
         uses: actions/download-artifact@v4
         with:
-          name: ${{ needs.create-addon-zip.outputs.artifact_name }}
+          name: ${{ needs.create-addon-zip.outputs.zip_multi }}
+      - name: Download ZIP PC
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ needs.create-addon-zip.outputs.zip_pc }}
+      - name: Download ZIP Console
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ needs.create-addon-zip.outputs.zip_console }}
       - name: Download Release Notes
         uses: actions/download-artifact@v4
         with:
           name: ${{ needs.create-release-notes.outputs.release_notes }}
-      - name: Verify downloaded files
-        run: |
-          ls -la ${{ needs.create-addon-zip.outputs.zip_multi }}
-          ls -la ${{ needs.create-addon-zip.outputs.zip_pc }}
-          ls -la ${{ needs.create-addon-zip.outputs.zip_console }}
-          cat ${{ needs.create-release-notes.outputs.release_notes }}
       - name: Create GitHub Release
         uses: ncipollo/release-action@v1
         with:
@@ -58,13 +60,10 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
-      - name: Download ZIP Files
+      - name: Download ZIP PC
         uses: actions/download-artifact@v4
         with:
-          name: ${{ needs.create-addon-zip.outputs.artifact_name }}
-      - name: Verify downloaded files
-        run: |
-          ls -la ${{ needs.create-addon-zip.outputs.zip_pc }}
+          name: ${{ needs.create-addon-zip.outputs.zip_pc }}
       - name: Upload to ESOUI
         uses: m00nyONE/esoui-upload@main
         with:

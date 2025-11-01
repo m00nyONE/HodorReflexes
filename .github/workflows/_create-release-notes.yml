@@ -1,6 +1,10 @@
 name: Create Release Notes
 on:
   workflow_call:
+    outputs:
+      release_notes:
+        description: 'The name of the generated release notes file'
+        value: ${{ jobs.create-release-notes.outputs.release_notes }}
 jobs:
   create-release-notes:
     runs-on: ubuntu-latest
