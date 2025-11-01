@@ -328,7 +328,7 @@ function module:compactListCryptCannonRowCreationFunction(rowControl, data, scro
     rowControl:GetNamedChild('_BG'):SetAlpha(self.compactList.sw.backgroundAlpha)
     rowControl:GetNamedChild("_UltIcon"):SetTexture(self.cryptCannonIcon)
 
-    local groupSize = GetGroupSize()
+    local groupSize = zo_max(GetGroupSize() - 1, 0) -- ultimate is transferred to everyone except the wearer
     if groupSize == 0 then -- when in test mode, we use the number of players in the data table so we do not divide by 0 while calculating the shared ult
         for _, _ in pairs(addon.playersData) do
             groupSize = groupSize + 1
