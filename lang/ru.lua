@@ -1,4 +1,4 @@
--- SPDX-FileCopyrightText: 2025 m00nyONE
+-- SPDX-FileCopyrightText: 2025 m00nyONE NeBioNik
 -- SPDX-License-Identifier: Artistic-2.0
 
 local strings = {
