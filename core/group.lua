@@ -111,6 +111,7 @@ end
 --- @param forceDelete boolean if true, all player data will be removed
 --- @return void
 local function cleanPlayersData(forceDelete)
+    forceDelete = forceDelete or false
     local _existingGroupCharacters = {}
 
     for i = 1, GetGroupSize() do
@@ -132,7 +133,7 @@ local function cleanPlayersData(forceDelete)
         end
     end
 
-    CM:FireCallbacks(HR_EVENT_PLAYERSDATA_CLEANED)
+    CM:FireCallbacks(HR_EVENT_PLAYERSDATA_CLEANED, forceDelete)
 end
 
 --- toggles the test mode

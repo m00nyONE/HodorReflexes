@@ -129,10 +129,10 @@ function list:Initialize(listDefinition)
     addon.RegisterCallback(HR_EVENT_LOCKUI, lockUI)
     addon.RegisterCallback(HR_EVENT_UNLOCKUI, unlockUI)
     addon.RegisterCallback(HR_EVENT_GROUP_CHANGED, onGroupChanged)
-    addon.RegisterCallback(HR_EVENT_PLAYERSDATA_UPDATED, function(...) self:UpdateDebounced(...) end)
-    addon.RegisterCallback(HR_EVENT_PLAYERSDATA_CLEANED, function(...) self:UpdateDebounced(...) end)
+    addon.RegisterCallback(HR_EVENT_PLAYERSDATA_UPDATED, function() self:UpdateDebounced() end)
+    addon.RegisterCallback(HR_EVENT_PLAYERSDATA_CLEANED, function(forceUpdate) self:UpdateDebounced(forceUpdate) end)
 
-    EM:RegisterForEvent(self._Id .. "_SupportRangeUpdate", EVENT_GROUP_SUPPORT_RANGE_UPDATE, function(...) self:UpdateDebounced(...) end)
+    EM:RegisterForEvent(self._Id .. "_SupportRangeUpdate", EVENT_GROUP_SUPPORT_RANGE_UPDATE, function() self:UpdateDebounced() end)
 
     self.logger:Debug("initialized in %d ms", GetGameTimeMilliseconds() - beginTime)
     self.Initialize = nil -- prevent re-initialization
@@ -157,8 +157,8 @@ end
 --- NOT for manual use! this gets called to update the list with a debounce.
 --- debounce the update calls to prevent excessive updates
 --- @return void
-function list:UpdateDebounced()
-    if not self:WindowFragmentCondition() then return end
+function list:UpdateDebounced(forceUpdate)
+    if not self:WindowFragmentCondition() and not forceUpdate then return end
     EM:RegisterForUpdate(self.updateDebouncedEventName, self.updateDebounceDelayMS, function()
         EM:UnregisterForUpdate(self.updateDebouncedEventName)
         self:Update()

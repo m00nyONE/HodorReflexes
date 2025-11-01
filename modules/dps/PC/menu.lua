@@ -83,6 +83,7 @@ function module:GetSubMenuOptions()
                 setFunc = function(value)
                     list.sw.enabled = value
                     list:RefreshVisibility()
+                    list:UpdateDebounced(true) -- force an update to clear potentially old data still being in the list because they where never redrawn when hidden
                 end,
                 width = "full",
             },
