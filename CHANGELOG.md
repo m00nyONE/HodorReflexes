@@ -12,8 +12,7 @@ Day one patch:
 - fixed cryptCannon not being calculated properly in the compact list. Thanks to @sheumais for creating a PR for that :-)
 - added RU translation by @NeBioNik :-) Thank you!
 - combined all language files to reduce the amount of files in the addon. We were already at the cap of BNET's 100 File limit :D
-- fixing a display bug in the lists that could occur when you had turned a list off, do a test, end the test, and then join a group and turn it on again. The list would show old data from the test instead of the current group data. This also lead to you not seeing any data when switching a list on that was previously off. - Thanks to @sheumais
- for pointing that out!
+- fixing a display bug in the lists that could occur when you had turned a list on, do a test, turn the list off, end the test, and then join a group and turn the list on again. The list would show old data from the test instead of the current group data. This also lead to you not seeing any data when switching a list on that was previously off until updates arrive. - Thanks to @sheumais for pointing that out!
 
 - adjusting dialogs to be delayed and use default language strings instead of hardcoded ones
 - switch from logger:Info() to logger:Debug() in some parts of the addon.
