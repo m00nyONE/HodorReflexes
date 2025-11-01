@@ -255,7 +255,11 @@ function module:compactListHornRowCreationFunction(rowControl, data, scrollList)
     self:applyUserStyles(rowControl, data, scrollList)
     rowControl:GetNamedChild('_BG'):SetColor(unpack(self.compactList.sw.colorHornBG))
     rowControl:GetNamedChild('_BG'):SetAlpha(self.compactList.sw.backgroundAlpha)
-    rowControl:GetNamedChild("_UltIcon"):SetTexture(self.hornIcon)
+    if data.hasHorn then
+        rowControl:GetNamedChild("_UltIcon"):SetTexture(self.hornIcon)
+    elseif data.hasSaxhleel then
+        rowControl:GetNamedChild("_UltIcon"):SetTexture(self.forceIcon)
+    end
 
     local hornPercentage = 0
     local gainSeconds = nil
