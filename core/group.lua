@@ -192,15 +192,19 @@ end
 
 --- registers subcommand to test group functionality
 core.RegisterSubCommand("test", GetString(HR_CORE_GROUP_COMMAND_TEST_HELP), function(str)
-    local players = zo_strmatch(str, "^%s*(.*)")
-    logger:Debug("test command received: '%s'", tostring(players))
-    if players then
-        if IsUnitGrouped(localPlayer) then
-            df("|cFF0000%s|r %s", addon_name, GetString(HR_CORE_GROUP_COMMAND_TEST_LEAVE_GROUP))
-        else
-            toggleTest(util.IsValidString(players) and {zo_strsplit(" ", players)})
-        end
+    if IsUnitGrouped(localPlayer) then
+        df("|cFF0000%s|r %s", addon_name, GetString(HR_CORE_GROUP_COMMAND_TEST_LEAVE_GROUP))
+        return
     end
+
+    local players = nil -- set to nil to use default players if none are provided
+    for name in zo_strgmatch(str, "@[^@]+") do
+        players = players or {}
+        local nameTrimmed = zo_strgsub(name, "^%s*(.-)%s*$", "%1")
+        table.insert(players, nameTrimmed)
+    end
+
+    toggleTest(players)
 end)
 
 --- register callback for group changes

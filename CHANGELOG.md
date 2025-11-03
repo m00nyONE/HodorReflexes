@@ -3,6 +3,7 @@
 ## 2025.11.03 - @m00nyONE
 - added frensh translation. Thank you @Melicious :-)
 - Fix an issue where a Saxhleel player still being displayed in the compact list even tho the horn rows have been disabled. Thanks to @isiiimode for reporting that!
+- improved "/hodor test" to now also support spaces in names for console players.
 
 ## 2025.11.01 - @m00nyONE
 Day one patch:
