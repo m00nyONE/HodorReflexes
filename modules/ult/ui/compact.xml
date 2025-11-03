@@ -23,7 +23,7 @@
 
                 <Texture name="$(parent)_ForceIcon" textureFile="/esoui/art/icons/ability_buff_major_force.dds">
                     <Dimensions x="28" y="28"/>
-                    <Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$(parent)_HornIcon" offsetX="10"/>
+                    <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="$(parent)_HornIcon" offsetX="10"/>
                 </Texture>
                 <Label name="$(parent)_ForceDuration" horizontalAlignment="center" font="$(MEDIUM_FONT)|$(KB_22)|outline" text="0.0" wrapMode="TRUNCATE">
                     <Dimensions x="50" y="24"/>
@@ -32,7 +32,7 @@
 
                 <Texture name="$(parent)_ColosIcon" textureFile="/esoui/art/icons/ability_necromancer_006.dds">
                     <Dimensions x="28" y="28"/>
-                    <Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$(parent)_ForceIcon" offsetX="10"/>
+                    <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="$(parent)_ForceIcon" offsetX="10"/>
                 </Texture>
                 <Label name="$(parent)_VulnDuration" horizontalAlignment="center" font="$(MEDIUM_FONT)|$(KB_22)|outline" text="0.0" wrapMode="TRUNCATE">
                     <Dimensions x="50" y="24"/>
@@ -41,7 +41,7 @@
 
                 <Texture name="$(parent)_AtroIcon" textureFile="/esoui/art/icons/ability_sorcerer_greater_storm_atronach.dds">
                     <Dimensions x="28" y="28"/>
-                    <Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$(parent)_ColosIcon" offsetX="10"/>
+                    <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="$(parent)_ColosIcon" offsetX="10"/>
                 </Texture>
                 <Label name="$(parent)_BerserkDuration" horizontalAlignment="center" font="$(MEDIUM_FONT)|$(KB_22)|outline" text="0.0" wrapMode="TRUNCATE">
                     <Dimensions x="50" y="24"/>
@@ -50,7 +50,7 @@
 
                 <Texture name="$(parent)_SlayerIcon" textureFile="/esoui/art/icons/ability_buff_major_slayer.dds">
                     <Dimensions x="28" y="28"/>
-                    <Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$(parent)_AtroIcon" offsetX="10"/>
+                    <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="$(parent)_AtroIcon" offsetX="10"/>
                 </Texture>
                 <Label name="$(parent)_SlayerDuration" horizontalAlignment="center" font="$(MEDIUM_FONT)|$(KB_22)|outline" text="0.0" wrapMode="TRUNCATE">
                     <Dimensions x="50" y="24"/>

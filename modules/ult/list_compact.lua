@@ -49,6 +49,13 @@ local svDefault = {
     showPillager = true,
     showCryptCannon = true,
 
+    showHornCountdown = true,
+    showForceCountdown = true,
+    showVulnCountdown = true,
+    showBerserkCountdown = true,
+    showSlayerCountdown = true,
+    showPillagerCooldown = true,
+
     colorCooldowns = {1, 0, 0}, -- red
     colorDurations = {1, 1, 0}, -- yellow
 
@@ -160,66 +167,107 @@ function module:CreateCompactList()
 end
 
 function module:compactListHeaderRowCreationFunction(rowControl, data, scrollList)
-    if not rowControl._initialized or self.compactList._redrawHeaders then
-        rowControl:GetNamedChild("_BG"):SetAlpha(self.compactList.sw.headerOpacity)
-
-        rowControl:GetNamedChild("_HornIcon"):SetTexture(self.hornIcon)
-        rowControl:GetNamedChild("_HornDuration"):SetColor(unpack(self.compactList.sw.colorDurations))
-        rowControl:GetNamedChild("_HornDuration"):SetAlpha(self.compactList.sw.zeroTimerOpacity)
-        self.compactList:CreateCountdownOnControl(
-                rowControl:GetNamedChild("_HornDuration"),
-                HR_EVENT_HORN_BUFF_GAINED
-                --self.compactList.sw.zeroTimerOpacity -- we want the Function itself to set this value. That way we can update it in the menu
-        )
-
-        rowControl:GetNamedChild("_ForceIcon"):SetTexture(self.forceIcon)
-        rowControl:GetNamedChild("_ForceDuration"):SetColor(unpack(self.compactList.sw.colorDurations))
-        rowControl:GetNamedChild("_ForceDuration"):SetAlpha(self.compactList.sw.zeroTimerOpacity)
-        self.compactList:CreateCountdownOnControl(
-                rowControl:GetNamedChild("_ForceDuration"),
-                HR_EVENT_MAJOR_FORCE_BUFF_GAINED
-                --self.compactList.sw.zeroTimerOpacity -- we want the Function itself to set this value. That way we can update it in the menu
-        )
-
-        rowControl:GetNamedChild("_ColosIcon"):SetTexture(self.vulnIcon)
-        rowControl:GetNamedChild("_VulnDuration"):SetColor(unpack(self.compactList.sw.colorDurations))
-        rowControl:GetNamedChild("_VulnDuration"):SetAlpha(self.compactList.sw.zeroTimerOpacity)
-        self.compactList:CreateCountdownOnControl(
-                rowControl:GetNamedChild("_VulnDuration"),
-                HR_EVENT_MAJOR_VULNERABILITY_DEBUFF_GAINED
-                --self.compactList.sw.zeroTimerOpacity -- we want the Function itself to set this value. That way we can update it in the menu
-        )
-
-        rowControl:GetNamedChild("_AtroIcon"):SetTexture(self.berserkIcon)
-        rowControl:GetNamedChild("_BerserkDuration"):SetColor(unpack(self.compactList.sw.colorDurations))
-        rowControl:GetNamedChild("_BerserkDuration"):SetAlpha(self.compactList.sw.zeroTimerOpacity)
-        self.compactList:CreateCountdownOnControl(
-                rowControl:GetNamedChild("_BerserkDuration"),
-                HR_EVENT_MAJOR_BERSERK_BUFF_GAINED
-                --self.compactList.sw.zeroTimerOpacity -- we want the Function itself to set this value. That way we can update it in the menu
-        )
-
-        rowControl:GetNamedChild("_SlayerIcon"):SetTexture(self.slayerIcon)
-        rowControl:GetNamedChild("_SlayerDuration"):SetColor(unpack(self.compactList.sw.colorDurations))
-        rowControl:GetNamedChild("_SlayerDuration"):SetAlpha(self.compactList.sw.zeroTimerOpacity)
-        self.compactList:CreateCountdownOnControl(
-                rowControl:GetNamedChild("_SlayerDuration"),
-                HR_EVENT_MAJOR_SLAYER_BUFF_GAINED
-                --self.compactList.sw.zeroTimerOpacity -- we want the Function itself to set this value. That way we can update it in the menu
-        )
-
-        rowControl:GetNamedChild("_PillagerIcon"):SetTexture(self.pillagerIcon)
-        rowControl:GetNamedChild("_PillagerCooldown"):SetColor(unpack(self.compactList.sw.colorCooldowns))
-        rowControl:GetNamedChild("_PillagerCooldown"):SetAlpha(self.compactList.sw.zeroTimerOpacity)
-        self.compactList:CreateCountdownOnControl(
-                rowControl:GetNamedChild("_PillagerCooldown"),
-                HR_EVENT_PILLAGER_BUFF_COOLDOWN
-                --self.compactList.sw.zeroTimerOpacity -- we want the Function itself to set this value. That way we can update it in the menu
-        )
-
-        self.compactList._redrawHeaders = false
-        rowControl._initialized = true
+    if rowControl._initialized and not self.compactList._redrawHeaders then -- we can skip everything if already initialized and no redraw is needed
+        return
     end
+
+    local list = self.compactList
+    local sw = list.sw
+
+    rowControl:GetNamedChild("_BG"):SetAlpha(sw.headerOpacity)
+
+    local hornIcon = rowControl:GetNamedChild("_HornIcon")
+    local hornDuration = rowControl:GetNamedChild("_HornDuration")
+    if sw.showHornCountdown then
+        hornIcon:SetScale(1)
+        hornDuration:SetScale(1)
+
+        hornIcon:SetTexture(self.hornIcon)
+        hornDuration:SetColor(unpack(sw.colorDurations))
+        hornDuration:SetAlpha(sw.zeroTimerOpacity)
+        list:CreateCountdownOnControl(hornDuration, HR_EVENT_HORN_BUFF_GAINED)
+    else
+        hornIcon:SetScale(0)
+        hornDuration:SetScale(0)
+    end
+
+    local forceIcon = rowControl:GetNamedChild("_ForceIcon")
+    local forceDuration = rowControl:GetNamedChild("_ForceDuration")
+    if sw.showForceDuration then
+        forceIcon:SetScale(1)
+        forceDuration:SetScale(1)
+
+        forceIcon:SetTexture(self.forceIcon)
+        forceDuration:SetColor(unpack(sw.colorDurations))
+        forceDuration:SetAlpha(sw.zeroTimerOpacity)
+        list:CreateCountdownOnControl(forceDuration, HR_EVENT_MAJOR_FORCE_BUFF_GAINED)
+    else
+        forceIcon:SetScale(0)
+        forceDuration:SetScale(0)
+    end
+
+    local colosIcon = rowControl:GetNamedChild("_ColosIcon")
+    local vulnDuration = rowControl:GetNamedChild("_VulnDuration")
+    if sw.showVulnDuration then
+        colosIcon:SetScale(1)
+        vulnDuration:SetScale(1)
+
+        colosIcon:SetTexture(self.vulnIcon)
+        vulnDuration:SetColor(unpack(sw.colorDurations))
+        vulnDuration:SetAlpha(sw.zeroTimerOpacity)
+        list:CreateCountdownOnControl(vulnDuration, HR_EVENT_MAJOR_VULNERABILITY_DEBUFF_GAINED)
+    else
+        colosIcon:SetScale(0)
+        vulnDuration:SetScale(0)
+    end
+
+    local atroIcon = rowControl:GetNamedChild("_AtroIcon")
+    local berserkDuration = rowControl:GetNamedChild("_BerserkDuration")
+    if sw.showBerserkCountdown then
+        atroIcon:SetScale(1)
+        berserkDuration:SetScale(1)
+
+        atroIcon:SetTexture(self.berserkIcon)
+        berserkDuration:SetColor(unpack(sw.colorDurations))
+        berserkDuration:SetAlpha(sw.zeroTimerOpacity)
+        list:CreateCountdownOnControl(berserkDuration, HR_EVENT_MAJOR_BERSERK_BUFF_GAINED)
+    else
+        atroIcon:SetScale(0)
+        berserkDuration:SetScale(0)
+    end
+
+    local slayerIcon = rowControl:GetNamedChild("_SlayerIcon")
+    local slayerDuration = rowControl:GetNamedChild("_SlayerDuration")
+    if sw.showSlayerCountdown then
+        slayerIcon:SetScale(1)
+        slayerDuration:SetScale(1)
+
+        slayerIcon:SetTexture(self.slayerIcon)
+        slayerDuration:SetColor(unpack(sw.colorDurations))
+        slayerDuration:SetAlpha(sw.zeroTimerOpacity)
+        list:CreateCountdownOnControl(slayerDuration, HR_EVENT_MAJOR_SLAYER_BUFF_GAINED)
+    else
+        slayerIcon:SetScale(0)
+        slayerDuration:SetScale(0)
+    end
+
+    local pillagerIcon = rowControl:GetNamedChild("_PillagerIcon")
+    local pillagerCooldown = rowControl:GetNamedChild("_PillagerCooldown")
+    if sw.showPillagerCooldown then
+        pillagerIcon:SetScale(1)
+        pillagerCooldown:SetScale(1)
+
+        pillagerIcon:SetTexture(self.pillagerIcon)
+        pillagerCooldown:SetColor(unpack(sw.colorCooldowns))
+        pillagerCooldown:SetAlpha(sw.zeroTimerOpacity)
+        list:CreateCountdownOnControl(pillagerCooldown, HR_EVENT_PILLAGER_BUFF_COOLDOWN)
+    else
+        pillagerIcon:SetScale(0)
+        pillagerCooldown:SetScale(0)
+    end
+
+    list._redrawHeaders = false
+    rowControl._initialized = true
 end
 
 function module:applyUserStyles(rowControl, data, scrollList)
