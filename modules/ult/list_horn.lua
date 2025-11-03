@@ -88,33 +88,38 @@ function module:CreateHornList()
 end
 
 function module:hornListHeaderRowCreationFunction(rowControl, data, scrollList)
-    if not rowControl._initialized or self.hornList._redrawHeaders then
-        rowControl:GetNamedChild("_BG"):SetAlpha(self.hornList.sw.headerOpacity)
-        rowControl:GetNamedChild("_HornIcon"):SetTexture(self.hornIcon)
-        rowControl:GetNamedChild("_HornDuration"):SetColor(unpack(self.hornList.sw.colorHorn))
-        rowControl:GetNamedChild("_HornDuration"):SetAlpha(self.hornList.sw.zeroTimerOpacity)
-        rowControl:GetNamedChild("_ForceIcon"):SetTexture(self.forceIcon)
-        rowControl:GetNamedChild("_ForceDuration"):SetColor(unpack(self.hornList.sw.colorForce))
-        rowControl:GetNamedChild("_ForceDuration"):SetAlpha(self.hornList.sw.zeroTimerOpacity)
-
-        self.hornList:CreateCountdownOnControl(
-            rowControl:GetNamedChild("_HornDuration"),
-            HR_EVENT_HORN_BUFF_GAINED
-            --self.hornList.sw.zeroTimerOpacity -- we want the Function itself to set this value. That way we can update it in the menu
-        )
-        self.hornList:CreateCountdownOnControl(
-            rowControl:GetNamedChild("_ForceDuration"),
-            HR_EVENT_MAJOR_FORCE_BUFF_GAINED
-            --self.hornList.sw.zeroTimerOpacity -- we want the Function itself to set this value. That way we can update it in the menu
-        )
-
-        self.hornList._redrawHeaders = false
-        rowControl._initialized = true
+    if rowControl._initialized and not self.hornList._redrawHeaders then
+        return
     end
+
+    local hornList = self.hornList
+    local sw = hornList.sw
+
+    local hornIcon = rowControl:GetNamedChild("_HornIcon")
+    local hornDuration = rowControl:GetNamedChild("_HornDuration")
+    local forceIcon = rowControl:GetNamedChild("_ForceIcon")
+    local forceDuration = rowControl:GetNamedChild("_ForceDuration")
+
+    rowControl:GetNamedChild("_BG"):SetAlpha(sw.headerOpacity)
+    hornIcon:SetTexture(self.hornIcon)
+    hornDuration:SetColor(unpack(sw.colorHorn))
+    hornDuration:SetAlpha(sw.zeroTimerOpacity)
+    forceIcon:SetTexture(self.forceIcon)
+    forceDuration:SetColor(unpack(sw.colorForce))
+    forceDuration:SetAlpha(sw.zeroTimerOpacity)
+
+    hornList:CreateCountdownOnControl(hornDuration, HR_EVENT_HORN_BUFF_GAINED)
+    hornList:CreateCountdownOnControl(forceDuration, HR_EVENT_MAJOR_FORCE_BUFF_GAINED)
+
+    hornList._redrawHeaders = false
+    rowControl._initialized = true
 end
 
 function module:hornListRowCreationFunction(rowControl, data, scrollList)
-    self.hornList:ApplySupportRangeStyle(rowControl, data.tag)
+    local list = self.hornList
+    local sw = list.sw
+
+    list:ApplySupportRangeStyle(rowControl, data.tag)
 
     local userName = util.GetUserName(data.userId, true)
     if userName then
@@ -132,9 +137,9 @@ function module:hornListRowCreationFunction(rowControl, data, scrollList)
     end
 
     local _BG = rowControl:GetNamedChild("_BG")
-    if self.hornList.sw.highlightSaxhleel then
+    if sw.highlightSaxhleel then
         if data.hasSaxhleel then
-            _BG:SetColor(unpack(self.hornList.sw.highlightSaxhleelColor))
+            _BG:SetColor(unpack(sw.highlightSaxhleelColor))
         end
     else
         _BG:SetColor(1, 1, 1, 0)
@@ -143,10 +148,10 @@ function module:hornListRowCreationFunction(rowControl, data, scrollList)
     local percentageColor = self:getUltPercentageColor(data.hornPercentage, 'FFFFFF')
     local percentageControl = rowControl:GetNamedChild("_PctValue")
     percentageControl:SetText(string.format('|c%s%d%%|r', percentageColor, zo_min(200, data.hornPercentage)))
-    percentageControl:SetScale(self.hornList.sw.showPercentValue)
+    percentageControl:SetScale(sw.showPercentValue)
     local rawValueControl = rowControl:GetNamedChild("_RawValue")
     rawValueControl:SetText(string.format('%s', data.ultValue))
-    rawValueControl:SetScale(self.hornList.sw.showRawValue)
+    rawValueControl:SetScale(sw.showRawValue)
 end
 
 function module:UpdateHornList()

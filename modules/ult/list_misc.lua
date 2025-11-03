@@ -81,17 +81,22 @@ function module:CreateMiscList()
 end
 
 function module:miscListHeaderRowCreationFunction(rowControl, data, scrollList)
-    if not rowControl._initialized or self.miscList._redrawHeaders then
-        rowControl:GetNamedChild("_BG"):SetAlpha(self.miscList.sw.headerOpacity)
-        rowControl:GetNamedChild("_Text"):SetText(data.title)
-
-        self.miscList._redrawHeaders = false
-        rowControl._initialized = true
+    if rowControl._initialized and not self.miscList._redrawHeaders then
+        return
     end
+
+    rowControl:GetNamedChild("_BG"):SetAlpha(self.miscList.sw.headerOpacity)
+    rowControl:GetNamedChild("_Text"):SetText(data.title)
+
+    self.miscList._redrawHeaders = false
+    rowControl._initialized = true
 end
 
 function module:miscListRowCreationFunction(rowControl, data, scrollList)
-    self.miscList:ApplySupportRangeStyle(rowControl, data.tag)
+    local list = self.miscList
+    local sw = list.sw
+
+    list:ApplySupportRangeStyle(rowControl, data.tag)
 
     local userName = util.GetUserName(data.userId, true)
     if userName then
@@ -111,10 +116,10 @@ function module:miscListRowCreationFunction(rowControl, data, scrollList)
     local percentageColor = self:getUltPercentageColor(data.lowestUltPercentage, 'FFFFFF')
     local percentageControl = rowControl:GetNamedChild("_PctValue")
     percentageControl:SetText(string.format('|c%s%d%%|r', percentageColor, zo_min(200, data.lowestUltPercentage)))
-    percentageControl:SetScale(self.miscList.sw.showPercentValue)
+    percentageControl:SetScale(sw.showPercentValue)
     local rawValueControl = rowControl:GetNamedChild("_RawValue")
     rawValueControl:SetText(string.format('%s', data.ultValue))
-    rawValueControl:SetScale(self.miscList.sw.showRawValue)
+    rawValueControl:SetScale(sw.showRawValue)
     rowControl:GetNamedChild('_UltIconFrontbar'):SetTexture(GetAbilityIcon(data.ult1ID))
     rowControl:GetNamedChild('_UltIconBackbar'):SetTexture(GetAbilityIcon(data.ult2ID))
 end

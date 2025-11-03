@@ -86,33 +86,38 @@ function module:CreateAtroList()
 end
 
 function module:atroListHeaderRowCreationFunction(rowControl, data, scrollList)
-    if not rowControl._initialized or self.atroList._redrawHeaders then
-        rowControl:GetNamedChild("_BG"):SetAlpha(self.atroList.sw.headerOpacity)
-        rowControl:GetNamedChild("_AtroIcon"):SetTexture(self.atroIcon)
-        rowControl:GetNamedChild("_AtroDuration"):SetColor(unpack(self.atroList.sw.colorAtro))
-        rowControl:GetNamedChild("_AtroDuration"):SetAlpha(self.atroList.sw.zeroTimerOpacity)
-        rowControl:GetNamedChild("_BerserkIcon"):SetTexture(GetAbilityIcon(self.majorBerserkId))
-        rowControl:GetNamedChild("_BerserkDuration"):SetColor(unpack(self.atroList.sw.colorBerserk))
-        rowControl:GetNamedChild("_BerserkDuration"):SetAlpha(self.atroList.sw.zeroTimerOpacity)
-
-        self.atroList:CreateCountdownOnControl(
-            rowControl:GetNamedChild("_AtroDuration"),
-            HR_EVENT_ATRO_CAST_STARTED
-            --self.atroList.sw.zeroTimerOpacity -- we want the Function itself to set this value. That way we can update it in the menu
-        )
-        self.atroList:CreateCountdownOnControl(
-            rowControl:GetNamedChild("_BerserkDuration"),
-            HR_EVENT_MAJOR_BERSERK_BUFF_GAINED
-            --self.atroList.sw.zeroTimerOpacity -- we want the Function itself to set this value. That way we can update it in the menu
-        )
-
-        self.atroList._redrawHeaders = false
-        rowControl._initialized = true
+    if rowControl._initialized and not self.atroList._redrawHeaders then
+        return
     end
+
+    local atroList = self.atroList
+    local sw = atroList.sw
+
+    local atroIcon = rowControl:GetNamedChild("_AtroIcon")
+    local atroDuration = rowControl:GetNamedChild("_AtroDuration")
+    local berserkIcon = rowControl:GetNamedChild("_BerserkIcon")
+    local berserkDuration = rowControl:GetNamedChild("_BerserkDuration")
+
+    rowControl:GetNamedChild("_BG"):SetAlpha(sw.headerOpacity)
+    atroIcon:SetTexture(self.atroIcon)
+    atroDuration:SetColor(unpack(sw.colorAtro))
+    atroDuration:SetAlpha(sw.zeroTimerOpacity)
+    berserkIcon:SetTexture(GetAbilityIcon(self.majorBerserkId))
+    berserkDuration:SetColor(unpack(sw.colorBerserk))
+    berserkDuration:SetAlpha(sw.zeroTimerOpacity)
+
+    atroList:CreateCountdownOnControl(atroDuration, HR_EVENT_ATRO_CAST_STARTED)
+    atroList:CreateCountdownOnControl(berserkDuration, HR_EVENT_MAJOR_BERSERK_BUFF_GAINED)
+
+    atroList._redrawHeaders = false
+    rowControl._initialized = true
 end
 
 function module:atroListRowCreationFunction(rowControl, data, scrollList)
-    self.atroList:ApplySupportRangeStyle(rowControl, data.tag)
+    local atroList = self.atroList
+    local sw = atroList.sw
+
+    atroList:ApplySupportRangeStyle(rowControl, data.tag)
 
     local userName = util.GetUserName(data.userId, true)
     if userName then
@@ -132,10 +137,10 @@ function module:atroListRowCreationFunction(rowControl, data, scrollList)
     local percentageColor = self:getUltPercentageColor(data.atroPercentage, 'FFFFFF')
     local percentageControl = rowControl:GetNamedChild("_PctValue")
     percentageControl:SetText(string.format('|c%s%d%%|r', percentageColor, zo_min(200, data.atroPercentage)))
-    percentageControl:SetScale(self.atroList.sw.showPercentValue)
+    percentageControl:SetScale(sw.showPercentValue)
     local rawValueControl = rowControl:GetNamedChild("_RawValue")
     rawValueControl:SetText(string.format('%s', data.ultValue))
-    rawValueControl:SetScale(self.atroList.sw.showRawValue)
+    rawValueControl:SetScale(sw.showRawValue)
 end
 
 function module:UpdateAtroList()

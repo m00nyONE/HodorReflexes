@@ -84,25 +84,32 @@ function module:CreateColosList()
 end
 
 function module:colosListHeaderRowCreationFunction(rowControl, data, scrollList)
-    if not rowControl._initialized or self.colosList._redrawHeaders then
-        rowControl:GetNamedChild("_BG"):SetAlpha(self.colosList.sw.headerOpacity)
-        rowControl:GetNamedChild("_Icon"):SetTexture(self.colosIcon)
-        rowControl:GetNamedChild("_Duration"):SetColor(unpack(self.colosList.sw.colorVuln))
-        rowControl:GetNamedChild("_Duration"):SetAlpha(self.colosList.sw.zeroTimerOpacity)
-
-        self.colosList:CreateCountdownOnControl(
-            rowControl:GetNamedChild("_Duration"),
-            HR_EVENT_MAJOR_VULNERABILITY_DEBUFF_GAINED
-            --self.colosList.sw.zeroTimerOpacity -- we want the Function itself to set this value. That way we can update it in the menu
-        )
-
-        self.colosList._redrawHeaders = false
-        rowControl._initialized = true
+    if rowControl._initialized and not self.colosList._redrawHeaders then
+        return
     end
+
+    local colosList = self.colosList
+    local sw = colosList.sw
+
+    local colosIcon = rowControl:GetNamedChild("_Icon")
+    local vulnDuration = rowControl:GetNamedChild("_Duration")
+
+    rowControl:GetNamedChild("_BG"):SetAlpha(sw.headerOpacity)
+    colosIcon:SetTexture(self.colosIcon)
+    vulnDuration:SetColor(unpack(sw.colorVuln))
+    vulnDuration:SetAlpha(sw.zeroTimerOpacity)
+
+    colosList:CreateCountdownOnControl(vulnDuration, HR_EVENT_MAJOR_VULNERABILITY_DEBUFF_GAINED)
+
+    colosList._redrawHeaders = false
+    rowControl._initialized = true
 end
 
 function module:colosListRowCreationFunction(rowControl, data, scrollList)
-    self.colosList:ApplySupportRangeStyle(rowControl, data.tag)
+    local colosList = self.colosList
+    local sw = colosList.sw
+
+    colosList:ApplySupportRangeStyle(rowControl, data.tag)
 
     local userName = util.GetUserName(data.userId, true)
     if userName then
@@ -122,10 +129,10 @@ function module:colosListRowCreationFunction(rowControl, data, scrollList)
     local percentageColor = self:getUltPercentageColor(data.colosPercentage, 'FFFFFF')
     local percentageControl = rowControl:GetNamedChild("_PctValue")
     percentageControl:SetText(string.format('|c%s%d%%|r', percentageColor, zo_min(200, data.colosPercentage)))
-    percentageControl:SetScale(self.colosList.sw.showPercentValue)
+    percentageControl:SetScale(sw.showPercentValue)
     local rawValueControl = rowControl:GetNamedChild("_RawValue")
     rawValueControl:SetText(string.format('%s', data.ultValue))
-    rawValueControl:SetScale(self.colosList.sw.showRawValue)
+    rawValueControl:SetScale(sw.showRawValue)
 end
 
 function module:UpdateColosList()
