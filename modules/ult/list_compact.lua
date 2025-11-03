@@ -174,94 +174,101 @@ function module:compactListHeaderRowCreationFunction(rowControl, data, scrollLis
 
     rowControl:GetNamedChild("_BG"):SetAlpha(sw.headerOpacity)
 
-    local hornIcon = rowControl:GetNamedChild("_HornIcon")
-    local hornDuration = rowControl:GetNamedChild("_HornDuration")
-    if sw.showHornCountdown then
-        hornIcon:SetScale(1)
-        hornDuration:SetScale(1)
+    do
+        local container = rowControl:GetNamedChild("_Horn")
+        if not sw.showHornCountdown then
+            container:SetScale(0)
+        else
+            local icon = container:GetNamedChild("_Icon")
+            local duration = container:GetNamedChild("_Duration")
 
-        hornIcon:SetTexture(self.hornIcon)
-        hornDuration:SetColor(unpack(sw.colorDurations))
-        hornDuration:SetAlpha(sw.zeroTimerOpacity)
-        list:CreateCountdownOnControl(hornDuration, HR_EVENT_HORN_BUFF_GAINED)
-    else
-        hornIcon:SetScale(0)
-        hornDuration:SetScale(0)
+            container:SetScale(1)
+            icon:SetTexture(self.hornIcon)
+            duration:SetColor(unpack(sw.colorDurations))
+            duration:SetAlpha(sw.zeroTimerOpacity)
+            list:CreateCountdownOnControl(duration, HR_EVENT_HORN_BUFF_GAINED)
+        end
     end
 
-    local forceIcon = rowControl:GetNamedChild("_ForceIcon")
-    local forceDuration = rowControl:GetNamedChild("_ForceDuration")
-    if sw.showForceDuration then
-        forceIcon:SetScale(1)
-        forceDuration:SetScale(1)
+    do
+        local container = rowControl:GetNamedChild("_Force")
+        if not sw.showForceCountdown then
+            container:SetScale(0)
+        else
+            local icon = container:GetNamedChild("_Icon")
+            local duration = container:GetNamedChild("_Duration")
 
-        forceIcon:SetTexture(self.forceIcon)
-        forceDuration:SetColor(unpack(sw.colorDurations))
-        forceDuration:SetAlpha(sw.zeroTimerOpacity)
-        list:CreateCountdownOnControl(forceDuration, HR_EVENT_MAJOR_FORCE_BUFF_GAINED)
-    else
-        forceIcon:SetScale(0)
-        forceDuration:SetScale(0)
+            container:SetScale(1)
+            icon:SetTexture(self.forceIcon)
+            duration:SetColor(unpack(sw.colorDurations))
+            duration:SetAlpha(sw.zeroTimerOpacity)
+            list:CreateCountdownOnControl(duration, HR_EVENT_MAJOR_FORCE_BUFF_GAINED)
+        end
     end
 
-    local colosIcon = rowControl:GetNamedChild("_ColosIcon")
-    local vulnDuration = rowControl:GetNamedChild("_VulnDuration")
-    if sw.showVulnDuration then
-        colosIcon:SetScale(1)
-        vulnDuration:SetScale(1)
+    do
+        local container = rowControl:GetNamedChild("_Vuln")
+        if not sw.showVulnCountdown then
+            container:SetScale(0)
+        else
+            local icon = container:GetNamedChild("_Icon")
+            local duration = container:GetNamedChild("_Duration")
 
-        colosIcon:SetTexture(self.vulnIcon)
-        vulnDuration:SetColor(unpack(sw.colorDurations))
-        vulnDuration:SetAlpha(sw.zeroTimerOpacity)
-        list:CreateCountdownOnControl(vulnDuration, HR_EVENT_MAJOR_VULNERABILITY_DEBUFF_GAINED)
-    else
-        colosIcon:SetScale(0)
-        vulnDuration:SetScale(0)
+            container:SetScale(1)
+            icon:SetTexture(self.vulnIcon)
+            duration:SetColor(unpack(sw.colorDurations))
+            duration:SetAlpha(sw.zeroTimerOpacity)
+            list:CreateCountdownOnControl(duration, HR_EVENT_MAJOR_VULNERABILITY_DEBUFF_GAINED)
+        end
     end
 
-    local atroIcon = rowControl:GetNamedChild("_AtroIcon")
-    local berserkDuration = rowControl:GetNamedChild("_BerserkDuration")
-    if sw.showBerserkCountdown then
-        atroIcon:SetScale(1)
-        berserkDuration:SetScale(1)
+    do
+        local container = rowControl:GetNamedChild("_Berserk")
+        if not sw.showBerserkCountdown then
+            container:SetScale(0)
+        else
+            local icon = container:GetNamedChild("_Icon")
+            local duration = container:GetNamedChild("_Duration")
 
-        atroIcon:SetTexture(self.berserkIcon)
-        berserkDuration:SetColor(unpack(sw.colorDurations))
-        berserkDuration:SetAlpha(sw.zeroTimerOpacity)
-        list:CreateCountdownOnControl(berserkDuration, HR_EVENT_MAJOR_BERSERK_BUFF_GAINED)
-    else
-        atroIcon:SetScale(0)
-        berserkDuration:SetScale(0)
+            container:SetScale(1)
+            icon:SetTexture(self.berserkIcon)
+            duration:SetColor(unpack(sw.colorDurations))
+            duration:SetAlpha(sw.zeroTimerOpacity)
+            list:CreateCountdownOnControl(duration, HR_EVENT_MAJOR_BERSERK_BUFF_GAINED)
+        end
     end
 
-    local slayerIcon = rowControl:GetNamedChild("_SlayerIcon")
-    local slayerDuration = rowControl:GetNamedChild("_SlayerDuration")
-    if sw.showSlayerCountdown then
-        slayerIcon:SetScale(1)
-        slayerDuration:SetScale(1)
 
-        slayerIcon:SetTexture(self.slayerIcon)
-        slayerDuration:SetColor(unpack(sw.colorDurations))
-        slayerDuration:SetAlpha(sw.zeroTimerOpacity)
-        list:CreateCountdownOnControl(slayerDuration, HR_EVENT_MAJOR_SLAYER_BUFF_GAINED)
-    else
-        slayerIcon:SetScale(0)
-        slayerDuration:SetScale(0)
+    do
+        local container = rowControl:GetNamedChild("_Slayer")
+        if not sw.showSlayerCountdown then
+            container:SetScale(0)
+        else
+            local icon = container:GetNamedChild("_Icon")
+            local duration = container:GetNamedChild("_Duration")
+
+            container:SetScale(1)
+            icon:SetTexture(self.slayerIcon)
+            duration:SetColor(unpack(sw.colorDurations))
+            duration:SetAlpha(sw.zeroTimerOpacity)
+            list:CreateCountdownOnControl(duration, HR_EVENT_MAJOR_SLAYER_BUFF_GAINED)
+        end
     end
 
-    local pillagerIcon = rowControl:GetNamedChild("_PillagerIcon")
-    local pillagerCooldown = rowControl:GetNamedChild("_PillagerCooldown")
-    if sw.showPillagerCooldown then
-        pillagerIcon:SetScale(1)
-        pillagerCooldown:SetScale(1)
+    do
+        local container = rowControl:GetNamedChild("_Pillager")
+        if not sw.showPillagerCooldown then
+            container:SetScale(0)
+        else
+            local icon = container:GetNamedChild("_Icon")
+            local duration = container:GetNamedChild("_Duration")
 
-        pillagerIcon:SetTexture(self.pillagerIcon)
-        pillagerCooldown:SetColor(unpack(sw.colorCooldowns))
-        pillagerCooldown:SetAlpha(sw.zeroTimerOpacity)
-        list:CreateCountdownOnControl(pillagerCooldown, HR_EVENT_PILLAGER_BUFF_COOLDOWN)
-    else
-        pillagerIcon:SetScale(0)
-        pillagerCooldown:SetScale(0)
+            container:SetScale(1)
+            icon:SetTexture(self.pillagerIcon)
+            duration:SetColor(unpack(sw.colorCooldowns))
+            duration:SetAlpha(sw.zeroTimerOpacity)
+            list:CreateCountdownOnControl(duration, HR_EVENT_PILLAGER_BUFF_COOLDOWN)
+        end
     end
 
     list._redrawHeaders = false
