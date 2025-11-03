@@ -374,6 +374,23 @@ function list:ApplySupportRangeStyle(rowControl, unitTag)
     end
 end
 
+function list:ApplyUserNameToControl(nameControl, userId)
+    local userName = util.GetUserName(userId, true)
+    if userName then
+        nameControl:SetText(userName)
+        nameControl:SetColor(1, 1, 1)
+    end
+end
+
+function list:ApplyUserIconToControl(iconControl, userId, classId)
+    local userIcon, tcLeft, tcRight, tcTop, tcBottom = util.GetUserIcon(userId, classId)
+    if userIcon then
+        iconControl:SetTextureReleaseOption(RELEASE_TEXTURE_AT_ZERO_REFERENCES)
+        iconControl:SetTexture(userIcon)
+        iconControl:SetTextureCoords(tcLeft, tcRight, tcTop, tcBottom)
+    end
+end
+
 --- creates and registers a buff/debuff countdown timer on the control passed as argument.
 --- Can be used by custom themes as well.
 --- WARNING: DO NOT use it on controls that get recycled (e.g. playerRows)! ONLY USE on headers or static labels! Otherwise the timers will pile up and cause performance issues. They do NOT get automatically cleaned up on control recycling!
