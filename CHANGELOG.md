@@ -1,5 +1,8 @@
 [SIZE="2"][B]IMPORTANT:[/B] You need LibCustomNames and LibCustomIcons now if you want to have names and icons displayed.[/SIZE]
 
+## 2025.11.03 - @m00nyONE
+- added frensh translation. Thank you @Melicious :-)
+
 ## 2025.11.01 - @m00nyONE
 Day one patch:
 - fixed locked UI when trying to move controls more than once per /reloadui. Now clearing all anchors before reanchoring.
