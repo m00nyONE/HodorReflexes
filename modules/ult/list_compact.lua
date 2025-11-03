@@ -346,7 +346,8 @@ function module:compactListCryptCannonRowCreationFunction(rowControl, data, scro
 end
 
 function module:UpdateCompactList()
-    local listControl = self.compactList.listControl
+    local compactList = self.compactList
+    local listControl = compactList.listControl
 
     ZO_ScrollList_Clear(listControl)
     local dataList = ZO_ScrollList_GetDataList(listControl)
@@ -358,62 +359,56 @@ function module:UpdateCompactList()
     local pillagerList = {}
     local cryptCannonList = {}
 
+    local sw = compactList.sw
     for _, playerData in pairs(addon.playersData) do
-        if (not playerData.hideHorn and self.compactList.sw.showHorn and playerData.hasHorn) or (not playerData.hideSaxhleel and playerData.hasSaxhleel) then
+        if sw.showHorn and ((not playerData.hideHorn and playerData.hasHorn) or (not playerData.hideSaxhleel and playerData.hasSaxhleel)) then
             table.insert(hornList, playerData)
         end
-        if not playerData.hideColos and self.compactList.sw.showColos and playerData.hasColos then
+        if sw.showColos and not playerData.hideColos and playerData.hasColos then
             table.insert(colosList, playerData)
         end
-        if not playerData.hideAtro and self.compactList.sw.showAtro and playerData.hasAtro then
+        if sw.showAtro and not playerData.hideAtro and playerData.hasAtro then
             table.insert(atroList, playerData)
         end
-        if self.compactList.sw.showSlayer and playerData.hasSlayer then
+        if sw.showSlayer and playerData.hasSlayer then
             table.insert(slayerList, playerData)
         end
-        if self.compactList.sw.showPillager and playerData.hasPillager then
+        if sw.showPillager and playerData.hasPillager then
             table.insert(pillagerList, playerData)
         end
-        if self.compactList.sw.showCryptCannon and playerData.hasCryptCannon then
+        if sw.showCryptCannon and playerData.hasCryptCannon then
             table.insert(cryptCannonList, playerData)
         end
     end
-    table.sort(hornList, self.sortByUltPercentage)
-    table.sort(colosList, self.sortByUltPercentage)
-    table.sort(atroList, self.sortByUltPercentage)
-    table.sort(slayerList, self.sortByUltPercentage)
-    table.sort(pillagerList, self.sortByUltPercentage)
-    table.sort(cryptCannonList, self.sortByUltPercentage)
-
+    local sortByUltPercentage = self.sortByUltPercentage
+    table.sort(hornList, sortByUltPercentage)
+    table.sort(colosList, sortByUltPercentage)
+    table.sort(atroList, sortByUltPercentage)
+    table.sort(slayerList, sortByUltPercentage)
+    table.sort(pillagerList, sortByUltPercentage)
+    table.sort(cryptCannonList, sortByUltPercentage)
 
     --- fill dataList ---
     -- insert Header
-    table.insert(dataList, ZO_ScrollList_CreateDataEntry(self.compactList.HEADER_TYPE, {}))
+    table.insert(dataList, ZO_ScrollList_CreateDataEntry(compactList.HEADER_TYPE, {}))
 
-    local entryCount = 0
-    for i, playerData in ipairs(hornList) do
-        entryCount = entryCount + 1
-        table.insert(dataList, ZO_ScrollList_CreateDataEntry(self.compactList.ROW_TYPE_HORN, playerData))
+    for _, playerData in ipairs(hornList) do
+        table.insert(dataList, ZO_ScrollList_CreateDataEntry(compactList.ROW_TYPE_HORN, playerData))
     end
-    for i, playerData in ipairs(colosList) do
-        entryCount = entryCount + 1
-        table.insert(dataList, ZO_ScrollList_CreateDataEntry(self.compactList.ROW_TYPE_COLOS, playerData))
+    for _, playerData in ipairs(colosList) do
+        table.insert(dataList, ZO_ScrollList_CreateDataEntry(compactList.ROW_TYPE_COLOS, playerData))
     end
-    for i, playerData in ipairs(atroList) do
-        entryCount = entryCount + 1
-        table.insert(dataList, ZO_ScrollList_CreateDataEntry(self.compactList.ROW_TYPE_ATRO, playerData))
+    for _, playerData in ipairs(atroList) do
+        table.insert(dataList, ZO_ScrollList_CreateDataEntry(compactList.ROW_TYPE_ATRO, playerData))
     end
-    for i, playerData in ipairs(slayerList) do
-        entryCount = entryCount + 1
-        table.insert(dataList, ZO_ScrollList_CreateDataEntry(self.compactList.ROW_TYPE_SLAYER, playerData))
+    for _, playerData in ipairs(slayerList) do
+        table.insert(dataList, ZO_ScrollList_CreateDataEntry(compactList.ROW_TYPE_SLAYER, playerData))
     end
-    for i, playerData in ipairs(pillagerList) do
-        entryCount = entryCount + 1
-        table.insert(dataList, ZO_ScrollList_CreateDataEntry(self.compactList.ROW_TYPE_PILLAGER, playerData))
+    for _, playerData in ipairs(pillagerList) do
+        table.insert(dataList, ZO_ScrollList_CreateDataEntry(compactList.ROW_TYPE_PILLAGER, playerData))
     end
-    for i, playerData in ipairs(cryptCannonList) do
-        entryCount = entryCount + 1
-        table.insert(dataList, ZO_ScrollList_CreateDataEntry(self.compactList.ROW_TYPE_CRYPTCANNON, playerData))
+    for _, playerData in ipairs(cryptCannonList) do
+        table.insert(dataList, ZO_ScrollList_CreateDataEntry(compactList.ROW_TYPE_CRYPTCANNON, playerData))
     end
 
     ZO_ScrollList_Commit(listControl)
