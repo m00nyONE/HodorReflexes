@@ -243,18 +243,20 @@ end
 
 function module:applyValues(rowControl, data, scrollList, percentage, gain, gainUnit)
     local percentageColor = self:getUltPercentageColor(percentage, 'FFFFFF')
+    local sw = self.compactList.sw
     rowControl:GetNamedChild("_PctValue"):SetText(string.format('|c%s%d%%|r', percentageColor, percentage))
-    rowControl:GetNamedChild("_PctValue"):SetScale(self.compactList.sw.showPercentValue)
+    rowControl:GetNamedChild("_PctValue"):SetScale(sw.showPercentValue)
     local gainString = "-"
     if gain ~= nil then gainString = string.format('%d%s', gain, gainUnit or "|u0:2:: |u") end
     rowControl:GetNamedChild("_RawValue"):SetText(gainString)
-    rowControl:GetNamedChild("_RawValue"):SetScale(self.compactList.sw.showRawValue)
+    rowControl:GetNamedChild("_RawValue"):SetScale(sw.showRawValue)
 end
 
 function module:compactListHornRowCreationFunction(rowControl, data, scrollList)
     self:applyUserStyles(rowControl, data, scrollList)
-    rowControl:GetNamedChild('_BG'):SetColor(unpack(self.compactList.sw.colorHornBG))
-    rowControl:GetNamedChild('_BG'):SetAlpha(self.compactList.sw.backgroundAlpha)
+    local sw = self.compactList.sw
+    rowControl:GetNamedChild('_BG'):SetColor(unpack(sw.colorHornBG))
+    rowControl:GetNamedChild('_BG'):SetAlpha(sw.backgroundAlpha)
     if data.hasHorn then
         rowControl:GetNamedChild("_UltIcon"):SetTexture(self.hornIcon)
     elseif data.hasSaxhleel then
@@ -275,8 +277,9 @@ end
 
 function module:compactListColosRowCreationFunction(rowControl, data, scrollList)
     self:applyUserStyles(rowControl, data, scrollList)
-    rowControl:GetNamedChild('_BG'):SetColor(unpack(self.compactList.sw.colorColosBG))
-    rowControl:GetNamedChild('_BG'):SetAlpha(self.compactList.sw.backgroundAlpha)
+    local sw = self.compactList.sw
+    rowControl:GetNamedChild('_BG'):SetColor(unpack(sw.colorColosBG))
+    rowControl:GetNamedChild('_BG'):SetAlpha(sw.backgroundAlpha)
     rowControl:GetNamedChild("_UltIcon"):SetTexture(self.colosIcon)
 
     local colosPercentage = 0
@@ -288,8 +291,9 @@ end
 
 function module:compactListAtroRowCreationFunction(rowControl, data, scrollList)
     self:applyUserStyles(rowControl, data, scrollList)
-    rowControl:GetNamedChild('_BG'):SetColor(unpack(self.compactList.sw.colorAtroBG))
-    rowControl:GetNamedChild('_BG'):SetAlpha(self.compactList.sw.backgroundAlpha)
+    local sw = self.compactList.sw
+    rowControl:GetNamedChild('_BG'):SetColor(unpack(sw.colorAtroBG))
+    rowControl:GetNamedChild('_BG'):SetAlpha(sw.backgroundAlpha)
     rowControl:GetNamedChild("_UltIcon"):SetTexture(self.atroIcon)
 
     local atroPercentage = 0
@@ -301,8 +305,9 @@ end
 
 function module:compactListSlayerRowCreationFunction(rowControl, data, scrollList)
     self:applyUserStyles(rowControl, data, scrollList)
-    rowControl:GetNamedChild('_BG'):SetColor(unpack(self.compactList.sw.colorSlayerBG))
-    rowControl:GetNamedChild('_BG'):SetAlpha(self.compactList.sw.backgroundAlpha)
+    local sw = self.compactList.sw
+    rowControl:GetNamedChild('_BG'):SetColor(unpack(sw.colorSlayerBG))
+    rowControl:GetNamedChild('_BG'):SetAlpha(sw.backgroundAlpha)
     rowControl:GetNamedChild("_UltIcon"):SetTexture(self.slayerIcon)
 
     local slayerPercentage = zo_min(data.ult1Percentage, data.ult2Percentage)
@@ -313,23 +318,25 @@ end
 
 function module:compactListPillagerRowCreationFunction(rowControl, data, scrollList)
     self:applyUserStyles(rowControl, data, scrollList)
-    rowControl:GetNamedChild('_BG'):SetColor(unpack(self.compactList.sw.colorPillagerBG))
-    rowControl:GetNamedChild('_BG'):SetAlpha(self.compactList.sw.backgroundAlpha)
+    local sw = self.compactList.sw
+    rowControl:GetNamedChild('_BG'):SetColor(unpack(sw.colorPillagerBG))
+    rowControl:GetNamedChild('_BG'):SetAlpha(sw.backgroundAlpha)
     rowControl:GetNamedChild("_UltIcon"):SetTexture(self.pillagerIcon)
 
     local pillagerPercentage = zo_min(data.ult1Percentage, data.ult2Percentage)
     local gainUltimate = zo_floor(data.ultValue * 0.02) * 5 -- 2% of ult spent gets transferred per tick ( 5 ticks in total )
 
     self:applyValues(rowControl, data, scrollList, pillagerPercentage, gainUltimate, nil)
-    if self.compactList.sw.markOnCooldown and self.pillagerCooldownEndTime > GetGameTimeMilliseconds() then
-        rowControl:GetNamedChild("_PctValue"):SetText(string.format("|c%s%d%%", util.RGB2Hex(unpack(self.compactList.sw.markOnCooldownColor)), pillagerPercentage)) -- red
+    if sw.markOnCooldown and self.pillagerCooldownEndTime > GetGameTimeMilliseconds() then
+        rowControl:GetNamedChild("_PctValue"):SetText(string.format("|c%s%d%%", util.RGB2Hex(unpack(sw.markOnCooldownColor)), pillagerPercentage)) -- red
     end
 end
 
 function module:compactListCryptCannonRowCreationFunction(rowControl, data, scrollList)
     self:applyUserStyles(rowControl, data, scrollList)
-    rowControl:GetNamedChild('_BG'):SetColor(unpack(self.compactList.sw.colorCryptCannonBG))
-    rowControl:GetNamedChild('_BG'):SetAlpha(self.compactList.sw.backgroundAlpha)
+    local sw = self.compactList.sw
+    rowControl:GetNamedChild('_BG'):SetColor(unpack(sw.colorCryptCannonBG))
+    rowControl:GetNamedChild('_BG'):SetAlpha(sw.backgroundAlpha)
     rowControl:GetNamedChild("_UltIcon"):SetTexture(self.cryptCannonIcon)
 
     local groupSize = zo_max(GetGroupSize() - 1, 0) -- ultimate is transferred to everyone except the wearer
