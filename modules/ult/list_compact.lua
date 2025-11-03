@@ -7,8 +7,6 @@ local internal = addon.internal
 local core = internal.core
 
 local addon_modules = addon.modules
-local addon_extensions = addon.extensions
-local internal_modules = internal.modules
 
 local module_name = "ult"
 local module = addon_modules[module_name]
@@ -270,26 +268,7 @@ function module:compactListHeaderRowCreationFunction(rowControl, data, scrollLis
     rowControl._initialized = true
 end
 
-function module:applyUserStyles(rowControl, data, scrollList)
-    self.compactList:ApplySupportRangeStyle(rowControl, data.tag)
-
-    local userName = util.GetUserName(data.userId, true)
-    if userName then
-        local nameControl = rowControl:GetNamedChild('_Name')
-        nameControl:SetText(userName)
-        nameControl:SetColor(1, 1, 1)
-    end
-
-    local userIcon, tcLeft, tcRight, tcTop, tcBottom = util.GetUserIcon(data.userId, data.classId)
-    if userIcon then
-        local iconControl = rowControl:GetNamedChild('_Icon')
-        iconControl:SetTextureReleaseOption(RELEASE_TEXTURE_AT_ZERO_REFERENCES)
-        iconControl:SetTexture(userIcon)
-        iconControl:SetTextureCoords(tcLeft, tcRight, tcTop, tcBottom)
-    end
-end
-
-function module:applyValues(rowControl, data, scrollList, percentage, gain, gainUnit)
+function module:applyCompactListValues(rowControl, data, scrollList, percentage, gain, gainUnit)
     local percentageColor = self:getUltPercentageColor(percentage, 'FFFFFF')
     local sw = self.compactList.sw
     rowControl:GetNamedChild("_PctValue"):SetText(string.format('|c%s%d%%|r', percentageColor, percentage))
@@ -301,8 +280,13 @@ function module:applyValues(rowControl, data, scrollList, percentage, gain, gain
 end
 
 function module:compactListHornRowCreationFunction(rowControl, data, scrollList)
-    self:applyUserStyles(rowControl, data, scrollList)
-    local sw = self.compactList.sw
+    local list = self.compactList
+    local sw = list.sw
+
+    list:ApplySupportRangeStyle(rowControl, data.tag)
+    list:ApplyUserNameToControl(rowControl:GetNamedChild('_Name'), data.userId)
+    list:ApplyUserIconToControl(rowControl:GetNamedChild('_Icon'), data.userId, data.classId)
+
     rowControl:GetNamedChild('_BG'):SetColor(unpack(sw.colorHornBG))
     rowControl:GetNamedChild('_BG'):SetAlpha(sw.backgroundAlpha)
     if data.hasHorn then
@@ -320,12 +304,17 @@ function module:compactListHornRowCreationFunction(rowControl, data, scrollList)
         gainSeconds = zo_floor(data.ultValue / 15) -- 1s per 15 points of ult
     end
 
-    self:applyValues(rowControl, data, scrollList, hornPercentage, gainSeconds, "s")
+    self:applyCompactListValues(rowControl, data, scrollList, hornPercentage, gainSeconds, "s")
 end
 
 function module:compactListColosRowCreationFunction(rowControl, data, scrollList)
-    self:applyUserStyles(rowControl, data, scrollList)
-    local sw = self.compactList.sw
+    local list = self.compactList
+    local sw = list.sw
+
+    list:ApplySupportRangeStyle(rowControl, data.tag)
+    list:ApplyUserNameToControl(rowControl:GetNamedChild('_Name'), data.userId)
+    list:ApplyUserIconToControl(rowControl:GetNamedChild('_Icon'), data.userId, data.classId)
+
     rowControl:GetNamedChild('_BG'):SetColor(unpack(sw.colorColosBG))
     rowControl:GetNamedChild('_BG'):SetAlpha(sw.backgroundAlpha)
     rowControl:GetNamedChild("_UltIcon"):SetTexture(self.colosIcon)
@@ -334,12 +323,17 @@ function module:compactListColosRowCreationFunction(rowControl, data, scrollList
     if self:isColos(data.ult1ID) then colosPercentage = data.ult1Percentage end
     if self:isColos(data.ult2ID) then colosPercentage = data.ult2Percentage end
 
-    self:applyValues(rowControl, data, scrollList, colosPercentage, nil, nil)
+    self:applyCompactListValues(rowControl, data, scrollList, colosPercentage, nil, nil)
 end
 
 function module:compactListAtroRowCreationFunction(rowControl, data, scrollList)
-    self:applyUserStyles(rowControl, data, scrollList)
-    local sw = self.compactList.sw
+    local list = self.compactList
+    local sw = list.sw
+
+    list:ApplySupportRangeStyle(rowControl, data.tag)
+    list:ApplyUserNameToControl(rowControl:GetNamedChild('_Name'), data.userId)
+    list:ApplyUserIconToControl(rowControl:GetNamedChild('_Icon'), data.userId, data.classId)
+
     rowControl:GetNamedChild('_BG'):SetColor(unpack(sw.colorAtroBG))
     rowControl:GetNamedChild('_BG'):SetAlpha(sw.backgroundAlpha)
     rowControl:GetNamedChild("_UltIcon"):SetTexture(self.atroIcon)
@@ -348,12 +342,17 @@ function module:compactListAtroRowCreationFunction(rowControl, data, scrollList)
     if self:isAtro(data.ult1ID) then atroPercentage = data.ult1Percentage end
     if self:isAtro(data.ult2ID) then atroPercentage = data.ult2Percentage end
 
-    self:applyValues(rowControl, data, scrollList, atroPercentage, nil, nil)
+    self:applyCompactListValues(rowControl, data, scrollList, atroPercentage, nil, nil)
 end
 
 function module:compactListSlayerRowCreationFunction(rowControl, data, scrollList)
-    self:applyUserStyles(rowControl, data, scrollList)
-    local sw = self.compactList.sw
+    local list = self.compactList
+    local sw = list.sw
+
+    list:ApplySupportRangeStyle(rowControl, data.tag)
+    list:ApplyUserNameToControl(rowControl:GetNamedChild('_Name'), data.userId)
+    list:ApplyUserIconToControl(rowControl:GetNamedChild('_Icon'), data.userId, data.classId)
+
     rowControl:GetNamedChild('_BG'):SetColor(unpack(sw.colorSlayerBG))
     rowControl:GetNamedChild('_BG'):SetAlpha(sw.backgroundAlpha)
     rowControl:GetNamedChild("_UltIcon"):SetTexture(self.slayerIcon)
@@ -361,12 +360,17 @@ function module:compactListSlayerRowCreationFunction(rowControl, data, scrollLis
     local slayerPercentage = zo_min(data.ult1Percentage, data.ult2Percentage)
     local gainSeconds = zo_floor(data.ultValue / 10) -- 1s per 10 points of ult
 
-    self:applyValues(rowControl, data, scrollList, slayerPercentage, gainSeconds, "s")
+    self:applyCompactListValues(rowControl, data, scrollList, slayerPercentage, gainSeconds, "s")
 end
 
 function module:compactListPillagerRowCreationFunction(rowControl, data, scrollList)
-    self:applyUserStyles(rowControl, data, scrollList)
-    local sw = self.compactList.sw
+    local list = self.compactList
+    local sw = list.sw
+
+    list:ApplySupportRangeStyle(rowControl, data.tag)
+    list:ApplyUserNameToControl(rowControl:GetNamedChild('_Name'), data.userId)
+    list:ApplyUserIconToControl(rowControl:GetNamedChild('_Icon'), data.userId, data.classId)
+
     rowControl:GetNamedChild('_BG'):SetColor(unpack(sw.colorPillagerBG))
     rowControl:GetNamedChild('_BG'):SetAlpha(sw.backgroundAlpha)
     rowControl:GetNamedChild("_UltIcon"):SetTexture(self.pillagerIcon)
@@ -374,15 +378,20 @@ function module:compactListPillagerRowCreationFunction(rowControl, data, scrollL
     local pillagerPercentage = zo_min(data.ult1Percentage, data.ult2Percentage)
     local gainUltimate = zo_floor(data.ultValue * 0.02) * 5 -- 2% of ult spent gets transferred per tick ( 5 ticks in total )
 
-    self:applyValues(rowControl, data, scrollList, pillagerPercentage, gainUltimate, nil)
+    self:applyCompactListValues(rowControl, data, scrollList, pillagerPercentage, gainUltimate, nil)
     if sw.markOnCooldown and self.pillagerCooldownEndTime > GetGameTimeMilliseconds() then
         rowControl:GetNamedChild("_PctValue"):SetText(string.format("|c%s%d%%", util.RGB2Hex(unpack(sw.markOnCooldownColor)), pillagerPercentage)) -- red
     end
 end
 
 function module:compactListCryptCannonRowCreationFunction(rowControl, data, scrollList)
-    self:applyUserStyles(rowControl, data, scrollList)
-    local sw = self.compactList.sw
+    local list = self.compactList
+    local sw = list.sw
+
+    list:ApplySupportRangeStyle(rowControl, data.tag)
+    list:ApplyUserNameToControl(rowControl:GetNamedChild('_Name'), data.userId)
+    list:ApplyUserIconToControl(rowControl:GetNamedChild('_Icon'), data.userId, data.classId)
+
     rowControl:GetNamedChild('_BG'):SetColor(unpack(sw.colorCryptCannonBG))
     rowControl:GetNamedChild('_BG'):SetAlpha(sw.backgroundAlpha)
     rowControl:GetNamedChild("_UltIcon"):SetTexture(self.cryptCannonIcon)
@@ -397,7 +406,7 @@ function module:compactListCryptCannonRowCreationFunction(rowControl, data, scro
     local cryptCannonPercentage = zo_min(data.ult1Percentage, data.ult2Percentage)
     local gainUltimate = zo_floor(data.ultValue / groupSize) -- ult gets transferred equally amongst living group members / we ignore the living part here
 
-    self:applyValues(rowControl, data, scrollList, cryptCannonPercentage, gainUltimate, nil)
+    self:applyCompactListValues(rowControl, data, scrollList, cryptCannonPercentage, gainUltimate, nil)
 end
 
 function module:UpdateCompactList()

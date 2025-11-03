@@ -7,13 +7,11 @@ local internal = addon.internal
 local core = internal.core
 
 local addon_modules = addon.modules
-local internal_modules = internal.modules
 
 local module_name = "dps"
 local module = addon_modules[module_name]
 
 local combat = addon.combat
-local util = addon.util
 
 local LGCS = LibGroupCombatStats
 local DAMAGE_UNKNOWN = LGCS.DAMAGE_UNKNOWN
@@ -125,22 +123,11 @@ end
 
 --- creation function for the damage rows. This can be overwritten if using a custom theme
 function module:damageRowCreationFunction(rowControl, data, scrollList)
-    local sw = self.damageList.sw
+    local list = self.damageList
+    local sw = list.sw
 
-    local userName = util.GetUserName(data.userId, true)
-    if userName then
-        local nameControl = rowControl:GetNamedChild('_Name')
-        nameControl:SetText(userName)
-        nameControl:SetColor(1, 1, 1)
-    end
-
-    local userIcon, tcLeft, tcRight, tcTop, tcBottom = util.GetUserIcon(data.userId, data.classId)
-    if userIcon then
-        local iconControl = rowControl:GetNamedChild('_Icon')
-        iconControl:SetTextureReleaseOption(RELEASE_TEXTURE_AT_ZERO_REFERENCES)
-        iconControl:SetTexture(userIcon)
-        iconControl:SetTextureCoords(tcLeft, tcRight, tcTop, tcBottom)
-    end
+    list:ApplyUserNameToControl(rowControl:GetNamedChild('_Name'), data.userId)
+    list:ApplyUserIconToControl(rowControl:GetNamedChild('_Icon'), data.userId, data.classId)
 
     local valueControl = rowControl:GetNamedChild("_Value")
     valueControl:SetText(self.getDamageRowFormat(data.dmgType, data.dmg, data.dps, sw.colorDamageBoss, sw.colorDamageTotal))

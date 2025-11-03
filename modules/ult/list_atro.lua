@@ -7,13 +7,9 @@ local internal = addon.internal
 local core = internal.core
 
 local addon_modules = addon.modules
-local addon_extensions = addon.extensions
-local internal_modules = internal.modules
 
 local module_name = "ult"
 local module = addon_modules[module_name]
-
-local util = addon.util
 
 local HR_EVENT_ATRO_CAST_STARTED = addon.HR_EVENT_ATRO_CAST_STARTED
 local HR_EVENT_MAJOR_BERSERK_BUFF_GAINED = addon.HR_EVENT_MAJOR_BERSERK_BUFF_GAINED
@@ -114,25 +110,12 @@ function module:atroListHeaderRowCreationFunction(rowControl, data, scrollList)
 end
 
 function module:atroListRowCreationFunction(rowControl, data, scrollList)
-    local atroList = self.atroList
-    local sw = atroList.sw
+    local list = self.atroList
+    local sw = list.sw
 
-    atroList:ApplySupportRangeStyle(rowControl, data.tag)
-
-    local userName = util.GetUserName(data.userId, true)
-    if userName then
-        local nameControl = rowControl:GetNamedChild('_Name')
-        nameControl:SetText(userName)
-        nameControl:SetColor(1, 1, 1)
-    end
-
-    local userIcon, tcLeft, tcRight, tcTop, tcBottom = util.GetUserIcon(data.userId, data.classId)
-    if userIcon then
-        local iconControl = rowControl:GetNamedChild('_Icon')
-        iconControl:SetTextureReleaseOption(RELEASE_TEXTURE_AT_ZERO_REFERENCES)
-        iconControl:SetTexture(userIcon)
-        iconControl:SetTextureCoords(tcLeft, tcRight, tcTop, tcBottom)
-    end
+    list:ApplySupportRangeStyle(rowControl, data.tag)
+    list:ApplyUserNameToControl(rowControl:GetNamedChild('_Name'), data.userId)
+    list:ApplyUserIconToControl(rowControl:GetNamedChild('_Icon'), data.userId, data.classId)
 
     local percentageColor = self:getUltPercentageColor(data.atroPercentage, 'FFFFFF')
     local percentageControl = rowControl:GetNamedChild("_PctValue")
