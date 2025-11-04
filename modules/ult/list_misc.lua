@@ -76,13 +76,14 @@ function module:CreateMiscList()
     list.logger:Debug("added player row type '%d' with template '%s'", list.ROW_TYPE, list.ROW_TEMPLATE)
 end
 
+local title = "Ultimates"
 function module:miscListHeaderRowCreationFunction(rowControl, data, scrollList)
     if rowControl._initialized and not self.miscList._redrawHeaders then
         return
     end
 
     rowControl:GetNamedChild("_BG"):SetAlpha(self.miscList.sw.headerOpacity)
-    rowControl:GetNamedChild("_Text"):SetText(data.title)
+    rowControl:GetNamedChild("_Text"):SetText(title)
 
     self.miscList._redrawHeaders = false
     rowControl._initialized = true
