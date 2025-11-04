@@ -18,8 +18,8 @@ local HR_EVENT_GROUP_CHANGED = addon.HR_EVENT_GROUP_CHANGED
 
 local moduleDefinition = {
     name = "hideme",
-    friendlyName = "Hide Me",
-    description = "allows you to hide some of your stats from other group members lists.", -- of course only if they also have the module enabled.
+    friendlyName = GetString(HR_MODULES_HIDEME_FRIENDLYNAME),
+    description = GetString(HR_MODULES_HIDEME_DESCRIPTION), -- of course only if they also have the module enabled.
     version = "0.1.0",
     priority = 15,
     enabled = false,
@@ -33,28 +33,28 @@ local moduleDefinition = {
     hideIds = {
         [1] = {
             name = "hideDamage",
-            label = "Hide Damage",
-            description = "Hide your damage numbers from other group members dps list.",
+            label = GetString(HR_MODULES_HIDEME_HIDEDAMAGE_LABEL),
+            description = GetString(HR_MODULES_HIDEME_HIDEDAMAGE_DESCRIPTION),
         },
         [2] = {
             name = "hideHorn",
-            label = "Hide Horn",
-            description = "Hide your horn from the lists.",
+            label = GetString(HR_MODULES_HIDEME_HIDEHORN_LABEL),
+            description = GetString(HR_MODULES_HIDEME_HIDEHORN_DESCRIPTION),
         },
         [3] = {
             name = "hideColos",
-            label = "Hide Colossus",
-            description = "Hide your colossus from the lists.",
+            label = GetString(HR_MODULES_HIDEME_HIDECOLOS_LABEL),
+            description = GetString(HR_MODULES_HIDEME_HIDECOLOS_DESCRIPTION),
         },
         [4] = {
             name = "hideAtro",
-            label = "Hide Atro",
-            description = "Hide your atronach from the lists.",
+            label = GetString(HR_MODULES_HIDEME_HIDEATRO_LABEL),
+            description = GetString(HR_MODULES_HIDEME_HIDEATRO_DESCRIPTION),
         },
         [5] = {
             name = "hideSaxhleel",
-            label = "Hide Saxhleel",
-            description = "Hide your saxhleel from the lists.",
+            label = GetString(HR_MODULES_HIDEME_HIDESAXHLEEL_LABEL),
+            description = GetString(HR_MODULES_HIDEME_HIDESAXHLEEL_DESCRIPTION),
         },
     }
 }

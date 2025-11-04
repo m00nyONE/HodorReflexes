@@ -23,7 +23,7 @@ function module:GetMainMenuOptions()
             step = 1,
             default = self.svDefault.countdownDuration,
             format = "%.0f",
-            unit = " seconds",
+            unit = GetString(HR_UNIT_SECONDS),
             getFunction = function() return self.sv.countdownDuration end,
             setFunction = function(value) self.sv.countdownDuration = value end,
         },

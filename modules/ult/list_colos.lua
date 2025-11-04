@@ -7,13 +7,9 @@ local internal = addon.internal
 local core = internal.core
 
 local addon_modules = addon.modules
-local addon_extensions = addon.extensions
-local internal_modules = internal.modules
 
 local module_name = "ult"
 local module = addon_modules[module_name]
-
-local util = addon.util
 
 local HR_EVENT_MAJOR_VULNERABILITY_DEBUFF_GAINED = addon.HR_EVENT_MAJOR_VULNERABILITY_DEBUFF_GAINED
 
@@ -26,7 +22,7 @@ local svDefault = {
     windowScale = 1.0,
     windowPosLeft = 10,
     windowPosTop = 660,
-    windowWidth = 262,
+    windowWidth = 272,
     backgroundOpacity = 0.0,
 
     showPercentValue = 1.0,
@@ -84,48 +80,42 @@ function module:CreateColosList()
 end
 
 function module:colosListHeaderRowCreationFunction(rowControl, data, scrollList)
-    if not rowControl._initialized or self.colosList._redrawHeaders then
-        rowControl:GetNamedChild("_BG"):SetAlpha(self.colosList.sw.headerOpacity)
-        rowControl:GetNamedChild("_Icon"):SetTexture(self.colosIcon)
-        rowControl:GetNamedChild("_Duration"):SetColor(unpack(self.colosList.sw.colorVuln))
-        rowControl:GetNamedChild("_Duration"):SetAlpha(self.colosList.sw.zeroTimerOpacity)
-
-        self.colosList:CreateCountdownOnControl(
-            rowControl:GetNamedChild("_Duration"),
-            HR_EVENT_MAJOR_VULNERABILITY_DEBUFF_GAINED
-            --self.colosList.sw.zeroTimerOpacity -- we want the Function itself to set this value. That way we can update it in the menu
-        )
-
-        self.colosList._redrawHeaders = false
-        rowControl._initialized = true
+    if rowControl._initialized and not self.colosList._redrawHeaders then
+        return
     end
+
+    local colosList = self.colosList
+    local sw = colosList.sw
+
+    local colosIcon = rowControl:GetNamedChild("_Icon")
+    local vulnDuration = rowControl:GetNamedChild("_Duration")
+
+    rowControl:GetNamedChild("_BG"):SetAlpha(sw.headerOpacity)
+    colosIcon:SetTexture(self.colosIcon)
+    vulnDuration:SetColor(unpack(sw.colorVuln))
+    vulnDuration:SetAlpha(sw.zeroTimerOpacity)
+
+    colosList:CreateCountdownOnControl(vulnDuration, HR_EVENT_MAJOR_VULNERABILITY_DEBUFF_GAINED)
+
+    colosList._redrawHeaders = false
+    rowControl._initialized = true
 end
 
 function module:colosListRowCreationFunction(rowControl, data, scrollList)
-    self.colosList:ApplySupportRangeStyle(rowControl, data.tag)
+    local list = self.colosList
+    local sw = list.sw
 
-    local userName = util.GetUserName(data.userId, true)
-    if userName then
-        local nameControl = rowControl:GetNamedChild('_Name')
-        nameControl:SetText(userName)
-        nameControl:SetColor(1, 1, 1)
-    end
-
-    local userIcon, tcLeft, tcRight, tcTop, tcBottom = util.GetUserIcon(data.userId, data.classId)
-    if userIcon then
-        local iconControl = rowControl:GetNamedChild('_Icon')
-        iconControl:SetTextureReleaseOption(RELEASE_TEXTURE_AT_ZERO_REFERENCES)
-        iconControl:SetTexture(userIcon)
-        iconControl:SetTextureCoords(tcLeft, tcRight, tcTop, tcBottom)
-    end
+    list:ApplySupportRangeStyle(rowControl, data.tag)
+    list:ApplyUserNameToControl(rowControl:GetNamedChild('_Name'), data.userId)
+    list:ApplyUserIconToControl(rowControl:GetNamedChild('_Icon'), data.userId, data.classId)
 
     local percentageColor = self:getUltPercentageColor(data.colosPercentage, 'FFFFFF')
     local percentageControl = rowControl:GetNamedChild("_PctValue")
     percentageControl:SetText(string.format('|c%s%d%%|r', percentageColor, zo_min(200, data.colosPercentage)))
-    percentageControl:SetScale(self.colosList.sw.showPercentValue)
+    percentageControl:SetScale(sw.showPercentValue)
     local rawValueControl = rowControl:GetNamedChild("_RawValue")
     rawValueControl:SetText(string.format('%s', data.ultValue))
-    rawValueControl:SetScale(self.colosList.sw.showRawValue)
+    rawValueControl:SetScale(sw.showRawValue)
 end
 
 function module:UpdateColosList()

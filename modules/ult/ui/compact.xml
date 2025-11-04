@@ -12,59 +12,96 @@
                     <AnchorFill />
                 </Texture>
 
-                <Texture name="$(parent)_HornIcon" textureFile="/esoui/art/icons/ability_ava_003.dds">
-                    <Dimensions x="28" y="28"/>
-                    <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)" offsetX="4"/> <!-- 24px offset -->
-                </Texture>
-                <Label name="$(parent)_HornDuration" horizontalAlignment="center" font="$(MEDIUM_FONT)|$(KB_22)|outline" text="0.0" wrapMode="TRUNCATE">
-                    <Dimensions x="50" y="24"/>
-                    <Anchor point="TOP" relativePoint="BOTTOM" relativeTo="$(parent)_HornIcon" offsetX="0" offsetY="2" />
-                </Label>
+                <Control name="$(parent)_Horn">
+                    <Dimensions x="40" y="60"/>
+                    <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)" offsetX="0" offsetY="0"/>
+                    <Controls>
+                        <Texture name="$(parent)_Icon" textureFile="/esoui/art/icons/ability_ava_003.dds">
+                            <Dimensions x="28" y="28"/>
+                            <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)" offsetX="6"/> <!-- 24px offset -->
+                        </Texture>
+                        <Label name="$(parent)_Duration" horizontalAlignment="center" font="$(MEDIUM_FONT)|$(KB_22)|outline" text="0.0" wrapMode="TRUNCATE">
+                            <Dimensions x="50" y="24"/>
+                            <Anchor point="TOP" relativePoint="BOTTOM" relativeTo="$(parent)_Icon" offsetX="0" offsetY="2" />
+                        </Label>
+                    </Controls>
+                </Control>
 
-                <Texture name="$(parent)_ForceIcon" textureFile="/esoui/art/icons/ability_buff_major_force.dds">
-                    <Dimensions x="28" y="28"/>
-                    <Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$(parent)_HornIcon" offsetX="10"/>
-                </Texture>
-                <Label name="$(parent)_ForceDuration" horizontalAlignment="center" font="$(MEDIUM_FONT)|$(KB_22)|outline" text="0.0" wrapMode="TRUNCATE">
-                    <Dimensions x="50" y="24"/>
-                    <Anchor point="TOP" relativePoint="BOTTOM" relativeTo="$(parent)_ForceIcon" offsetX="0" offsetY="2" />
-                </Label>
+                <Control name="$(parent)_Force">
+                    <Dimensions x="40" y="60"/>
+                    <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="$(parent)_Horn" offsetX="0" offsetY="0"/>
+                    <Controls>
+                        <Texture name="$(parent)_Icon" textureFile="/esoui/art/icons/ability_buff_major_force.dds">
+                            <Dimensions x="28" y="28"/>
+                            <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)" offsetX="6"/>
+                        </Texture>
+                        <Label name="$(parent)_Duration" horizontalAlignment="center" font="$(MEDIUM_FONT)|$(KB_22)|outline" text="0.0" wrapMode="TRUNCATE">
+                            <Dimensions x="50" y="24"/>
+                            <Anchor point="TOP" relativePoint="BOTTOM" relativeTo="$(parent)_Icon" offsetX="0" offsetY="2" />
+                        </Label>
+                    </Controls>
+                </Control>
 
-                <Texture name="$(parent)_ColosIcon" textureFile="/esoui/art/icons/ability_necromancer_006.dds">
-                    <Dimensions x="28" y="28"/>
-                    <Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$(parent)_ForceIcon" offsetX="10"/>
-                </Texture>
-                <Label name="$(parent)_VulnDuration" horizontalAlignment="center" font="$(MEDIUM_FONT)|$(KB_22)|outline" text="0.0" wrapMode="TRUNCATE">
-                    <Dimensions x="50" y="24"/>
-                    <Anchor point="TOP" relativePoint="BOTTOM" relativeTo="$(parent)_ColosIcon" offsetX="0" offsetY="2" />
-                </Label>
+                <Control name="$(parent)_Vuln">
+                    <Dimensions x="40" y="60"/>
+                    <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="$(parent)_Force" offsetX="0" offsetY="0"/>
+                    <Controls>
+                        <Texture name="$(parent)_Icon" textureFile="/esoui/art/icons/ability_necromancer_006.dds">
+                            <Dimensions x="28" y="28"/>
+                            <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)" offsetX="6"/>
+                        </Texture>
+                        <Label name="$(parent)_Duration" horizontalAlignment="center" font="$(MEDIUM_FONT)|$(KB_22)|outline" text="0.0" wrapMode="TRUNCATE">
+                            <Dimensions x="50" y="24"/>
+                            <Anchor point="TOP" relativePoint="BOTTOM" relativeTo="$(parent)_Icon" offsetX="0" offsetY="2" />
+                        </Label>
+                    </Controls>
+                </Control>
 
-                <Texture name="$(parent)_AtroIcon" textureFile="/esoui/art/icons/ability_sorcerer_greater_storm_atronach.dds">
-                    <Dimensions x="28" y="28"/>
-                    <Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$(parent)_ColosIcon" offsetX="10"/>
-                </Texture>
-                <Label name="$(parent)_BerserkDuration" horizontalAlignment="center" font="$(MEDIUM_FONT)|$(KB_22)|outline" text="0.0" wrapMode="TRUNCATE">
-                    <Dimensions x="50" y="24"/>
-                    <Anchor point="TOP" relativePoint="BOTTOM" relativeTo="$(parent)_AtroIcon" offsetX="0" offsetY="2" />
-                </Label>
+                <Control name="$(parent)_Berserk">
+                    <Dimensions x="40" y="60"/>
+                    <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="$(parent)_Vuln" offsetX="0" offsetY="0"/>
+                    <Controls>
+                        <Texture name="$(parent)_Icon" textureFile="/esoui/art/icons/ability_sorcerer_greater_storm_atronach.dds">
+                            <Dimensions x="28" y="28"/>
+                            <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)" offsetX="6"/>
+                        </Texture>
+                        <Label name="$(parent)_Duration" horizontalAlignment="center" font="$(MEDIUM_FONT)|$(KB_22)|outline" text="0.0" wrapMode="TRUNCATE">
+                            <Dimensions x="50" y="24"/>
+                            <Anchor point="TOP" relativePoint="BOTTOM" relativeTo="$(parent)_Icon" offsetX="0" offsetY="2" />
+                        </Label>
+                    </Controls>
+                </Control>
 
-                <Texture name="$(parent)_SlayerIcon" textureFile="/esoui/art/icons/ability_buff_major_slayer.dds">
-                    <Dimensions x="28" y="28"/>
-                    <Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$(parent)_AtroIcon" offsetX="10"/>
-                </Texture>
-                <Label name="$(parent)_SlayerDuration" horizontalAlignment="center" font="$(MEDIUM_FONT)|$(KB_22)|outline" text="0.0" wrapMode="TRUNCATE">
-                    <Dimensions x="50" y="24"/>
-                    <Anchor point="TOP" relativePoint="BOTTOM" relativeTo="$(parent)_SlayerIcon" offsetX="0" offsetY="2" />
-                </Label>
+                <Control name="$(parent)_Slayer">
+                    <Dimensions x="40" y="60"/>
+                    <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="$(parent)_Berserk" offsetX="0" offsetY="0"/>
+                    <Controls>
+                        <Texture name="$(parent)_Icon" textureFile="/esoui/art/icons/ability_buff_major_slayer.dds">
+                            <Dimensions x="28" y="28"/>
+                            <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)" offsetX="6"/>
+                        </Texture>
+                        <Label name="$(parent)_Duration" horizontalAlignment="center" font="$(MEDIUM_FONT)|$(KB_22)|outline" text="0.0" wrapMode="TRUNCATE">
+                            <Dimensions x="50" y="24"/>
+                            <Anchor point="TOP" relativePoint="BOTTOM" relativeTo="$(parent)_Icon" offsetX="0" offsetY="2" />
+                        </Label>
+                    </Controls>
+                </Control>
 
-                <Texture name="$(parent)_PillagerIcon" textureFile="esoui/art/icons/ability_healer_030.dds">
-                    <Dimensions x="28" y="28"/>
-                    <Anchor point="TOPRIGHT" relativePoint="TOPRIGHT" relativeTo="$(parent)" offsetX="-4"/>
-                </Texture>
-                <Label name="$(parent)_PillagerCooldown" horizontalAlignment="center" font="$(MEDIUM_FONT)|$(KB_22)|outline" text="0.0" wrapMode="TRUNCATE">
-                    <Dimensions x="50" y="24"/>
-                    <Anchor point="TOP" relativePoint="BOTTOM" relativeTo="$(parent)_PillagerIcon" offsetX="0" offsetY="2" />
-                </Label>
+
+                <Control name="$(parent)_Pillager">
+                    <Dimensions x="40" y="60"/>
+                    <Anchor point="TOPRIGHT" relativePoint="TOPRIGHT" relativeTo="$(parent)" offsetX="0" offsetY="0"/>
+                    <Controls>
+                        <Texture name="$(parent)_Icon" textureFile="esoui/art/icons/ability_healer_030.dds">
+                            <Dimensions x="28" y="28"/>
+                            <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)" offsetX="6"/>
+                        </Texture>
+                        <Label name="$(parent)_Duration" horizontalAlignment="center" font="$(MEDIUM_FONT)|$(KB_22)|outline" text="0.0" wrapMode="TRUNCATE">
+                            <Dimensions x="50" y="24"/>
+                            <Anchor point="TOP" relativePoint="BOTTOM" relativeTo="$(parent)_Icon" offsetX="0" offsetY="2" />
+                        </Label>
+                    </Controls>
+                </Control>
 
             </Controls>
         </Control>

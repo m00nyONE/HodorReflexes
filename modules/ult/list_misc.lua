@@ -7,13 +7,9 @@ local internal = addon.internal
 local core = internal.core
 
 local addon_modules = addon.modules
-local addon_extensions = addon.extensions
-local internal_modules = internal.modules
 
 local module_name = "ult"
 local module = addon_modules[module_name]
-
-local util = addon.util
 
 local svVersion = 1
 local svDefault = {
@@ -23,7 +19,7 @@ local svDefault = {
     windowScale = 1.0,
     windowPosLeft = 250,
     windowPosTop = 580,
-    windowWidth = 262,
+    windowWidth = 272,
     backgroundOpacity = 0.0,
 
     showPercentValue = 1.0,
@@ -81,40 +77,32 @@ function module:CreateMiscList()
 end
 
 function module:miscListHeaderRowCreationFunction(rowControl, data, scrollList)
-    if not rowControl._initialized or self.miscList._redrawHeaders then
-        rowControl:GetNamedChild("_BG"):SetAlpha(self.miscList.sw.headerOpacity)
-        rowControl:GetNamedChild("_Text"):SetText(data.title)
-
-        self.miscList._redrawHeaders = false
-        rowControl._initialized = true
+    if rowControl._initialized and not self.miscList._redrawHeaders then
+        return
     end
+
+    rowControl:GetNamedChild("_BG"):SetAlpha(self.miscList.sw.headerOpacity)
+    rowControl:GetNamedChild("_Text"):SetText(data.title)
+
+    self.miscList._redrawHeaders = false
+    rowControl._initialized = true
 end
 
 function module:miscListRowCreationFunction(rowControl, data, scrollList)
-    self.miscList:ApplySupportRangeStyle(rowControl, data.tag)
+    local list = self.miscList
+    local sw = list.sw
 
-    local userName = util.GetUserName(data.userId, true)
-    if userName then
-        local nameControl = rowControl:GetNamedChild('_Name')
-        nameControl:SetText(userName)
-        nameControl:SetColor(1, 1, 1)
-    end
-
-    local userIcon, tcLeft, tcRight, tcTop, tcBottom = util.GetUserIcon(data.userId, data.classId)
-    if userIcon then
-        local iconControl = rowControl:GetNamedChild('_Icon')
-        iconControl:SetTextureReleaseOption(RELEASE_TEXTURE_AT_ZERO_REFERENCES)
-        iconControl:SetTexture(userIcon)
-        iconControl:SetTextureCoords(tcLeft, tcRight, tcTop, tcBottom)
-    end
+    list:ApplySupportRangeStyle(rowControl, data.tag)
+    list:ApplyUserNameToControl(rowControl:GetNamedChild('_Name'), data.userId)
+    list:ApplyUserIconToControl(rowControl:GetNamedChild('_Icon'), data.userId, data.classId)
 
     local percentageColor = self:getUltPercentageColor(data.lowestUltPercentage, 'FFFFFF')
     local percentageControl = rowControl:GetNamedChild("_PctValue")
     percentageControl:SetText(string.format('|c%s%d%%|r', percentageColor, zo_min(200, data.lowestUltPercentage)))
-    percentageControl:SetScale(self.miscList.sw.showPercentValue)
+    percentageControl:SetScale(sw.showPercentValue)
     local rawValueControl = rowControl:GetNamedChild("_RawValue")
     rawValueControl:SetText(string.format('%s', data.ultValue))
-    rawValueControl:SetScale(self.miscList.sw.showRawValue)
+    rawValueControl:SetScale(sw.showRawValue)
     rowControl:GetNamedChild('_UltIconFrontbar'):SetTexture(GetAbilityIcon(data.ult1ID))
     rowControl:GetNamedChild('_UltIconBackbar'):SetTexture(GetAbilityIcon(data.ult2ID))
 end

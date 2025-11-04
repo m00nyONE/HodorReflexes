@@ -10,9 +10,9 @@ local util = addon.util
 
 local extensionDefinition = {
     name = "icons",
-    friendlyName = "Icons",
+    friendlyName = GetString(HR_EXTENSIONS_ICONS_FRIENDLYNAME),
     version = "1.0.0",
-    description = "Extension to provide user icons via LibCustomIcons.",
+    description = GetString(HR_EXTENSIONS_ICONS_DESCRIPTION),
     priority = 2,
     svVersion = 1,
     svDefault = {},

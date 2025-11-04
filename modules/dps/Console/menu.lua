@@ -31,6 +31,9 @@ function module:GetSubMenuOptions()
                 --end
             end
             if not option.isAdvancedSetting or self.sw.advancedSettings then
+                if option.isAdvancedSetting and option.label then
+                    option.label = string.format("|cff9900%s|r", option.label)
+                end
                 table.insert(destination, option)
             end
         end
@@ -38,11 +41,11 @@ function module:GetSubMenuOptions()
 
     local function GetGeneralOptions()
         return {
-            core.CreateSectionHeader("General"),
+            core.CreateSectionHeader(GetString(HR_MENU_GENERAL)),
             {
                 type = LHAS.ST_CHECKBOX,
-                label = "account wide settings",
-                tooltip = "enable/disable account-wide settings.",
+                label = GetString(HR_MENU_ACCOUNTWIDE),
+                tooltip = GetString(HR_MENU_ACCOUNTWIDE_TT),
                 default = true,
                 getFunction = function() return self.sw.accountWide end,
                 setFunction = function(value)
@@ -52,8 +55,8 @@ function module:GetSubMenuOptions()
             },
             {
                 type = LHAS.ST_CHECKBOX,
-                label = "Advanced Settings",
-                tooltip = "allows you to customize more advanced settings for the lists.",
+                label = GetString(HR_MENU_ADVANCED_SETTINGS),
+                tooltip = GetString(HR_MENU_ADVANCED_SETTINGS_TT),
                 default = false,
                 getFunction = function() return self.sw.advancedSettings end,
                 setFunction = function(value)
@@ -68,8 +71,8 @@ function module:GetSubMenuOptions()
             core.CreateSectionHeader(listName),
             {
                 type = LHAS.ST_SLIDER,
-                label = "horizontal position",
-                tooltip = "set the horizontal position of the list.",
+                label = GetString(HR_MENU_HORIZONTAL_POSITION),
+                tooltip = GetString(HR_MENU_HORIZONTAL_POSITION_TT),
                 min = 0,
                 max = SCREEN_WIDTH - list.sw.windowWidth,
                 step = 10,
@@ -85,8 +88,8 @@ function module:GetSubMenuOptions()
             },
             {
                 type = LHAS.ST_SLIDER,
-                label = "vertical position",
-                tooltip = "set the vertical position of the list.",
+                label = GetString(HR_MENU_VERTICAL_POSITION),
+                tooltip = GetString(HR_MENU_VERTICAL_POSITION_TT),
                 min = 0,
                 max = SCREEN_HEIGHT - (list.listHeaderHeight + (list.listRowHeight * 4)),
                 step = 10,
@@ -102,8 +105,8 @@ function module:GetSubMenuOptions()
             },
             {
                 type = LHAS.ST_SLIDER,
-                label = "scale",
-                tooltip = "set the scale of the list.",
+                label = GetString(HR_MENU_SCALE),
+                tooltip = GetString(HR_MENU_SCALE_TT),
                 min = 60,
                 max = 160,
                 step = 1,
@@ -118,8 +121,8 @@ function module:GetSubMenuOptions()
             },
             {
                 type = LHAS.ST_CHECKBOX,
-                label = "Disable in PvP",
-                tooltip = "disable the list when in PvP.",
+                label = GetString(HR_MENU_DISABLE_IN_PVP),
+                tooltip = GetString(HR_MENU_DISABLE_IN_PVP_TT),
                 default = list.svDefault.disableInPvP,
                 getFunction = function() return list.sw.disableInPvP end,
                 setFunction = function(value)
@@ -129,8 +132,8 @@ function module:GetSubMenuOptions()
             },
             {
                 type = LHAS.ST_DROPDOWN,
-                label = "Visibility",
-                tooltip = "set the visibility of the list.",
+                label = GetString(HR_MENU_VISIBILITY),
+                tooltip = GetString(HR_MENU_VISIBILITY_TT),
                 default = GetString(HR_VISIBILITY_SHOW_ALWAYS),
                 items = {
                     {name = GetString(HR_VISIBILITY_SHOW_NEVER), data = 0},
@@ -147,12 +150,14 @@ function module:GetSubMenuOptions()
                 setFunction = function(control, itemName, itemData)
                     list.sv.enabled = itemData.data
                     list:RefreshVisibility()
+                    list:UpdateDebounced(true) -- force an update to clear potentially old data still being in the list because they where never redrawn when hidden
                 end,
                 width = "full",
             },
             {
                 type = LHAS.ST_SLIDER,
-                label = "List width",
+                label = GetString(HR_MENU_LIST_WIDTH),
+                tooltip = GetString(HR_MENU_LIST_WIDTH_TT),
                 min = list.svDefault.windowWidth,
                 max = list.svDefault.windowWidth + 150,
                 step = 1,
@@ -171,12 +176,12 @@ function module:GetSubMenuOptions()
 
     local options = {}
     local generalOptions = GetGeneralOptions()
-    local damageList = GetComonListOptions("Damage List", self.damageList)
+    local damageList = GetComonListOptions(GetString(HR_MODULES_DPS_MENU_HEADER), self.damageList)
     local damageListSpecificOptions = {
         {
             type = LHAS.ST_CHECKBOX,
-            label = "Show Summary",
-            tooltip = "toggle the display of the summary row in the damage list.",
+            label = GetString(HR_MODULES_DPS_MENU_SHOW_SUMMARY),
+            tooltip = GetString(HR_MODULES_DPS_MENU_SHOW_SUMMARY_TT),
             default = self.damageList.svDefault.showSummary,
             getFunction = function() return self.damageList.sw.showSummary end,
             setFunction = function(value)
@@ -246,6 +251,18 @@ function module:GetSubMenuOptions()
             getFunction = function() return util.Hex2RGB(self.damageList.sw.colorDamageBoss) end,
             setFunction = function(r, g, b)
                 self.damageList.sw.colorDamageBoss = util.RGB2Hex(r, g, b)
+                self.damageList:Update()
+            end,
+            isAdvancedSetting = true,
+        },
+        {
+            type = LHAS.ST_CHECKBOX,
+            label = "Highlight Player Row",
+            tooltip = "enable or disable highlighting of the player's row in the damage list.",
+            default = self.damageList.svDefault.listPlayerHighlight,
+            getFunction = function() return self.damageList.sw.listPlayerHighlight end,
+            setFunction = function(value)
+                self.damageList.sw.listPlayerHighlight = value
                 self.damageList:Update()
             end,
             isAdvancedSetting = true,

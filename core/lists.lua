@@ -129,10 +129,10 @@ function list:Initialize(listDefinition)
     addon.RegisterCallback(HR_EVENT_LOCKUI, lockUI)
     addon.RegisterCallback(HR_EVENT_UNLOCKUI, unlockUI)
     addon.RegisterCallback(HR_EVENT_GROUP_CHANGED, onGroupChanged)
-    addon.RegisterCallback(HR_EVENT_PLAYERSDATA_UPDATED, function(...) self:UpdateDebounced(...) end)
-    addon.RegisterCallback(HR_EVENT_PLAYERSDATA_CLEANED, function(...) self:UpdateDebounced(...) end)
+    addon.RegisterCallback(HR_EVENT_PLAYERSDATA_UPDATED, function() self:UpdateDebounced() end)
+    addon.RegisterCallback(HR_EVENT_PLAYERSDATA_CLEANED, function(forceUpdate) self:UpdateDebounced(forceUpdate) end)
 
-    EM:RegisterForEvent(self._Id .. "_SupportRangeUpdate", EVENT_GROUP_SUPPORT_RANGE_UPDATE, function(...) self:UpdateDebounced(...) end)
+    EM:RegisterForEvent(self._Id .. "_SupportRangeUpdate", EVENT_GROUP_SUPPORT_RANGE_UPDATE, function() self:UpdateDebounced() end)
 
     self.logger:Debug("initialized in %d ms", GetGameTimeMilliseconds() - beginTime)
     self.Initialize = nil -- prevent re-initialization
@@ -157,8 +157,8 @@ end
 --- NOT for manual use! this gets called to update the list with a debounce.
 --- debounce the update calls to prevent excessive updates
 --- @return void
-function list:UpdateDebounced()
-    if not self:WindowFragmentCondition() then return end
+function list:UpdateDebounced(forceUpdate)
+    if not self:WindowFragmentCondition() and not forceUpdate then return end
     EM:RegisterForUpdate(self.updateDebouncedEventName, self.updateDebounceDelayMS, function()
         EM:UnregisterForUpdate(self.updateDebouncedEventName)
         self:Update()
@@ -224,7 +224,7 @@ function list:CreateSavedVariables()
     self.svDefault.windowScale = self.svDefault.windowScale or 1.0
     self.svDefault.windowPosLeft = self.svDefault.windowPosLeft or 0
     self.svDefault.windowPosTop = self.svDefault.windowPosTop or 0
-    self.svDefault.windowWidth = self.svDefault.windowWidth or 220
+    self.svDefault.windowWidth = self.svDefault.windowWidth or 230
     self.svDefault.backgroundOpacity = self.svDefault.backgroundOpacity or 0.0
     self.svDefault.supportRangeOnly = self.svDefault.supportRangeOnly or false
 
@@ -251,13 +251,18 @@ end
 --- the window is saved under sel.window and the scrollList control under self.listControl
 --- @return void
 function list:CreateControls()
+    -- make sure minimum size is updated based on defaults (if user set smaller values before)
+    if self.sw.windowWidth < self.svDefault.windowWidth then
+        self.sw.windowWidth = self.svDefault.windowWidth
+    end
+
     -- create the main window
     local windowName = string.format("%s_%s", addon_name, self._Id)
     local window = WM:CreateTopLevelWindow(windowName)
     window:SetClampedToScreen(true)
     window:SetHidden(true)
     window:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, self.sv.windowPosLeft, self.sv.windowPosTop)
-    window:SetWidth(self.sv.windowWidth)
+    window:SetWidth(self.sw.windowWidth)
     window:SetHandler( "OnMoveStop", function()
         self.sv.windowPosLeft = window:GetLeft()
         self.sv.windowPosTop = window:GetTop()
@@ -371,6 +376,23 @@ function list:ApplySupportRangeStyle(rowControl, unitTag)
         rowControl:SetAlpha(0.2)
     else
         rowControl:SetAlpha(1.0)
+    end
+end
+
+function list:ApplyUserNameToControl(nameControl, userId)
+    local userName = util.GetUserName(userId, true)
+    if userName then
+        nameControl:SetText(userName)
+        nameControl:SetColor(1, 1, 1)
+    end
+end
+
+function list:ApplyUserIconToControl(iconControl, userId, classId)
+    local userIcon, tcLeft, tcRight, tcTop, tcBottom = util.GetUserIcon(userId, classId)
+    if userIcon then
+        iconControl:SetTextureReleaseOption(RELEASE_TEXTURE_AT_ZERO_REFERENCES)
+        iconControl:SetTexture(userIcon)
+        iconControl:SetTextureCoords(tcLeft, tcRight, tcTop, tcBottom)
     end
 end
 

@@ -13,9 +13,9 @@ local util = addon.util
 
 local extensionDefinition = {
     name = "configurator",
-    friendlyName = "Configurator",
+    friendlyName = GetString(HR_EXTENSIONS_CONFIGURATOR_FRIENDLYNAME),
     version = "1.0.0",
-    description = "Allows you to request a custom name/icon yourself with an easy to use editor.",
+    description = GetString(HR_EXTENSIONS_CONFIGURATOR_DESCRIPTION),
     priority = 11,
     svVersion = 1,
     svDefault = {

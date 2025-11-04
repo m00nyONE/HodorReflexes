@@ -47,8 +47,6 @@ core/modules.lua
 core/extensions.lua
 
 ; modules
-modules/ult/lang/en.lua
-modules/ult/lang/$(language).lua
 modules/ult/ui/horn.xml
 modules/ult/ui/colos.xml
 modules/ult/ui/atro.xml
@@ -67,8 +65,6 @@ modules/ult/test.lua
 modules/ult/PC/menu.lua
 modules/ult/Console/menu.lua
 
-modules/dps/lang/en.lua
-modules/dps/lang/$(language).lua
 modules/dps/ui/damage.xml
 modules/dps/main.lua
 modules/dps/util.lua
@@ -77,37 +73,27 @@ modules/dps/list_damage.lua
 modules/dps/PC/menu.lua
 modules/dps/Console/menu.lua
 
-modules/hideme/lang/en.lua
-modules/hideme/lang/$(language).lua
 modules/hideme/main.lua
 modules/hideme/protocol.lua
 modules/hideme/PC/menu.lua
 modules/hideme/Console/menu.lua
 
-modules/readycheck/lang/en.lua
-modules/readycheck/lang/$(language).lua
 modules/readycheck/main.lua
 modules/readycheck/PC/menu.lua
 modules/readycheck/Console/menu.lua
 
 modules/pull/Bindings.xml
-modules/pull/lang/en.lua
-modules/pull/lang/$(language).lua
 modules/pull/main.lua
 modules/pull/protocol.lua
 modules/pull/PC/menu.lua
 modules/pull/Console/menu.lua
 
 modules/exitinstance/Bindings.xml
-modules/exitinstance/lang/en.lua
-modules/exitinstance/lang/$(language).lua
 modules/exitinstance/main.lua
 modules/exitinstance/protocol.lua
 modules/exitinstance/PC/menu.lua
 modules/exitinstance/Console/menu.lua
 
-modules/skilllines/lang/en.lua
-modules/skilllines/lang/$(language).lua
 modules/skilllines/main.lua
 
 ; extensions
@@ -118,7 +104,5 @@ extensions/seasons/PC/valentines.lua
 extensions/names/main.lua
 extensions/icons/PC/main.lua
 extensions/animations/PC/main.lua
-extensions/configurator/PC/lang/en.lua
-extensions/configurator/PC/lang/$(language).lua
 extensions/configurator/PC/main.lua
 extensions/configurator/PC/menu.lua

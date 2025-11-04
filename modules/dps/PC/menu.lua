@@ -19,6 +19,9 @@ function module:GetSubMenuOptions()
     local function mergeOptions(source, destination)
         for _, option in ipairs(source) do
             if not option.isAdvancedSetting or self.sw.advancedSettings then
+                if option.isAdvancedSetting and option.name then
+                    option.name = string.format("|cff9900%s|r", option.name)
+                end
                 table.insert(destination, option)
             end
         end
@@ -26,11 +29,11 @@ function module:GetSubMenuOptions()
 
     local function GetGeneralOptions()
         return {
-            core.CreateSectionHeader("General"),
+            core.CreateSectionHeader(GetString(HR_MENU_GENERAL)),
             {
                 type = "checkbox",
-                name = "account wide settings",
-                tooltip = "enable/disable account-wide settings.",
+                name = GetString(HR_MENU_ACCOUNTWIDE),
+                tooltip = GetString(HR_MENU_ACCOUNTWIDE_TT),
                 default = true,
                 getFunc = function() return self.sw.accountWide end,
                 setFunc = function(value)
@@ -40,8 +43,8 @@ function module:GetSubMenuOptions()
             },
             {
                 type = "checkbox",
-                name = "Advanced Settings",
-                tooltip = "allows you to customize more advanced settings for the lists.",
+                name = string.format("|cff9900%s|r", GetString(HR_MENU_ADVANCED_SETTINGS)),
+                tooltip = GetString(HR_MENU_ADVANCED_SETTINGS_TT),
                 default = false,
                 getFunc = function() return self.sw.advancedSettings end,
                 setFunc = function(value)
@@ -56,8 +59,8 @@ function module:GetSubMenuOptions()
             core.CreateSectionHeader(listName),
             {
                 type = "checkbox",
-                name = "Disable in PvP",
-                tooltip = "disable the list when in PvP.",
+                name = GetString(HR_MENU_DISABLE_IN_PVP),
+                tooltip = GetString(HR_MENU_DISABLE_IN_PVP_TT),
                 default = list.svDefault.disableInPvP,
                 getFunc = function() return list.sw.disableInPvP end,
                 setFunc = function(value)
@@ -67,8 +70,8 @@ function module:GetSubMenuOptions()
             },
             {
                 type = "dropdown",
-                name = "Visibility",
-                tooltip = "set the visibility of the list.",
+                name = GetString(HR_MENU_VISIBILITY),
+                tooltip = GetString(HR_MENU_VISIBILITY_TT),
                 default = list.svDefault.enabled,
                 choices = {
                     GetString(HR_VISIBILITY_SHOW_NEVER),
@@ -83,6 +86,7 @@ function module:GetSubMenuOptions()
                 setFunc = function(value)
                     list.sw.enabled = value
                     list:RefreshVisibility()
+                    list:UpdateDebounced(true) -- force an update to clear potentially old data still being in the list because they where never redrawn when hidden
                 end,
                 width = "full",
             },
@@ -92,7 +96,8 @@ function module:GetSubMenuOptions()
             },
             {
                 type = "slider",
-                name = "List width",
+                name = GetString(HR_MENU_LIST_WIDTH),
+                tooltip = GetString(HR_MENU_LIST_WIDTH_TT),
                 min = list.svDefault.windowWidth,
                 max = list.svDefault.windowWidth + 150,
                 step = 1,
@@ -108,7 +113,8 @@ function module:GetSubMenuOptions()
             },
             {
                 type = "slider",
-                name = "scale",
+                name = GetString(HR_MENU_SCALE),
+                tooltip = GetString(HR_MENU_SCALE_TT),
                 min = 60,
                 max = 160,
                 step = 1,
@@ -127,15 +133,15 @@ function module:GetSubMenuOptions()
 
 
     local options = GetGeneralOptions()
-    local damageList = GetComonListOptions("Damage List", self.damageList)
+    local damageList = GetComonListOptions(GetString(HR_MODULES_DPS_MENU_HEADER), self.damageList)
     local damageListSpecificOptions = {
         {
             type = "divider",
         },
         {
             type = "checkbox",
-            name = "Show Summary",
-            tooltip = "toggle the display of the summary row in the damage list.",
+            name = GetString(HR_MODULES_DPS_MENU_SHOW_SUMMARY),
+            tooltip = GetString(HR_MODULES_DPS_MENU_SHOW_SUMMARY_TT),
             default = self.damageList.svDefault.showSummary,
             getFunc = function() return self.damageList.sw.showSummary end,
             setFunc = function(value)
@@ -210,6 +216,22 @@ function module:GetSubMenuOptions()
             getFunc = function() return util.Hex2RGB(self.damageList.sw.colorDamageBoss) end,
             setFunc = function(r, g, b)
                 self.damageList.sw.colorDamageBoss = util.RGB2Hex(r, g, b)
+                self.damageList:Update()
+            end,
+            isAdvancedSetting = true,
+        },
+        {
+            type = "divider",
+            isAdvancedSetting = true,
+        },
+        {
+            type = "checkbox",
+            name = "Highlight Player Row",
+            tooltip = "enable or disable highlighting of the player's row in the damage list.",
+            default = self.damageList.svDefault.listPlayerHighlight,
+            getFunc = function() return self.damageList.sw.listPlayerHighlight end,
+            setFunc = function(value)
+                self.damageList.sw.listPlayerHighlight = value
                 self.damageList:Update()
             end,
             isAdvancedSetting = true,

@@ -44,7 +44,7 @@
                     <Anchor point="LEFT" relativePoint="LEFT" relativeTo="$(parent)" offsetX="2"/>
                 </Texture>
                 <Label name="$(parent)_Value" horizontalAlignment="RIGHT" font="$(GAMEPAD_MEDIUM_FONT)|$(KB_19)|outline" text="192.5K" wrapMode="TRUNCATE">
-                    <Dimensions x="95" y="22" />
+                    <Dimensions x="90" y="22" />
                     <Anchor point="RIGHT" relativePoint="RIGHT" relativeTo="$(parent)" offsetX="-2"/>
                 </Label>
                 <Label name="$(parent)_Name" horizontalAlignment="LEFT" font="$(BOLD_FONT)|$(KB_18)|outline" text="@Player" wrapMode="TRUNCATE" maxLineCount="1">

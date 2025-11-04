@@ -112,3 +112,4 @@ jobs:
           version: ${{ needs.create-addon-zip.outputs.addon_version }}
           zip_file: ${{ needs.create-addon-zip.outputs.zip_console }}
           release_notes_file: ${{ needs.create-release-notes.outputs.release_notes }}
+          concurrency: '5'

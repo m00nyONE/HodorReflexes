@@ -10,9 +10,9 @@ local util = addon.util
 
 local extensionDefinition = {
     name = "names",
-    friendlyName = "Names",
+    friendlyName = GetString(HR_EXTENSIONS_NAMES_FRIENDLYNAME),
     version = "1.0.0",
-    description = "Extension to provide user names via LibCustomNames.",
+    description = GetString(HR_EXTENSIONS_NAMES_DESCRIPTION),
     priority = 1,
     svVersion = 1,
     svDefault = {},
