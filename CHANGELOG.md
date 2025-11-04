@@ -6,6 +6,7 @@
 - improved "/hodor test" to now also support spaces in @names for console players.
 - Adding options in the settings for hiding countdowns/cooldowns from the compact list. You need to enable advanced settings to see them as they are not commonly used.
 - the default width for every list has been enlarged by 10px to compensate for new font.
+- advanced settings are now colored in orange to make them more visible over normal settings.
 
 ## 2025.11.01 - @m00nyONE
 Day one patch:
