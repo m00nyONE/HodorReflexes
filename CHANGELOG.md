@@ -1,5 +1,8 @@
 [SIZE="2"][B]IMPORTANT:[/B] You need LibCustomNames and LibCustomIcons now if you want to have names and icons displayed.[/SIZE]
 
+## 2025.11.05 - @m00nyONE
+- add chinese translation by @Lykeion :-) Thank you!
+
 ## 2025.11.04 - @m00nyONE
 - added frensh translation. Thank you @Melicious :-)
 - updated russian translation by @NeBioNik :-)
