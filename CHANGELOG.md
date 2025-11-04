@@ -10,6 +10,8 @@
 - advanced settings are now colored in orange to make them more visible over normal settings.
 - Allow player row highlight to be turned off in advanced settings for the DPS list.
 - Disable dialogs on console - temporary - they will be reenabled in a future update.
+- slight performance improvements.
+- added some localization strings that were missing. ( still a lot missing tho :D )
 
 ## 2025.11.01 - @m00nyONE
 Day one patch:
