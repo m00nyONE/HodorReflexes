@@ -11,6 +11,8 @@ local addon_modules = addon.modules
 local module_name = "ult"
 local module = addon_modules[module_name]
 
+local blankTable = {}
+
 local svVersion = 1
 local svDefault = {
     enabled =  1, -- 1=always, 2=out of combat, 3=non bossfights, 0=off
@@ -124,9 +126,7 @@ function module:UpdateMiscList()
 
     --- fill dataList ---
     -- insert Header
-    table.insert(dataList, ZO_ScrollList_CreateDataEntry(self.miscList.HEADER_TYPE, {
-        title = "Ultimates",
-    }))
+    table.insert(dataList, ZO_ScrollList_CreateDataEntry(self.miscList.HEADER_TYPE, blankTable))
 
     -- insert playerRows
     for i, playerData in ipairs(playersDataList) do

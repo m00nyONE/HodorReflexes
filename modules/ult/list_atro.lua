@@ -14,6 +14,7 @@ local module = addon_modules[module_name]
 local HR_EVENT_ATRO_CAST_STARTED = addon.HR_EVENT_ATRO_CAST_STARTED
 local HR_EVENT_MAJOR_BERSERK_BUFF_GAINED = addon.HR_EVENT_MAJOR_BERSERK_BUFF_GAINED
 
+local blankTable = {}
 
 local svVersion = 1
 local svDefault = {
@@ -146,8 +147,7 @@ function module:UpdateAtroList()
 
     --- fill dataList ---
     -- insert Header
-    table.insert(dataList, ZO_ScrollList_CreateDataEntry(self.atroList.HEADER_TYPE, {
-    }))
+    table.insert(dataList, ZO_ScrollList_CreateDataEntry(self.atroList.HEADER_TYPE, blankTable))
 
     -- insert playerRows
     for i, playerData in ipairs(playersDataList) do

@@ -20,6 +20,7 @@ local HR_EVENT_MAJOR_BERSERK_BUFF_GAINED = addon.HR_EVENT_MAJOR_BERSERK_BUFF_GAI
 local HR_EVENT_MAJOR_SLAYER_BUFF_GAINED = addon.HR_EVENT_MAJOR_SLAYER_BUFF_GAINED
 local HR_EVENT_PILLAGER_BUFF_COOLDOWN = addon.HR_EVENT_PILLAGER_BUFF_COOLDOWN
 
+local blankTable = {}
 
 local svVersion = 1
 local svDefault = {
@@ -461,7 +462,7 @@ function module:UpdateCompactList()
 
     --- fill dataList ---
     -- insert Header
-    table.insert(dataList, ZO_ScrollList_CreateDataEntry(compactList.HEADER_TYPE, {}))
+    table.insert(dataList, ZO_ScrollList_CreateDataEntry(compactList.HEADER_TYPE, blankTable))
 
     for _, playerData in ipairs(hornList) do
         table.insert(dataList, ZO_ScrollList_CreateDataEntry(compactList.ROW_TYPE_HORN, playerData))
