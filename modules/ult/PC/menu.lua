@@ -569,6 +569,84 @@ function module:GetSubMenuOptions()
             isAdvancedSetting = true,
         },
         {
+            type = "checkbox",
+            name = "Show Horn Countdown",
+            tooltip = "show/hide the horn buff countdown.",
+            default = self.compactList.svDefault.showHornCountdown,
+            getFunc = function() return self.compactList.sw.showHornCountdown end,
+            setFunc = function(value)
+                self.compactList.sw.showHornCountdown = value
+                self.compactList._redrawHeaders = true
+                self.compactList:Update()
+            end,
+            isAdvancedSetting = true,
+        },
+        {
+            type = "checkbox",
+            name = "Show Force Countdown",
+            tooltip = "show/hide the major force buff countdown.",
+            default = self.compactList.svDefault.showForceCountdown,
+            getFunc = function() return self.compactList.sw.showForceCountdown end,
+            setFunc = function(value)
+                self.compactList.sw.showForceCountdown = value
+                self.compactList._redrawHeaders = true
+                self.compactList:Update()
+            end,
+            isAdvancedSetting = true,
+        },
+        {
+            type = "checkbox",
+            name = "Show Vulnerability Countdown",
+            tooltip = "show/hide the major vulnerability debuff countdown.",
+            default = self.compactList.svDefault.showVulnCountdown,
+            getFunc = function() return self.compactList.sw.showVulnCountdown end,
+            setFunc = function(value)
+                self.compactList.sw.showVulnCountdown = value
+                self.compactList._redrawHeaders = true
+                self.compactList:Update()
+            end,
+            isAdvancedSetting = true,
+        },
+        {
+            type = "checkbox",
+            name = "Show Berserk Countdown",
+            tooltip = "show/hide the major berserk countdown.",
+            default = self.compactList.svDefault.showBerserkCountdown,
+            getFunc = function() return self.compactList.sw.showBerserkCountdown end,
+            setFunc = function(value)
+                self.compactList.sw.showBerserkCountdown = value
+                self.compactList._redrawHeaders = true
+                self.compactList:Update()
+            end,
+            isAdvancedSetting = true,
+        },
+        {
+            type = "checkbox",
+            name = "Show Slayer Countdown",
+            tooltip = "show/hide the major slayer countdown.",
+            default = self.compactList.svDefault.showSlayerCountdown,
+            getFunc = function() return self.compactList.sw.showSlayerCountdown end,
+            setFunc = function(value)
+                self.compactList.sw.showSlayerCountdown = value
+                self.compactList._redrawHeaders = true
+                self.compactList:Update()
+            end,
+            isAdvancedSetting = true,
+        },
+        {
+            type = "checkbox",
+            name = "Show Pillager Cooldown",
+            tooltip = "show/hide the pillager buff cooldown.",
+            default = self.compactList.svDefault.showPillagerCooldown,
+            getFunc = function() return self.compactList.sw.showPillagerCooldown end,
+            setFunc = function(value)
+                self.compactList.sw.showPillagerCooldown = value
+                self.compactList._redrawHeaders = true
+                self.compactList:Update()
+            end,
+            isAdvancedSetting = true,
+        },
+        {
             type = "colorpicker",
             name = "Duration Color",
             tooltip = "set the color of the ultimate durations.",
