@@ -19,7 +19,7 @@ local svDefault = {
     windowScale = 1.0,
     windowPosLeft = 250,
     windowPosTop = 580,
-    windowWidth = 262,
+    windowWidth = 272,
     backgroundOpacity = 0.0,
 
     showPercentValue = 1.0,

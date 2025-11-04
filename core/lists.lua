@@ -224,7 +224,7 @@ function list:CreateSavedVariables()
     self.svDefault.windowScale = self.svDefault.windowScale or 1.0
     self.svDefault.windowPosLeft = self.svDefault.windowPosLeft or 0
     self.svDefault.windowPosTop = self.svDefault.windowPosTop or 0
-    self.svDefault.windowWidth = self.svDefault.windowWidth or 220
+    self.svDefault.windowWidth = self.svDefault.windowWidth or 230
     self.svDefault.backgroundOpacity = self.svDefault.backgroundOpacity or 0.0
     self.svDefault.supportRangeOnly = self.svDefault.supportRangeOnly or false
 
@@ -251,13 +251,18 @@ end
 --- the window is saved under sel.window and the scrollList control under self.listControl
 --- @return void
 function list:CreateControls()
+    -- make sure minimum size is updated based on defaults (if user set smaller values before)
+    if self.sw.windowWidth < self.svDefault.windowWidth then
+        self.sw.windowWidth = self.svDefault.windowWidth
+    end
+
     -- create the main window
     local windowName = string.format("%s_%s", addon_name, self._Id)
     local window = WM:CreateTopLevelWindow(windowName)
     window:SetClampedToScreen(true)
     window:SetHidden(true)
     window:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, self.sv.windowPosLeft, self.sv.windowPosTop)
-    window:SetWidth(self.sv.windowWidth)
+    window:SetWidth(self.sw.windowWidth)
     window:SetHandler( "OnMoveStop", function()
         self.sv.windowPosLeft = window:GetLeft()
         self.sv.windowPosTop = window:GetTop()

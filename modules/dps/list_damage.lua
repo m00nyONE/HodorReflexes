@@ -28,7 +28,7 @@ local svDefault = {
     windowScale = 1.0,
     windowPosLeft = 10,
     windowPosTop = 260,
-    windowWidth = 227,
+    windowWidth = 237,
     backgroundOpacity = 0.0,
 
     listHeaderOpacity = 0.8,
