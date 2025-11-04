@@ -171,14 +171,16 @@ function module:summaryRowCreationFunction(rowControl, data, scrollList)
 end
 
 local summaryData = {}
-
+local dmgType = {
+    dmgType = DAMAGE_UNKNOWN
+}
 --- update function to refresh the damage list. This should usually not be overwritten by a custom theme unless absolutely necessary.
 function module:UpdateDamageList()
     local listControl = self.damageList.listControl
     local list = self.damageList
     local sw = list.sw
 
-    local dmgType = DAMAGE_UNKNOWN
+    dmgType.dmgType = DAMAGE_UNKNOWN
 
     ZO_ScrollList_Clear(listControl)
     local dataList = ZO_ScrollList_GetDataList(listControl)
@@ -186,16 +188,14 @@ function module:UpdateDamageList()
     local playersDataList = {}
     for _, playerData in pairs(addon.playersData) do
         if not playerData.hideDamage and playerData.dmg > 0 then
-            dmgType = playerData.dmgType
+            dmgType.dmgType = playerData.dmgType
             table.insert(playersDataList, playerData)
         end
     end
     table.sort(playersDataList, self.sortByDamageType)
 
     -- insert header row
-    table.insert(dataList, ZO_ScrollList_CreateDataEntry(list.HEADER_TYPE, {
-        dmgType = dmgType,
-    }))
+    table.insert(dataList, ZO_ScrollList_CreateDataEntry(list.HEADER_TYPE, dmgType))
 
     -- insert damageRows
     for i, playerData in ipairs(playersDataList) do
@@ -204,7 +204,7 @@ function module:UpdateDamageList()
     end
 
     if sw.showSummary and #playersDataList > 0 then
-        summaryData.dmgType = dmgType
+        summaryData.dmgType = dmgType.dmgType
         summaryData.fightTime = combat:GetCombatTime()
         summaryData.groupDPS = combat:GetGroupDPSOut()
         summaryData.groupDPSBurst = combat:GetGroupDPSOverTime(sw.burstWindowSeconds)
