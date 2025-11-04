@@ -2,12 +2,14 @@
 
 ## 2025.11.04 - @m00nyONE
 - added frensh translation. Thank you @Melicious :-)
+- updated russian translation by @NeBioNik :-)
 - Fix an issue where a Saxhleel player still being displayed in the compact list even tho the horn rows have been disabled. Thanks to @isiiimode for reporting that!
 - improved "/hodor test" to now also support spaces in @names for console players.
 - Adding options in the settings for hiding countdowns/cooldowns from the compact list. You need to enable advanced settings to see them as they are not commonly used.
 - the default width for every list has been enlarged by 10px to compensate for new font.
 - advanced settings are now colored in orange to make them more visible over normal settings.
 - Allow player row highlight to be turned off in advanced settings for the DPS list.
+- Disable dialogs on console - temporary - they will be reenabled in a future update.
 
 ## 2025.11.01 - @m00nyONE
 Day one patch:
