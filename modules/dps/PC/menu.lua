@@ -221,6 +221,22 @@ function module:GetSubMenuOptions()
             isAdvancedSetting = true,
         },
         {
+            type = "divider",
+            isAdvancedSetting = true,
+        },
+        {
+            type = "checkbox",
+            name = "Highlight Player Row",
+            tooltip = "enable or disable highlighting of the player's row in the damage list.",
+            default = self.damageList.svDefault.listPlayerHighlight,
+            getFunc = function() return self.damageList.sw.listPlayerHighlight end,
+            setFunc = function(value)
+                self.damageList.sw.listPlayerHighlight = value
+                self.damageList:Update()
+            end,
+            isAdvancedSetting = true,
+        },
+        {
             type = "colorpicker",
             name = "player row highlight color",
             tooltip = "highlight color for the player's row in the damage list.",

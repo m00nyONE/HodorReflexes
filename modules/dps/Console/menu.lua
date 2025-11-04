@@ -256,6 +256,18 @@ function module:GetSubMenuOptions()
             isAdvancedSetting = true,
         },
         {
+            type = LHAS.ST_CHECKBOX,
+            label = "Highlight Player Row",
+            tooltip = "enable or disable highlighting of the player's row in the damage list.",
+            default = self.damageList.svDefault.listPlayerHighlight,
+            getFunction = function() return self.damageList.sw.listPlayerHighlight end,
+            setFunction = function(value)
+                self.damageList.sw.listPlayerHighlight = value
+                self.damageList:Update()
+            end,
+            isAdvancedSetting = true,
+        },
+        {
             type = LHAS.ST_COLOR,
             label = "player row highlight color",
             tooltip = "highlight color for the player's row in the damage list.",

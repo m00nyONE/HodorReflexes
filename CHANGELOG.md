@@ -7,6 +7,7 @@
 - Adding options in the settings for hiding countdowns/cooldowns from the compact list. You need to enable advanced settings to see them as they are not commonly used.
 - the default width for every list has been enlarged by 10px to compensate for new font.
 - advanced settings are now colored in orange to make them more visible over normal settings.
+- Allow player row highlight to be turned off in advanced settings for the DPS list.
 
 ## 2025.11.01 - @m00nyONE
 Day one patch:
