@@ -388,9 +388,9 @@ function list:ApplyUserNameToControl(nameControl, userId)
 end
 
 function list:ApplyUserIconToControl(iconControl, userId, classId)
+    iconControl:SetTextureReleaseOption(RELEASE_TEXTURE_AT_ZERO_REFERENCES)
     local userIcon, tcLeft, tcRight, tcTop, tcBottom = util.GetUserIcon(userId, classId)
     if userIcon then
-        iconControl:SetTextureReleaseOption(RELEASE_TEXTURE_AT_ZERO_REFERENCES)
         iconControl:SetTexture(userIcon)
         iconControl:SetTextureCoords(tcLeft, tcRight, tcTop, tcBottom)
     end
