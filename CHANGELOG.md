@@ -2,6 +2,7 @@
 
 ## 2025.11.05 - @m00nyONE
 - add chinese translation by @Lykeion :-) Thank you!
+- fix configurator not loading when LCI is not installed. Thanks @NeBioNik for the PR (https://github.com/m00nyONE/HodorReflexes/pull/39) :-)
 
 ## 2025.11.04 - @m00nyONE
 - added frensh translation. Thank you @Melicious :-)
