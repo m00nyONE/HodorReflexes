@@ -40,12 +40,12 @@ local extension = internal.extensionClass:New(extensionDefinition)
 --- NOT for manual use. This function gets called once when the extension is loaded and then deleted afterwards.
 --- @return void
 function extension:Activate()
-    if not LCN or not LCI then
+    if not LCN then
         self.enabled = false
         return
     end
 
-    self.currentFolder = (LCI.GetCurrentFolder and LCI.GetCurrentFolder()) or "misc"
+    self.currentFolder = (LCI and LCI.GetCurrentFolder and LCI.GetCurrentFolder()) or "misc"
 
     local options = self:RunOnce("BuildMenuOptions")
     core.RegisterSubMenuOptions(self.friendlyName, options)
