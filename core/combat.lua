@@ -79,6 +79,20 @@ function combat:FightRecapCallback(_, data)
         timestamp = GetGameTimeMilliseconds(),
         damage = data.damageOutTotalGroup
     })
+    self:CleanupOldHistory(60)
+end
+
+--- cleans up old entries from the damage history.
+--- @param olderThanSeconds number
+--- @return void
+function combat:CleanupOldHistory(olderThanSeconds)
+    local now = GetGameTimeMilliseconds()
+    local cutoff = now - olderThanSeconds * 1000
+    for i = #self.damageHistory, 1, -1 do
+        if self.damageHistory[i].timestamp and self.damageHistory[i].timestamp < cutoff then
+            table.remove(self.damageHistory, i)
+        end
+    end
 end
 
 --- gets the current combat time in seconds.
