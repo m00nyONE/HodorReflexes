@@ -21,8 +21,8 @@ local CM = core.CM
 local combat = {
     damageHistory = {
         {
-            timeStamp = 0,
-            damageDone = 0,
+            timestamp = 0,
+            damage = 0,
         },
     },
     data = {
