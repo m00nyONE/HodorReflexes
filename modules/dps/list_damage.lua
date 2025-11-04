@@ -170,6 +170,8 @@ function module:summaryRowCreationFunction(rowControl, data, scrollList)
     rowControl:GetNamedChild("_Value"):SetText(value)
 end
 
+local summaryData = {}
+
 --- update function to refresh the damage list. This should usually not be overwritten by a custom theme unless absolutely necessary.
 function module:UpdateDamageList()
     local listControl = self.damageList.listControl
@@ -202,15 +204,19 @@ function module:UpdateDamageList()
     end
 
     if sw.showSummary and #playersDataList > 0 then
-        table.insert(dataList, ZO_ScrollList_CreateDataEntry(list.SUMMARY_TYPE, {
-            dmgType = dmgType,
-            fightTime = combat:GetCombatTime(),
-            damageOutTotalGroup = combat:GetDamageOutTotalGroup(),
-            --timeToKillMainBoss = combat:GetTimeToKill(localBoss1), -- TODO: implement
-            groupDPS = combat:GetGroupDPSOut(),
-            groupDPSBurst = combat:GetGroupDPSOverTime(sw.burstWindowSeconds),
-        }))
+        summaryData.dmgType = dmgType
+        summaryData.fightTime = combat:GetCombatTime()
+        summaryData.groupDPS = combat:GetGroupDPSOut()
+        summaryData.groupDPSBurst = combat:GetGroupDPSOverTime(sw.burstWindowSeconds)
+        summaryData.damageOutTotalGroup = combat:GetDamageOutTotalGroup()
+        --summaryData.timeToKillMainBoss = combat:GetTimeToKill(localBoss1)
+
+        table.insert(dataList, ZO_ScrollList_CreateDataEntry(list.SUMMARY_TYPE, summaryData))
     end
 
     ZO_ScrollList_Commit(listControl)
+
+    -- cleanup
+    playersDataList = nil
+    ZO_ClearTable(summaryData)
 end
