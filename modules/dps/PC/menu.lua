@@ -20,7 +20,7 @@ function module:GetSubMenuOptions()
         for _, option in ipairs(source) do
             if not option.isAdvancedSetting or self.sw.advancedSettings then
                 if option.isAdvancedSetting and option.name then
-                    option.name = string.format("|cffcc00%s|r", option.name)
+                    option.name = string.format("|cff9900%s|r", option.name)
                 end
                 table.insert(destination, option)
             end
@@ -43,7 +43,7 @@ function module:GetSubMenuOptions()
             },
             {
                 type = "checkbox",
-                name = string.format("|cffcc00%s|r", GetString(HR_MENU_ADVANCED_SETTINGS)),
+                name = string.format("|cff9900%s|r", GetString(HR_MENU_ADVANCED_SETTINGS)),
                 tooltip = GetString(HR_MENU_ADVANCED_SETTINGS_TT),
                 default = false,
                 getFunc = function() return self.sw.advancedSettings end,
