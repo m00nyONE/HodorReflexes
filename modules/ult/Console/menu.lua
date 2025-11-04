@@ -29,6 +29,9 @@ function module:GetSubMenuOptions()
                 --end
             end
             if not option.isAdvancedSetting or self.sw.advancedSettings then
+                if option.isAdvancedSetting and option.name then
+                    option.label = string.format("|cffcc00%s|r", option.label)
+                end
                 table.insert(destination, option)
             end
         end
@@ -50,7 +53,7 @@ function module:GetSubMenuOptions()
             },
             {
                 type = LHAS.ST_CHECKBOX,
-                label = GetString(HR_MENU_ADVANCED_SETTINGS),
+                label = string.format("|cffcc00%s|r", GetString(HR_MENU_ADVANCED_SETTINGS)),
                 tooltip = GetString(HR_MENU_ADVANCED_SETTINGS_TT),
                 default = false,
                 getFunction = function() return self.sw.advancedSettings end,
