@@ -34,6 +34,8 @@ local svDefault = {
     listHeaderOpacity = 0.8,
     listRowEvenOpacity = 0.65,
     listRowOddOpacity = 0.45,
+
+    listPlayerHighlight = true,
     listPlayerHighlightColor = {0, 1, 0, 0.36}, -- green
 
     colorDamageTotal = "FAFFB2", -- light yellow
@@ -134,7 +136,7 @@ function module:damageRowCreationFunction(rowControl, data, scrollList)
     valueControl:SetFont("$(GAMEPAD_MEDIUM_FONT)|$(KB_19)|outline")
 
     local customColor = false
-    if data.isPlayer then
+    if data.isPlayer and sw.listPlayerHighlight then
         local r, g, b, o = unpack(sw.listPlayerHighlightColor)
         if o ~= 0 then
             customColor = true

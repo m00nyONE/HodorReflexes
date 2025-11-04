@@ -19,6 +19,9 @@ function module:GetSubMenuOptions()
     local function mergeOptions(source, destination)
         for _, option in ipairs(source) do
             if not option.isAdvancedSetting or self.sw.advancedSettings then
+                if option.isAdvancedSetting and option.name then
+                    option.name = string.format("|cff9900%s|r", option.name)
+                end
                 table.insert(destination, option)
             end
         end
@@ -40,7 +43,7 @@ function module:GetSubMenuOptions()
             },
             {
                 type = "checkbox",
-                name = GetString(HR_MENU_ADVANCED_SETTINGS),
+                name = string.format("|cff9900%s|r", GetString(HR_MENU_ADVANCED_SETTINGS)),
                 tooltip = GetString(HR_MENU_ADVANCED_SETTINGS_TT),
                 default = false,
                 getFunc = function() return self.sw.advancedSettings end,
@@ -213,6 +216,22 @@ function module:GetSubMenuOptions()
             getFunc = function() return util.Hex2RGB(self.damageList.sw.colorDamageBoss) end,
             setFunc = function(r, g, b)
                 self.damageList.sw.colorDamageBoss = util.RGB2Hex(r, g, b)
+                self.damageList:Update()
+            end,
+            isAdvancedSetting = true,
+        },
+        {
+            type = "divider",
+            isAdvancedSetting = true,
+        },
+        {
+            type = "checkbox",
+            name = "Highlight Player Row",
+            tooltip = "enable or disable highlighting of the player's row in the damage list.",
+            default = self.damageList.svDefault.listPlayerHighlight,
+            getFunc = function() return self.damageList.sw.listPlayerHighlight end,
+            setFunc = function(value)
+                self.damageList.sw.listPlayerHighlight = value
                 self.damageList:Update()
             end,
             isAdvancedSetting = true,

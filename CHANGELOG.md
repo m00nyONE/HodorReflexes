@@ -1,11 +1,24 @@
 [SIZE="2"][B]IMPORTANT:[/B] You need LibCustomNames and LibCustomIcons now if you want to have names and icons displayed.[/SIZE]
 
+## 2025.11.05 - @m00nyONE
+- add chinese translation by @Lykeion :-) Thank you!
+- fix configurator not loading when LCI is not installed. Thanks @NeBioNik for the PR (https://github.com/m00nyONE/HodorReflexes/pull/39) :-)
+
 ## 2025.11.04 - @m00nyONE
 - added frensh translation. Thank you @Melicious :-)
+- updated russian translation by @NeBioNik :-)
 - Fix an issue where a Saxhleel player still being displayed in the compact list even tho the horn rows have been disabled. Thanks to @isiiimode for reporting that!
+- Fix a display bug in the lists that could occur when you had turned a list on, do a test, turn the list off, end the test, and then join a group and turn the list on again. The list would show old data from the test instead of the current group data. This also lead to you not seeing any data when switching a list on that was previously off until updates arrive. - Thanks to @sheumais for pointing that out!
+- Fix the pull countdown not using the settings properly
 - improved "/hodor test" to now also support spaces in @names for console players.
 - Adding options in the settings for hiding countdowns/cooldowns from the compact list. You need to enable advanced settings to see them as they are not commonly used.
 - the default width for every list has been enlarged by 10px to compensate for new font.
+- advanced settings are now colored in orange to make them more visible over normal settings.
+- Allow player row highlight to be turned off in advanced settings for the DPS list.
+- Disable dialogs on console - temporary - they will be reenabled in a future update.
+- slight performance improvements.
+- combined all language files to reduce the amount of files in the addon. We were already at the cap of BNET's 100 File limit :D
+- added some localization strings that were missing. ( still a lot missing tho :D )
 
 ## 2025.11.01 - @m00nyONE
 Day one patch:
@@ -18,9 +31,6 @@ Day one patch:
 - use force icon instead of horn icon for saxhleel players in compact list. Thanks to @STUDLETON for that suggestion!
 - fixed cryptCannon not being calculated properly in the compact list. Thanks to @sheumais for creating a PR for that :-)
 - added RU translation by @NeBioNik :-) Thank you!
-- combined all language files to reduce the amount of files in the addon. We were already at the cap of BNET's 100 File limit :D
-- fixing a display bug in the lists that could occur when you had turned a list on, do a test, turn the list off, end the test, and then join a group and turn the list on again. The list would show old data from the test instead of the current group data. This also lead to you not seeing any data when switching a list on that was previously off until updates arrive. - Thanks to @sheumais for pointing that out!
-- fixing the pull countdown not using the settings properly
 
 - adjusting dialogs to be delayed and use default language strings instead of hardcoded ones
 - switch from logger:Info() to logger:Debug() in some parts of the addon.

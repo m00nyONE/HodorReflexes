@@ -31,6 +31,9 @@ function module:GetSubMenuOptions()
                 --end
             end
             if not option.isAdvancedSetting or self.sw.advancedSettings then
+                if option.isAdvancedSetting and option.label then
+                    option.label = string.format("|cff9900%s|r", option.label)
+                end
                 table.insert(destination, option)
             end
         end
@@ -248,6 +251,18 @@ function module:GetSubMenuOptions()
             getFunction = function() return util.Hex2RGB(self.damageList.sw.colorDamageBoss) end,
             setFunction = function(r, g, b)
                 self.damageList.sw.colorDamageBoss = util.RGB2Hex(r, g, b)
+                self.damageList:Update()
+            end,
+            isAdvancedSetting = true,
+        },
+        {
+            type = LHAS.ST_CHECKBOX,
+            label = "Highlight Player Row",
+            tooltip = "enable or disable highlighting of the player's row in the damage list.",
+            default = self.damageList.svDefault.listPlayerHighlight,
+            getFunction = function() return self.damageList.sw.listPlayerHighlight end,
+            setFunction = function(value)
+                self.damageList.sw.listPlayerHighlight = value
                 self.damageList:Update()
             end,
             isAdvancedSetting = true,

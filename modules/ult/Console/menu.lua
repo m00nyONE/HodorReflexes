@@ -29,6 +29,9 @@ function module:GetSubMenuOptions()
                 --end
             end
             if not option.isAdvancedSetting or self.sw.advancedSettings then
+                if option.isAdvancedSetting and option.label then
+                    option.label = string.format("|cff9900%s|r", option.label)
+                end
                 table.insert(destination, option)
             end
         end
