@@ -44,7 +44,9 @@ function core.OptionalLibrariesCheck()
             },
         })
 
-        ZO_Dialogs_ShowPlatformDialog(dialogName)
+        --if not ZO_Dialogs_IsShowingDialog() then
+        --    ZO_Dialogs_ShowPlatformDialog(dialogName)
+        --end
     end
 
 end
