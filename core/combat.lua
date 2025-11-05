@@ -160,6 +160,7 @@ function combat:startTest()
 
     -- initial calculation of group DPS and total damage from mock data
     for _, data in pairs(addon.playersData) do
+        if not data.dps then return end
         self.data.groupDPSOut = self.data.groupDPSOut + (data.dps * 1000 or 0)
         self.data.damageOutTotalGroup = self.data.damageOutTotalGroup + (data.dps * 1000 * self.data.dpstime) or 0
     end
@@ -184,6 +185,7 @@ function combat:updateTest()
 
     -- recalculate group DPS and total damage from mock data
     for _, data in pairs(addon.playersData) do
+        if not data.dps then return end
         self.data.groupDPSOut = self.data.groupDPSOut + (data.dps * 1000 or 0)
         self.data.damageOutTotalGroup = self.data.damageOutTotalGroup + (data.dps * 1000 * self.data.dpstime) or 0
     end
