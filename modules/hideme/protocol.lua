@@ -73,18 +73,19 @@ function module:onHideMeMessageReceived(unitTag, data)
     group.CreateOrUpdatePlayerData(playerData)
 end
 
+local hideProtocolCache = {}
+local hideProtocolDataCache = {}
 function module:SendHideMeMessage(syncRequest)
-    local data = {}
+    ZO_ClearTable(hideProtocolDataCache)
     for id, enabled in pairs(self.sv.preferences) do -- intentionally use pairs instead of ipairs to avoid sending empty IDs
         if enabled then
-            table.insert(data, id)
+            table.insert(hideProtocolDataCache, id)
         end
     end
-    self.logger:Debug("Sending HideMe message with IDs: %s", table.concat(data, ", "))
-    protocolHideMe:Send({
-        syncRequest = syncRequest or false,
-        ids = data
-    })
+    self.logger:Debug("Sending HideMe message with IDs: %s", table.concat(hideProtocolDataCache, ", "))
+    hideProtocolCache.syncRequest = syncRequest or false
+    hideProtocolCache.ids = hideProtocolDataCache
+    protocolHideMe:Send(hideProtocolCache)
 end
 
 function module:SendHideMeMessageDebounced(syncRequest)
