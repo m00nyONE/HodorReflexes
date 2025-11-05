@@ -75,9 +75,13 @@ function combat:FightRecapCallback(_, data)
     self.data.damageOutTotalGroup = data.damageOutTotalGroup or 0
     -- save history
     if self.saveHistory == false then return end
+    self:SaveDamageToHistory(data.damageOutTotalGroup)
+end
+
+function combat:SaveDamageToHistory(damage)
     table.insert(self.damageHistory, {
         timestamp = GetGameTimeMilliseconds(),
-        damage = data.damageOutTotalGroup
+        damage = damage
     })
     self:CleanupOldHistory(60)
 end
@@ -180,10 +184,7 @@ function combat:startTest()
     end
 
     -- save history -- here we do not check for saveHistory as we want to have that initial entry at the start. if this feature is not needed, then it's only one entry that gets deleted after the test anyways
-    table.insert(self.damageHistory, {
-        timestamp = GetGameTimeMilliseconds(),
-        damage = self.data.damageOutTotalGroup
-    })
+    self:SaveDamageToHistory(self.data.damageOutTotalGroup)
 end
 function combat:stopTest()
     self.logger:Debug("Stopping combat test")
@@ -206,8 +207,5 @@ function combat:updateTest()
 
     -- save history
     if self.saveHistory == false then return end
-    table.insert(self.damageHistory, {
-        timestamp = GetGameTimeMilliseconds(),
-        damage = self.data.damageOutTotalGroup
-    })
+    self:SaveDamageToHistory(self.data.damageOutTotalGroup)
 end
