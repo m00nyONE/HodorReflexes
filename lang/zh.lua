@@ -68,6 +68,7 @@ local strings = {
     HR_MODULES_DPS_MENU_HEADER = "伤害列表",
     HR_MODULES_DPS_MENU_SHOW_SUMMARY = "显示汇总",
     HR_MODULES_DPS_MENU_SHOW_SUMMARY_TT = "开关伤害列表中的汇总行显示。",
+    --HR_MODULES_DPS_SUMMARY_GROUP_TOTAL = "Group Total: ",
     -- EXIT INSTANCE
     HR_MODULES_EXITINSTANCE_FRIENDLYNAME = "退出副本",
     HR_MODULES_EXITINSTANCE_DESCRIPTION = "允许你向你的队伍发送退出副本请求。",

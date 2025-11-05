@@ -68,6 +68,7 @@ local strings = {
     HR_MODULES_DPS_MENU_HEADER = "Список урона",
     HR_MODULES_DPS_MENU_SHOW_SUMMARY = "Показывать сводку",
     HR_MODULES_DPS_MENU_SHOW_SUMMARY_TT = "Добавить строку со сводкой урона в списке.",
+    --HR_MODULES_DPS_SUMMARY_GROUP_TOTAL = "Group Total: ",
     -- EXIT INSTANCE
     HR_MODULES_EXITINSTANCE_FRIENDLYNAME = "Exit Instance",
     HR_MODULES_EXITINSTANCE_DESCRIPTION = "Позволяет отправлять запросы на выход из локации вашей группе.",

@@ -148,26 +148,32 @@ function module:damageRowCreationFunction(rowControl, data, scrollList)
     end
 end
 
+local cachedTitle = "Group Total: "
+local cachedValue = ""
 --- creation function for the summary row. This can be overwritten if using a custom theme
+--- @param rowControl any
+--- @param data table
+--- @param scrollList any
+--- @return void
 function module:summaryRowCreationFunction(rowControl, data, scrollList)
     local sw = self.damageList.sw
 
-    local title = "Group Total: "
-    local value = ""
+    cachedTitle = GetString(HR_MODULES_DPS_SUMMARY_GROUP_TOTAL)
+    cachedValue = ""
     if data.dmgType == DAMAGE_BOSS then
         --title = string.format("dps (10sBurst) [ttk]:")
         --value = string.format("%0.1fK (%0.1fK) [%0.1s]", data.groupDPS / 1000, data.groupDPSBurst / 1000, data.timeToKillMainBoss and data.timeToKillMainBoss > 0 and data.timeToKillMainBoss or "-")
-        title = string.format("|c%sGroup DPS|r |c%s(%ds)|r", sw.colorGroupDPS, sw.colorBurstDPS, sw.burstWindowSeconds)
-        value = string.format("|c%s%0.2fM|r |c%s(%0.2fM)|r", sw.colorGroupDPS, data.groupDPS / 1000000, sw.colorBurstDPS, data.groupDPSBurst / 1000000 or "-")
+        cachedTitle = string.format("|c%sGroup DPS|r |c%s(%ds)|r", sw.colorGroupDPS, sw.colorBurstDPS, sw.burstWindowSeconds)
+        cachedValue = string.format("|c%s%0.2fM|r |c%s(%0.2fM)|r", sw.colorGroupDPS, data.groupDPS / 1000000, sw.colorBurstDPS, data.groupDPSBurst / 1000000 or "-")
         --title = "Group Total: "
         --value = self.getDamageRowFormat(data.dmgType, (data.damageOutTotalGroup / 100) / data.fightTime, data.groupDPS / 1000, sw.colorDamageBoss, sw.colorDamageTotal)
     else
-        title = "Group Total: "
-        value = self.getDamageRowFormat(data.dmgType, data.damageOutTotalGroup / 10000, data.groupDPS / 1000, sw.colorDamageBoss, sw.colorDamageTotal)
+        cachedTitle = GetString(HR_MODULES_DPS_SUMMARY_GROUP_TOTAL)
+        cachedValue = self.getDamageRowFormat(data.dmgType, data.damageOutTotalGroup / 10000, data.groupDPS / 1000, sw.colorDamageBoss, sw.colorDamageTotal)
     end
 
-    rowControl:GetNamedChild("_Title"):SetText(title)
-    rowControl:GetNamedChild("_Value"):SetText(value)
+    rowControl:GetNamedChild("_Title"):SetText(cachedTitle)
+    rowControl:GetNamedChild("_Value"):SetText(cachedValue)
 end
 
 local summaryData = {}
