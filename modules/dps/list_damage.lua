@@ -218,5 +218,4 @@ function module:UpdateDamageList()
 
     -- cleanup
     playersDataList = nil
-    ZO_ClearTable(summaryData)
 end
