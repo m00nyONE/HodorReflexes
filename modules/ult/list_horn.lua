@@ -131,7 +131,7 @@ function module:hornListRowCreationFunction(rowControl, data, scrollList)
 
     local percentageColor = self:getUltPercentageColor(data.hornPercentage, 'FFFFFF')
     local percentageControl = rowControl:GetNamedChild("_PctValue")
-    percentageControl:SetText(string.format('|c%s%d%%|r', percentageColor, zo_min(200, data.hornPercentage)))
+    percentageControl:SetText(string.format('|c%s%d%%|r', percentageColor, zo_clamp(data.hornPercentage, 0, 200)))
     percentageControl:SetScale(sw.showPercentValue)
     local rawValueControl = rowControl:GetNamedChild("_RawValue")
     rawValueControl:SetText(string.format('%s', data.ultValue))
@@ -149,7 +149,7 @@ function module:UpdateHornList()
         if playerData.ultValue > 0 and ((not playerData.hideHorn and playerData.hasHorn) or (not playerData.hideSaxhleel and playerData.hasSaxhleel)) then
             local lowestPossibleHornCost = 0
             if not playerData.hideSaxhleel and playerData.hasSaxhleel then
-                lowestPossibleHornCost = zo_max(zo_min(playerData.ult1Cost, playerData.ult2Cost), 250)
+                lowestPossibleHornCost = zo_clamp(zo_min(playerData.ult1Cost, playerData.ult2Cost), 250, 500)
             else
                 if self:isHorn(playerData.ult1ID) then lowestPossibleHornCost = playerData.ult1Cost end
                 if self:isHorn(playerData.ult2ID) then lowestPossibleHornCost = playerData.ult2Cost end

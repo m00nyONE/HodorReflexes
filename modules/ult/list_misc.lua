@@ -101,7 +101,7 @@ function module:miscListRowCreationFunction(rowControl, data, scrollList)
 
     local percentageColor = self:getUltPercentageColor(data.lowestUltPercentage, 'FFFFFF')
     local percentageControl = rowControl:GetNamedChild("_PctValue")
-    percentageControl:SetText(string.format('|c%s%d%%|r', percentageColor, zo_min(200, data.lowestUltPercentage)))
+    percentageControl:SetText(string.format('|c%s%d%%|r', percentageColor, zo_clamp(data.lowestUltPercentage, 0, 200)))
     percentageControl:SetScale(sw.showPercentValue)
     local rawValueControl = rowControl:GetNamedChild("_RawValue")
     rawValueControl:SetText(string.format('%s', data.ultValue))

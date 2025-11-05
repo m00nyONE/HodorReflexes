@@ -120,7 +120,7 @@ function module:atroListRowCreationFunction(rowControl, data, scrollList)
 
     local percentageColor = self:getUltPercentageColor(data.atroPercentage, 'FFFFFF')
     local percentageControl = rowControl:GetNamedChild("_PctValue")
-    percentageControl:SetText(string.format('|c%s%d%%|r', percentageColor, zo_min(200, data.atroPercentage)))
+    percentageControl:SetText(string.format('|c%s%d%%|r', percentageColor, zo_clamp(data.atroPercentage, 0, 200)))
     percentageControl:SetScale(sw.showPercentValue)
     local rawValueControl = rowControl:GetNamedChild("_RawValue")
     rawValueControl:SetText(string.format('%s', data.ultValue))

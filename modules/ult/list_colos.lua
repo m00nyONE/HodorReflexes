@@ -112,7 +112,7 @@ function module:colosListRowCreationFunction(rowControl, data, scrollList)
 
     local percentageColor = self:getUltPercentageColor(data.colosPercentage, 'FFFFFF')
     local percentageControl = rowControl:GetNamedChild("_PctValue")
-    percentageControl:SetText(string.format('|c%s%d%%|r', percentageColor, zo_min(200, data.colosPercentage)))
+    percentageControl:SetText(string.format('|c%s%d%%|r', percentageColor, zo_clamp(data.colosPercentage, 0, 200)))
     percentageControl:SetScale(sw.showPercentValue)
     local rawValueControl = rowControl:GetNamedChild("_RawValue")
     rawValueControl:SetText(string.format('%s', data.ultValue))
