@@ -2,6 +2,7 @@
 
 ## 2025.11.06 - @m00nyONE
 - improve overall performance of the addon
+- fixed the damage list header title not updating and being stuck in it's first state
 - add chinese translation by @Lykeion :-) Thank you!
 - fix configurator not loading when LCI is not installed. Thanks @NeBioNik for the PR (https://github.com/m00nyONE/HodorReflexes/pull/39) :-)
 
