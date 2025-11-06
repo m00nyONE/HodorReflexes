@@ -16,6 +16,14 @@ function module:GetMainMenuOptions()
     return {
         {
             type = "checkbox",
+            name = GetString(HR_MODULES_READYCHECK_MENU_UI),
+            tooltip = GetString(HR_MODULES_READYCHECK_MENU_UI_TT),
+            default = self.svDefault.enableUI,
+            getFunc = function() return self.sw.enableUI end,
+            setFunc = function(value) self.sw.enableUI = value end,
+        },
+        {
+            type = "checkbox",
             name = GetString(HR_MODULES_READYCHECK_MENU_CHAT),
             tooltip = GetString(HR_MODULES_READYCHECK_MENU_CHAT_TT),
             default = self.svDefault.enableChatMessages,

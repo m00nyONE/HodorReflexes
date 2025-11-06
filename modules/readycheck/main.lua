@@ -39,6 +39,7 @@ local moduleDefinition = {
     svVersion = 1,
     svDefault = {
         accountWide = true,
+        enableUI = true,
         enableChatMessages = true,
         windowCenterX = GuiRoot:GetWidth() / 2,
         windowCenterY = GuiRoot:GetHeight() / 5,
@@ -118,7 +119,7 @@ function module:CreateReadyCheckUI()
     self.readycheckWindow = readycheckWindow
 
     local function readycheckFragmentCondition()
-        return (self.isPollActive or not self.uiLocked) and not IsUnitInCombat(localPlayer)
+        return self.sw.enableUI and (self.isPollActive or not self.uiLocked) and not IsUnitInCombat(localPlayer)
     end
 
     self.READYCHECK_FRAGMENT = hud.AddFadeFragment(readycheckWindow, readycheckFragmentCondition)
