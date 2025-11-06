@@ -118,6 +118,9 @@ function extension:_listUpdatePostHook(list, iconControlName)
             end
         end
     end
+    -- cleanup
+    listTypes = nil
+    usersWithAnimation = nil
 end
 
 --- NOT for manual use.

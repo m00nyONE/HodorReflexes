@@ -1,5 +1,10 @@
 [SIZE="2"][B]IMPORTANT:[/B] You need LibCustomNames and LibCustomIcons now if you want to have names and icons displayed.[/SIZE]
 
+## 2025.11.06 - @m00nyONE
+- improve overall performance of the addon
+- add chinese translation by @Lykeion :-) Thank you!
+- fix configurator not loading when LCI is not installed. Thanks @NeBioNik for the PR (https://github.com/m00nyONE/HodorReflexes/pull/39) :-)
+
 ## 2025.11.04 - @m00nyONE
 - added frensh translation. Thank you @Melicious :-)
 - updated russian translation by @NeBioNik :-)

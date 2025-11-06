@@ -13,6 +13,7 @@ local module = addon_modules[module_name]
 
 local HR_EVENT_MAJOR_VULNERABILITY_DEBUFF_GAINED = addon.HR_EVENT_MAJOR_VULNERABILITY_DEBUFF_GAINED
 
+local blankTable = {}
 
 local svVersion = 1
 local svDefault = {
@@ -111,7 +112,7 @@ function module:colosListRowCreationFunction(rowControl, data, scrollList)
 
     local percentageColor = self:getUltPercentageColor(data.colosPercentage, 'FFFFFF')
     local percentageControl = rowControl:GetNamedChild("_PctValue")
-    percentageControl:SetText(string.format('|c%s%d%%|r', percentageColor, zo_min(200, data.colosPercentage)))
+    percentageControl:SetText(string.format('|c%s%d%%|r', percentageColor, zo_clamp(data.colosPercentage, 0, 200)))
     percentageControl:SetScale(sw.showPercentValue)
     local rawValueControl = rowControl:GetNamedChild("_RawValue")
     rawValueControl:SetText(string.format('%s', data.ultValue))
@@ -138,8 +139,7 @@ function module:UpdateColosList()
 
     --- fill dataList ---
     -- insert Header
-    table.insert(dataList, ZO_ScrollList_CreateDataEntry(self.colosList.HEADER_TYPE, {
-    }))
+    table.insert(dataList, ZO_ScrollList_CreateDataEntry(self.colosList.HEADER_TYPE, blankTable))
 
     -- insert playerRows
     for i, playerData in ipairs(playersDataList) do

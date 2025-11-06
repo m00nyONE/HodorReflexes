@@ -68,6 +68,7 @@ local strings = {
     HR_MODULES_DPS_MENU_HEADER = "Schadensliste",
     HR_MODULES_DPS_MENU_SHOW_SUMMARY = "Zusammenfassungszeile anzeigen",
     HR_MODULES_DPS_MENU_SHOW_SUMMARY_TT = "Wenn aktiviert, wird eine Zusammenfassungszeile mit den Gesamtschadenszahlen der Gruppe unten in der Liste angezeigt.",
+    HR_MODULES_DPS_SUMMARY_GROUP_TOTAL = "Gruppe: ",
     -- EXIT INSTANCE
     HR_MODULES_EXITINSTANCE_FRIENDLYNAME = "Instanz verlassen",
     HR_MODULES_EXITINSTANCE_DESCRIPTION = "Ermöglicht es dir, Anfragen zum Verlassen der Instanz an deine Gruppe zu senden.",

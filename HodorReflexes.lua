@@ -39,6 +39,7 @@ local addon = {
                     ["hideme"] = true,
                 },
                 libraryPopupDisabled = false,
+                enableTestTick = true, -- this is not toggleable via the settings atm. only for dev purposes
             }
         },
         registeredLists = {}, -- list of all registered lists

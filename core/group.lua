@@ -20,6 +20,8 @@ core.group = group
 local playersData = {}
 addon.playersData = playersData
 
+local TEST_TICK_INTERVAL = 1000 -- milliseconds
+
 local HR_EVENT_GROUP_CHANGED = addon.HR_EVENT_GROUP_CHANGED
 local HR_EVENT_LOCKUI = addon.HR_EVENT_LOCKUI
 local HR_EVENT_UNLOCKUI = addon.HR_EVENT_UNLOCKUI
@@ -169,7 +171,8 @@ local function toggleTest(players)
     isTestRunning = true
     CM:FireCallbacks(HR_EVENT_TEST_STARTED)
     CM:FireCallbacks(HR_EVENT_UNLOCKUI)
-    EM:RegisterForUpdate(addon_name .. "_TestUpdate", 1000, function()
+    EM:RegisterForUpdate(addon_name .. "_TestUpdate", TEST_TICK_INTERVAL, function()
+        if not core.sw.enableTestTick then return end -- we still want to keep the test tick loop running, even if the tick events are disabled. That way the ticks can be enabled again during runtime without restarting the test.
         CM:FireCallbacks(HR_EVENT_TEST_TICK)
     end)
     df("%s |c00FF00%s|r", addon_name, GetString(HR_CORE_GROUP_COMMAND_TEST_ACTION_START))

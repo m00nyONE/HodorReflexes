@@ -126,13 +126,18 @@ function list:Initialize(listDefinition)
         hud.UnlockControls(self.window)
     end
 
+    self._updateDebouncedTrigger = function()
+        EM:UnregisterForUpdate(self.updateDebouncedEventName)
+        self:Update()
+        self:ResizeList()
+    end
+
     addon.RegisterCallback(HR_EVENT_LOCKUI, lockUI)
     addon.RegisterCallback(HR_EVENT_UNLOCKUI, unlockUI)
     addon.RegisterCallback(HR_EVENT_GROUP_CHANGED, onGroupChanged)
-    addon.RegisterCallback(HR_EVENT_PLAYERSDATA_UPDATED, function() self:UpdateDebounced() end)
-    addon.RegisterCallback(HR_EVENT_PLAYERSDATA_CLEANED, function(forceUpdate) self:UpdateDebounced(forceUpdate) end)
-
-    EM:RegisterForEvent(self._Id .. "_SupportRangeUpdate", EVENT_GROUP_SUPPORT_RANGE_UPDATE, function() self:UpdateDebounced() end)
+    addon.RegisterCallback(HR_EVENT_PLAYERSDATA_UPDATED, self:CreateUpdateRebouncedCallback())
+    addon.RegisterCallback(HR_EVENT_PLAYERSDATA_CLEANED, self:CreateUpdateRebouncedCallback())
+    EM:RegisterForEvent(self._Id .. "_SupportRangeUpdate", EVENT_GROUP_SUPPORT_RANGE_UPDATE, self:CreateUpdateRebouncedCallback())
 
     self.logger:Debug("initialized in %d ms", GetGameTimeMilliseconds() - beginTime)
     self.Initialize = nil -- prevent re-initialization
@@ -153,17 +158,21 @@ function list:ResizeList()
     self.window:SetHeight(height)
 end
 
+--- NOT for manual use! this gets called to create the debounced update callback function.
+--- creates a function that can be used as a callback to update the list with debounce.
+--- @return function debounced update callback function
+function list:CreateUpdateRebouncedCallback()
+    return function(forceUpdate)
+        self:UpdateDebounced(forceUpdate)
+    end
+end
 
 --- NOT for manual use! this gets called to update the list with a debounce.
 --- debounce the update calls to prevent excessive updates
 --- @return void
 function list:UpdateDebounced(forceUpdate)
-    if not self:WindowFragmentCondition() and not forceUpdate then return end
-    EM:RegisterForUpdate(self.updateDebouncedEventName, self.updateDebounceDelayMS, function()
-        EM:UnregisterForUpdate(self.updateDebouncedEventName)
-        self:Update()
-        self:ResizeList()
-    end)
+    if not self:WindowFragmentCondition() and not (forceUpdate == true) then return end
+    EM:RegisterForUpdate(self.updateDebouncedEventName, self.updateDebounceDelayMS, self._updateDebouncedTrigger)
 end
 
 --- NOT for manual use! this gets called to check if the list is enabled.
@@ -388,9 +397,9 @@ function list:ApplyUserNameToControl(nameControl, userId)
 end
 
 function list:ApplyUserIconToControl(iconControl, userId, classId)
+    iconControl:SetTextureReleaseOption(RELEASE_TEXTURE_AT_ZERO_REFERENCES)
     local userIcon, tcLeft, tcRight, tcTop, tcBottom = util.GetUserIcon(userId, classId)
     if userIcon then
-        iconControl:SetTextureReleaseOption(RELEASE_TEXTURE_AT_ZERO_REFERENCES)
         iconControl:SetTexture(userIcon)
         iconControl:SetTextureCoords(tcLeft, tcRight, tcTop, tcBottom)
     end

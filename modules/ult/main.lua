@@ -70,6 +70,7 @@ local moduleDefinition = {
 
 local module = internal.moduleClass:New(moduleDefinition)
 
+local playerDataCache = {}
 --- handle ULT data received from LGCS
 --- @param tag string
 --- @param data table
@@ -84,29 +85,29 @@ function module:onULTDataReceived(tag, data)
     local ult2Percentage = self:getUltPercentage(ultValue, ult2Cost)
     local lowestUltPercentage = zo_min(ult1Percentage, ult2Percentage)
 
-    group.CreateOrUpdatePlayerData({
-        name = GetUnitName(tag),
-        tag  = tag,
-        ultValue = ultValue,
-        ult1ID = data.ult1ID,
-        ult2ID = data.ult2ID,
-        ult1Cost = ult1Cost,
-        ult2Cost = ult2Cost,
-        ult1Percentage = ult1Percentage,
-        ult2Percentage = ult2Percentage,
-        lowestUltPercentage = lowestUltPercentage,
-        -- special ults
-        hasHorn = self:hasUnitHorn(data),
-        hasColos = self:hasUnitColos(data),
-        hasAtro = self:hasUnitAtro(data),
-        hasBarrier = self:hasUnitBarrier(data),
-        hasCryptCannon = self:hasUnitCryptCannon(data),
-        -- ult activated sets
-        hasSaxhleel = self:hasUnitSaxhleel(data),
-        hasSlayer = self:hasUnitSlayer(data),
-        hasPillager = self:hasUnitPillager(data),
-        ultActivatedSetID = data.ultActivatedSetID, -- TODO: remove after reworking LGCS
-    })
+    playerDataCache.name = GetUnitName(tag)
+    playerDataCache.tag = tag
+    playerDataCache.ultValue = ultValue
+    playerDataCache.ult1ID = data.ult1ID
+    playerDataCache.ult2ID = data.ult2ID
+    playerDataCache.ult1Cost = ult1Cost
+    playerDataCache.ult2Cost = ult2Cost
+    playerDataCache.ult1Percentage = ult1Percentage
+    playerDataCache.ult2Percentage = ult2Percentage
+    playerDataCache.lowestUltPercentage = lowestUltPercentage
+    -- special ults
+    playerDataCache.hasHorn = self:hasUnitHorn(data)
+    playerDataCache.hasColos = self:hasUnitColos(data)
+    playerDataCache.hasAtro = self:hasUnitAtro(data)
+    playerDataCache.hasBarrier = self:hasUnitBarrier(data)
+    playerDataCache.hasCryptCannon = self:hasUnitCryptCannon(data)
+    -- ult activated sets
+    playerDataCache.hasSaxhleel = self:hasUnitSaxhleel(data)
+    playerDataCache.hasSlayer = self:hasUnitSlayer(data)
+    playerDataCache.hasPillager = self:hasUnitPillager(data)
+    playerDataCache.ultActivatedSetID = data.ultActivatedSetID -- TODO: remove after reworking LGCS later
+
+    group.CreateOrUpdatePlayerData(playerDataCache)
 end
 
 --- module activation function

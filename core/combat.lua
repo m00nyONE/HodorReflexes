@@ -21,8 +21,8 @@ local CM = core.CM
 local combat = {
     damageHistory = {
         {
-            timeStamp = 0,
-            damageDone = 0,
+            timestamp = 0,
+            damage = 0,
         },
     },
     data = {
@@ -75,10 +75,28 @@ function combat:FightRecapCallback(_, data)
     self.data.damageOutTotalGroup = data.damageOutTotalGroup or 0
     -- save history
     if self.saveHistory == false then return end
+    self:SaveDamageToHistory(data.damageOutTotalGroup)
+end
+
+function combat:SaveDamageToHistory(damage)
     table.insert(self.damageHistory, {
         timestamp = GetGameTimeMilliseconds(),
-        damage = data.damageOutTotalGroup
+        damage = damage
     })
+    self:CleanupOldHistory(60)
+end
+
+--- cleans up old entries from the damage history.
+--- @param olderThanSeconds number
+--- @return void
+function combat:CleanupOldHistory(olderThanSeconds)
+    local now = GetGameTimeMilliseconds()
+    local cutoff = now - olderThanSeconds * 1000
+    for i = #self.damageHistory, 1, -1 do
+        if self.damageHistory[i].timestamp and self.damageHistory[i].timestamp < cutoff then
+            table.remove(self.damageHistory, i)
+        end
+    end
 end
 
 --- gets the current combat time in seconds.
@@ -160,15 +178,13 @@ function combat:startTest()
 
     -- initial calculation of group DPS and total damage from mock data
     for _, data in pairs(addon.playersData) do
+        if not data.dps then return end
         self.data.groupDPSOut = self.data.groupDPSOut + (data.dps * 1000 or 0)
         self.data.damageOutTotalGroup = self.data.damageOutTotalGroup + (data.dps * 1000 * self.data.dpstime) or 0
     end
 
     -- save history -- here we do not check for saveHistory as we want to have that initial entry at the start. if this feature is not needed, then it's only one entry that gets deleted after the test anyways
-    table.insert(self.damageHistory, {
-        timestamp = GetGameTimeMilliseconds(),
-        damage = self.data.damageOutTotalGroup
-    })
+    self:SaveDamageToHistory(self.data.damageOutTotalGroup)
 end
 function combat:stopTest()
     self.logger:Debug("Stopping combat test")
@@ -184,14 +200,12 @@ function combat:updateTest()
 
     -- recalculate group DPS and total damage from mock data
     for _, data in pairs(addon.playersData) do
+        if not data.dps then return end
         self.data.groupDPSOut = self.data.groupDPSOut + (data.dps * 1000 or 0)
         self.data.damageOutTotalGroup = self.data.damageOutTotalGroup + (data.dps * 1000 * self.data.dpstime) or 0
     end
 
     -- save history
     if self.saveHistory == false then return end
-    table.insert(self.damageHistory, {
-        timestamp = GetGameTimeMilliseconds(),
-        damage = self.data.damageOutTotalGroup
-    })
+    self:SaveDamageToHistory(self.data.damageOutTotalGroup)
 end

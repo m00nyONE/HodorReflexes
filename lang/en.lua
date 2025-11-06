@@ -68,6 +68,7 @@ local strings = {
     HR_MODULES_DPS_MENU_HEADER = "Damage List",
     HR_MODULES_DPS_MENU_SHOW_SUMMARY = "Show Summary",
     HR_MODULES_DPS_MENU_SHOW_SUMMARY_TT = "toggle the display of the summary row in the damage list.",
+    HR_MODULES_DPS_SUMMARY_GROUP_TOTAL = "Group Total: ",
     -- EXIT INSTANCE
     HR_MODULES_EXITINSTANCE_FRIENDLYNAME = "Exit Instance",
     HR_MODULES_EXITINSTANCE_DESCRIPTION = "Allows you to send exit instance requests to your group.",

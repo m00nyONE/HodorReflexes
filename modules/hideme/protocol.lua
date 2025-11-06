@@ -47,6 +47,7 @@ function module:RegisterLGBProtocols(handler)
     protocolHideMe:Finalize(protocolOptions)
 end
 
+local playerDataCache = {}
 function module:onHideMeMessageReceived(unitTag, data)
     if data.syncRequest and not AreUnitsEqual(unitTag, localPlayer) then
         self.logger:Debug("Received HideMe sync request from %s, sending current preferences.", GetUnitName(unitTag))
@@ -54,37 +55,37 @@ function module:onHideMeMessageReceived(unitTag, data)
     end
     self.logger:Debug("Received HideMe message from %s with IDs: %s", GetUnitName(unitTag), table.concat(data.ids, ", "))
 
-    local playerData = {
-        name     = GetUnitName(unitTag),
-        tag      = unitTag,
-    }
+    ZO_ClearTable(playerDataCache) -- we need to clear it here because the table is variable. Even tho we later set everything to false, it can be that the client has an older version than the sender and thus receiving additional data it cannot process
+    playerDataCache.name = GetUnitName(unitTag)
+    playerDataCache.tag = unitTag
 
-    for id, hideId in pairs(self.hideIds) do
-        playerData[hideId.name] = false
+    for _, hideId in pairs(self.hideIds) do
+        playerDataCache[hideId.name] = false
     end
 
     for _, id in pairs(data.ids) do
         local hideOptionName = self.hideIds[id] and self.hideIds[id].name
         if hideOptionName then
-            playerData[hideOptionName] = true
+            playerDataCache[hideOptionName] = true
         end
     end
 
-    group.CreateOrUpdatePlayerData(playerData)
+    group.CreateOrUpdatePlayerData(playerDataCache)
 end
 
+local hideProtocolCache = {}
+local hideProtocolDataCache = {}
 function module:SendHideMeMessage(syncRequest)
-    local data = {}
+    ZO_ClearTable(hideProtocolDataCache)
     for id, enabled in pairs(self.sv.preferences) do -- intentionally use pairs instead of ipairs to avoid sending empty IDs
         if enabled then
-            table.insert(data, id)
+            table.insert(hideProtocolDataCache, id)
         end
     end
-    self.logger:Debug("Sending HideMe message with IDs: %s", table.concat(data, ", "))
-    protocolHideMe:Send({
-        syncRequest = syncRequest or false,
-        ids = data
-    })
+    self.logger:Debug("Sending HideMe message with IDs: %s", table.concat(hideProtocolDataCache, ", "))
+    hideProtocolCache.syncRequest = syncRequest or false
+    hideProtocolCache.ids = hideProtocolDataCache
+    protocolHideMe:Send(hideProtocolCache)
 end
 
 function module:SendHideMeMessageDebounced(syncRequest)

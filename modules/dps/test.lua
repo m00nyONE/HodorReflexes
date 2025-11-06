@@ -18,6 +18,7 @@ local LGCS = LibGroupCombatStats
 
 local DAMAGE_BOSS = LGCS.DAMAGE_BOSS
 
+local playerDataCache = {}
 --- callback function that gets called on test start
 --- @return void
 function module:startTest()
@@ -26,13 +27,13 @@ function module:startTest()
     for name, _ in pairs(addon.playersData) do
         local dmg = zo_random(500, 1200)
 
-        group.CreateOrUpdatePlayerData({
-            name = name, -- required
-            tag = name, -- required
-            dmg = dmg,
-            dps = dmg * 0.15,
-            dmgType = DAMAGE_BOSS,
-        })
+        playerDataCache.name = name -- required
+        playerDataCache.tag = name -- required
+        playerDataCache.dmg = dmg
+        playerDataCache.dps = dmg * 0.15
+        playerDataCache.dmgType = DAMAGE_BOSS
+
+        group.CreateOrUpdatePlayerData(playerDataCache)
     end
 
     -- manually force updates on lists without the usual debounce to initialize them early during the test
@@ -53,12 +54,12 @@ function module:updateTest()
         if dmg > 1200 then dmg = 1200 end
         if dmg < 500 then dmg = 500 end
 
-        group.CreateOrUpdatePlayerData({
-            name = name, -- required
-            tag = name, -- required
-            dmg = dmg,
-            dps = dmg * 0.15,
-            dmgType = DAMAGE_BOSS,
-        })
+        playerDataCache.name = name -- required
+        playerDataCache.tag = name -- required
+        playerDataCache.dmg = dmg
+        playerDataCache.dps = dmg * 0.15
+        playerDataCache.dmgType = DAMAGE_BOSS
+
+        group.CreateOrUpdatePlayerData(playerDataCache)
     end
 end

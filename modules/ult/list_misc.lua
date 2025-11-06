@@ -11,6 +11,8 @@ local addon_modules = addon.modules
 local module_name = "ult"
 local module = addon_modules[module_name]
 
+local blankTable = {}
+
 local svVersion = 1
 local svDefault = {
     enabled =  1, -- 1=always, 2=out of combat, 3=non bossfights, 0=off
@@ -76,13 +78,14 @@ function module:CreateMiscList()
     list.logger:Debug("added player row type '%d' with template '%s'", list.ROW_TYPE, list.ROW_TEMPLATE)
 end
 
+local title = "Ultimates"
 function module:miscListHeaderRowCreationFunction(rowControl, data, scrollList)
     if rowControl._initialized and not self.miscList._redrawHeaders then
         return
     end
 
     rowControl:GetNamedChild("_BG"):SetAlpha(self.miscList.sw.headerOpacity)
-    rowControl:GetNamedChild("_Text"):SetText(data.title)
+    rowControl:GetNamedChild("_Text"):SetText(title)
 
     self.miscList._redrawHeaders = false
     rowControl._initialized = true
@@ -98,7 +101,7 @@ function module:miscListRowCreationFunction(rowControl, data, scrollList)
 
     local percentageColor = self:getUltPercentageColor(data.lowestUltPercentage, 'FFFFFF')
     local percentageControl = rowControl:GetNamedChild("_PctValue")
-    percentageControl:SetText(string.format('|c%s%d%%|r', percentageColor, zo_min(200, data.lowestUltPercentage)))
+    percentageControl:SetText(string.format('|c%s%d%%|r', percentageColor, zo_clamp(data.lowestUltPercentage, 0, 200)))
     percentageControl:SetScale(sw.showPercentValue)
     local rawValueControl = rowControl:GetNamedChild("_RawValue")
     rawValueControl:SetText(string.format('%s', data.ultValue))
@@ -123,9 +126,7 @@ function module:UpdateMiscList()
 
     --- fill dataList ---
     -- insert Header
-    table.insert(dataList, ZO_ScrollList_CreateDataEntry(self.miscList.HEADER_TYPE, {
-        title = "Ultimates",
-    }))
+    table.insert(dataList, ZO_ScrollList_CreateDataEntry(self.miscList.HEADER_TYPE, blankTable))
 
     -- insert playerRows
     for i, playerData in ipairs(playersDataList) do

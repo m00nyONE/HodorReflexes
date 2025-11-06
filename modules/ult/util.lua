@@ -21,7 +21,7 @@ function module:getUltPercentage(ultValue, ultCost)
         return zo_floor((ultValue / ultCost) * 100)
     end
 
-    return zo_min(200, 100 + zo_floor(100 * (ultValue - ultCost) / (500 - ultCost)))
+    return zo_clamp(100 + zo_floor(100 * (ultValue - ultCost) / (500 - ultCost)), 0, 200)
 end
 
 --- get a hex color code depending on the ult percentage

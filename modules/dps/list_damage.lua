@@ -109,13 +109,13 @@ end
 
 --- creation function for the header row. This can be overwritten if using a custom theme
 function module:headerRowCreationFunction(rowControl, data, scrollList)
+    local sw = self.damageList.sw
+    rowControl:GetNamedChild("_Title"):SetText(self.getDamageHeaderFormat(data.dmgType, sw.colorDamageBoss, sw.colorDamageTotal))
+
     if rowControl._initialized and not self.damageList._redrawHeaders then
         return
     end
 
-    local sw = self.damageList.sw
-
-    rowControl:GetNamedChild("_Title"):SetText(self.getDamageHeaderFormat(data.dmgType, sw.colorDamageBoss, sw.colorDamageTotal))
     rowControl:GetNamedChild("_BG"):SetAlpha(sw.listHeaderOpacity)
     local timeControl = rowControl:GetNamedChild("_Time")
     self.damageList:CreateFightTimeUpdaterOnControl(timeControl)
@@ -148,35 +148,45 @@ function module:damageRowCreationFunction(rowControl, data, scrollList)
     end
 end
 
+local cachedTitle = "Group Total: "
+local cachedValue = ""
 --- creation function for the summary row. This can be overwritten if using a custom theme
+--- @param rowControl any
+--- @param data table
+--- @param scrollList any
+--- @return void
 function module:summaryRowCreationFunction(rowControl, data, scrollList)
     local sw = self.damageList.sw
 
-    local title = "Group Total: "
-    local value = ""
+    cachedTitle = GetString(HR_MODULES_DPS_SUMMARY_GROUP_TOTAL)
+    cachedValue = ""
     if data.dmgType == DAMAGE_BOSS then
         --title = string.format("dps (10sBurst) [ttk]:")
         --value = string.format("%0.1fK (%0.1fK) [%0.1s]", data.groupDPS / 1000, data.groupDPSBurst / 1000, data.timeToKillMainBoss and data.timeToKillMainBoss > 0 and data.timeToKillMainBoss or "-")
-        title = string.format("|c%sGroup DPS|r |c%s(%ds)|r", sw.colorGroupDPS, sw.colorBurstDPS, sw.burstWindowSeconds)
-        value = string.format("|c%s%0.2fM|r |c%s(%0.2fM)|r", sw.colorGroupDPS, data.groupDPS / 1000000, sw.colorBurstDPS, data.groupDPSBurst / 1000000 or "-")
+        cachedTitle = string.format("|c%sGroup DPS|r |c%s(%ds)|r", sw.colorGroupDPS, sw.colorBurstDPS, sw.burstWindowSeconds)
+        cachedValue = string.format("|c%s%0.2fM|r |c%s(%0.2fM)|r", sw.colorGroupDPS, data.groupDPS / 1000000, sw.colorBurstDPS, data.groupDPSBurst / 1000000 or "-")
         --title = "Group Total: "
         --value = self.getDamageRowFormat(data.dmgType, (data.damageOutTotalGroup / 100) / data.fightTime, data.groupDPS / 1000, sw.colorDamageBoss, sw.colorDamageTotal)
     else
-        title = "Group Total: "
-        value = self.getDamageRowFormat(data.dmgType, data.damageOutTotalGroup / 10000, data.groupDPS / 1000, sw.colorDamageBoss, sw.colorDamageTotal)
+        cachedTitle = GetString(HR_MODULES_DPS_SUMMARY_GROUP_TOTAL)
+        cachedValue = self.getDamageRowFormat(data.dmgType, data.damageOutTotalGroup / 10000, data.groupDPS / 1000, sw.colorDamageBoss, sw.colorDamageTotal)
     end
 
-    rowControl:GetNamedChild("_Title"):SetText(title)
-    rowControl:GetNamedChild("_Value"):SetText(value)
+    rowControl:GetNamedChild("_Title"):SetText(cachedTitle)
+    rowControl:GetNamedChild("_Value"):SetText(cachedValue)
 end
 
+local summaryData = {}
+local dmgType = {
+    dmgType = DAMAGE_UNKNOWN
+}
 --- update function to refresh the damage list. This should usually not be overwritten by a custom theme unless absolutely necessary.
 function module:UpdateDamageList()
     local listControl = self.damageList.listControl
     local list = self.damageList
     local sw = list.sw
 
-    local dmgType = DAMAGE_UNKNOWN
+    dmgType.dmgType = DAMAGE_UNKNOWN
 
     ZO_ScrollList_Clear(listControl)
     local dataList = ZO_ScrollList_GetDataList(listControl)
@@ -184,16 +194,14 @@ function module:UpdateDamageList()
     local playersDataList = {}
     for _, playerData in pairs(addon.playersData) do
         if not playerData.hideDamage and playerData.dmg > 0 then
-            dmgType = playerData.dmgType
+            dmgType.dmgType = playerData.dmgType
             table.insert(playersDataList, playerData)
         end
     end
     table.sort(playersDataList, self.sortByDamageType)
 
     -- insert header row
-    table.insert(dataList, ZO_ScrollList_CreateDataEntry(list.HEADER_TYPE, {
-        dmgType = dmgType,
-    }))
+    table.insert(dataList, ZO_ScrollList_CreateDataEntry(list.HEADER_TYPE, dmgType))
 
     -- insert damageRows
     for i, playerData in ipairs(playersDataList) do
@@ -202,15 +210,18 @@ function module:UpdateDamageList()
     end
 
     if sw.showSummary and #playersDataList > 0 then
-        table.insert(dataList, ZO_ScrollList_CreateDataEntry(list.SUMMARY_TYPE, {
-            dmgType = dmgType,
-            fightTime = combat:GetCombatTime(),
-            damageOutTotalGroup = combat:GetDamageOutTotalGroup(),
-            --timeToKillMainBoss = combat:GetTimeToKill(localBoss1), -- TODO: implement
-            groupDPS = combat:GetGroupDPSOut(),
-            groupDPSBurst = combat:GetGroupDPSOverTime(sw.burstWindowSeconds),
-        }))
+        summaryData.dmgType = dmgType.dmgType
+        summaryData.fightTime = combat:GetCombatTime()
+        summaryData.groupDPS = combat:GetGroupDPSOut()
+        summaryData.groupDPSBurst = combat:GetGroupDPSOverTime(sw.burstWindowSeconds)
+        summaryData.damageOutTotalGroup = combat:GetDamageOutTotalGroup()
+        --summaryData.timeToKillMainBoss = combat:GetTimeToKill(localBoss1)
+
+        table.insert(dataList, ZO_ScrollList_CreateDataEntry(list.SUMMARY_TYPE, summaryData))
     end
 
     ZO_ScrollList_Commit(listControl)
+
+    -- cleanup
+    playersDataList = nil
 end
