@@ -174,6 +174,6 @@ end
 function module:CreateCounters()
     self:RunOnce("CreateHornCounter")
     self:RunOnce("CreatePillagerCounter")
-    --self:RunOnce("CreateSlayerCounter") -- experimental, disabled for now
+    self:RunOnce("CreateSlayerCounter")
 end
 
