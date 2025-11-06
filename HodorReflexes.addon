@@ -34,8 +34,6 @@ core/combat.lua
 core/lists.lua
 core/counter.lua
 core/menu.lua
-core/donate.lua
-core/LibCheck.lua
 core/PC/menu.lua
 core/PC/donate.lua
 core/PC/LibCheck.lua
