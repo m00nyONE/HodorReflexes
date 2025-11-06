@@ -13,10 +13,24 @@ local util = {}
 addon.util = util
 
 -- generate classIcons table
-local classIcons = {}
+local classIcons = {
+    [0] = {
+        texturePath = "esoui/art/campaign/campaignbrowser_guestcampaign.dds",
+        left = 0,
+        right = 1,
+        top = 0,
+        bottom = 1,
+    },
+}
 for i = 1, GetNumClasses() do
     local realClassId, _, _, _, _, _, icon, _, _, _ = GetClassInfo(i)
-    classIcons[realClassId] = icon
+    classIcons[realClassId] = {
+        texturePath = icon,
+        left = 0,
+        right = 1,
+        top = 0,
+        bottom = 1,
+    }
 end
 
 --[[ doc.lua begin ]]
@@ -164,8 +178,8 @@ end
 --- @param newClassIcons table<number, string> {classId: number, texturePath: string}
 --- @return void
 function util.overwriteClassIcons(newClassIcons)
-    for classId, icon in pairs(newClassIcons) do
-        classIcons[classId] = icon
+    for classId, classIconProperties in pairs(newClassIcons) do
+        classIcons[classId] = classIconProperties
     end
 end
 
@@ -173,11 +187,8 @@ end
 --- @param classId number
 --- @return string, number, number, number, number texturePath, textureCoordsLeft, textureCoordsRight, textureCoordsTop, textureCoordsBottom
 function util.GetClassIcon(classId)
-    local texturePath = classIcons[classId]
-    if not texturePath then
-        texturePath = "esoui/art/campaign/campaignbrowser_guestcampaign.dds"
-    end
-    return texturePath, 0, 1, 0, 1
+    local classIcon = classIcons[classId] or classIcons[0] -- fallback to to default icon if ID is not registered
+    return classIcon.texturePath, classIcon.left, classIcon.right, classIcon.top, classIcon.bottom
 end
 
 --- get alias for userId.
