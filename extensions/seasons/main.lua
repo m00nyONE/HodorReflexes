@@ -9,8 +9,15 @@ local core = internal.core
 local HR_EVENT_DEBUG_MODE_CHANGED = core.HR_EVENT_DEBUG_MODE_CHANGED
 
 --- @class seasonClass : ZO_Object
-local seasonClass = ZO_Object:Subclass()
-seasonClass:MUST_IMPLEMNT("Activate")
+local seasonClass = ZO_InitializingObject:Subclass()
+seasonClass:MUST_IMPLEMENT("Activate")
+function seasonClass:Initialize(season)
+    for k, v in pairs(season) do
+        self[k] = v
+    end
+
+    self.enabled = false
+end
 function seasonClass:IsEnabled()
     return self.enabled
 end
@@ -21,11 +28,11 @@ function seasonClass:ActivateAndEnable()
     end
 end
 
-
 local extensionDefinition = {
     name = "seasons",
     version = "1.0.0",
-    description = "Seasonal events which change some behaviors of the addon on specific dates.",
+    friendlyName = GetString(HR_EXTENSIONS_SEASONS_FRIENDLYNAME),
+    description = GetString(HR_EXTENSIONS_SEASONS_DESCRIPTION),
     priority = 10,
     svVersion = 1,
     svDefault = {}, -- per-season settings are created dynamically
@@ -86,8 +93,5 @@ end
 --- @return seasonClass season object
 function extension:NewSeason(season)
     local obj = seasonClass:New(season)
-    obj.enabled = false
     self.seasons[obj.name] = obj
-    return obj
 end
-

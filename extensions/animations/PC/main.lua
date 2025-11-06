@@ -19,7 +19,8 @@ local HR_EVENT_PLAYERSDATA_CHARACTER_REMOVED = addon.HR_EVENT_PLAYERSDATA_CHARAC
 local extensionDefinition = {
     name = "animations",
     version = "0.1.0",
-    description = "Provides animated user icon support for lists.",
+    friendlyName = GetString(HR_EXTENSIONS_ANIMATIONS_FRIENDLYNAME),
+    description = GetString(HR_EXTENSIONS_ANIMATIONS_DESCRIPTION),
     priority = 3,
     svVersion = 1,
     svDefault = {},
@@ -41,28 +42,20 @@ function extension:Activate()
 
     -- hook util.GetUserIcon to return nil when an animation is found so the static icon does not get attached to any controls
     -- This is to prevent flickering between static and animated icons while updating the list
-    local _getUserIcon = util.GetUserIcon
-    function util.GetUserIcon(userId)
+    local originalGetUserIcon = util.GetUserIcon
+    util.GetUserIcon = function(userId, classId)
         if LCI.HasAnimated(userId) then
-            return nil
+            return nil, 0, 1, 0, 1
         end
-        return _getUserIcon(userId)
+        return originalGetUserIcon(userId, classId)
     end
 
-    local lists = {
-        addon.modules.dps.damageList,
-        addon.modules.ult.hornList,
-        addon.modules.ult.colosList,
-        addon.modules.ult.atroList,
-        addon.modules.ult.miscList,
-        addon.modules.ult.compactList,
-    }
-    for _, list in pairs(lists) do
+    for _, list in pairs(internal.registeredLists) do
         self:AttachToList(list)
     end
 
     -- register for character removed to clean up animations when they are no longer needed
-    addon.RegisterCallback(HR_EVENT_PLAYERSDATA_CHARACTER_REMOVED, function(data) self:_removeAnimationsForUser(data.userId) end)
+    addon.RegisterCallback(HR_EVENT_PLAYERSDATA_CHARACTER_REMOVED, function(data) self:_removeAllAnimationsForUser(data.userId) end)
 end
 
 --- Hook a list to add animation support
@@ -90,67 +83,107 @@ end
 --- NOT for manual use.
 --- post hook for list update to attach animations to icon controls
 --- @param list listClass
---- @param iconControlName string name of the icon control in the list row template
+--- @param iconControlName string name of the icon control child in the list row template. (e.g. "_Icon")
 --- @return void
 function extension:_listUpdatePostHook(list, iconControlName)
+    local listTypes = {}
+    local usersWithAnimation = {}
     local contents = list.listControl:GetNamedChild("Contents")
     for childId = 1, contents:GetNumChildren() do
         local rowControl = contents:GetChild(childId)
-        local entryData = ZO_ScrollList_GetData(rowControl)
-        if entryData and entryData.userId and LCI.HasAnimated(entryData.userId) then
-            self:_createAnimationForUser(entryData.userId)
-            self:_attachAnimationToControl(entryData.userId, list.name, rowControl:GetNamedChild(iconControlName))
+        local data = ZO_ScrollList_GetData(rowControl)
+        if data and data.userId then -- only process player rows
+            local listName = string.format("%s_%s", list.name, rowControl.dataEntry.typeId) -- we create a "sub list" for each data type in the list to avoid conflicts when the same user is present in multiple data types
+            listTypes[listName] = true
+            if LCI.HasAnimated(data.userId) then -- find users with animations
+                local iconControl = rowControl:GetNamedChild(iconControlName)
+                if iconControl == nil then -- icon control not found! This can only happen when someone creates a list with a custom template that does not have the expected icon control or when the template of a standard list got overwritten by a theme that did no follow the guidelines in the README.md of the theme extension.
+                    self.logger:Warn("icon control '%s' not found in list '%s' row template", iconControlName, list.name)
+                    return -- exit out of the update hook because there is nothing we can do here
+                end
+
+                self:_createAnimationForUser(listName, data.userId) -- create animation timeline for the user in the list if it does not already exist
+                self:_attachAnimationToControl(listName, data.userId, iconControl) -- attach the animation to the icon control
+                usersWithAnimation[listName] = usersWithAnimation[listName] or {}
+                usersWithAnimation[listName][data.userId] = true
+            end
         end
     end
+    for listName, _ in pairs(listTypes) do
+        for userId, _ in pairs(self.animations[listName] or {}) do
+            local uwa = usersWithAnimation[listName] or {}
+            if not uwa[userId] then
+                self.logger:Debug("user '%s' no longer in list '%s', removing animation", userId, listName)
+                self:_removeAnimationForUser(listName, userId)
+            end
+        end
+    end
+    -- cleanup
+    listTypes = nil
+    usersWithAnimation = nil
 end
 
 --- NOT for manual use.
---- creates an animation entry and timeline for a user if it does not already exist
+--- creates an animation entry and timeline for a user for a list if it does not already exist
+--- @param listName string the name of the list
 --- @param userId string the user id
 --- @return void
-function extension:_createAnimationForUser(userId)
-    if self.animations[userId] then
-        return -- animation already exists for this user
+function extension:_createAnimationForUser(listName, userId)
+    self.animations[listName] = self.animations[listName] or {}  -- create a list entry if it does not exist
+    local animations = self.animations[listName]
+
+    if animations[userId] then
+        return -- animation already exists for this user in this list
     end
 
     local userAnim = LCI.GetAnimated(userId)
-    if userAnim == nil then
+    if userAnim == nil then -- sanity check (should not happen because we check for HasAnimated in the _listUpdatePostHook function)
         self.logger:Warn("no animated icon found for user '%s'", userId)
         return
     end
-    self.animations[userId] = {
+
+    animations[userId] = {
         timeline = AM:CreateTimeline(),
-        animationObjects = {},
+        animationObject = nil,
+        attachedControl = nil,
         texture = userAnim[1],
+        --textureCoords = {0, 1, 0, 1},
         width = userAnim[2],
         height = userAnim[3],
         frameRate = userAnim[4],
-        attachedControls = {},
     }
-    self.logger:Debug("created animation for user '%s'", userId)
+
+    self.logger:Debug("created animation for user '%s' on list '%s'", userId, listName)
 end
 
 --- NOT for manual use.
 --- attaches the animation for a user to a specific icon control in a list
---- @param userId string the user id
 --- @param listName string the name of the list
---- @param iconControl table the icon control to attach the animation to
+--- @param userId string the user id
+--- @param iconControl TextureControl the icon control to attach the animation to
 --- @return void
-function extension:_attachAnimationToControl(userId, listName, iconControl)
-    local a =  self.animations[userId]
+function extension:_attachAnimationToControl(listName, userId, iconControl)
+    local animations = self.animations[listName] or {}
 
-    if a.attachedControls[listName] == iconControl then
+    local a = animations[userId]
+    if a == nil then
+        self.logger:Warn("no animation found for user '%s' in list '%s'", userId, listName) -- sanity check (should never happen because we always create the animation entry before attaching it in _listUpdatePostHook)
+        return
+    end
+
+    if a.attachedControl == iconControl then
         return -- already attached to this control
     end
 
     iconControl:SetTexture(a.texture)
+    --iconControl:SetTextureCoords(a.textureCoords)
 
-    if a.animationObjects[listName] then
-        a.animationObjects[listName]:SetAnimatedControl(iconControl)
+    if a.animationObject then
+        a.animationObject:SetAnimatedControl(iconControl) -- attach to the new control
     else
-        a.animationObjects[listName] = a.timeline:InsertAnimation(ANIMATION_TEXTURE, iconControl)
-        a.animationObjects[listName]:SetImageData(a.width, a.height)
-        a.animationObjects[listName]:SetFramerate(a.frameRate)
+        a.animationObject = a.timeline:InsertAnimation(ANIMATION_TEXTURE, iconControl)
+        a.animationObject:SetImageData(a.width, a.height)
+        a.animationObject:SetFramerate(a.frameRate)
         self.logger:Debug("create animationObject user '%s'", userId)
     end
 
@@ -160,23 +193,31 @@ function extension:_attachAnimationToControl(userId, listName, iconControl)
         a.timeline:PlayFromStart()
     end
 
-    a.attachedControls[listName] = iconControl
+    a.attachedControl = iconControl -- set the attached control to the current icon control (for future reference)
 end
 
 --- NOT for manual use.
 --- removes and stops all animations for a user
 --- @param userId string the user id
 --- @return void
-function extension:_removeAnimationsForUser(userId)
-    local a = self.animations[userId]
-    if a then
+function extension:_removeAllAnimationsForUser(userId)
+    for listName, _ in pairs(self.animations) do
         self.logger:Debug("removing animations for user '%s'", userId)
-        for listName, _ in pairs(self.registeredLists) do
-            if a.animationObjects[listName] then -- it is somewhat possible that the animationObject is still nil here. better be safe than sorry
-                a.animationObjects[listName]:SetAnimatedControl(nil)
-            end
-            a.timeline:SetEnabled(false)
-            self.animations[userId] = nil
-        end
+        self:_removeAnimationForUser(listName, userId)
     end
+end
+
+function extension:_removeAnimationForUser(listName, userId)
+    if self.animations[listName] == nil then
+        return
+    end
+
+    if self.animations[listName][userId] == nil then return end
+    if self.animations[listName][userId].animationObject then -- it is somewhat possible that the animationObject is still nil here. better be safe than sorry
+        self.animations[listName][userId].animationObject:SetAnimatedControl(nil)
+    end
+
+    self.animations[listName][userId].timeline:SetEnabled(false)
+    self.animations[listName][userId] = nil
+    self.logger:Debug("removed animation for user '%s' on list '%s'", userId, listName)
 end

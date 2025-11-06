@@ -5,10 +5,108 @@ local addon_name = "HodorReflexes"
 local addon = _G[addon_name]
 local internal = addon.internal
 local core = internal.core
-local logger = core.initSubLogger("menu")
+local logger = core.GetLogger("core/menu")
 
---- build the menu for PC platform
---- @return void
-function core.BuildMenu()
-    logger:Info("Building menu for PC")
+local util = addon.util
+local LAM = LibAddonMenu2
+
+function core.GetPanelConfig(subName)
+    local name = addon.friendlyName
+    local displayName = string.format('|cFFFACD%s|r', addon.friendlyName)
+    if subName then
+        name = string.format("%s - %s", addon.friendlyName, subName)
+        displayName = string.format('|cFFFACD%s - %s|r', addon.friendlyName, subName)
+    end
+
+    return {
+        type = "panel",
+        name = name,
+        displayName = displayName,
+        author = addon.author,
+        version = addon.version,
+        website = "https://www.esoui.com/downloads/info2311-HodorReflexes-DPSULTtracker.html#donate",
+        donation = addon.Donate,
+        registerForRefresh = true,
+        registerForDefaults = true,
+    }
+end
+
+function core.CreateSectionHeader(name)
+    return {
+        type = "header",
+        name = string.format("|cFFFACD%s|r", name)
+    }
+end
+
+function core.CreateNewMenu(subName, options)
+    local panel = core.GetPanelConfig(subName)
+    local menuReference = addon_name .. "_menu"
+    if subName then
+        menuReference = string.format("%s_module_%s_menu", addon_name, subName)
+    end
+
+    LAM:RegisterAddonPanel(menuReference, panel)
+    LAM:RegisterOptionControls(menuReference, options)
+end
+
+function core.GetCoreMenuOptions()
+    local options = {
+        core.CreateSectionHeader(GetString(HR_MENU_GENERAL)),
+        {
+            type = "checkbox",
+            name = GetString(HR_MENU_ACCOUNTWIDE),
+            tooltip = GetString(HR_MENU_ACCOUNTWIDE_TT),
+            default = true,
+            getFunc = function() return core.sw.accountWide end,
+            setFunc = function(value)
+                core.sw.accountWide = value
+            end,
+            requiresReload = true,
+        },
+        {
+            type = "checkbox",
+            name = GetString(HR_MENU_LOCKUI),
+            tooltip = GetString(HR_MENU_LOCKUI_TT),
+            default = true,
+            getFunc = core.hud.IsUILocked,
+            setFunc = function(value)
+                if value then
+                    core.CM:FireCallbacks(addon.HR_EVENT_LOCKUI)
+                else
+                    core.CM:FireCallbacks(addon.HR_EVENT_UNLOCKUI)
+                end
+            end,
+        }
+    }
+
+    table.insert(options, core.CreateSectionHeader(GetString(HR_MENU_MODULES)))
+    for moduleName, module in util.Spairs(addon.modules, util.SortByPriority) do
+        table.insert(options, {
+            type = "checkbox",
+            name = module.friendlyName or moduleName,
+            tooltip = module.description or "",
+            default = true,
+            getFunc = function() return core.sw.modules[moduleName] end,
+            setFunc = function(value)
+                core.sw.modules[moduleName] = value
+            end,
+            requiresReload = true,
+        })
+    end
+    table.insert(options, core.CreateSectionHeader(GetString(HR_MENU_EXTENSIONS)))
+    for extensionName, extension in util.Spairs(addon.extensions, util.SortByPriority) do
+        table.insert(options, {
+            type = "checkbox",
+            name = extension.friendlyName or extensionName,
+            tooltip = extension.description or "",
+            default = true,
+            getFunc = function() return core.sw.extensions[extensionName] end,
+            setFunc = function(value)
+                core.sw.extensions[extensionName] = value
+            end,
+            requiresReload = true,
+        })
+    end
+
+    return options
 end

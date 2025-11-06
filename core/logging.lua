@@ -11,21 +11,22 @@ core.logger = {}
 --- @class Logger
 core.logger.main = LibDebugLogger:Create(addon_name)
 
+local function noLog(self, ...)
+    --df(...)
+end
+local noLogger = {
+    Debug = noLog,
+    Info = noLog,
+    Warn = noLog,
+    Error = noLog,
+}
+
 --- Initialize a sub logger
 --- @param name string the name of the sub logger
 --- @return table the sub logger
-function core.initSubLogger(name)
-    local mainLogger = core.logger.main
-    if name == nil or name == "" then
-        return mainLogger
+function core.GetLogger(name)
+    if IsConsoleUI() then
+        return noLogger
     end
-    if core.logger[name] ~= nil then
-        mainLogger:Warn("SubLogger %s already exists!", name)
-        return core.logger[name]
-    end
-
-    local subLogger = core.logger.main:Create(name)
-    mainLogger:Debug("SubLogger %s created", name)
-    core.logger[name] = subLogger
-    return subLogger
+    return core.logger.main:Create(name)
 end

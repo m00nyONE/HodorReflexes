@@ -5,10 +5,11 @@ local addon_name = "HodorReflexes"
 local addon = _G[addon_name]
 local internal = addon.internal
 local core = internal.core
-local logger = core.logger.main
+local logger = core.GetLogger("core/lists")
 
 local hud = core.hud
 local util = addon.util
+local combat = addon.combat
 
 local WM = GetWindowManager()
 local EM = GetEventManager()
@@ -27,25 +28,25 @@ local HR_EVENT_COMBAT_END = addon.HR_EVENT_COMBAT_END
 local globalUpdateDebounceDelayMS = 15 -- global debounce delay for all lists, can be overridden in each list
 
 --- @class: listClass
-local listClass = ZO_InitializingObject:Subclass()
-addon.listClass = listClass
+local list = ZO_InitializingObject:Subclass()
+addon.listClass = list
 
-listClass.uiLocked = true
-listClass.windowName = ""
-listClass.window = {}
-listClass.windowFragment = {}
-listClass.listControlName = ""
-listClass.listControl = {}
+list.uiLocked = true
+list.windowName = ""
+list.window = {}
+list.windowFragment = {}
+list.listControlName = ""
+list.listControl = {}
 
 -- must implement fields
-listClass:MUST_IMPLEMENT("Update") -- function to update the list
+list:MUST_IMPLEMENT("Update") -- function to update the list
 
 --- NOT for manual use! this is a helper function that runs a function only once and then removes it from the list instance.
 --- If you use it on a still needed function, it will be gone after the first call and thus break your list!
 --- @param funcName string name of the function to run once
 --- @param ... any arguments to pass to the function
 --- @return any result of the function, or nil if the function does not exist
-function listClass:RunOnce(funcName, ...)
+function list:RunOnce(funcName, ...)
     if type(self[funcName]) == "function" then
         local result = self[funcName](self, ...)
         self[funcName] = nil
@@ -56,8 +57,15 @@ end
 
 --- get the unique ID of the List instance
 --- @return string unique ID of the list instance
-function listClass:GetId()
+function list:GetId()
     return self._Id
+end
+
+--- get the next unique data type ID for the list instance that can be used to register a new dataType with the scrollList.
+--- @return number unique data type ID
+function list:GetNextDataTypeId()
+    self._nextTypeId = self._nextTypeId + 1
+    return self._nextTypeId - 1
 end
 
 --- NOT for manual use! this gets automatically called by :New() when creating a new list instance.
@@ -66,7 +74,7 @@ end
 --- sets up event listeners for group changes, ui lock/unlock and player data updates.
 --- @param listDefinition table definition of the list
 --- @return void
-function listClass:Initialize(listDefinition)
+function list:Initialize(listDefinition)
     local beginTime = GetGameTimeMilliseconds()
     assert(type(listDefinition) == "table", "listDefinition must be a table")
     assert(type(listDefinition.name) == "string" and listDefinition.name ~= "", "list must have a valid name")
@@ -81,14 +89,19 @@ function listClass:Initialize(listDefinition)
         error(string.format("A list with the name '%s' is already registered!", self.name), 2)
     end
 
-    self.logger = core.initSubLogger("list/" .. self.name)
+    self.logger = core.GetLogger("list/" .. self.name)
     self.logger:Debug("initializing")
 
     self.listHeaderHeight = self.listHeaderHeight or 22
     self.listRowHeight = self.listRowHeight or 22
+    self._redrawHeaders = false -- flag to indicate if headers need to be redrawn - used internally when updating header colors or opacity values
+
+    self._nextTypeId = 1 -- initialize the next data type id counter
 
     -- create a unique id for the list instance (and make it somewhat readable by adding the list name at the end)
     self._Id = string.format("%s_%s", util.GetTableReference(self), self.name)
+    self.updateDebouncedEventName = self._Id .. "_UpdateDebounced"
+
     self.logger:Debug("assigned unique id '%s'", self._Id)
     self.updateDebounceDelayMS = self.updateDebounceDelayMS or globalUpdateDebounceDelayMS
     self.logger:Debug("using update debounce delay of %d ms", self.updateDebounceDelayMS)
@@ -113,11 +126,18 @@ function listClass:Initialize(listDefinition)
         hud.UnlockControls(self.window)
     end
 
+    self._updateDebouncedTrigger = function()
+        EM:UnregisterForUpdate(self.updateDebouncedEventName)
+        self:Update()
+        self:ResizeList()
+    end
+
     addon.RegisterCallback(HR_EVENT_LOCKUI, lockUI)
     addon.RegisterCallback(HR_EVENT_UNLOCKUI, unlockUI)
     addon.RegisterCallback(HR_EVENT_GROUP_CHANGED, onGroupChanged)
-    addon.RegisterCallback(HR_EVENT_PLAYERSDATA_UPDATED, function(...) self:UpdateDebounced(...) end)
-    addon.RegisterCallback(HR_EVENT_PLAYERSDATA_CLEANED, function(...) self:UpdateDebounced(...) end)
+    addon.RegisterCallback(HR_EVENT_PLAYERSDATA_UPDATED, self:CreateUpdateRebouncedCallback())
+    addon.RegisterCallback(HR_EVENT_PLAYERSDATA_CLEANED, self:CreateUpdateRebouncedCallback())
+    EM:RegisterForEvent(self._Id .. "_SupportRangeUpdate", EVENT_GROUP_SUPPORT_RANGE_UPDATE, self:CreateUpdateRebouncedCallback())
 
     self.logger:Debug("initialized in %d ms", GetGameTimeMilliseconds() - beginTime)
     self.Initialize = nil -- prevent re-initialization
@@ -125,21 +145,40 @@ function listClass:Initialize(listDefinition)
     internal.registeredLists[self.name] = self -- register the list
 end
 
---- NOT for manual use! this gets called to update the list with a debounce.
---- debounces the update calls to prevent excessive updates
+--- NOT for manual use! this gets called to resize the list window based on the current data.
+--- calculates the total height of the list based on the data types and their heights.
 --- @return void
-function listClass:UpdateDebounced()
-    if not self:WindowFragmentCondition() then return end
-    EM:RegisterForUpdate(self._Id .. "_UpdateDebounced", self.updateDebounceDelayMS, function()
-        EM:UnregisterForUpdate(self._Id .. "_UpdateDebounced")
-        self:Update()
-    end)
+function list:ResizeList()
+    local height = 0
+    local dataList = ZO_ScrollList_GetDataList(self.listControl)
+    for _, entry in pairs(dataList) do
+        local type = ZO_ScrollList_GetDataTypeTable(self.listControl, entry.typeId)
+        height = height + type.height
+    end
+    self.window:SetHeight(height)
+end
+
+--- NOT for manual use! this gets called to create the debounced update callback function.
+--- creates a function that can be used as a callback to update the list with debounce.
+--- @return function debounced update callback function
+function list:CreateUpdateRebouncedCallback()
+    return function(forceUpdate)
+        self:UpdateDebounced(forceUpdate)
+    end
+end
+
+--- NOT for manual use! this gets called to update the list with a debounce.
+--- debounce the update calls to prevent excessive updates
+--- @return void
+function list:UpdateDebounced(forceUpdate)
+    if not self:WindowFragmentCondition() and not (forceUpdate == true) then return end
+    EM:RegisterForUpdate(self.updateDebouncedEventName, self.updateDebounceDelayMS, self._updateDebouncedTrigger)
 end
 
 --- NOT for manual use! this gets called to check if the list is enabled.
 --- checks if the list is enabled based on the saved variables and current conditions
 --- @return boolean true if the list is enabled, false otherwise
-function listClass:IsEnabled()
+function list:IsEnabled()
     if self.sv.disableInPvP and (IsPlayerInAvAWorld() or IsActiveWorldBattleground()) then
         return false
     end
@@ -156,10 +195,14 @@ function listClass:IsEnabled()
     end
 end
 
+function list:SetBackgroundOpacity(opacity)
+    self.backgroundControl:SetAlpha(opacity)
+end
+
 --- NOT for manual use! this gets called to refresh the visibility of the list.
 --- refresh the visibility of the list based on the current conditions
 --- @return void
-function listClass:RefreshVisibility()
+function list:RefreshVisibility()
     self.windowFragment:Refresh()
 end
 
@@ -167,30 +210,34 @@ end
 --- condition function for the window fragment of the list.
 --- checks if the list should be shown based on the current conditions.
 --- @return boolean true if the window fragment should be shown, false otherwise
-function listClass:WindowFragmentCondition()
-    if not self.uiLocked then
+function list:WindowFragmentCondition()
+    local isEnabled = self:IsEnabled()
+    if not self.uiLocked and isEnabled then
         return true -- always show when ui is unlocked
     end
     if not IsUnitGrouped(localPlayer) then
         return false -- never show when not in a group
     end
 
-    return self:IsEnabled()
+    return isEnabled
 end
 
 --- NOT for manual use! this gets called once when the list is initialized.
 --- Create saved variables for the list.
 --- sets default values if they are not provided during initialization.
 --- @return void
-function listClass:CreateSavedVariables()
+function list:CreateSavedVariables()
     if not self.svVersion then self.svVersion = 1 end
     self.svDefault.enabled = self.svDefault.enabled or 1 -- 1=always, 2=out of combat, 3=non bossfights, 0=off
     self.svDefault.disableInPvP = self.svDefault.disableInPvP or true
+    self.svDefault.windowScale = self.svDefault.windowScale or 1.0
     self.svDefault.windowPosLeft = self.svDefault.windowPosLeft or 0
     self.svDefault.windowPosTop = self.svDefault.windowPosTop or 0
-    self.svDefault.windowWidth = self.svDefault.windowWidth or 220
+    self.svDefault.windowWidth = self.svDefault.windowWidth or 230
+    self.svDefault.backgroundOpacity = self.svDefault.backgroundOpacity or 0.0
+    self.svDefault.supportRangeOnly = self.svDefault.supportRangeOnly or false
 
-    local svNamespace = self.name .. "List"
+    local svNamespace = string.format("list_%s", self.name)
     local svVersion = core.svVersion + self.svVersion
     self.logger:Debug("using saved variables version %d", svVersion)
     -- we use a combination of accountWide saved variables and per character saved variables. This little swappi swappi allows us to switch between them without defining new variables
@@ -212,30 +259,47 @@ end
 --- creates the window and controls for the list.
 --- the window is saved under sel.window and the scrollList control under self.listControl
 --- @return void
-function listClass:CreateControls()
+function list:CreateControls()
+    -- make sure minimum size is updated based on defaults (if user set smaller values before)
+    if self.sw.windowWidth < self.svDefault.windowWidth then
+        self.sw.windowWidth = self.svDefault.windowWidth
+    end
+
     -- create the main window
     local windowName = string.format("%s_%s", addon_name, self._Id)
     local window = WM:CreateTopLevelWindow(windowName)
     window:SetClampedToScreen(true)
-    window:SetResizeToFitDescendents(true)
     window:SetHidden(true)
     window:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, self.sv.windowPosLeft, self.sv.windowPosTop)
-    window:SetWidth(self.sv.windowWidth)
-    window:SetHeight(self.listHeaderHeight + (self.listRowHeight * GROUP_SIZE_MAX) + self.listRowHeight) -- header + rows + extraRow for padding
+    window:SetWidth(self.sw.windowWidth)
     window:SetHandler( "OnMoveStop", function()
         self.sv.windowPosLeft = window:GetLeft()
         self.sv.windowPosTop = window:GetTop()
+        window:ClearAnchors()
+        window:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, self.sv.windowPosLeft, self.sv.windowPosTop)
     end)
+    window:SetScale(self.sw.windowScale)
     self.windowName = windowName
     self.window = window
     self.logger:Debug("created main window '%s'", windowName)
+
+    -- create a background for the body of the list
+    local backgroundName = string.format("%s_%s", windowName, "Background")
+    local backgroundControl = window:CreateControl(backgroundName, CT_TEXTURE)
+    backgroundControl:SetAnchor(TOPLEFT, window, TOPLEFT, 0, self.listHeaderHeight, ANCHOR_CONSTRAINS_XY)
+    backgroundControl:SetAnchor(BOTTOMRIGHT, window, BOTTOMRIGHT, 0, 0, ANCHOR_CONSTRAINS_XY)
+    backgroundControl:SetColor(0, 0, 0, self.sw.backgroundOpacity)
+    backgroundControl:SetMouseEnabled(false)
+    self.backgroundName = backgroundName
+    self.backgroundControl = backgroundControl
+    self.logger:Debug("created background control '%s'", backgroundName)
 
     -- create the list control
     local listControlName = string.format("%s_%s", windowName, "List")
     local listControl = WM:CreateControlFromVirtual(listControlName, window, "ZO_ScrollList")
     listControl:SetAnchor(TOPLEFT, window, TOPLEFT, 0, 0, ANCHOR_CONSTRAINS_XY)
     listControl:SetAnchor(TOPRIGHT, window, TOPRIGHT, ZO_SCROLL_BAR_WIDTH, 0, ANCHOR_CONSTRAINS_X)
-    listControl:SetHeight(self.listHeaderHeight + (self.listRowHeight * GROUP_SIZE_MAX) + self.listRowHeight) -- header + rows + extraRow for padding
+    listControl:SetHeight(600) -- we need to set a fixed height here to make the scroll list work properly when it gets scaled. don't ask me why :D
     listControl:SetMouseEnabled(false)
     listControl:GetNamedChild("Contents"):SetMouseEnabled(false)
     self.listControlName = listControlName
@@ -245,12 +309,13 @@ function listClass:CreateControls()
     ZO_ScrollList_SetHideScrollbarOnDisable(listControl, true)
     ZO_ScrollList_SetUseScrollbar(listControl, false)
     ZO_ScrollList_SetScrollbarEthereal(listControl, true)
+
 end
 
 --- NOT for manual use! this gets called once when the list is initialized.
 --- creates the window fragment for the list.
 --- @return void
-function listClass:CreateFragment()
+function list:CreateFragment()
     local function windowFragmentConditionWrapper()
         return self:WindowFragmentCondition()
     end
@@ -263,9 +328,9 @@ end
 --- Can be used by custom themes as well.
 --- @param control LabelControl
 --- @return void
-function listClass.RenderCurrentFightTimeToControl(control)
+function list.RenderCurrentFightTimeToControl(control)
     -- it would be more expensive here to check if the list is visible and prevent the rendering of the text than just rendering it anyways
-    local t = core.combat:GetCombatTime()
+    local t = combat:GetCombatTime()
     control:SetText(t > 0 and string.format("%d:%04.1f|u0:2::|u", t / 60, t % 60) or "")
 end
 
@@ -274,7 +339,7 @@ end
 --- WARNING: DO NOT use it on controls that get recycled (e.g. playerRows)! ONLY USE on headers or static labels! Otherwise the timers will pile up and cause performance issues. They do NOT get automatically cleaned up on control recycling!
 --- @param control LabelControl the control to render the fight time to
 --- @return void
-function listClass:CreateFightTimeUpdaterOnControl(control)
+function list:CreateFightTimeUpdaterOnControl(control)
     -- check if timer is already registered - if so, return
     if control._onCombatStart or control._onCombatStop then return end
 
@@ -307,11 +372,36 @@ end
 --- @param timeMS number time in milliseconds
 --- @param opacity number|nil optional opacity to set on the control
 --- @return void
-function listClass.RenderTimeToControl(control, timeMS, opacity)
+function list.RenderTimeToControl(control, timeMS, opacity)
     local timeS = timeMS / 1000
     control:SetText(string.format("%0.1f|u0:2::|u", timeS) or "")
     if opacity then
         control:SetAlpha(opacity)
+    end
+end
+
+function list:ApplySupportRangeStyle(rowControl, unitTag)
+    if self.sw.supportRangeOnly and not IsUnitInGroupSupportRange(unitTag) then
+        rowControl:SetAlpha(0.2)
+    else
+        rowControl:SetAlpha(1.0)
+    end
+end
+
+function list:ApplyUserNameToControl(nameControl, userId)
+    local userName = util.GetUserName(userId, true)
+    if userName then
+        nameControl:SetText(userName)
+        nameControl:SetColor(1, 1, 1)
+    end
+end
+
+function list:ApplyUserIconToControl(iconControl, userId, classId)
+    iconControl:SetTextureReleaseOption(RELEASE_TEXTURE_AT_ZERO_REFERENCES)
+    local userIcon, tcLeft, tcRight, tcTop, tcBottom = util.GetUserIcon(userId, classId)
+    if userIcon then
+        iconControl:SetTexture(userIcon)
+        iconControl:SetTextureCoords(tcLeft, tcRight, tcTop, tcBottom)
     end
 end
 
@@ -320,9 +410,9 @@ end
 --- WARNING: DO NOT use it on controls that get recycled (e.g. playerRows)! ONLY USE on headers or static labels! Otherwise the timers will pile up and cause performance issues. They do NOT get automatically cleaned up on control recycling!
 --- @param control LabelControl the control to render the countdown to
 --- @param eventName string the event name to register the countdown start callback to (must provide the following arguments: (unitTag, duration) where duration is in milliseconds)
---- @param zeroTimerOpacity number|nil optional opacity to set on the control when the timer reaches zero (default: 0.7)
+--- @param zeroTimerOpacity number|nil optional opacity to set on the control when the timer reaches zero (default: self.sw.zeroTimerOpacity or 0.7)
 --- @return void
-function listClass:CreateCountdownOnControl(control, eventName, zeroTimerOpacity)
+function list:CreateCountdownOnControl(control, eventName, zeroTimerOpacity)
     -- check if timer is already registered - if so, return
     if control._onCountdownStart or control._onCountdownTick then return end
 
@@ -331,16 +421,13 @@ function listClass:CreateCountdownOnControl(control, eventName, zeroTimerOpacity
     self.logger:Debug("creating countdown timer on control with id '%s'", control._Id)
 
     local blinkDurationMS = 2500 -- TODO: possibly make configurable by savedVars ?
-    self.logger:Debug("using blink duration of %d ms", blinkDurationMS)
-    zeroTimerOpacity = zeroTimerOpacity or 0.7
-    self.logger:Debug("using zero timer opacity of %.2f", zeroTimerOpacity)
 
     control._onCountdownTick = function()
         local nowMS = GetGameTimeMilliseconds()
 
         -- when the timer ended more than 5 seconds ago, set the opacity to zeroTimerOpacity, stop updating and return
         if not control._countdownEndTime or control._countdownEndTime + blinkDurationMS < nowMS then
-            self.RenderTimeToControl(control, 0, zeroTimerOpacity)
+            self.RenderTimeToControl(control, 0, zeroTimerOpacity or self.sw.zeroTimerOpacity or 0.35)
             EM:UnregisterForUpdate(control._Id .. "_CountdownUpdate")
             return
         end
@@ -348,13 +435,13 @@ function listClass:CreateCountdownOnControl(control, eventName, zeroTimerOpacity
         -- render remaining time
         local remainingMS = control._countdownEndTime - nowMS
         local remainingMSDisplayed = zo_max(0, remainingMS)
-        local opacity = nil
+        local opacity = 1.0
 
         -- if remaining time is less than blinkDurationMS, start blinking the text
         if remainingMS <= 0 then
             -- Blinking: switch every 250ms between 1.0 and zeroTimerOpacity
             local blinkPhase = zo_floor((remainingMS % 500) / 250)
-            opacity = (blinkPhase == 0) and 1.0 or zeroTimerOpacity
+            opacity = (blinkPhase == 0) and 1.0 or zeroTimerOpacity or self.sw.zeroTimerOpacity or 0.35
         end
 
         self.RenderTimeToControl(control, remainingMSDisplayed, opacity)

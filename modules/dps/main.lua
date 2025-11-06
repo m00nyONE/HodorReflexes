@@ -31,6 +31,7 @@ local moduleDefinition = {
     svVersion = 1,
     svDefault = {
         accountWide = true,
+        advancedSettings = false,-- displays more settings in the menu
     },
 
     isTestRunning = false,
@@ -40,6 +41,7 @@ local moduleDefinition = {
 
 local module = internal.moduleClass:New(moduleDefinition)
 
+local playerDataCache = {}
 --- handle DPS data received from LGCS
 --- @param tag string
 --- @param data table
@@ -47,13 +49,13 @@ local module = internal.moduleClass:New(moduleDefinition)
 function module:onDPSDataReceived(tag, data)
     if not IsUnitGrouped(tag) then return end
 
-    group.CreateOrUpdatePlayerData({
-        name     = GetUnitName(tag),
-        tag      = tag,
-        dmg      = data.dmg,
-        dps      = data.dps,
-        dmgType  = data.dmgType,
-    })
+    playerDataCache.name = GetUnitName(tag)
+    playerDataCache.tag = tag
+    playerDataCache.dmg = data.dmg
+    playerDataCache.dps = data.dps
+    playerDataCache.dmgType = data.dmgType
+
+    group.CreateOrUpdatePlayerData(playerDataCache)
 end
 
 --- module activation function
@@ -80,6 +82,8 @@ function module:Activate()
         dmg = 0,
         dps = 0,
         dmgType = DAMAGE_UNKNOWN,
+        -- hide from list preferences ( sent by HideMe module )
+        hideDamage = false,
     })
 
     self:RunOnce("CreateLists")

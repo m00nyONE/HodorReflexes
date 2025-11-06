@@ -11,39 +11,44 @@ local util = addon.util
 local addon_extensions = addon.extensions
 local extension = addon_extensions.seasons
 
-local seasonDefinition = {
+local season = {
     name = "valentines",
     version = "1.0.0",
     description = "random hearts as class icons",
     dates = { "1402" },
 }
 
-local season = extension:NewSeason(seasonDefinition)
-
 function season:Activate()
-    local valentineIcons = { -- TODO: combine into one texture and set textureCoordinates for performance
-        "HodorReflexes/extensions/seasons/PC/assets/valentine/8bitHeart.dds",
-        "HodorReflexes/extensions/seasons/PC/assets/valentine/angel_heart.dds",
-        "HodorReflexes/extensions/seasons/PC/assets/valentine/blue_heart.dds",
-        "HodorReflexes/extensions/seasons/PC/assets/valentine/calender.dds",
-        "HodorReflexes/extensions/seasons/PC/assets/valentine/ff_heart.dds",
-        "HodorReflexes/extensions/seasons/PC/assets/valentine/green_heart.dds",
-        "HodorReflexes/extensions/seasons/PC/assets/valentine/happyheart.dds",
-        "HodorReflexes/extensions/seasons/PC/assets/valentine/orange_heart.dds",
-        "HodorReflexes/extensions/seasons/PC/assets/valentine/present.dds",
-        "HodorReflexes/extensions/seasons/PC/assets/valentine/purple_heart.dds",
-        "HodorReflexes/extensions/seasons/PC/assets/valentine/rainbow_heart.dds",
-        "HodorReflexes/extensions/seasons/PC/assets/valentine/ring.dds",
-        "HodorReflexes/extensions/seasons/PC/assets/valentine/rose.dds",
-        "HodorReflexes/extensions/seasons/PC/assets/valentine/round_heart.dds",
-        "HodorReflexes/extensions/seasons/PC/assets/valentine/smiling_heart.dds",
-        "HodorReflexes/extensions/seasons/PC/assets/valentine/sparkling_heart.dds",
-        "HodorReflexes/extensions/seasons/PC/assets/valentine/white_heart.dds",
+    local texturePath = "HodorReflexes/extensions/seasons/PC/assets/valentines/icons-4x4.dds"
+    local textureCoordinates = {
+        -- row 1
+        { 0, 0.25, 0, 0.25 },    -- 8-bit heart
+        { 0.25, 0.5, 0, 0.25 },  -- angel heart
+        { 0.5, 0.75, 0, 0.25 },  -- happy heart
+        { 0.75, 1, 0, 0.25 },    -- surprised heart
+        -- row 2
+        { 0, 0.25, 0.25, 0.5 },   -- red heart in yellow circle
+        { 0.25, 0.5, 0.25, 0.5 }, -- white heart in red circle
+        { 0.5, 0.75, 0.25, 0.5 }, -- rainbow heart
+        { 0.75, 1, 0.25, 0.5 },   -- purple heart
+        -- row 3
+        { 0, 0.25, 0.5, 0.75 },   -- white heart
+        { 0.25, 0.5, 0.5, 0.75 }, -- blue heart
+        { 0.5, 0.75, 0.5, 0.75 }, -- green heart
+        { 0.75, 1, 0.5, 0.75 },   -- orange heart
+        -- row 4
+        { 0, 0.25, 0.75, 1 },     -- sparkling heart
+        { 0.25, 0.5, 0.75, 1 },   -- ring
+        { 0.5, 0.75, 0.75, 1 },   -- rose
+        { 0.75, 1, 0.75, 1 },     -- date
     }
-    local function getRandomValentinesIcon()
-        local randomIconIndex = zo_random(1, #valentineIcons)
-        return valentineIcons[randomIconIndex], 0, 1, 0, 1
+
+    local function getRandomValentinesIcon(classId)
+        local randomIconIndex = zo_random(1, #textureCoordinates)
+        return texturePath, unpack(textureCoordinates[randomIconIndex])
     end
 
-    util.GetClassIcon = getRandomValentinesIcon()
+    util.GetClassIcon = getRandomValentinesIcon
 end
+
+extension:NewSeason(season)

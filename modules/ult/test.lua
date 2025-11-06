@@ -68,6 +68,7 @@ function module:genUltPoolForTest()
     end
 end
 
+local playerDataCache = {}
 --- callback function that gets called on test start
 --- @return void
 function module:startTest()
@@ -81,13 +82,13 @@ function module:startTest()
         saxhleel = 1,
         colos = 2,
         atro = 2,
-        cryptCannon = 1,
+        slayer = 2,
         pillager = 1,
-        MAorWM = 2,
+        cryptCannon = 1,
     }
 
 
-    for name, data in pairs(addon.playersData) do
+    for name, _ in pairs(addon.playersData) do
         local ultValue = zo_random(1, 500)
         local ult1ID = ultPool[zo_random(1, #ultPool)]
         local ult2ID = ultPool[zo_random(1, #ultPool)]
@@ -113,9 +114,9 @@ function module:startTest()
             ult1ID = self.barrierAbilityIds[zo_random(1, #self.barrierAbilityIds)]
             ultActivatedSetID = 2 -- pillager
             limits.pillager = limits.pillager - 1
-        elseif limits.MAorWM > 0 then
+        elseif limits.slayer > 0 then
             ultActivatedSetID = zo_random(4, 5) -- MA or WM
-            limits.MAorWM = limits.MAorWM - 1
+            limits.slayer = limits.slayer - 1
         end
 
         local ult1Cost = GetAbilityCost(ult2ID)
@@ -129,37 +130,48 @@ function module:startTest()
             ultActivatedSetID = ultActivatedSetID,
         }
 
-        group.CreateOrUpdatePlayerData({
-            name = name, -- required
-            tag = name, -- required
-            ultValue = ultValue,
-            ult1ID = ult1ID,
-            ult2ID = ult2ID,
-            ult1Cost = ult1Cost,
-            ult2Cost = ult2Cost,
-            ult1Percentage = ult1Percentage,
-            ult2Percentage = ult2Percentage,
-            lowestUltPercentage = zo_min(ult1Percentage, ult2Percentage),
-            -- special ults
-            hasHorn = self:hasUnitHorn(mockData),
-            hasColos = self:hasUnitColos(mockData),
-            hasAtro = self:hasUnitAtro(mockData),
-            hasBarrier = self:hasUnitBarrier(mockData),
-            hasCryptCannon = self:hasUnitCryptCannon(mockData),
-            -- ult activated sets
-            hasSaxhleel = self:hasUnitSaxhleel(mockData),
-            hasMAorWM = self:hasUnitMAorWM(mockData),
-            hasPillager = self:hasUnitPillager(mockData),
-            ultActivatedSetID = ultActivatedSetID,
-        })
+        playerDataCache.name = name -- required
+        playerDataCache.tag = name -- required
+        playerDataCache.ultValue = ultValue
+        playerDataCache.ult1ID = ult1ID
+        playerDataCache.ult2ID = ult2ID
+        playerDataCache.ult1Cost = ult1Cost
+        playerDataCache.ult2Cost = ult2Cost
+        playerDataCache.ult1Percentage = ult1Percentage
+        playerDataCache.ult2Percentage = ult2Percentage
+        playerDataCache.lowestUltPercentage = zo_min(ult1Percentage, ult2Percentage)
+        -- special ults
+        playerDataCache.hasHorn = self:hasUnitHorn(mockData)
+        playerDataCache.hasColos = self:hasUnitColos(mockData)
+        playerDataCache.hasAtro = self:hasUnitAtro(mockData)
+        playerDataCache.hasBarrier = self:hasUnitBarrier(mockData)
+        playerDataCache.hasCryptCannon = self:hasUnitCryptCannon(mockData)
+        -- ult activated sets
+        playerDataCache.hasSaxhleel = self:hasUnitSaxhleel(mockData)
+        playerDataCache.hasSlayer = self:hasUnitSlayer(mockData)
+        playerDataCache.hasPillager = self:hasUnitPillager(mockData)
+        playerDataCache.ultActivatedSetID = ultActivatedSetID
+
+        group.CreateOrUpdatePlayerData(playerDataCache)
+
+        -- cleanup
+        mockData = nil
     end
+
+    -- cleanup
+    limits = nil
 
     -- manually force updates on lists without the usual debounce to initialize them early during the test
     self.hornList:Update()
+    self.hornList:ResizeList()
     self.colosList:Update()
+    self.colosList:ResizeList()
     self.atroList:Update()
+    self.atroList:ResizeList()
     self.miscList:Update()
+    self.miscList:ResizeList()
     self.compactList:Update()
+    self.compactList:ResizeList()
 
     -- fire some buff/debuff events for testing purposes
     CM:FireCallbacks(HR_EVENT_HORN_BUFF_GAINED, localPlayer, 30 * 1000)
@@ -181,6 +193,7 @@ end
 --- @return void
 function module:updateTest()
     if not self.isTestRunning then return end
+    ZO_ClearTable(playerDataCache) -- we have to clear the cache because it stil contains data from when the test started.
 
     for name, data in pairs(addon.playersData) do
         local ultValue = data.ultValue + zo_random(2, 5)
@@ -188,13 +201,13 @@ function module:updateTest()
         local ult1Percentage = self:getUltPercentage(ultValue, data.ult1Cost)
         local ult2Percentage = self:getUltPercentage(ultValue, data.ult2Cost)
 
-        group.CreateOrUpdatePlayerData({
-            name = name, -- required
-            tag = name, -- required
-            ultValue = ultValue,
-            ult1Percentage = ult1Percentage,
-            ult2Percentage = ult2Percentage,
-            lowestUltPercentage = zo_min(ult1Percentage, ult2Percentage),
-        })
+        playerDataCache.name = name -- required
+        playerDataCache.tag = name -- required
+        playerDataCache.ultValue = ultValue
+        playerDataCache.ult1Percentage = ult1Percentage
+        playerDataCache.ult2Percentage = ult2Percentage
+        playerDataCache.lowestUltPercentage = zo_min(ult1Percentage, ult2Percentage)
+
+        group.CreateOrUpdatePlayerData(playerDataCache)
     end
 end

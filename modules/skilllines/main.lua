@@ -33,34 +33,38 @@ local moduleDefinition = {
 
 local module = internal.moduleClass:New(moduleDefinition)
 
+local playerDataCache = {
+    name = "",
+    tag = "",
+    skillLines = {
+        first = 0,
+        second = 0,
+        third = 0,
+    }
+}
 local function onSkillLinesDataReceived(tag, data)
     if not IsUnitGrouped(tag) then return end
 
-    group.CreateOrUpdatePlayerData({
-        name = GetUnitName(tag),
-        tag = tag,
-        skillLines = {
-            first = data.first or 0,
-            second = data.second or 0,
-            third = data.third or 0,
-        }
-    })
+    playerDataCache.name = GetUnitName(tag)
+    playerDataCache.tag = tag
+    playerDataCache.skillLines.first = data.first or 0
+    playerDataCache.skillLines.second = data.second or 0
+    playerDataCache.skillLines.third = data.third or 0
 
+    group.CreateOrUpdatePlayerData(playerDataCache)
 end
 
 local function startTest()
     isTestRunning = true
 
     for name, _ in pairs(addon.playersData) do
-        group.CreateOrUpdatePlayerData({
-            name = name,
-            tag = name,
-            skillLines = {
-                first = 22,
-                second = 22,
-                third = 22,
-            }
-        })
+        playerDataCache.name = name
+        playerDataCache.tag = name
+        playerDataCache.skillLines.first = 22
+        playerDataCache.skillLines.second = 22
+        playerDataCache.skillLines.third = 22
+
+        group.CreateOrUpdatePlayerData(playerDataCache)
     end
 end
 local function stopTest()

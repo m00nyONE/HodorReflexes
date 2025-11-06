@@ -7,31 +7,32 @@ local internal = addon.internal
 local core = internal.core
 
 local addon_modules = addon.modules
-local addon_extensions = addon.extensions
-local internal_modules = internal.modules
 
 local module_name = "ult"
 local module = addon_modules[module_name]
 
-local util = addon.util
-
 local HR_EVENT_MAJOR_VULNERABILITY_DEBUFF_GAINED = addon.HR_EVENT_MAJOR_VULNERABILITY_DEBUFF_GAINED
 
+local blankTable = {}
 
 local svVersion = 1
 local svDefault = {
     enabled =  1, -- 1=always, 2=out of combat, 3=non bossfights, 0=off
     disableInPvP = true,
 
-    windowPosLeft = 550,
-    windowPosTop = 50,
-    windowWidth = 262,
+    windowScale = 1.0,
+    windowPosLeft = 10,
+    windowPosTop = 660,
+    windowWidth = 272,
+    backgroundOpacity = 0.0,
 
     showPercentValue = 1.0,
-    showRawValue = 1.0,
+    showRawValue = 0.0,
 
     headerOpacity = 0.0,
-    zeroTimerOpacity = 0.7,
+    zeroTimerOpacity = 0.35,
+
+    supportRangeOnly = false,
 
     colorVuln = {1, 1, 0}, -- yellow
 }
@@ -46,84 +47,76 @@ function module:CreateColosList()
         listRowHeight = 24,
     }
     self.colosList = addon.listClass:New(listDefinition)
+    local list = self.colosList
 
-    self.colosList.HEADER_TYPE = 1 -- type id for header
-    self.colosList.ROW_TYPE = 2 -- type id for rows
-    self.colosList.HEADER_TEMPLATE = "HodorReflexes_Ult_ColosList_Header"
-    self.colosList.ROW_TEMPLATE = "HodorReflexes_Ult_ColosList_PlayerRow"
+    list.HEADER_TYPE = list:GetNextDataTypeId() -- type id for header
+    list.ROW_TYPE = list:GetNextDataTypeId() -- type id for rows
+    list.HEADER_TEMPLATE = "HodorReflexes_Ult_ColosList_Header"
+    list.ROW_TEMPLATE = "HodorReflexes_Ult_ColosList_PlayerRow"
 
-    local function headerRowCreationWrapper(wrappedFunction)
+    local function rowCreationWrapper(wrappedFunction)
         return function(rowControl, data, scrollList)
             wrappedFunction(self, rowControl, data, scrollList)
         end
     end
 
-    local function playerRowCreationWrapper(wrappedFunction)
-        return function(rowControl, data, scrollList)
-            if data.ultValue > 0 and (self.isTestRunning or IsUnitOnline(data.tag)) then
-                wrappedFunction(self, rowControl, data, scrollList)
-            end
-        end
-    end
+    ZO_ScrollList_AddDataType(
+            list.listControl,
+            list.HEADER_TYPE,
+            list.HEADER_TEMPLATE,
+            list.listHeaderHeight,
+            rowCreationWrapper(self.colosListHeaderRowCreationFunction)
+    )
+    ZO_ScrollList_SetTypeCategoryHeader(list.listControl, list.HEADER_TYPE, true)
+    list.logger:Debug("added header row type '%d' with template '%s'", list.HEADER_TYPE, list.HEADER_TEMPLATE)
 
     ZO_ScrollList_AddDataType(
-            self.colosList.listControl,
-            self.colosList.HEADER_TYPE,
-            self.colosList.HEADER_TEMPLATE,
-            self.colosList.listHeaderHeight,
-            headerRowCreationWrapper(self.colosListHeaderRowCreationFunction)
+            list.listControl,
+            list.ROW_TYPE,
+            list.ROW_TEMPLATE,
+            list.listRowHeight,
+            rowCreationWrapper(self.colosListRowCreationFunction)
     )
-    ZO_ScrollList_SetTypeCategoryHeader(self.colosList.listControl, self.colosList.HEADER_TYPE, true)
-    self.colosList.logger:Debug("added header row type '%d' with template '%s'", self.colosList.HEADER_TYPE, self.colosList.HEADER_TEMPLATE)
-
-    ZO_ScrollList_AddDataType(
-            self.colosList.listControl,
-            self.colosList.ROW_TYPE,
-            self.colosList.ROW_TEMPLATE,
-            self.colosList.listRowHeight,
-            playerRowCreationWrapper(self.colosListRowCreationFunction)
-    )
-    self.colosList.logger:Debug("added player row type '%d' with template '%s'", self.colosList.ROW_TYPE, self.colosList.ROW_TEMPLATE)
+    list.logger:Debug("added player row type '%d' with template '%s'", list.ROW_TYPE, list.ROW_TEMPLATE)
 end
 
 function module:colosListHeaderRowCreationFunction(rowControl, data, scrollList)
-    if not rowControl._initialized then
-        rowControl:GetNamedChild("_BG"):SetAlpha(self.colosList.sw.headerOpacity)
-        rowControl:GetNamedChild("_Duration"):SetColor(unpack(self.colosList.sw.colorVuln))
-        rowControl:GetNamedChild("_Duration"):SetAlpha(self.colosList.sw.zeroTimerOpacity)
-
-        self.colosList:CreateCountdownOnControl(
-            rowControl:GetNamedChild("_Duration"),
-            HR_EVENT_MAJOR_VULNERABILITY_DEBUFF_GAINED,
-            self.colosList.sw.zeroTimerOpacity
-        )
-
-        rowControl._initialized = true
+    if rowControl._initialized and not self.colosList._redrawHeaders then
+        return
     end
+
+    local colosList = self.colosList
+    local sw = colosList.sw
+
+    local colosIcon = rowControl:GetNamedChild("_Icon")
+    local vulnDuration = rowControl:GetNamedChild("_Duration")
+
+    rowControl:GetNamedChild("_BG"):SetAlpha(sw.headerOpacity)
+    colosIcon:SetTexture(self.colosIcon)
+    vulnDuration:SetColor(unpack(sw.colorVuln))
+    vulnDuration:SetAlpha(sw.zeroTimerOpacity)
+
+    colosList:CreateCountdownOnControl(vulnDuration, HR_EVENT_MAJOR_VULNERABILITY_DEBUFF_GAINED)
+
+    colosList._redrawHeaders = false
+    rowControl._initialized = true
 end
 
 function module:colosListRowCreationFunction(rowControl, data, scrollList)
-    local userName = util.GetUserName(data.userId, true)
-    if userName then
-        local nameControl = rowControl:GetNamedChild('_Name')
-        nameControl:SetText(userName)
-        nameControl:SetColor(1, 1, 1)
-    end
+    local list = self.colosList
+    local sw = list.sw
 
-    local userIcon, tcLeft, tcRight, tcTop, tcBottom = util.GetUserIcon(data.userId, data.classId)
-    if userIcon then
-        local iconControl = rowControl:GetNamedChild('_Icon')
-        iconControl:SetTexture(userIcon)
-        iconControl:SetTextureCoords(tcLeft, tcRight, tcTop, tcBottom)
-    end
+    list:ApplySupportRangeStyle(rowControl, data.tag)
+    list:ApplyUserNameToControl(rowControl:GetNamedChild('_Name'), data.userId)
+    list:ApplyUserIconToControl(rowControl:GetNamedChild('_Icon'), data.userId, data.classId)
 
     local percentageColor = self:getUltPercentageColor(data.colosPercentage, 'FFFFFF')
     local percentageControl = rowControl:GetNamedChild("_PctValue")
-    percentageControl:SetText(string.format('|c%s%d%%|r', percentageColor, zo_min(200, data.colosPercentage)))
-    percentageControl:SetScale(self.colosList.sw.showPercentValue)
+    percentageControl:SetText(string.format('|c%s%d%%|r', percentageColor, zo_clamp(data.colosPercentage, 0, 200)))
+    percentageControl:SetScale(sw.showPercentValue)
     local rawValueControl = rowControl:GetNamedChild("_RawValue")
     rawValueControl:SetText(string.format('%s', data.ultValue))
-    rawValueControl:SetScale(self.colosList.sw.showRawValue)
+    rawValueControl:SetScale(sw.showRawValue)
 end
 
 function module:UpdateColosList()
@@ -134,7 +127,7 @@ function module:UpdateColosList()
 
     local playersDataList = {}
     for _, playerData in pairs(addon.playersData) do
-        if playerData.ultValue > 0 and playerData.hasColos then
+        if not playerData.hideColos and playerData.ultValue > 0 and playerData.hasColos then
             local lowestPossibleColosCost = 0
             if self:isColos(playerData.ult1ID) then lowestPossibleColosCost = playerData.ult1Cost end
             if self:isColos(playerData.ult2ID) then lowestPossibleColosCost = playerData.ult2Cost end
@@ -146,19 +139,13 @@ function module:UpdateColosList()
 
     --- fill dataList ---
     -- insert Header
-    table.insert(dataList, ZO_ScrollList_CreateDataEntry(self.colosList.HEADER_TYPE, {
-    }))
+    table.insert(dataList, ZO_ScrollList_CreateDataEntry(self.colosList.HEADER_TYPE, blankTable))
 
     -- insert playerRows
     for i, playerData in ipairs(playersDataList) do
         playerData.orderIndex = i
         table.insert(dataList, ZO_ScrollList_CreateDataEntry(self.colosList.ROW_TYPE, playerData))
     end
-
-    self.colosList.window:SetHeight(
-        self.colosList.listHeaderHeight +
-        (#playersDataList * self.colosList.listRowHeight)
-    )
 
     ZO_ScrollList_Commit(listControl)
 end

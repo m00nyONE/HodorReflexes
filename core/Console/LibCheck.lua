@@ -5,9 +5,7 @@ local addon_name = "HodorReflexes"
 local addon = _G[addon_name]
 local internal = addon.internal
 local core = internal.core
-local logger = core.initSubLogger("LibCheck")
-
-local LCN = LibCustomNames
+local logger = core.GetLogger("core/LibCheck")
 
 --- checks if optional libraries are loaded, if not show a reminder dialog
 --- @return void
@@ -15,7 +13,10 @@ function core.OptionalLibrariesCheck()
     local sw = core.sw
     local dialogName = string.format("%s_MISSING_LIBS", addon_name)
 
-    if (not LCN) and not sw.libraryPopupDisabled then
+    -- TODO: activate again when confirmed that HR is not causing the issues on console inside the mod-manager window
+    if true then return end -- Disabled for now
+
+    if (not LibCustomNames) and (not sw.libraryPopupDisabled) then
         logger:Warn("LibCustomNames is missing. Some features will be disabled.")
         ZO_Dialogs_RegisterCustomDialog(dialogName, {
             title = {
@@ -26,7 +27,7 @@ function core.OptionalLibrariesCheck()
             },
             buttons = {
                 {
-                    text = GetString(HR_MISSING_LIBS_OK),
+                    text = SI_OK,
                     keybind = "DIALOG_PRIMARY",
                     callback = function() end,
                 },
@@ -46,7 +47,9 @@ function core.OptionalLibrariesCheck()
             },
         })
 
-        ZO_Dialogs_ShowDialog(dialogName, nil, nil, IsInGamepadPreferredMode())
+        if not ZO_Dialogs_IsShowingDialog() then
+            ZO_Dialogs_ShowPlatformDialog(dialogName)
+        end
     end
 
 end

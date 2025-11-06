@@ -16,7 +16,7 @@ local moduleDefinition = {
     friendlyName = GetString(HR_MODULES_PULL_FRIENDLYNAME),
     description = GetString(HR_MODULES_PULL_DESCRIPTION),
     version = "0.9.0",
-    priority = 10,
+    priority = 9,
     enabled = false,
     svVersion = 1,
     svDefault = {
@@ -39,7 +39,7 @@ function module:Activate()
     local countdownButton = {
         name = GetString(HR_MODULES_PULL_BINDING_COUNTDOWN),
         keybind = 'HR_MODULES_PULL_BINDING_COUNTDOWN',
-        callback = function(...) self:SendPullCountdown(...) end,
+        callback = function() self:SendPullCountdown() end,
         alignment = KEYBIND_STRIP_ALIGN_CENTER,
     }
 
@@ -50,9 +50,14 @@ function module:Activate()
             KEYBIND_STRIP:RemoveKeybindButton(countdownButton)
         end
     end
+
     -- Add hotkey to group window
-    KEYBOARD_GROUP_MENU_SCENE:RegisterCallback('StateChange', OnStateChanged)
-    GAMEPAD_GROUP_SCENE:RegisterCallback('StateChange', OnStateChanged)
+    if KEYBOARD_GROUP_MENU_SCENE then
+        KEYBOARD_GROUP_MENU_SCENE:RegisterCallback("StateChange", OnStateChanged)
+    end
+    if GAMEPAD_GROUP_SCENE then
+        GAMEPAD_GROUP_SCENE:RegisterCallback("StateChange", OnStateChanged)
+    end
 
     core.RegisterSubCommand("pull", GetString(HR_MODULES_PULL_COMMAND_HELP), function(...) self:SendPullCountdown(...) end)
 end

@@ -5,21 +5,24 @@ local addon_name = "HodorReflexes"
 local addon = _G[addon_name]
 local internal = addon.internal
 
+local core = internal.core
+
 local LCN = LibCustomNames
 local LCI = LibCustomIcons
 local util = addon.util
 
 local extensionDefinition = {
     name = "configurator",
+    friendlyName = GetString(HR_EXTENSIONS_CONFIGURATOR_FRIENDLYNAME),
     version = "1.0.0",
-    description = "Allows you to request a custom name/icon yourself with an easy to use editor.",
+    description = GetString(HR_EXTENSIONS_CONFIGURATOR_DESCRIPTION),
     priority = 11,
     svVersion = 1,
     svDefault = {
         selectedDonationTier = 1,
 
-        nameRaw = "",
-        nameColored = "",
+        nameRaw = UndecorateDisplayName(GetUnitDisplayName("player")),
+        nameColored = UndecorateDisplayName(GetUnitDisplayName("player")),
 
         nameGradient = false,
         nameColorBegin = {1, 1, 1},
@@ -37,12 +40,15 @@ local extension = internal.extensionClass:New(extensionDefinition)
 --- NOT for manual use. This function gets called once when the extension is loaded and then deleted afterwards.
 --- @return void
 function extension:Activate()
-    if not LCN or not LCI then
+    if not LCN then
         self.enabled = false
         return
     end
 
-    self.currentFolder = (LCI.GetCurrentFolder and LCI.GetCurrentFolder()) or "misc"
+    self.currentFolder = (LCI and LCI.GetCurrentFolder and LCI.GetCurrentFolder()) or "misc"
+
+    local options = self:RunOnce("BuildMenuOptions")
+    core.RegisterSubMenuOptions(self.friendlyName, options)
 end
 
 --- Escapes the display name to a valid string that can be used as a filename.
@@ -55,13 +61,13 @@ function extension:escapeName(displayName)
 end
 
 --- Generates a colored name with optional gradient coloring.
---- @param withGradient boolean|nil optional whether to use gradient coloring or not.
+--- @param withGradient boolean|nil optional whether to use gradient coloring or not. If nil, uses self.sw.nameGradient
 --- @param nameRaw string|nil optional raw name. If nil, uses self.sw.nameRaw
 --- @param colorBegin table optional begin color as {r, g, b}. If nil, uses self.sw.nameColorBegin
 --- @param colorEnd table optional end color as {r, g, b}. If nil, uses self.sw.nameColorEnd
 --- @return string The formatted name.
 function extension:generateColoredName(withGradient, nameRaw, colorBegin, colorEnd)
-    if withGradient == nil then withGradient = self.sw.withGradient end
+    if withGradient == nil then withGradient = self.sw.nameGradient end
     if nameRaw == nil then nameRaw = self.sw.nameRaw end
     if colorBegin == nil then colorBegin = self.sw.nameColorBegin end
     if colorEnd == nil then colorEnd = self.sw.nameColorEnd end
@@ -165,6 +171,13 @@ function extension:generateGradient(rawName, colorBegin, colorEnd)
     local r2, g2, b2 = unpack(colorEnd)
     local chars = {} -- raw name split into single characters
     local numChars = 0 -- number of non spaces
+
+    -- sanity check for colors
+    if r1 == r2 and g1 == g2 and b1 == b2 then
+        local hex = util.RGB2Hex(r1, g1, b1)
+        return string.format('|c%s%s|r', hex, rawName)
+    end
+
     -- Split raw name into single utf8 characters.
     for i = 1, utf8.len(rawName) do
         chars[i] = string.sub(rawName, utf8.offset(rawName, i), utf8.offset(rawName, i + 1) - 1)

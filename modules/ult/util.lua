@@ -12,7 +12,7 @@ local internal_modules = internal.modules
 local module_name = "ult"
 local module = addon_modules[module_name]
 
---- get the ultimate in percent from 0-100. from 100-200 its scaled acordingly.
+--- get the ultimate in percent from 0-100. from 100-200 its scaled accordingly.
 --- @param ultValue number current ult value
 --- @param ultCost number ult cost of the ability
 --- @return number percentage from 0-200
@@ -21,7 +21,7 @@ function module:getUltPercentage(ultValue, ultCost)
         return zo_floor((ultValue / ultCost) * 100)
     end
 
-    return zo_min(200, 100 + zo_floor(100 * (ultValue - ultCost) / (500 - ultCost)))
+    return zo_clamp(100 + zo_floor(100 * (ultValue - ultCost) / (500 - ultCost)), 0, 200)
 end
 
 --- get a hex color code depending on the ult percentage
@@ -167,7 +167,7 @@ end
 --- checks if the player has the MasterArchitect or WarMachine ult activated set
 --- @param playerData table
 --- @return boolean
-function module:hasUnitMAorWM(playerData)
+function module:hasUnitSlayer(playerData)
     if playerData.ultActivatedSetID == 4 or playerData.ultActivatedSetID == 5 then return true end
     return false
 end

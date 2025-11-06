@@ -15,7 +15,10 @@ local HR_EVENT_UNLOCKUI = addon.HR_EVENT_UNLOCKUI
 local HR_EVENT_TEST_STARTED = addon.HR_EVENT_TEST_STARTED
 local HR_EVENT_TEST_STOPPED = addon.HR_EVENT_TEST_STOPPED
 local HR_EVENT_PLAYER_ACTIVATED = addon.HR_EVENT_PLAYER_ACTIVATED
+local HR_EVENT_COMBAT_START = addon.HR_EVENT_COMBAT_START
+local HR_EVENT_COMBAT_END = addon.HR_EVENT_COMBAT_END
 
+local localPlayer = "player"
 
 local EM = GetEventManager()
 local WM = GetWindowManager()
@@ -31,13 +34,14 @@ local moduleDefinition = {
     friendlyName = GetString(HR_MODULES_READYCHECK_FRIENDLYNAME),
     description = GetString(HR_MODULES_READYCHECK_DESCRIPTION),
     version = "1.0.0",
-    priority = 99,
+    priority = 12,
     enabled = false,
     svVersion = 1,
     svDefault = {
+        accountWide = true,
         enableChatMessages = true,
-        readycheckWindowPosLeft = 0,
-        readycheckWindowPosTop = 200,
+        windowCenterX = GuiRoot:GetWidth() / 2,
+        windowCenterY = GuiRoot:GetHeight() / 5,
     },
 
     uiLocked = true,
@@ -63,6 +67,8 @@ function module:Activate()
     addon.RegisterCallback(HR_EVENT_UNLOCKUI, function(...) self:unlockUI(...) end)
     addon.RegisterCallback(HR_EVENT_TEST_STARTED, function(...) self:startTest(...) end)
     addon.RegisterCallback(HR_EVENT_TEST_STOPPED, function(...) self:stopTest(...) end)
+    addon.RegisterCallback(HR_EVENT_COMBAT_START, function(...) self:refreshVisibility(...) end)
+    addon.RegisterCallback(HR_EVENT_COMBAT_END, function(...) self:refreshVisibility(...) end)
 
     local eventName = addon_name .. self.name
     EM:RegisterForEvent(eventName, EVENT_GROUP_ELECTION_REQUESTED, function(...) self:startElection(...) end) -- when player starts the vote
@@ -80,10 +86,11 @@ function module:CreateReadyCheckUI()
     readycheckWindow:SetClampedToScreen(true)
     readycheckWindow:SetResizeToFitDescendents(true)
     readycheckWindow:SetHidden(true)
-    readycheckWindow:SetAnchor(TOP, GuiRoot, TOP, self.sv.readycheckWindowPosLeft, self.sv.readycheckWindowPosTop)
+    readycheckWindow:SetAnchor(CENTER, GuiRoot, TOPLEFT, self.sw.windowCenterX, self.sw.windowCenterY)
     readycheckWindow:SetHandler("OnMoveStop", function()
-        self.sv.readycheckWindowPosLeft = readycheckWindow:GetLeft()
-        self.sv.readycheckWindowPosTop = readycheckWindow:GetTop()
+        self.sw.windowCenterX, self.sw.windowCenterY = readycheckWindow:GetCenter()
+        readycheckWindow:ClearAnchors()
+        readycheckWindow:SetAnchor(CENTER, GuiRoot, TOPLEFT, self.sw.windowCenterX, self.sw.windowCenterY)
     end)
 
     local readycheckTitle = WM:CreateControl(readycheckWindowName .. "_Title", readycheckWindow, CT_LABEL)
@@ -111,7 +118,7 @@ function module:CreateReadyCheckUI()
     self.readycheckWindow = readycheckWindow
 
     local function readycheckFragmentCondition()
-        return self.isPollActive or not self.uiLocked
+        return (self.isPollActive or not self.uiLocked) and not IsUnitInCombat(localPlayer)
     end
 
     self.READYCHECK_FRAGMENT = hud.AddFadeFragment(readycheckWindow, readycheckFragmentCondition)
@@ -202,12 +209,12 @@ function module:groupElectionResult(_, electionResult, _)
     if self.isPollActive then
         if electionResult == GROUP_ELECTION_RESULT_ELECTION_WON then
             self.readycheckWindow:GetNamedChild("_Title"):SetText(GetString(HR_MODULES_READYCHECK_READY))
-            if self.sv.enableChatMessages then
+            if self.sw.enableChatMessages then
                 df("|c00FF00%s", GetString(HR_MODULES_READYCHECK_READY))
             end
         else
             self.readycheckWindow:GetNamedChild("_Title"):SetText(GetString(HR_MODULES_READYCHECK_NOT_READY))
-            if self.sv.enableChatMessages then
+            if self.sw.enableChatMessages then
                 local g1, g2, g3, g4, g5, g6, g7, g8, g9, g10, g11, g12 = GetGroupElectionUnreadyUnitTags()
                 local unreadyPlayers = { g1, g2, g3, g4, g5, g6, g7, g8, g9, g10, g11, g12 }
                 for _, unitTag in pairs(unreadyPlayers) do

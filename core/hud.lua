@@ -5,16 +5,22 @@ local addon_name = "HodorReflexes"
 local addon = _G[addon_name]
 local internal = addon.internal
 local core = internal.core
-local logger = core.initSubLogger("hud")
+local logger = core.GetLogger("core/hud")
 
 local hud = {}
 core.hud = hud
 local CM = core.CM
 
+local uiLocked = true
+
 local HR_EVENT_LOCKUI = "HR_EVENT_LOCKUI"
 local HR_EVENT_UNLOCKUI = "HR_EVENT_UNLOCKUI"
 addon.HR_EVENT_LOCKUI = HR_EVENT_LOCKUI
 addon.HR_EVENT_UNLOCKUI = HR_EVENT_UNLOCKUI
+
+function hud.IsUILocked()
+    return uiLocked
+end
 
 --- Disable controls movement.
 --- @param ... table List of controls to lock
@@ -65,9 +71,16 @@ end
 --- registers subcommands to lock/unlock the UI
 core.RegisterSubCommand("lock", GetString(HR_CORE_HUD_COMMAND_LOCK_HELP), function()
     CM:FireCallbacks(HR_EVENT_LOCKUI)
-    logger:Info("|cFFFF00%s|r %s", addon_name, GetString(HR_CORE_HUD_COMMAND_LOCK_ACTION))
+    logger:Debug("|cFFFF00%s|r %s", addon_name, GetString(HR_CORE_HUD_COMMAND_LOCK_ACTION))
 end)
 core.RegisterSubCommand("unlock", GetString(HR_CORE_HUD_COMMAND_UNLOCK_HELP), function()
     CM:FireCallbacks(HR_EVENT_UNLOCKUI)
-    logger:Info("|cFFFF00%s|r %s", addon_name, GetString(HR_CORE_HUD_COMMAND_UNLOCK_ACTION))
+    logger:Debug("|cFFFF00%s|r %s", addon_name, GetString(HR_CORE_HUD_COMMAND_UNLOCK_ACTION))
+end)
+
+addon.RegisterCallback(HR_EVENT_LOCKUI, function()
+    uiLocked = true
+end)
+addon.RegisterCallback(HR_EVENT_UNLOCKUI, function()
+    uiLocked = false
 end)

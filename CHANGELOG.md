@@ -1,5 +1,98 @@
 [SIZE="2"][B]IMPORTANT:[/B] You need LibCustomNames and LibCustomIcons now if you want to have names and icons displayed.[/SIZE]
 
+## 2025.11.06 - @m00nyONE
+- improve overall performance of the addon
+- fixed the damage list header title not updating and being stuck in it's first state
+- add chinese translation by @Lykeion :-) Thank you!
+- fix configurator not loading when LCI is not installed. Thanks @NeBioNik for the PR (https://github.com/m00nyONE/HodorReflexes/pull/39) :-)
+
+## 2025.11.04 - @m00nyONE
+- added frensh translation. Thank you @Melicious :-)
+- updated russian translation by @NeBioNik :-)
+- Fix an issue where a Saxhleel player still being displayed in the compact list even tho the horn rows have been disabled. Thanks to @isiiimode for reporting that!
+- Fix a display bug in the lists that could occur when you had turned a list on, do a test, turn the list off, end the test, and then join a group and turn the list on again. The list would show old data from the test instead of the current group data. This also lead to you not seeing any data when switching a list on that was previously off until updates arrive. - Thanks to @sheumais for pointing that out!
+- Fix the pull countdown not using the settings properly
+- improved "/hodor test" to now also support spaces in @names for console players.
+- Adding options in the settings for hiding countdowns/cooldowns from the compact list. You need to enable advanced settings to see them as they are not commonly used.
+- the default width for every list has been enlarged by 10px to compensate for new font.
+- advanced settings are now colored in orange to make them more visible over normal settings.
+- Allow player row highlight to be turned off in advanced settings for the DPS list.
+- Disable dialogs on console - temporary - they will be reenabled in a future update.
+- slight performance improvements.
+- combined all language files to reduce the amount of files in the addon. We were already at the cap of BNET's 100 File limit :D
+- added some localization strings that were missing. ( still a lot missing tho :D )
+
+## 2025.11.01 - @m00nyONE
+Day one patch:
+- fixed locked UI when trying to move controls more than once per /reloadui. Now clearing all anchors before reanchoring.
+- fixed an issue where the gamepad UI (PC & Console) gets buggy when optional depenencies are not installed. This was caused by displaying a dialog at load time instead of at runtime.
+- fixed atro not getting tracked properly when casted
+- fixed an error that can pop up when the IsUnitInCombat check returns false even tho you are in combat. Just ZoS Things :D
+- fixed readme having a wrong link to the github page
+- fixed saxhleel highlight not being updated if changed in horn list. Thanks to @STUDLETON for reporting that!
+- use force icon instead of horn icon for saxhleel players in compact list. Thanks to @STUDLETON for that suggestion!
+- fixed cryptCannon not being calculated properly in the compact list. Thanks to @sheumais for creating a PR for that :-)
+- added RU translation by @NeBioNik :-) Thank you!
+
+- adjusting dialogs to be delayed and use default language strings instead of hardcoded ones
+- switch from logger:Info() to logger:Debug() in some parts of the addon.
+
+## 2025.10.31 - @m00nyONE
+HodorReflexes got a complete rewrite from scratch! All code has been replaced and modernized to current ESO API standards.
+The old legacy version will not be updated anymore and will not receive any support in the future!
+
+Important:
+- Your saved variables will be reset to default on first start after updating to this version! There is no way around that because the addon functions completely different now.
+
+Although I tried my best to keep everything as similar as possible to the old version, there are some changes that you need to be aware of:
+
+New Features:
+- New "compact list" that combines all special ultimates into a single list. It also adds support for Slayer, Pillager and CryptCannon. The numbers next to the percentage shows the gain in seconds or ult points your group gets when fired.
+- New DPS summary can be enabled in the settings. It shows the group DPS and the DPS over the last 10 seconds. Configurable through the settings menu.
+- "Only show in range" option for every list. Instead of removing the players entirely, it now just makes them transparent when they are out of range.
+- Every List now has the option to show/hide the percentage and/or raw ult points separately.
+- Every List now has the option to be visible "never", "always", "out of combat" or on "non boss fights" only.
+- Saxhleel can now be highlighted in the horn list.
+- You can now finaly hide your own ultimates from others lists by using the "Hide Me" option in the settings menu.
+- The "misc ultimates" list does now have an option to include all special ults like Horn, Colossus, and Atro. This way you can have a single list for all ultimates if you want to.
+- New CLI commands for easier access to certain functions. To get a list of all commands, type "/hodor" in chat.
+
+Removed Features:
+- Toxic mode has been removed to stay in line with ZoS Terms of Service.
+- "Ult Now" got removed as almost nobody used that anyway. The computation for this feature was too expensive for the gain it provided. - maybe in the future i readd it if there is enough demand for it.
+- selfish mode for all the buffs is not implemented yet. If there is enough demand for it, I will add it in a future update.
+
+Noteworthy changes:
+- This new version is PC and Console compatible. So they are finally all on the same page which makes developing and testing way easier.
+- All initialization happens at runtime! If you enable/disable a module or extension in the settings, it will not even load anymore! This improves performance and memory footprint a lot.
+- Updates to the lists only happen when necessary! No more constant updates every 0.8s that waste CPU cycles for nothing.
+- Even tho it looks similar to the old version UI wise, everything has been redone from scratch. So there might be small differences here and there.
+- "/hodor test" command now tests all functionality of HodorReflexes and updates every second to simulate real data changes.
+- The menu is now way more sorted and structured. Finding options should be way easier now. Most of the stuff that is not needed for everyday use is hidden behind the "Advanced Settings" option now.
+- HodorReflexes now logs with LibDebugLogger. This will help to find issues and bugs way easier in the future.
+- Extensions now no longer provide essential functionality for modules to work. You can enable/disable extensions at will without breaking anything. They simply overwrite base functionality now and thus do not require extra checks for being enabled or not each time the lists update.
+- There is a new listClass available now that internally handles updates and data management for lists. This should make it easier to add new lists in the future and can also be used by external addons to create their own lists and add functionality to Hodor without hooking into its guts.
+- Internally everything is handled with events now. This makes it way more modular and easier to maintain in the future. That also means other addons can use these events to hook onto HodorReflexes without breaking anything. ( looking at you HodorRestyle :D )
+
+Known Issues:
+- sometimes there are glitches with the animation extension that cause icons to not animate properly. A reloadui fixes this. I haven't completely figured out why this happens yet.
+- Localization is not finished yet. Only English and partially German is done. And because I'm not a native english speaker, there might be some grammar/spelling mistakes here and there. If you want to help with translations, feel free to open a PullRequest on github or message me on discord.
+- The lists only update when new data is received from LibGroupCombatStats. If the data does not change, the lists do not update. This can lead to situations where the data is stale and not up to date. That's all good and intentional but i thought i might add it here so you are aware of it.
+- The new summary feature for the DPS list is not always reliable. It depends on what the client can get from ESO API. So sometimes it might be off by a few percent. I will try to improve this in the future.
+
+Looking Forward:
+- There are some things i plan on adding in the future like a "HideMe" module to control what others can see from you.
+- There is a theming engine planned to allow authors to create custom themes for HodorReflexes that can be shared with others without the need to create a new UI from scratch.
+- More extensions to add more functionality to the existing modules.
+- Support for Barrier.
+
+Thanks:
+- A very special thanks goes to @Solinur for giving me support during development and testing of this new version!
+- Thanks to all the testers that grabbed the new version early from github and helped me out finding bugs and issues!
+- Thank you @andy.s for creating HodorReflexes in the first place and allowing me to take over maintenance of this awesome addon!
+
+For a list of all Changes, please check my github: https://github.com/m00nyONE/HodorReflexes/pull/24.
+
 ## 2025.08.16 - @m00nyONE
 - fixed a bug where enabling/disabling of the readycheck module did not work
 - bump API

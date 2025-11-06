@@ -13,14 +13,12 @@ local extension = addon_extensions.seasons
 
 local dps_module = addon.modules.dps
 
-local seasonDefinition = {
+local season = {
     name = "aprilfools",
     version = "1.0.0",
     description = "reverse dps ranking",
     dates = { "0104" },
 }
-
-local season = extension:NewSeason(seasonDefinition)
 
 function season:Activate()
     local function sortByDamageReversed(a, b)
@@ -31,3 +29,5 @@ function season:Activate()
     end
     dps_module.sortByDamage = sortByDamageReversed
 end
+
+extension:NewSeason(season)

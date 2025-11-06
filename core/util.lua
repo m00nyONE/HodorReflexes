@@ -1,25 +1,65 @@
--- SPDX-FileCopyrightText: 2025 m00nyONE
+-- SPDX-FileCopyrightText: 2025 m00nyONE andy.s
 -- SPDX-License-Identifier: Artistic-2.0
 
 local addon_name = "HodorReflexes"
 local addon = _G[addon_name]
 local internal = addon.internal
 local core = internal.core
-local logger = core.initSubLogger("util")
+local logger = core.GetLogger("core/util")
+
+local localPlayer = "player"
 
 local util = {}
 addon.util = util
 
+-- generate classIcons table
+local classIcons = {}
+for i = 1, GetNumClasses() do
+    local realClassId, _, _, _, _, _, icon, _, _, _ = GetClassInfo(i)
+    classIcons[realClassId] = icon
+end
+
 --[[ doc.lua begin ]]
 
---- calculate the distance between two points
---- @param x1 number x coordinate of point 1
---- @param y1 number y coordinate of point 1
---- @param x2 number x coordinate of point 2
---- @param y2 number y coordinate of point 2
---- @return number distance between point 1 and point 2
-function util.GetDistance(x1, y1, x2, y2)
-    return zo_sqrt((x2 - x1) ^ 2 + (y2 - y1) ^ 2)
+--- calculate the distance between two units.
+--- @param unitTag1 string unit tag of the first unit
+--- @param unitTag2 string unit tag of the second unit
+--- @return number|nil distance in meters, or nil if units are in different zones
+function util.GetUnitDistanceToUnit(unitTag1, unitTag2)
+    local zone1, x1, y1, z1 = GetUnitWorldPosition(unitTag1)
+    local zone2, x2, y2, z2 = GetUnitWorldPosition(unitTag2)
+    if zone1 == zone2 then
+        return zo_distance3D(x1, y1, z1, x2, y2, z2) / 100
+    end
+end
+--- calculate the distance between the local player and another unit.
+--- @param unitTag string unit tag of the unit to measure distance to
+--- @return number|nil distance in meters, or nil if units are in different zones
+function util.GetPlayerDistanceToUnit(unitTag)
+    return util.GetUnitDistanceToUnit(localPlayer, unitTag)
+end
+--- check if a unit is within a certain range of the player.
+--- @param unitTag string unit tag of the unit to check
+--- @param range number range in meters
+--- @return boolean true if the unit is within range, false otherwise
+function util.IsUnitInPlayersRange(unitTag, range)
+    local distance = util.GetPlayerDistanceToUnit(unitTag)
+    if distance and distance <= range then
+        return true
+    end
+    return false
+end
+--- check if two units are within a certain range of each other.
+--- @param unitTag1 string unit tag of the first unit
+--- @param unitTag2 string unit tag of the second unit
+--- @param range number range in meters
+--- @return boolean true if the units are within range, false otherwise
+function util.IsUnitInUnitsRange(unitTag1, unitTag2, range)
+    local distance = util.GetUnitDistanceToUnit(unitTag1, unitTag2)
+    if distance and distance <= range then
+        return true
+    end
+    return false
 end
 
 --- Convert FFFFFF to 1, 1, 1
@@ -119,7 +159,6 @@ end
 
 -- user related functions
 
-local classIcons = nil
 --- overwrite class icons with new ones.
 --- This is used for some events. For example on christmas, class icons get overwritten by their christmas version.
 --- @param newClassIcons table<number, string> {classId: number, texturePath: string}
@@ -132,16 +171,8 @@ end
 
 --- get class icon for classId.
 --- @param classId number
---- @return string, number, number, number, number texturePath (falls back to "campaignbrowser_guestcampaign.dds" if the icon is not found), textureCoordsLeft, textureCoordsRight, textureCoordsTop, textureCoordsBottom
+--- @return string, number, number, number, number texturePath, textureCoordsLeft, textureCoordsRight, textureCoordsTop, textureCoordsBottom
 function util.GetClassIcon(classId)
-    if not classIcons then
-        classIcons = {}
-        for i = 1, GetNumClasses() do
-            local realClassId, _, _, _, _, _, icon, _, _, _ = GetClassInfo(i)
-            classIcons[realClassId] = icon
-        end
-    end
-
     local texturePath = classIcons[classId]
     if not texturePath then
         texturePath = "esoui/art/campaign/campaignbrowser_guestcampaign.dds"
@@ -162,7 +193,7 @@ end
 --- @param classId number
 --- @return string, number, number, number, number texturePath, textureCoordsLeft, textureCoordsRight, textureCoordsTop, textureCoordsBottom
 function util.GetUserIcon(userId, classId)
-    return util.GetClassIcon(classId), 0, 1, 0, 1
+    return util.GetClassIcon(classId) -- returns texturePath, left, right, top, bottom
 end
 
 --[[ doc.lua end ]]
