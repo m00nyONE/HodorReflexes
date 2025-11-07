@@ -43,21 +43,7 @@ function module:Activate()
         alignment = KEYBIND_STRIP_ALIGN_CENTER,
     }
 
-    local function OnStateChanged(_, newState)
-        if newState == SCENE_FRAGMENT_SHOWING and IsUnitGroupLeader(localPlayer) then
-            KEYBIND_STRIP:AddKeybindButton(countdownButton)
-        elseif newState == SCENE_FRAGMENT_HIDING then
-            KEYBIND_STRIP:RemoveKeybindButton(countdownButton)
-        end
-    end
-
-    -- Add hotkey to group window
-    if KEYBOARD_GROUP_MENU_SCENE then
-        KEYBOARD_GROUP_MENU_SCENE:RegisterCallback("StateChange", OnStateChanged)
-    end
-    if GAMEPAD_GROUP_SCENE then
-        GAMEPAD_GROUP_SCENE:RegisterCallback("StateChange", OnStateChanged)
-    end
+    self:SetupKeybinds()
 
     core.RegisterSubCommand("pull", GetString(HR_MODULES_PULL_COMMAND_HELP), function(...) self:SendPullCountdown(...) end)
 end
