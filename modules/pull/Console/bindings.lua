@@ -14,7 +14,8 @@ local module = addon_modules[module_name]
 
 local LRM = LibRadialMenu
 
-
+--- Setup keybinds for Pull module
+--- @return void
 function module:SetupKeybinds()
     local function sendPullCountdownWrapper()
         module:SendPullCountdown()

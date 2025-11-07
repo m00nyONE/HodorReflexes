@@ -10,7 +10,8 @@ local logger = core.GetLogger("core/menu")
 local util = addon.util
 local LHAS = LibHarvensAddonSettings
 
--- function is platform specific
+--- @param subName string|nil
+--- @return table
 function core.GetPanelConfig(subName)
     local name = addon.friendlyName
     if subName then
@@ -26,7 +27,8 @@ function core.GetPanelConfig(subName)
     })
 end
 
--- function is platform specific
+--- @param name string
+--- @return table
 function core.CreateSectionHeader(name)
     return {
         type = LHAS.ST_SECTION,
@@ -34,7 +36,8 @@ function core.CreateSectionHeader(name)
     }
 end
 
--- function is platform specific
+--- @param subName string|nil
+--- @param options table[]
 function core.CreateNewMenu(subName, options)
     local panel = core.GetPanelConfig(subName)
     panel:AddSetting({
@@ -64,7 +67,7 @@ function core.CreateNewMenu(subName, options)
     end
 end
 
--- function is platform specific
+--- @return table
 function core.GetCoreMenuOptions()
     local function mergeOptions(source, destination)
         for _, option in ipairs(source) do

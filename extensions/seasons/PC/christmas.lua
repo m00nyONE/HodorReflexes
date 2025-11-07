@@ -18,6 +18,8 @@ local season = {
     dates = { "2412", "2512", "2612" },
 }
 
+--- Activates the christmas season
+--- @return void
 function season:Activate()
     -- TODO: rework to use a single texture instead of one per class
     local christmasIcons = {

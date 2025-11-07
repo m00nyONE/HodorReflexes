@@ -11,6 +11,10 @@ core.logger = {}
 --- @class Logger
 core.logger.main = LibDebugLogger:Create(addon_name)
 
+--- A logger that does nothing
+--- @param self table
+--- @param ... any
+--- @return void
 local function noLog(self, ...)
     --df(...)
 end

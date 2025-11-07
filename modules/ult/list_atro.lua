@@ -39,6 +39,8 @@ local svDefault = {
     colorBerserk = {1, 1, 0}, -- yellow
 }
 
+--- Create the Atro Ult List
+--- @return void
 function module:CreateAtroList()
     local listDefinition = {
         name = "atro",
@@ -82,6 +84,11 @@ function module:CreateAtroList()
     list.logger:Debug("added player row type '%d' with template '%s'", list.ROW_TYPE, list.ROW_TEMPLATE)
 end
 
+--- Atro List Header Row Creation Function
+--- @param rowControl Control
+--- @param data table
+--- @param scrollList ZO_ScrollList
+--- @return void
 function module:atroListHeaderRowCreationFunction(rowControl, data, scrollList)
     if rowControl._initialized and not self.atroList._redrawHeaders then
         return
@@ -110,6 +117,11 @@ function module:atroListHeaderRowCreationFunction(rowControl, data, scrollList)
     rowControl._initialized = true
 end
 
+--- Atro List Row Creation Function
+--- @param rowControl Control
+--- @param data table
+--- @param scrollList ZO_ScrollList
+--- @return void
 function module:atroListRowCreationFunction(rowControl, data, scrollList)
     local list = self.atroList
     local sw = list.sw
@@ -127,6 +139,8 @@ function module:atroListRowCreationFunction(rowControl, data, scrollList)
     rawValueControl:SetScale(sw.showRawValue)
 end
 
+--- Update the Atro Ult List
+--- @return void
 function module:UpdateAtroList()
     local listControl = self.atroList.listControl
 

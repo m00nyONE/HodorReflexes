@@ -16,6 +16,7 @@ local module_name = "dps"
 local module = addon_modules[module_name]
 
 -- TODO: translations
+--- @return table[]
 function module:GetSubMenuOptions()
     local SCREEN_WIDTH = GuiRoot:GetWidth()
     local SCREEN_HEIGHT = GuiRoot:GetHeight()

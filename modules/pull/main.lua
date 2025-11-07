@@ -30,6 +30,8 @@ local moduleDefinition = {
 
 local module = internal.moduleClass:New(moduleDefinition)
 
+--- Activate the Pull module
+--- @return void
 function module:Activate()
     self.logger:Debug("activated pull module")
 
@@ -48,6 +50,9 @@ function module:Activate()
     core.RegisterSubCommand("pull", GetString(HR_MODULES_PULL_COMMAND_HELP), function(...) self:SendPullCountdown(...) end)
 end
 
+--- Renders a pull countdown on the center screen announce area
+--- @param durationMS number|nil Duration in seconds
+--- @return void
 function module:RenderPullCountdown(durationMS)
     local texturePath = "EsoUI/Art/HUD/HUD_Countdown_Badge_Dueling.dds"
     local messageParams = CENTER_SCREEN_ANNOUNCE:CreateMessageParams(CSA_CATEGORY_COUNTDOWN_TEXT, SOUNDS.DUEL_START)

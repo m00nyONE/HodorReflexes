@@ -163,6 +163,7 @@ function module:Activate()
 end
 
 --- create scrollLists for the module
+--- @return void
 function module:CreateLists()
     self:RunOnce("CreateHornList")
     self:RunOnce("CreateColosList")
@@ -171,6 +172,8 @@ function module:CreateLists()
     self:RunOnce("CreateCompactList")
 end
 
+--- create counters for the module
+--- @return void
 function module:CreateCounters()
     self:RunOnce("CreateHornCounter")
     self:RunOnce("CreatePillagerCounter")

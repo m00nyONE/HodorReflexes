@@ -12,6 +12,8 @@ local internal_modules = internal.modules
 local module_name = "ult"
 local module = addon_modules[module_name]
 
+--- builds the submenu options for the ult module
+--- @return table[]
 function module:GetSubMenuOptions()
     local function mergeOptions(source, destination)
         for _, option in ipairs(source) do

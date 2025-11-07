@@ -41,6 +41,8 @@ local svDefault = {
     highlightSaxhleelColor = {0.7058823529411765, 0.7372549019607844, 0.6901960784313725, 0.2},
 }
 
+--- Create the horn ult list.
+--- @return void
 function module:CreateHornList()
     local listDefinition = {
         name = "horn",
@@ -84,6 +86,11 @@ function module:CreateHornList()
     list.logger:Debug("added player row type '%d' with template '%s'", list.ROW_TYPE, list.ROW_TEMPLATE)
 end
 
+--- horn list header row creation function
+--- @param rowControl Control
+--- @param data table
+--- @param scrollList ZO_ScrollList
+--- @return void
 function module:hornListHeaderRowCreationFunction(rowControl, data, scrollList)
     if rowControl._initialized and not self.hornList._redrawHeaders then
         return
@@ -112,6 +119,11 @@ function module:hornListHeaderRowCreationFunction(rowControl, data, scrollList)
     rowControl._initialized = true
 end
 
+--- horn list player row creation function
+--- @param rowControl Control
+--- @param data table
+--- @param scrollList ZO_ScrollList
+--- @return void
 function module:hornListRowCreationFunction(rowControl, data, scrollList)
     local list = self.hornList
     local sw = list.sw
@@ -138,6 +150,8 @@ function module:hornListRowCreationFunction(rowControl, data, scrollList)
     rawValueControl:SetScale(sw.showRawValue)
 end
 
+--- Update the horn ult list.
+--- @return void
 function module:UpdateHornList()
     local listControl = self.hornList.listControl
 

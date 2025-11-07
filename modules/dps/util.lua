@@ -52,6 +52,9 @@ end
 -- formatting functions
 
 --- get header format for damage list.
+--- @param dmgType number
+--- @param colorDamageBoss string
+--- @param colorDamageTotal string
 --- @return string
 function module.getDamageHeaderFormat(dmgType, colorDamageBoss, colorDamageTotal)
     if dmgType == DAMAGE_TOTAL then
@@ -65,6 +68,11 @@ function module.getDamageHeaderFormat(dmgType, colorDamageBoss, colorDamageTotal
     return string.format('|c%s%s|r |c%s(DPS)|r', colorDamageBoss, GetString(HR_MODULES_DPS_DAMAGE_MISC), colorDamageTotal)
 end
 --- get row format for damage list.
+--- @param dmgType number
+--- @param dmg number
+--- @param dps number
+--- @param colorDamageBoss string
+--- @param colorDamageTotal string
 --- @return string
 function module.getDamageRowFormat(dmgType, dmg, dps, colorDamageBoss, colorDamageTotal)
     if dmgType == DAMAGE_TOTAL then

@@ -3,6 +3,15 @@
 
 --[[ doc.lua begin ]]
 --- @class HodorReflexes
+--- @field name string
+--- @field friendlyName string
+--- @field slashCmd string
+--- @field version string
+--- @field author string
+--- @field debug boolean
+--- @field extensions table<string, extensionClass>
+--- @field modules table<string, moduleClass>
+--- @field internal table
 local addon = {
     name = "HodorReflexes",
     friendlyName = "Hodor Reflexes",

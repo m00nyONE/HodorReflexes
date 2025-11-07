@@ -14,6 +14,8 @@ local module = addon_modules[module_name]
 
 local LRM = LibRadialMenu
 
+--- Setup keybinds for Exit Instance module
+--- @return void
 function module:SetupKeybinds()
     local function SendExitInstanceRequestWrapper()
         module:SendExitInstanceRequest()

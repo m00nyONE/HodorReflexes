@@ -51,6 +51,8 @@ function counter:GetId()
     return self._Id
 end
 
+--- check if the counter is enabled based on the saved variable settings
+--- @return boolean true if the counter is enabled, false otherwise
 function counter:IsEnabled()
     local enabled = self.sv.enabled
     if enabled == 1 then
@@ -86,6 +88,9 @@ function counter:WindowFragmentCondition()
     return isEnabled
 end
 
+--- Initializes the counter instance with the given definition.
+--- @param counterDefinition table definition of the counter
+--- @return void
 function counter:Initialize(counterDefinition)
     assert(type(counterDefinition) == "table", "counterDefinition must be a table")
     assert(type(counterDefinition.name) == "string" and counterDefinition.name ~= "", "counter must have a valid name")

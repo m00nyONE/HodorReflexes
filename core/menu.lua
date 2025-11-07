@@ -22,7 +22,8 @@ end
 function core.CreateNewMenu(subName, options)
 end
 
--- function needs to be implemented platform specific
+--- builds the main menu and submenus
+--- @return void
 function core.BuildMenu()
     local options = core.GetCoreMenuOptions()
     for _, data in ipairs(core.mainMenuOptions) do
@@ -38,11 +39,18 @@ function core.BuildMenu()
     end
 end
 
-
+--- registers main menu options
+--- @param header string
+--- @param options table[]
+--- @return void
 function core.RegisterMainMenuOptions(header, options)
     table.insert(core.mainMenuOptions, { header = header, options = options })
 end
 
+--- registers submenu options
+--- @param header string
+--- @param options table[]
+--- @return void
 function core.RegisterSubMenuOptions(header, options)
     table.insert(core.subMenuOptions, { header = header, options = options })
 end

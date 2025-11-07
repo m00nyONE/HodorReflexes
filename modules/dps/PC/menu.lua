@@ -15,6 +15,7 @@ local module_name = "dps"
 local module = addon_modules[module_name]
 
 -- TODO: translations
+--- @return table the submenu options for the DPS module
 function module:GetSubMenuOptions()
     local function mergeOptions(source, destination)
         for _, option in ipairs(source) do

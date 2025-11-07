@@ -12,7 +12,8 @@ local internal_modules = internal.modules
 local module_name = "pull"
 local module = addon_modules[module_name]
 
-
+--- Keybind button for sending pull countdown
+--- @return void
 function module:SetupKeybinds()
     -- Bindings
     ZO_CreateStringId('SI_BINDING_NAME_HR_MODULES_EXITINSTANCE_BINDING_SENDEJECT', GetString(HR_MODULES_EXITINSTANCE_BINDING_SENDEJECT))

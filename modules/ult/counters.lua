@@ -21,6 +21,8 @@ local localPlayer = "player"
 local HR_EVENT_PLAYERSDATA_UPDATED = addon.HR_EVENT_PLAYERSDATA_UPDATED
 local HR_EVENT_GROUP_CHANGED = addon.HR_EVENT_GROUP_CHANGED
 
+--- Creates the horn counter
+--- @return void
 function module:CreateHornCounter()
     local effectRange = 20
 
@@ -71,6 +73,8 @@ function module:CreateHornCounter()
     end)
 end
 
+--- Creates the pillager counter
+--- @return void
 function module:CreatePillagerCounter()
     local effectRange = 12
 
@@ -121,7 +125,8 @@ function module:CreatePillagerCounter()
     end)
 end
 
--- experimental, disabled for now
+--- Creates the slayer counter
+--- @return void
 function module:CreateSlayerCounter()
     local effectRange = 28
 

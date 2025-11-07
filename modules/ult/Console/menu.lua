@@ -14,6 +14,8 @@ local module = addon_modules[module_name]
 
 local LHAS = LibHarvensAddonSettings
 
+--- builds the submenu options for the ult module
+--- @return table[]
 function module:GetSubMenuOptions()
     local SCREEN_WIDTH = GuiRoot:GetWidth()
     local SCREEN_HEIGHT = GuiRoot:GetHeight()

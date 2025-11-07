@@ -14,6 +14,8 @@ local module = addon_modules[module_name]
 
 local localPlayer = "player"
 
+--- Setup keybinds for Exit Instance module
+--- @return void
 function module:SetupKeybinds()
     local exitInstanceRequestButton = {
         name = GetString(HR_MODULES_EXITINSTANCE_BINDING_SENDEJECT),

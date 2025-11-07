@@ -30,6 +30,8 @@ local moduleDefinition = {
 
 local module = internal.moduleClass:New(moduleDefinition)
 
+--- Activate the Exit Instance module
+--- @return void
 function module:Activate()
     self.logger:Debug("activated exitInstance module")
 
@@ -43,6 +45,8 @@ function module:Activate()
     core.RegisterSubCommand("eject", GetString(HR_MODULES_EXITINSTANCE_COMMAND_HELP), function(...) self:SendExitInstanceRequest(...) end)
 end
 
+--- Exits the current instance, showing a confirmation dialog if enabled.
+--- @return void
 function module:ExitInstance()
     if not CanExitInstanceImmediately() then return end
 
@@ -56,6 +60,8 @@ function module:ExitInstance()
     end
 end
 
+--- Registers the exit instance request dialog.
+--- @return void
 function module:registerExitInstanceRequestDialog()
     ZO_Dialogs_RegisterCustomDialog(self.dialogExitInstance, {
         title = {

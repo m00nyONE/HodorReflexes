@@ -12,6 +12,7 @@ local internal_modules = internal.modules
 local module_name = "exitinstance"
 local module = addon_modules[module_name]
 
+--- @return table
 function module:GetMainMenuOptions()
     return {
         {

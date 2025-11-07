@@ -78,6 +78,9 @@ function combat:FightRecapCallback(_, data)
     self:SaveDamageToHistory(data.damageOutTotalGroup)
 end
 
+--- saves the current damage to the history.
+--- @param damage number the current damage to save
+--- @return void
 function combat:SaveDamageToHistory(damage)
     table.insert(self.damageHistory, {
         timestamp = GetGameTimeMilliseconds(),
@@ -167,6 +170,7 @@ end
 
 --- test functions
 
+--- @return void
 function combat:startTest()
     self.logger:Debug("Starting combat test")
     self._testBeginTime = GetGameTimeMilliseconds()
@@ -186,12 +190,14 @@ function combat:startTest()
     -- save history -- here we do not check for saveHistory as we want to have that initial entry at the start. if this feature is not needed, then it's only one entry that gets deleted after the test anyways
     self:SaveDamageToHistory(self.data.damageOutTotalGroup)
 end
+--- @return void
 function combat:stopTest()
     self.logger:Debug("Stopping combat test")
     self._testBeginTime = nil
     CM:FireCallbacks(HR_EVENT_COMBAT_END)
     self:Reset()
 end
+--- @return void
 function combat:updateTest()
     self.data.dpstime = (GetGameTimeMilliseconds() - self._testBeginTime) / 1000
 

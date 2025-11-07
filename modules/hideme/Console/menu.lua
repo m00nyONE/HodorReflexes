@@ -14,6 +14,7 @@ local module = addon_modules[module_name]
 
 local LHAS = LibHarvensAddonSettings
 
+--- @return table
 function module:GetSubMenuOptions()
     local function mergeOptions(source, destination)
         for _, option in ipairs(source) do

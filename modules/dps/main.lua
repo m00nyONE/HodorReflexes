@@ -90,6 +90,7 @@ function module:Activate()
 end
 
 --- create scrollLists for the module
+--- @return void
 function module:CreateLists()
     module:RunOnce("CreateDamageList")
 end
