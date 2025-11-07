@@ -61,6 +61,7 @@ list.updateDebounceDelayMS = globalUpdateDebounceDelayMS -- debounce delay for t
 list._redrawHeaders = false -- flag to indicate if headers need to be redrawn - used internally when updating header colors or opacity values
 list._nextTypeId = 1 -- initialize the next data type id counter
 list._updateCounter = 0 -- initialize the update counter
+list.uiLocked = true -- flag to indicate if the UI is locked
 
 addon.listClass = list
 
