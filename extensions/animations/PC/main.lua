@@ -88,17 +88,18 @@ end
 function extension:_listUpdatePostHook(list, iconControlName)
     local listTypes = {}
     local usersWithAnimation = {}
-    local contents = list.listControl:GetNamedChild("Contents")
+    local listControl = list:GetListControl()
+    local contents = listControl:GetNamedChild("Contents")
     for childId = 1, contents:GetNumChildren() do
         local rowControl = contents:GetChild(childId)
         local data = ZO_ScrollList_GetData(rowControl)
         if data and data.userId then -- only process player rows
-            local listName = string.format("%s_%s", list.name, rowControl.dataEntry.typeId) -- we create a "sub list" for each data type in the list to avoid conflicts when the same user is present in multiple data types
+            local listName = string.format("%s_%s", list:GetName(), rowControl.dataEntry.typeId) -- we create a "sub list" for each data type in the list to avoid conflicts when the same user is present in multiple data types
             listTypes[listName] = true
             if LCI.HasAnimated(data.userId) then -- find users with animations
                 local iconControl = rowControl:GetNamedChild(iconControlName)
                 if iconControl == nil then -- icon control not found! This can only happen when someone creates a list with a custom template that does not have the expected icon control or when the template of a standard list got overwritten by a theme that did no follow the guidelines in the README.md of the theme extension.
-                    self.logger:Warn("icon control '%s' not found in list '%s' row template", iconControlName, list.name)
+                    self.logger:Warn("icon control '%s' not found in list '%s' row template", iconControlName, list:GetName())
                     return -- exit out of the update hook because there is nothing we can do here
                 end
 
