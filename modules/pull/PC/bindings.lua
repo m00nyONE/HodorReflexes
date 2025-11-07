@@ -12,12 +12,21 @@ local internal_modules = internal.modules
 local module_name = "pull"
 local module = addon_modules[module_name]
 
+local localPlayer = "player"
+
 --- Keybind button for sending pull countdown
 --- @return void
 function module:SetupKeybinds()
     -- Bindings
     ZO_CreateStringId('SI_BINDING_NAME_HR_MODULES_EXITINSTANCE_BINDING_SENDEJECT', GetString(HR_MODULES_EXITINSTANCE_BINDING_SENDEJECT))
     ZO_CreateStringId('SI_BINDING_NAME_HR_MODULES_EXITINSTANCE_BINDING_EXITINSTANCE', GetString(HR_MODULES_EXITINSTANCE_BINDING_EXITINSTANCE))
+
+    local countdownButton = {
+        name = GetString(HR_MODULES_PULL_BINDING_COUNTDOWN),
+        keybind = 'HR_MODULES_PULL_BINDING_COUNTDOWN',
+        callback = function() self:SendPullCountdown() end,
+        alignment = KEYBIND_STRIP_ALIGN_CENTER,
+    }
 
     local function OnStateChanged(_, newState)
         if newState == SCENE_FRAGMENT_SHOWING and IsUnitGroupLeader(localPlayer) then

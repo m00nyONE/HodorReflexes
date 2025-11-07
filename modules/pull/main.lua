@@ -38,13 +38,6 @@ function module:Activate()
     -- Bindings
     ZO_CreateStringId('SI_BINDING_NAME_HR_MODULES_PULL_BINDING_COUNTDOWN', GetString(HR_MODULES_PULL_BINDING_COUNTDOWN))
 
-    local countdownButton = {
-        name = GetString(HR_MODULES_PULL_BINDING_COUNTDOWN),
-        keybind = 'HR_MODULES_PULL_BINDING_COUNTDOWN',
-        callback = function() self:SendPullCountdown() end,
-        alignment = KEYBIND_STRIP_ALIGN_CENTER,
-    }
-
     self:SetupKeybinds()
 
     core.RegisterSubCommand("pull", GetString(HR_MODULES_PULL_COMMAND_HELP), function(...) self:SendPullCountdown(...) end)
