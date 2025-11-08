@@ -74,7 +74,7 @@ end
 --- checks if the counter should be shown based on the current conditions.
 --- @return boolean true if the window fragment should be shown, false otherwise
 function counter:WindowFragmentCondition()
-    local isEnabled = self:IsEnabled()
+    local isEnabled = self:IsEnabled() and (not self.sw.hideOnCooldown or not self:IsCooldownActive())
     if not self.uiLocked and isEnabled then
         return true -- always show when ui is unlocked
     end
@@ -218,6 +218,7 @@ function counter:CreateSavedVariables()
     self.svDefault.windowPosTop = self.svDefault.windowPosTop or 0
     self.svDefault.scale = self.svDefault.scale or 1.0
     self.svDefault.accountWide = self.svDefault.accountWide or false
+    self.svDefault.hideOnCooldown = self.svDefault.hideOnCooldown or false
 
     local svNamespace = string.format("counter_%s", self.name)
     local svVersion = core.svVersion + self.svVersion
@@ -241,6 +242,17 @@ function counter:Update()
     local labelControl = self.window:GetNamedChild("_Label")
     local bgControl = self.window:GetNamedChild("_BG")
 
+    -- show countdown when on cooldown or buff is still active
+    local remainingCooldownMS = self:GetRemainingCooldownMS()
+    if remainingCooldownMS > 0 then
+        labelControl:SetColor(1, 0, 0)
+        bgControl:SetColor(1, 0, 0)
+        labelControl:SetText(string.format("%.1f", remainingCooldownMS / 1000))
+        self:StopAnimation()
+        return
+    end
+
+    -- call the update function
     local count, ready = self.updateFunc()
     count = count or 0
     ready = ready or false
@@ -291,4 +303,23 @@ end
 function counter:SetActive(active)
     self.active = active
     self:RefreshVisibility()
+end
+
+--- Checks if the cooldown is currently active.
+--- @return boolean true if the cooldown is active, false otherwise
+function counter:IsCooldownActive()
+    return self:GetRemainingCooldownMS() > 0
+end
+
+--- Gets the remaining cooldown time in milliseconds.
+--- @return number remaining cooldown time in milliseconds
+function counter:GetRemainingCooldownMS()
+    return zo_max(0, (self._cooldownEndTimeMS or 0) - GetGameTimeMilliseconds())
+end
+
+--- Sets the cooldown duration for the counter.
+--- @param durationMS number duration of the cooldown in milliseconds
+--- @return void
+function counter:SetCooldown(durationMS)
+    self._cooldownEndTimeMS = zo_max(self._cooldownEndTimeMS, GetGameTimeMilliseconds() + durationMS)
 end
