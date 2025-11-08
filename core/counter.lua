@@ -113,6 +113,8 @@ function counter:Initialize(counterDefinition)
 
     self._updateEventName = string.format("%s_UpdateEvent", self._Id)
 
+    self._cooldownEndTimeMS = 0
+
     self:RunOnce("CreateSavedVariables")
     self:RunOnce("CreateControls")
     self:RunOnce("CreateFragment")
@@ -314,7 +316,7 @@ end
 --- Gets the remaining cooldown time in milliseconds.
 --- @return number remaining cooldown time in milliseconds
 function counter:GetRemainingCooldownMS()
-    return zo_max(0, (self._cooldownEndTimeMS or 0) - GetGameTimeMilliseconds())
+    return zo_max(0, self._cooldownEndTimeMS - GetGameTimeMilliseconds())
 end
 
 --- Sets the cooldown duration for the counter.
