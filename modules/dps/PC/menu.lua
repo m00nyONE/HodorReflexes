@@ -171,7 +171,7 @@ function module:GetSubMenuOptions()
             type = "colorpicker",
             name = "Group DPS Color",
             tooltip = "color used to display the group DPS value.",
-            default = util.Hex2RGB(self.damageList.svDefault.colorGroupDPS),
+            default = ZO_ColorDef:New(util.Hex2RGB(self.damageList.svDefault.colorGroupDPS)),
             getFunc = function() return util.Hex2RGB(self.damageList.sw.colorGroupDPS) end,
             setFunc = function(r, g, b)
                 self.damageList.sw.colorGroupDPS = util.RGB2Hex(r, g, b)
@@ -184,7 +184,7 @@ function module:GetSubMenuOptions()
             type = "colorpicker",
             name = "Group Burst DPS Color",
             tooltip = "color used to display the group burst DPS value.",
-            default = util.Hex2RGB(self.damageList.svDefault.colorBurstDPS),
+            default = ZO_ColorDef:New(util.Hex2RGB(self.damageList.svDefault.colorBurstDPS)),
             getFunc = function() return util.Hex2RGB(self.damageList.sw.colorBurstDPS) end,
             setFunc = function(r, g, b)
                 self.damageList.sw.colorBurstDPS = util.RGB2Hex(r, g, b)
@@ -201,7 +201,7 @@ function module:GetSubMenuOptions()
             type = "colorpicker",
             name = "Total Damage Color",
             tooltip = "",
-            default = util.Hex2RGB(self.damageList.svDefault.colorDamageTotal),
+            default = ZO_ColorDef:New(util.Hex2RGB(self.damageList.svDefault.colorDamageTotal)),
             getFunc = function() return util.Hex2RGB(self.damageList.sw.colorDamageTotal) end,
             setFunc = function(r, g, b)
                 self.damageList.sw.colorDamageTotal = util.RGB2Hex(r, g, b)
@@ -213,7 +213,7 @@ function module:GetSubMenuOptions()
             type = "colorpicker",
             name = "Boss Damage Color",
             tooltip = "",
-            default = util.Hex2RGB(self.damageList.svDefault.colorDamageBoss),
+            default = ZO_ColorDef:New(util.Hex2RGB(self.damageList.svDefault.colorDamageBoss)),
             getFunc = function() return util.Hex2RGB(self.damageList.sw.colorDamageBoss) end,
             setFunc = function(r, g, b)
                 self.damageList.sw.colorDamageBoss = util.RGB2Hex(r, g, b)

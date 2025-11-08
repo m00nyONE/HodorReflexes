@@ -3,6 +3,7 @@
 ## 2025.11.07 - @m00nyONE
 - adding an option to hide the readycheck window and only display a chat message when a readycheck is started.
 - add LibRadialMenu by M0R for console. Now you can finally use Exit Instance and Pull Countdowns on console too! :-)
+- fix settings reset not working properly
 - creating/updating in-code emmyLUA documentation.
 
 ## 2025.11.06 - @m00nyONE
