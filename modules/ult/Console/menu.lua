@@ -317,6 +317,17 @@ function module:GetSubMenuOptions()
                     counter.window:SetAnchor(CENTER, GuiRoot, TOPLEFT, counter.sw.windowPosLeft, counter.sw.windowPosTop)
                 end,
             },
+            {
+                type = LHAS.ST_CHECKBOX,
+                label = "hide on active buff/cooldown",
+                tooltip = "show/hide the counter depending on if a buff or cooldown is active.",
+                default = counter.svDefault.hideOnCooldown,
+                getFunction = function() return counter.sw.hideOnCooldown end,
+                setFunction = function(value)
+                    counter.sw.hideOnCooldown = value
+                    counter:RefreshVisibility()
+                end,
+            },
         }
     end
 
@@ -732,10 +743,6 @@ function module:GetSubMenuOptions()
     mergeOptions(compactListSpecificOptions, compactList)
     mergeOptions(compactList, options)
 
-    local counterOptions = {
-        core.CreateSectionHeader("Counters"),
-    }
-    mergeOptions(counterOptions, options)
     mergeOptions(getCommonCounterOptions("Horn", self.hornCounter), options)
     mergeOptions(getCommonCounterOptions("Pillager", self.pillagerCounter), options)
     --mergeOptions(getCommonCounterOptions("Slayer", self.slayerCounter), options) -- experimental, disabled for now

@@ -21,6 +21,9 @@ local localPlayer = "player"
 local HR_EVENT_PLAYERSDATA_UPDATED = addon.HR_EVENT_PLAYERSDATA_UPDATED
 local HR_EVENT_GROUP_CHANGED = addon.HR_EVENT_GROUP_CHANGED
 
+local HR_EVENT_MAJOR_FORCE_BUFF_GAINED = addon.HR_EVENT_MAJOR_FORCE_BUFF_GAINED
+local HR_EVENT_PILLAGER_BUFF_COOLDOWN = addon.HR_EVENT_PILLAGER_BUFF_COOLDOWN
+
 --- Creates the horn counter
 --- @return void
 function module:CreateHornCounter()
@@ -70,6 +73,9 @@ function module:CreateHornCounter()
         if not IsUnitGrouped(localPlayer) then
             self.hornCounter:SetActive(false)
         end
+    end)
+    addon.RegisterCallback(HR_EVENT_MAJOR_FORCE_BUFF_GAINED, function(_, durationMS)
+        self.hornCounter:SetCooldown(durationMS)
     end)
 end
 
@@ -122,6 +128,9 @@ function module:CreatePillagerCounter()
         if not IsUnitGrouped(localPlayer) then
             self.pillagerCounter:SetActive(false)
         end
+    end)
+    addon.RegisterCallback(HR_EVENT_PILLAGER_BUFF_COOLDOWN, function(_, durationMS)
+        self.pillagerCounter:SetCooldown(durationMS)
     end)
 end
 

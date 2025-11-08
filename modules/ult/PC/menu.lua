@@ -237,6 +237,17 @@ function module:GetSubMenuOptions()
                 end,
                 width = "full",
             },
+            {
+                type = "checkbox",
+                name = "hide on active buff/cooldown",
+                tooltip = "show/hide the counter depending on if a buff or cooldown is active.",
+                default = counter.svDefault.hideOnCooldown,
+                getFunc = function() return counter.sw.hideOnCooldown end,
+                setFunc = function(value)
+                    counter.sw.hideOnCooldown = value
+                    counter:RefreshVisibility()
+                end,
+            },
         }
     end
 
@@ -682,10 +693,6 @@ function module:GetSubMenuOptions()
     mergeOptions(compactListSpecificOptions, compactList)
     mergeOptions(compactList, options)
 
-    local counterOptions = {
-        core.CreateSectionHeader("Counters"),
-    }
-    mergeOptions(counterOptions, options)
     mergeOptions(getCommonCounterOptions("Horn", self.hornCounter), options)
     mergeOptions(getCommonCounterOptions("Pillager", self.pillagerCounter), options)
     --mergeOptions(getCommonCounterOptions("Slayer", self.slayerCounter), options) -- experimental, disabled for now
