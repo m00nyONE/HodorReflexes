@@ -216,10 +216,11 @@ function module:GetSubMenuOptions()
     end
     local function getCommonCounterOptions(counterName, counter)
         return {
+            core.CreateSectionHeader(counterName .. " Counter"),
             {
                 type = "dropdown",
-                name = "enable "..counterName.." counter",
-                tooltip = "set the visibility of the counter.",
+                name = GetString(HR_MENU_VISIBILITY),
+                tooltip = GetString(HR_MENU_VISIBILITY_TT),
                 default = counter.svDefault.enabled,
                 choices = {
                     GetString(HR_VISIBILITY_SHOW_NEVER),

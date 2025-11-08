@@ -261,10 +261,11 @@ function module:GetSubMenuOptions()
     end
     local function getCommonCounterOptions(counterName, counter)
         return {
+            core.CreateSectionHeader(counterName .. " Counter"),
             {
                 type = LHAS.ST_DROPDOWN,
-                label = "enable "..counterName.." counter",
-                tooltip = "set the visibility of the counter.",
+                label = GetString(HR_MENU_VISIBILITY),
+                tooltip = GetString(HR_MENU_VISIBILITY_TT),
                 default = GetString(HR_VISIBILITY_SHOW_NEVER),
                 items = {
                     {name = GetString(HR_VISIBILITY_SHOW_NEVER), data = 0},
@@ -284,8 +285,8 @@ function module:GetSubMenuOptions()
             },
             {
                 type = LHAS.ST_SLIDER,
-                label = counterName .. " counter horizontal position",
-                tooltip = "set the horizontal position of the counter.",
+                label = GetString(HR_MENU_HORIZONTAL_POSITION),
+                tooltip = GetString(HR_MENU_HORIZONTAL_POSITION_TT),
                 min = 0,
                 max = SCREEN_WIDTH,
                 step = 10,
@@ -301,8 +302,8 @@ function module:GetSubMenuOptions()
             },
             {
                 type = LHAS.ST_SLIDER,
-                label = counterName .. " counter vertical position",
-                tooltip = "set the vertical position of the counter.",
+                label = GetString(HR_MENU_VERTICAL_POSITION),
+                tooltip = GetString(HR_MENU_VERTICAL_POSITION_TT),
                 min = 0,
                 max = SCREEN_HEIGHT,
                 step = 10,
