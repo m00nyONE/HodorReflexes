@@ -153,6 +153,10 @@ function counter:Initialize(counterDefinition)
         hud.UnlockControls(self.window)
     end
 
+    self._update = function()
+        self:Update()
+    end
+
     addon.RegisterCallback(HR_EVENT_LOCKUI, lockUI)
     addon.RegisterCallback(HR_EVENT_UNLOCKUI, unlockUI)
     addon.RegisterCallback(HR_EVENT_GROUP_CHANGED, onGroupChanged)
@@ -290,9 +294,7 @@ end
 --- @return void
 function counter:StartUpdate()
     if self.isUpdating then return end
-    EM:RegisterForUpdate(self._updateEventName, self.updateInterval, function()
-        self:Update()
-    end)
+    EM:RegisterForUpdate(self._updateEventName, self.updateInterval, self._update)
     self.isUpdating = true
 end
 --- Stops the update of the counter.
