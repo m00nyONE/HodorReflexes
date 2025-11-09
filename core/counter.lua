@@ -17,6 +17,18 @@ local HR_EVENT_LOCKUI = addon.HR_EVENT_LOCKUI
 local HR_EVENT_UNLOCKUI = addon.HR_EVENT_UNLOCKUI
 local HR_EVENT_GROUP_CHANGED = addon.HR_EVENT_GROUP_CHANGED
 
+--- @class counter : ZO_InitializingObject
+--- @field name string name of the counter
+--- @field texture string texture path of the counter icon
+--- @field updateInterval number update interval in milliseconds
+--- @field svVersion number version of the saved variables
+--- @field svDefault table default values for the saved variables
+--- @field updateFunc function function to update the counter
+--- @field sv table saved variables for the counter
+--- @field sw table account wide saved variables for the counter
+--- @field logger table logger for the counter
+--- @field active boolean whether the counter is active
+--- @field uiLocked boolean whether the UI is locked
 local counter = ZO_InitializingObject:Subclass()
 internal.counterClass = counter
 
