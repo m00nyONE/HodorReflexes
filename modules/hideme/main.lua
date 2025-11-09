@@ -61,6 +61,8 @@ local moduleDefinition = {
 
 local module = internal.moduleClass:New(moduleDefinition)
 
+--- Activate the Hide Me module
+--- @return void
 function module:Activate()
     -- generate data fields
     local fields = {}
@@ -72,6 +74,8 @@ function module:Activate()
     self:RunOnce("RegisterEvents")
 end
 
+--- Registers event listeners
+--- @return void
 function module:RegisterEvents()
     addon.RegisterCallback(HR_EVENT_PLAYER_ACTIVATED, function(...) self:SendHideMeMessageDebounced(true) end)
     addon.RegisterCallback(HR_EVENT_GROUP_CHANGED, function(...) self:SendHideMeMessageDebounced() end)

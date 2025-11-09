@@ -30,44 +30,23 @@ local moduleDefinition = {
 
 local module = internal.moduleClass:New(moduleDefinition)
 
+--- Activate the Exit Instance module
+--- @return void
 function module:Activate()
     self.logger:Debug("activated exitInstance module")
-
-    -- Bindings
-    ZO_CreateStringId('SI_BINDING_NAME_HR_MODULES_EXITINSTANCE_BINDING_SENDEJECT', GetString(HR_MODULES_EXITINSTANCE_BINDING_SENDEJECT))
-    ZO_CreateStringId('SI_BINDING_NAME_HR_MODULES_EXITINSTANCE_BINDING_EXITINSTANCE', GetString(HR_MODULES_EXITINSTANCE_BINDING_EXITINSTANCE))
-
-    local exitInstanceRequestButton = {
-        name = GetString(HR_MODULES_EXITINSTANCE_BINDING_SENDEJECT),
-        keybind = 'HR_MODULES_EXITINSTANCE_BINDING_SENDEJECT',
-        callback = function(...) self:SendExitInstanceRequest(...) end,
-        alignment = KEYBIND_STRIP_ALIGN_CENTER,
-    }
-
-    local function OnStateChanged(_, newState)
-        if newState == SCENE_FRAGMENT_SHOWING and IsUnitGroupLeader(localPlayer) then
-            KEYBIND_STRIP:AddKeybindButton(exitInstanceRequestButton)
-        elseif newState == SCENE_FRAGMENT_HIDING then
-            KEYBIND_STRIP:RemoveKeybindButton(exitInstanceRequestButton)
-        end
-    end
-    -- Add hotkey to group window
-    if KEYBOARD_GROUP_MENU_SCENE then
-        KEYBOARD_GROUP_MENU_SCENE:RegisterCallback("StateChange", OnStateChanged)
-    end
-    if GAMEPAD_GROUP_SCENE then
-        GAMEPAD_GROUP_SCENE:RegisterCallback("StateChange", OnStateChanged)
-    end
 
     -- register custom dialog
     self:registerExitInstanceRequestDialog()
     self.registerExitInstanceRequestDialog = nil -- only once
 
+    self:SetupKeybinds()
 
     -- register "eject" subcommand
     core.RegisterSubCommand("eject", GetString(HR_MODULES_EXITINSTANCE_COMMAND_HELP), function(...) self:SendExitInstanceRequest(...) end)
 end
 
+--- Exits the current instance, showing a confirmation dialog if enabled.
+--- @return void
 function module:ExitInstance()
     if not CanExitInstanceImmediately() then return end
 
@@ -81,6 +60,8 @@ function module:ExitInstance()
     end
 end
 
+--- Registers the exit instance request dialog.
+--- @return void
 function module:registerExitInstanceRequestDialog()
     ZO_Dialogs_RegisterCustomDialog(self.dialogExitInstance, {
         title = {

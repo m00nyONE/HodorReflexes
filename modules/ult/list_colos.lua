@@ -37,6 +37,8 @@ local svDefault = {
     colorVuln = {1, 1, 0}, -- yellow
 }
 
+--- Create the colos ult list.
+--- @return void
 function module:CreateColosList()
     local listDefinition = {
         name = "colos",
@@ -80,6 +82,12 @@ function module:CreateColosList()
     list.logger:Debug("added player row type '%d' with template '%s'", list.ROW_TYPE, list.ROW_TEMPLATE)
 end
 
+--- NOT for manual use.
+--- Creation function for colos list header row.
+--- @param rowControl Control
+--- @param data table
+--- @param scrollList ZO_ScrollList
+--- @return void
 function module:colosListHeaderRowCreationFunction(rowControl, data, scrollList)
     if rowControl._initialized and not self.colosList._redrawHeaders then
         return
@@ -102,6 +110,12 @@ function module:colosListHeaderRowCreationFunction(rowControl, data, scrollList)
     rowControl._initialized = true
 end
 
+--- NOT for manual use.
+--- Creation function for colos list player row.
+--- @param rowControl Control
+--- @param data table
+--- @param scrollList ZO_ScrollList
+--- @return void
 function module:colosListRowCreationFunction(rowControl, data, scrollList)
     local list = self.colosList
     local sw = list.sw
@@ -119,6 +133,9 @@ function module:colosListRowCreationFunction(rowControl, data, scrollList)
     rawValueControl:SetScale(sw.showRawValue)
 end
 
+--- NOT for manual use.
+--- Update the colos ult list.
+--- @return void
 function module:UpdateColosList()
     local listControl = self.colosList.listControl
 

@@ -18,6 +18,9 @@ local localPlayer = "player"
 local protocolPullCountdown = {}
 local MESSAGE_ID_PULLCOUNTDOWN = 31
 
+--- Register LGB protocols for Pull module
+--- @param handler LibGroupBroadcastHandler
+--- @return void
 function module:RegisterLGBProtocols(handler)
     local CreateNumericField = LGB.CreateNumericField
     local protocolOptions = {
@@ -33,6 +36,10 @@ function module:RegisterLGBProtocols(handler)
     protocolPullCountdown:Finalize(protocolOptions)
 end
 
+--- Handle received pull countdown message
+--- @param unitTag string
+--- @param data table
+--- @return void
 function module:onPullCountdownMessageReceived(unitTag, data)
     if not IsUnitGroupLeader(unitTag) then return end
     if self.isCountdownActive then return end
@@ -45,6 +52,9 @@ function module:onPullCountdownMessageReceived(unitTag, data)
     self:RenderPullCountdown(duration)
 end
 
+--- Send pull countdown message to group members
+--- @param duration number|nil Duration in seconds
+--- @return void
 function module:SendPullCountdown(duration)
     duration = tonumber(duration) or self.sv.countdownDuration
     self.logger:Debug("SendPullCountdown called with duration: %s", tostring(duration))

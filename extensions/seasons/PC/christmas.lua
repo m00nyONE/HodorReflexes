@@ -18,15 +18,59 @@ local season = {
     dates = { "2412", "2512", "2612" },
 }
 
+--- Activates the christmas season
+--- @return void
 function season:Activate()
     local christmasIcons = {
-        [1] = "HodorReflexes/extensions/seasons/PC/assets/christmas/class_dragonknight_christmas.dds",
-        [2] = "HodorReflexes/extensions/seasons/PC/assets/christmas/class_sorcerer_christmas.dds",
-        [3] = "HodorReflexes/extensions/seasons/PC/assets/christmas/class_nightblade_christmas.dds",
-        [4] = "HodorReflexes/extensions/seasons/PC/assets/christmas/class_warden_christmas.dds",
-        [5] = "HodorReflexes/extensions/seasons/PC/assets/christmas/class_necromancer_christmas.dds",
-        [6] = "HodorReflexes/extensions/seasons/PC/assets/christmas/class_templar_christmas.dds",
-        [117] = "HodorReflexes/extensions/seasons/PC/assets/christmas/class_arcanist_christmas.dds"
+        [1] = {
+            texturePath = "HodorReflexes/extensions/seasons/PC/assets/christmas/icons-3x3.dds",
+            left = 0,
+            right = 1/3,
+            top = 0,
+            bottom = 1/3,
+        },
+        [2] = {
+            texturePath = "HodorReflexes/extensions/seasons/PC/assets/christmas/icons-3x3.dds",
+            left = 1/3,
+            right = 2/3,
+            top = 0,
+            bottom = 1/3,
+        },
+        [3] = {
+            texturePath = "HodorReflexes/extensions/seasons/PC/assets/christmas/icons-3x3.dds",
+            left = 2/3,
+            right = 3/3,
+            top = 0,
+            bottom = 1/3,
+        },
+        [4] = {
+            texturePath = "HodorReflexes/extensions/seasons/PC/assets/christmas/icons-3x3.dds",
+            left = 0,
+            right = 1/3,
+            top = 1/3,
+            bottom = 2/3,
+        },
+        [5] = {
+            texturePath = "HodorReflexes/extensions/seasons/PC/assets/christmas/icons-3x3.dds",
+            left = 1/3,
+            right = 2/3,
+            top = 1/3,
+            bottom = 2/3,
+        },
+        [6] = {
+            texturePath = "HodorReflexes/extensions/seasons/PC/assets/christmas/icons-3x3.dds",
+            left = 2/3,
+            right = 3/3,
+            top = 1/3,
+            bottom = 2/3,
+        },
+        [117] = {
+            texturePath = "HodorReflexes/extensions/seasons/PC/assets/christmas/icons-3x3.dds",
+            left = 0,
+            right = 1/3,
+            top = 2/3,
+            bottom = 3/3,
+        },
     }
     util.overwriteClassIcons(christmasIcons)
 end

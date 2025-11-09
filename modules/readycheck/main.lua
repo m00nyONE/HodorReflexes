@@ -39,6 +39,7 @@ local moduleDefinition = {
     svVersion = 1,
     svDefault = {
         accountWide = true,
+        enableUI = true,
         enableChatMessages = true,
         windowCenterX = GuiRoot:GetWidth() / 2,
         windowCenterY = GuiRoot:GetHeight() / 5,
@@ -57,6 +58,8 @@ local moduleDefinition = {
 
 local module = internal.moduleClass:New(moduleDefinition)
 
+--- Activate the Ready Check module
+--- @return void
 function module:Activate()
     self.logger:Debug("activated readycheck module")
 
@@ -79,6 +82,8 @@ function module:Activate()
     addon.RegisterCallback(HR_EVENT_PLAYER_ACTIVATED, function(...) self:refreshVisibility(...) end)
 end
 
+--- Create the Ready Check UI
+--- @return void
 function module:CreateReadyCheckUI()
     local readycheckWindowName = addon_name .. self.name
 
@@ -118,16 +123,20 @@ function module:CreateReadyCheckUI()
     self.readycheckWindow = readycheckWindow
 
     local function readycheckFragmentCondition()
-        return (self.isPollActive or not self.uiLocked) and not IsUnitInCombat(localPlayer)
+        return self.sw.enableUI and (self.isPollActive or not self.uiLocked) and not IsUnitInCombat(localPlayer)
     end
 
     self.READYCHECK_FRAGMENT = hud.AddFadeFragment(readycheckWindow, readycheckFragmentCondition)
 end
 
+--- Refresh the visibility of the Ready Check UI
+--- @return void
 function module:refreshVisibility()
     self.READYCHECK_FRAGMENT:Refresh()
 end
 
+--- Start a test ready check
+--- @return void
 function module:startTest()
     local names = {}
 
@@ -144,21 +153,30 @@ function module:startTest()
 
     self.readycheckWindow:GetNamedChild("_List"):SetText(tconcat(names, ", "))
 end
+--- Stop the test ready check
+--- @return void
 function module:stopTest()
     self.readycheckWindow:GetNamedChild("_List"):SetText(player1to12)
 end
-
+--- Lock the Ready Check UI
+--- @return void
 function module:lockUI()
     self.uiLocked = true
     hud.LockControls(self.readycheckWindow)
     self:refreshVisibility()
 end
+--- Unlock the Ready Check UI
+--- @return void
 function module:unlockUI()
     self.uiLocked = false
     hud.UnlockControls(self.readycheckWindow)
     self:refreshVisibility()
 end
 
+--- Start the election ready check
+--- @param id number
+--- @param descriptor string
+--- @return void
 function module:startElection(id, descriptor)
     if self.isPollActive then return end
 
@@ -166,11 +184,15 @@ function module:startElection(id, descriptor)
     self:refreshVisibility()
     EM:RegisterForUpdate(addon_name .. self.name .. "Update", self.electionUpdateInterval, function(...) self:updateElection(...) end)
 end
+--- Stop the election ready check
+--- @return void
 function module:stopElection()
     self.isPollActive = false
     self:refreshVisibility()
     EM:UnregisterForUpdate(addon_name .. self.name .. "Update")
 end
+--- Update the election ready check UI
+--- @return void
 function module:updateElection()
     local electionType, timeRemainingSeconds, _, _ = GetGroupElectionInfo()
     if electionType ~= GROUP_ELECTION_TYPE_GENERIC_UNANIMOUS then
@@ -200,11 +222,21 @@ function module:updateElection()
     end
     self.readycheckWindow:GetNamedChild("_List"):SetText(tconcat(names, ", "))
 end
+--- Handle group election failed event
+--- @param _ number
+--- @param failureReason number
+--- @param _ number
+--- @return void
 function module:groupElectionFailed(_, failureReason, _)
     if failureReason == GROUP_ELECTION_FAILURE_NONE then return end
     if failureReason == GROUP_ELECTION_FAILURE_ANOTHER_IN_PROGRESS then return end
     zo_callLater(function() self:stopElection() end, 2000)
 end
+--- Handle group election result event
+--- @param _ number
+--- @param electionResult number
+--- @param _ number
+--- @return void
 function module:groupElectionResult(_, electionResult, _)
     if self.isPollActive then
         if electionResult == GROUP_ELECTION_RESULT_ELECTION_WON then

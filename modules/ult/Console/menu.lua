@@ -14,6 +14,8 @@ local module = addon_modules[module_name]
 
 local LHAS = LibHarvensAddonSettings
 
+--- builds the submenu options for the ult module
+--- @return table[]
 function module:GetSubMenuOptions()
     local SCREEN_WIDTH = GuiRoot:GetWidth()
     local SCREEN_HEIGHT = GuiRoot:GetHeight()
@@ -259,10 +261,11 @@ function module:GetSubMenuOptions()
     end
     local function getCommonCounterOptions(counterName, counter)
         return {
+            core.CreateSectionHeader(counterName .. " Counter"),
             {
                 type = LHAS.ST_DROPDOWN,
-                label = "enable "..counterName.." counter",
-                tooltip = "set the visibility of the counter.",
+                label = GetString(HR_MENU_VISIBILITY),
+                tooltip = GetString(HR_MENU_VISIBILITY_TT),
                 default = GetString(HR_VISIBILITY_SHOW_NEVER),
                 items = {
                     {name = GetString(HR_VISIBILITY_SHOW_NEVER), data = 0},
@@ -282,8 +285,8 @@ function module:GetSubMenuOptions()
             },
             {
                 type = LHAS.ST_SLIDER,
-                label = counterName .. " counter horizontal position",
-                tooltip = "set the horizontal position of the counter.",
+                label = GetString(HR_MENU_HORIZONTAL_POSITION),
+                tooltip = GetString(HR_MENU_HORIZONTAL_POSITION_TT),
                 min = 0,
                 max = SCREEN_WIDTH,
                 step = 10,
@@ -299,8 +302,8 @@ function module:GetSubMenuOptions()
             },
             {
                 type = LHAS.ST_SLIDER,
-                label = counterName .. " counter vertical position",
-                tooltip = "set the vertical position of the counter.",
+                label = GetString(HR_MENU_VERTICAL_POSITION),
+                tooltip = GetString(HR_MENU_VERTICAL_POSITION_TT),
                 min = 0,
                 max = SCREEN_HEIGHT,
                 step = 10,
@@ -312,6 +315,17 @@ function module:GetSubMenuOptions()
                     counter.sw.windowPosTop = value
                     counter.window:ClearAnchors()
                     counter.window:SetAnchor(CENTER, GuiRoot, TOPLEFT, counter.sw.windowPosLeft, counter.sw.windowPosTop)
+                end,
+            },
+            {
+                type = LHAS.ST_CHECKBOX,
+                label = "hide on active buff/cooldown",
+                tooltip = "show/hide the counter depending on if a buff or cooldown is active.",
+                default = counter.svDefault.hideOnCooldown,
+                getFunction = function() return counter.sw.hideOnCooldown end,
+                setFunction = function(value)
+                    counter.sw.hideOnCooldown = value
+                    counter:RefreshVisibility()
                 end,
             },
         }
@@ -729,10 +743,6 @@ function module:GetSubMenuOptions()
     mergeOptions(compactListSpecificOptions, compactList)
     mergeOptions(compactList, options)
 
-    local counterOptions = {
-        core.CreateSectionHeader("Counters"),
-    }
-    mergeOptions(counterOptions, options)
     mergeOptions(getCommonCounterOptions("Horn", self.hornCounter), options)
     mergeOptions(getCommonCounterOptions("Pillager", self.pillagerCounter), options)
     --mergeOptions(getCommonCounterOptions("Slayer", self.slayerCounter), options) -- experimental, disabled for now

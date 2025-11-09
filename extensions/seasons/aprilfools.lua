@@ -20,6 +20,8 @@ local season = {
     dates = { "0104" },
 }
 
+--- activates the april fools season
+--- @return void
 function season:Activate()
     local function sortByDamageReversed(a, b)
         if a.dmg == b.dmg then

@@ -25,18 +25,21 @@ local HR_EVENT_PLAYERSDATA_UPDATED = addon.HR_EVENT_PLAYERSDATA_UPDATED
 local HR_EVENT_COMBAT_START = addon.HR_EVENT_COMBAT_START
 local HR_EVENT_COMBAT_END = addon.HR_EVENT_COMBAT_END
 
-local globalUpdateDebounceDelayMS = 15 -- global debounce delay for all lists, can be overridden in each list
+--[[ doc.lua begin ]]
+local globalUpdateDebounceDelayMS = 5 -- global debounce delay for all lists, can be overridden in each list
 
---- @class: listClass
+--- @class listClass : ZO_InitializingObject base class for all lists
+--- @field name string unique name of the list
+--- @field sv table GENERATED! per character saved variables for the list
+--- @field sw table GENERATED! account wide saved variables for the list
+--- @field svDefault table default saved variables for the list
+--- @field svVersion number version of the saved variables
+--- @field listHeaderHeight number height of the list headers
+--- @field listRowHeight number height of the list rows
+--- @field updateDebounceDelayMS number debounce delay for the update
+--- @field Update function MUST IMPLEMENT! function to update the list
 local list = ZO_InitializingObject:Subclass()
 addon.listClass = list
-
-list.uiLocked = true
-list.windowName = ""
-list.window = {}
-list.windowFragment = {}
-list.listControlName = ""
-list.listControl = {}
 
 -- must implement fields
 list:MUST_IMPLEMENT("Update") -- function to update the list
@@ -68,6 +71,132 @@ function list:GetNextDataTypeId()
     return self._nextTypeId - 1
 end
 
+--- get the main window of the list instance
+--- @return TopLevelWindow main window of the list instance
+function list:GetWindow()
+    return self.window
+end
+
+--- get the left position of the list window
+--- @return number left position of the list window
+function list:GetWindowPosTop()
+    return self.sv.windowPosTop
+end
+
+--- get the top position of the list window
+--- @return number top position of the list window
+function list:GetWindowPosLeft()
+    return self.sv.windowPosLeft
+end
+
+--- get the scrollList control of the list instance
+--- @return ZO_ScrollList scrollList control of the list instance
+function list:GetListControl()
+    return self.listControl
+end
+
+--- check if the UI is currently locked
+--- @return boolean true if the UI is locked, false otherwise
+function list:IsUILocked()
+    return self.uiLocked
+end
+
+--- get the current update counter of the list instance
+--- @return number current update counter
+function list:GetUpdateCounter()
+    return self._updateCounter
+end
+
+--- get the name of the list instance
+--- @return string name of the list instance
+function list:GetName()
+    return self.name
+end
+
+--- get the header height of the list instance
+--- @return number header height of the list instance
+function list:GetHeaderHeight()
+    return self.listHeaderHeight
+end
+
+--- get the row height of the list instance
+--- @return number row height of the list instance
+function list:GetRowHeight()
+    return self.listRowHeight
+end
+
+--- set the flag to redraw headers on the next update to true
+--- @return void
+function list:SetRedrawHeaders()
+    self._redrawHeaders = true
+end
+
+--- get the flag to redraw headers
+--- @return boolean true if headers need to be redrawn, false otherwise
+function list:ShouldRedrawHeaders()
+    return self._redrawHeaders
+end
+
+--- get the logger (LibDebugLogger) of the list instance
+--- @return table logger of the list instance
+function list:GetLogger()
+    return self.logger
+end
+
+--- set the scale of the list
+--- @param scale number scale to set
+--- @return void
+function list:SetScale(scale)
+    self.sv.windowScale = scale
+    self.window:SetScale(scale)
+end
+
+--- get the scale of the list
+--- @return number scale of the list
+function list:GetScale()
+    return self.sv.windowScale
+end
+
+--- set the background opacity of the list
+--- @param opacity number opacity to set (0.0 - 1.0)
+--- @return void
+function list:SetBackgroundOpacity(opacity)
+    self.backgroundControl:SetAlpha(opacity)
+end
+
+--- get the background opacity of the list
+--- @return number background opacity (0.0 - 1.0)
+function list:GetBackgroundOpacity()
+    return self.sw.backgroundOpacity
+end
+
+--- set the background texture of the list
+--- @param texturePath string path to the texture to set
+--- @return void
+function list:SetBackgroundTexture(texturePath)
+    self.sw.backgroundTexture = texturePath
+    self.backgroundControl:SetTexture(texturePath)
+end
+
+--- get the background texture of the list
+--- @return string|nil background texture path or `nil` if non is set
+function list:GetBackgroundTexture()
+    return self.sw.backgroundTexture
+end
+
+--- set the out of support range opacity of the list
+--- @param opacity number opacity to set (0.0 - 1.0)
+--- @return void
+function list:SetOutOfSupportRangeOpacity(opacity)
+    self.sw.outOfSupportRangeOpacity = opacity
+end
+
+--- get the out of support range opacity of the list
+--- @return number out of support range opacity (0.0 - 1.0)
+function list:GetOutOfSupportRangeOpacity()
+    return self.sw.outOfSupportRangeOpacity
+end
+
 --- NOT for manual use! this gets automatically called by :New() when creating a new list instance.
 --- initializes the list with the given definition.
 --- calls CreateSavedVariables(), CreateControls() and CreateFragment() once and deletes them afterwards.
@@ -78,33 +207,49 @@ function list:Initialize(listDefinition)
     local beginTime = GetGameTimeMilliseconds()
     assert(type(listDefinition) == "table", "listDefinition must be a table")
     assert(type(listDefinition.name) == "string" and listDefinition.name ~= "", "list must have a valid name")
-    assert(type(listDefinition.svDefault) == "table", "list must have a valid svDefault table")
     assert(type(listDefinition.Update) == "function", "list must have a valid update function")
 
-    for k, v in pairs(listDefinition) do
-        self[k] = v
+    -- set defaults
+    self.svVersion = 1
+    self.svDefault = {
+        enabled = 1, -- 1=always, 2=out of combat, 3=non bossfights, 0=off
+        disableInPvP = true, -- disable the list in PvP zones
+        windowWith = 230, -- default window width
+        windowScale = 1.0, -- default window scale
+        windowPosLeft = 0, -- default window left position
+        windowPosTop = 0, -- default window top position
+        backgroundOpacity = 0.0, -- default background opacity
+        backgroundTexture = nil, -- default background texture
+        supportRangeOnly = false, -- default support range only setting
+        outOfSupportRangeOpacity = 0.2, -- default opacity for out of support range players
+    }
+    self.listHeaderHeight = 22 -- default header height
+    self.listRowHeight = 22 -- default row height
+    self.updateDebounceDelayMS = globalUpdateDebounceDelayMS -- debounce delay for the update
+
+    -- copy over everything from listDefinition but keep existing tables and just overwrite their inner contents
+    for key, value in pairs(listDefinition) do
+        if type(value) == "table" and type(self[key]) == "table" then
+            for tableKey, tableValue in pairs(value) do
+                self[key][tableKey] = tableValue
+            end
+        else
+            self[key] = value
+        end
     end
 
     if internal.registeredLists[self.name] then
         error(string.format("A list with the name '%s' is already registered!", self.name), 2)
     end
 
+    -- set essential defaults. Just to be sure they are not overridden to invalid values
     self.logger = core.GetLogger("list/" .. self.name)
-    self.logger:Debug("initializing")
-
-    self.listHeaderHeight = self.listHeaderHeight or 22
-    self.listRowHeight = self.listRowHeight or 22
-    self._redrawHeaders = false -- flag to indicate if headers need to be redrawn - used internally when updating header colors or opacity values
-
-    self._nextTypeId = 1 -- initialize the next data type id counter
-
-    -- create a unique id for the list instance (and make it somewhat readable by adding the list name at the end)
+    self.uiLocked = true
+    self._redrawHeaders = false
+    self._nextTypeId = 1
+    self._updateCounter = 0
     self._Id = string.format("%s_%s", util.GetTableReference(self), self.name)
-    self.updateDebouncedEventName = self._Id .. "_UpdateDebounced"
-
-    self.logger:Debug("assigned unique id '%s'", self._Id)
-    self.updateDebounceDelayMS = self.updateDebounceDelayMS or globalUpdateDebounceDelayMS
-    self.logger:Debug("using update debounce delay of %d ms", self.updateDebounceDelayMS)
+    self._updateDebouncedEventName = self._Id .. "_UpdateDebounced"
 
     self:RunOnce("CreateSavedVariables")
     self:RunOnce("CreateControls")
@@ -127,7 +272,8 @@ function list:Initialize(listDefinition)
     end
 
     self._updateDebouncedTrigger = function()
-        EM:UnregisterForUpdate(self.updateDebouncedEventName)
+        EM:UnregisterForUpdate(self._updateDebouncedEventName)
+        self._updateCounter = self._updateCounter + 1
         self:Update()
         self:ResizeList()
     end
@@ -172,7 +318,7 @@ end
 --- @return void
 function list:UpdateDebounced(forceUpdate)
     if not self:WindowFragmentCondition() and not (forceUpdate == true) then return end
-    EM:RegisterForUpdate(self.updateDebouncedEventName, self.updateDebounceDelayMS, self._updateDebouncedTrigger)
+    EM:RegisterForUpdate(self._updateDebouncedEventName, self.updateDebounceDelayMS, self._updateDebouncedTrigger)
 end
 
 --- NOT for manual use! this gets called to check if the list is enabled.
@@ -190,13 +336,9 @@ function list:IsEnabled()
         return not IsUnitInCombat(localPlayer)
     elseif enabled == 3 then -- show non bossfights
         return not IsUnitInCombat(localPlayer) or not DoesUnitExist(localBoss1) and not DoesUnitExist(localBoss2)
-    else -- off
-        return false
     end
-end
 
-function list:SetBackgroundOpacity(opacity)
-    self.backgroundControl:SetAlpha(opacity)
+    return false
 end
 
 --- NOT for manual use! this gets called to refresh the visibility of the list.
@@ -212,7 +354,7 @@ end
 --- @return boolean true if the window fragment should be shown, false otherwise
 function list:WindowFragmentCondition()
     local isEnabled = self:IsEnabled()
-    if not self.uiLocked and isEnabled then
+    if not self:IsUILocked() and isEnabled then
         return true -- always show when ui is unlocked
     end
     if not IsUnitGrouped(localPlayer) then
@@ -228,14 +370,6 @@ end
 --- @return void
 function list:CreateSavedVariables()
     if not self.svVersion then self.svVersion = 1 end
-    self.svDefault.enabled = self.svDefault.enabled or 1 -- 1=always, 2=out of combat, 3=non bossfights, 0=off
-    self.svDefault.disableInPvP = self.svDefault.disableInPvP or true
-    self.svDefault.windowScale = self.svDefault.windowScale or 1.0
-    self.svDefault.windowPosLeft = self.svDefault.windowPosLeft or 0
-    self.svDefault.windowPosTop = self.svDefault.windowPosTop or 0
-    self.svDefault.windowWidth = self.svDefault.windowWidth or 230
-    self.svDefault.backgroundOpacity = self.svDefault.backgroundOpacity or 0.0
-    self.svDefault.supportRangeOnly = self.svDefault.supportRangeOnly or false
 
     local svNamespace = string.format("list_%s", self.name)
     local svVersion = core.svVersion + self.svVersion
@@ -279,7 +413,6 @@ function list:CreateControls()
         window:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, self.sv.windowPosLeft, self.sv.windowPosTop)
     end)
     window:SetScale(self.sw.windowScale)
-    self.windowName = windowName
     self.window = window
     self.logger:Debug("created main window '%s'", windowName)
 
@@ -290,7 +423,9 @@ function list:CreateControls()
     backgroundControl:SetAnchor(BOTTOMRIGHT, window, BOTTOMRIGHT, 0, 0, ANCHOR_CONSTRAINS_XY)
     backgroundControl:SetColor(0, 0, 0, self.sw.backgroundOpacity)
     backgroundControl:SetMouseEnabled(false)
-    self.backgroundName = backgroundName
+    if self.sw.backgroundTexture then
+        backgroundControl:SetTexture(self.sw.backgroundTexture)
+    end
     self.backgroundControl = backgroundControl
     self.logger:Debug("created background control '%s'", backgroundName)
 
@@ -302,7 +437,6 @@ function list:CreateControls()
     listControl:SetHeight(600) -- we need to set a fixed height here to make the scroll list work properly when it gets scaled. don't ask me why :D
     listControl:SetMouseEnabled(false)
     listControl:GetNamedChild("Contents"):SetMouseEnabled(false)
-    self.listControlName = listControlName
     self.listControl = listControl
     self.logger:Debug("created list control '%s'", listControlName)
 
@@ -380,14 +514,24 @@ function list.RenderTimeToControl(control, timeMS, opacity)
     end
 end
 
+--- applies the support range style (transparent look) to the control passed as argument.
+--- Can be used by custom themes as well.
+--- @param rowControl any the control to apply the style to
+--- @param unitTag string the unit tag of the player
+--- @return void
 function list:ApplySupportRangeStyle(rowControl, unitTag)
     if self.sw.supportRangeOnly and not IsUnitInGroupSupportRange(unitTag) then
-        rowControl:SetAlpha(0.2)
+        rowControl:SetAlpha(self.sw.outOfSupportRangeOpacity)
     else
         rowControl:SetAlpha(1.0)
     end
 end
 
+--- applies the user name to the control passed as argument.
+--- Can be used by custom themes as well.
+--- @param nameControl LabelControl the control to render the name to
+--- @param userId string the user id of the player
+--- @return void
 function list:ApplyUserNameToControl(nameControl, userId)
     local userName = util.GetUserName(userId, true)
     if userName then
@@ -396,6 +540,12 @@ function list:ApplyUserNameToControl(nameControl, userId)
     end
 end
 
+--- applies the user icon to the control passed as argument and sets the texture to be released at zero references.
+--- Can be used by custom themes as well.
+--- @param iconControl TextureControl the control to render the icon to
+--- @param userId string the user id of the player
+--- @param classId number the class id of the player
+--- @return void
 function list:ApplyUserIconToControl(iconControl, userId, classId)
     iconControl:SetTextureReleaseOption(RELEASE_TEXTURE_AT_ZERO_REFERENCES)
     local userIcon, tcLeft, tcRight, tcTop, tcBottom = util.GetUserIcon(userId, classId)
@@ -460,3 +610,5 @@ function list:CreateCountdownOnControl(control, eventName, zeroTimerOpacity)
     addon.RegisterCallback(eventName, control._onCountdownStart)
     self.logger:Debug("registered countdown timer on control with id '%s'", control._Id)
 end
+
+--[[ doc.lua end ]]

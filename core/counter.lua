@@ -17,19 +17,20 @@ local HR_EVENT_LOCKUI = addon.HR_EVENT_LOCKUI
 local HR_EVENT_UNLOCKUI = addon.HR_EVENT_UNLOCKUI
 local HR_EVENT_GROUP_CHANGED = addon.HR_EVENT_GROUP_CHANGED
 
+--- @class counter : ZO_InitializingObject
+--- @field name string name of the counter
+--- @field texture string texture path of the counter icon
+--- @field updateInterval number update interval in milliseconds
+--- @field svVersion number version of the saved variables
+--- @field svDefault table default values for the saved variables
+--- @field updateFunc function function to update the counter
+--- @field sv table saved variables for the counter
+--- @field sw table account wide saved variables for the counter
+--- @field logger table logger for the counter
+--- @field active boolean whether the counter is active
+--- @field uiLocked boolean whether the UI is locked
 local counter = ZO_InitializingObject:Subclass()
 internal.counterClass = counter
-
-counter.name = ""
-counter.windowName = ""
-counter.window = {}
-counter.windowFragment = {}
-counter.animation = {}
-counter.distance = 0
-counter.texture = "esoui/art/icons/ability_ultimate_001.dds"
-counter.updateInterval = 200 -- milliseconds
-counter.updateFunc = nil -- function to call to update the counter -- should return count and ready state
-counter.active = false
 
 --- NOT for manual use! this is a helper function that runs a function only once and then removes it from the counter instance.
 --- If you use it on a still needed function, it will be gone after the first call and thus break your counter!
@@ -51,6 +52,8 @@ function counter:GetId()
     return self._Id
 end
 
+--- check if the counter is enabled based on the saved variable settings
+--- @return boolean true if the counter is enabled, false otherwise
 function counter:IsEnabled()
     local enabled = self.sv.enabled
     if enabled == 1 then
@@ -58,6 +61,8 @@ function counter:IsEnabled()
     elseif enabled == 2 then
         return IsUnitInCombat(localPlayer)
     end
+
+    return false
 end
 
 --- NOT for manual use! this gets called to refresh the visibility of the counter.
@@ -72,7 +77,7 @@ end
 --- checks if the counter should be shown based on the current conditions.
 --- @return boolean true if the window fragment should be shown, false otherwise
 function counter:WindowFragmentCondition()
-    local isEnabled = self:IsEnabled()
+    local isEnabled = self:IsEnabled() and (not self.sw.hideOnCooldown or not self:IsCooldownActive())
     if not self.uiLocked and isEnabled then
         return true -- always show when ui is unlocked
     end
@@ -86,6 +91,9 @@ function counter:WindowFragmentCondition()
     return isEnabled
 end
 
+--- Initializes the counter instance with the given definition.
+--- @param counterDefinition table definition of the counter
+--- @return void
 function counter:Initialize(counterDefinition)
     assert(type(counterDefinition) == "table", "counterDefinition must be a table")
     assert(type(counterDefinition.name) == "string" and counterDefinition.name ~= "", "counter must have a valid name")
@@ -93,20 +101,39 @@ function counter:Initialize(counterDefinition)
     assert(type(counterDefinition.updateInterval) == "number", "counter must have a valid updateInterval")
     assert(type(counterDefinition.updateFunc) == "function", "counter must have a valid updateFunc method")
 
-    for k, v in pairs(counterDefinition) do
-        self[k] = v
+    -- set defaults
+    self.svVersion = 1
+    self.distance = 0
+    self.texture = "esoui/art/icons/ability_ultimate_001.dds"
+    self.updateInterval = 200 -- milliseconds
+    self.svDefault = {
+        enabled = 0, -- 1=always, 2=only in combat, 0=off
+        windowPosLeft = 0,
+        windowPosTop = 0,
+        scale = 1.0,
+        accountWide = false,
+        hideOnCooldown = false,
+    }
+
+    -- copy over everything from listDefinition but keep existing tables and just overwrite their inner contents
+    for key, value in pairs(counterDefinition) do
+        if type(value) == "table" and type(self[key]) == "table" then
+            for tableKey, tableValue in pairs(value) do
+                self[key][tableKey] = tableValue
+            end
+        else
+            self[key] = value
+        end
     end
 
-    self.uiLocked = true
+    -- set essential defaults. Just to be sure they are not overridden to invalid values
     self.logger = core.GetLogger("counter/" .. self.name)
-    self.logger:Debug("Initializing")
-
+    self.active = false
+    self.uiLocked = true
     self.windowName = string.format("%s_Counter_%s", addon_name, self.name)
-
     self._Id = string.format("%s_%s", util.GetTableReference(self), self.name)
-    self.logger:Debug("assigned unique id '%s'", self._Id)
-
     self._updateEventName = string.format("%s_UpdateEvent", self._Id)
+    self._cooldownEndTimeMS = 0
 
     self:RunOnce("CreateSavedVariables")
     self:RunOnce("CreateControls")
@@ -126,9 +153,15 @@ function counter:Initialize(counterDefinition)
         hud.UnlockControls(self.window)
     end
 
+    self._update = function()
+        self:Update()
+    end
+
     addon.RegisterCallback(HR_EVENT_LOCKUI, lockUI)
     addon.RegisterCallback(HR_EVENT_UNLOCKUI, unlockUI)
     addon.RegisterCallback(HR_EVENT_GROUP_CHANGED, onGroupChanged)
+
+    internal.registeredCounters[self.name] = self -- register the counter
 end
 
 --- NOT for manual use! this gets called once when the counter is initialized.
@@ -147,7 +180,6 @@ function counter:CreateFragment()
     end
 
     self.windowFragment = hud.AddFadeFragment(self.window, windowFragmentConditionWrapper)
-    self.logger:Debug("created window fragment")
 end
 
 --- NOT for manual use! this gets called once when the counter is initialized.
@@ -172,14 +204,17 @@ function counter:CreateControls()
         window:SetScale(self.sv.scale)
     end)
     local bg = window:CreateControl(self.windowName .. "_BG", CT_TEXTURE)
+    bg:SetTextureReleaseOption(RELEASE_TEXTURE_AT_ZERO_REFERENCES)
     bg:SetAnchor(CENTER, window, CENTER, 0, 0)
     bg:SetDimensions(64, 64)
     bg:SetColor(0, 0, 0, 1)
     local icon = window:CreateControl(self.windowName .. "_Icon", CT_TEXTURE)
+    icon:SetTextureReleaseOption(RELEASE_TEXTURE_AT_ZERO_REFERENCES)
     icon:SetAnchor(CENTER, window, CENTER, 0, 0)
     icon:SetDimensions(56, 56)
     icon:SetTexture(self.texture)
     local highLight = window:CreateControl(self.windowName .. "_Highlight", CT_TEXTURE)
+    highLight:SetTextureReleaseOption(RELEASE_TEXTURE_AT_ZERO_REFERENCES)
     highLight:SetAnchor(CENTER, window, CENTER, 0, 0)
     highLight:SetDimensions(56, 56)
     highLight:SetTexture("esoui/art/actionBar/abilityHighlightAnimation.dds")
@@ -207,13 +242,6 @@ end
 --- sets default values if they are not provided during initialization.
 --- @return void
 function counter:CreateSavedVariables()
-    if not self.svVersion then self.svVersion = 1 end
-    self.svDefault.enabled = self.svDefault.enabled or 0 -- 1=always, 2=only in combat, 0=off
-    self.svDefault.windowPosLeft = self.svDefault.windowPosLeft or 0
-    self.svDefault.windowPosTop = self.svDefault.windowPosTop or 0
-    self.svDefault.scale = self.svDefault.scale or 1.0
-    self.svDefault.accountWide = self.svDefault.accountWide or false
-
     local svNamespace = string.format("counter_%s", self.name)
     local svVersion = core.svVersion + self.svVersion
     self.logger:Debug("using saved variables version %d", svVersion)
@@ -236,11 +264,22 @@ function counter:Update()
     local labelControl = self.window:GetNamedChild("_Label")
     local bgControl = self.window:GetNamedChild("_BG")
 
+    -- show countdown when on cooldown or buff is still active
+    local remainingCooldownMS = self:GetRemainingCooldownMS()
+    if remainingCooldownMS > 0 then
+        labelControl:SetColor(1, 0, 0)
+        bgControl:SetColor(1, 0, 0)
+        labelControl:SetText(string.format("%.1f", remainingCooldownMS / 1000))
+        self:StopAnimation()
+        return
+    end
+
+    -- call the update function
     local count, ready = self.updateFunc()
     count = count or 0
     ready = ready or false
 
-    labelControl:SetText(tostring(count))
+    labelControl:SetText(string.format("%d", count))
     if ready then
         labelControl:SetColor(0, 1, 0)
         bgControl:SetColor(0, 1, 0)
@@ -255,9 +294,7 @@ end
 --- @return void
 function counter:StartUpdate()
     if self.isUpdating then return end
-    EM:RegisterForUpdate(self._updateEventName, self.updateInterval, function()
-        self:Update()
-    end)
+    EM:RegisterForUpdate(self._updateEventName, self.updateInterval, self._update)
     self.isUpdating = true
 end
 --- Stops the update of the counter.
@@ -286,4 +323,23 @@ end
 function counter:SetActive(active)
     self.active = active
     self:RefreshVisibility()
+end
+
+--- Checks if the cooldown is currently active.
+--- @return boolean true if the cooldown is active, false otherwise
+function counter:IsCooldownActive()
+    return self:GetRemainingCooldownMS() > 0
+end
+
+--- Gets the remaining cooldown time in milliseconds.
+--- @return number remaining cooldown time in milliseconds
+function counter:GetRemainingCooldownMS()
+    return zo_max(0, self._cooldownEndTimeMS - GetGameTimeMilliseconds())
+end
+
+--- Sets the cooldown duration for the counter.
+--- @param durationMS number duration of the cooldown in milliseconds
+--- @return void
+function counter:SetCooldown(durationMS)
+    self._cooldownEndTimeMS = zo_max(self._cooldownEndTimeMS, GetGameTimeMilliseconds() + durationMS)
 end

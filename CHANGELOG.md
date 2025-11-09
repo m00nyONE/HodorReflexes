@@ -1,5 +1,13 @@
 [SIZE="2"][B]IMPORTANT:[/B] You need LibCustomNames and LibCustomIcons now if you want to have names and icons displayed.[/SIZE]
 
+## 2025.11.07 - @m00nyONE
+- adding an option to hide the readycheck window and only display a chat message when a readycheck is started.
+- add LibRadialMenu by M0R for console. Now you can finally use Exit Instance and Pull Countdowns on console too! :-)
+- add an option to hide counters when the buff/cooldown is active
+- counters can now display active buffs/cooldowns
+- fix settings reset not working properly
+- creating/updating in-code emmyLUA documentation.
+
 ## 2025.11.06 - @m00nyONE
 - improve overall performance of the addon
 - fixed the damage list header title not updating and being stuck in it's first state

@@ -194,6 +194,8 @@ local function onGroupChanged()
 end
 
 --- registers subcommand to test group functionality
+--- @param str string the command string
+--- @return void
 core.RegisterSubCommand("test", GetString(HR_CORE_GROUP_COMMAND_TEST_HELP), function(str)
     if IsUnitGrouped(localPlayer) then
         df("|cFF0000%s|r %s", addon_name, GetString(HR_CORE_GROUP_COMMAND_TEST_LEAVE_GROUP))

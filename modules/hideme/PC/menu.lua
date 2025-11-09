@@ -12,6 +12,7 @@ local internal_modules = internal.modules
 local module_name = "hideme"
 local module = addon_modules[module_name]
 
+--- @return table
 function module:GetSubMenuOptions()
     local function GetGeneralOptions()
         return {

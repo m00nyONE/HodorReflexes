@@ -10,6 +10,8 @@ local logger = core.GetLogger("core/menu")
 local util = addon.util
 local LAM = LibAddonMenu2
 
+--- @param subName string|nil
+--- @return table
 function core.GetPanelConfig(subName)
     local name = addon.friendlyName
     local displayName = string.format('|cFFFACD%s|r', addon.friendlyName)
@@ -31,6 +33,8 @@ function core.GetPanelConfig(subName)
     }
 end
 
+--- @param name string
+--- @return table
 function core.CreateSectionHeader(name)
     return {
         type = "header",
@@ -38,6 +42,9 @@ function core.CreateSectionHeader(name)
     }
 end
 
+--- @param subName string|nil
+--- @param options table
+--- @return void
 function core.CreateNewMenu(subName, options)
     local panel = core.GetPanelConfig(subName)
     local menuReference = addon_name .. "_menu"
@@ -49,6 +56,7 @@ function core.CreateNewMenu(subName, options)
     LAM:RegisterOptionControls(menuReference, options)
 end
 
+--- @return table
 function core.GetCoreMenuOptions()
     local options = {
         core.CreateSectionHeader(GetString(HR_MENU_GENERAL)),

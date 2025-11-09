@@ -112,8 +112,8 @@ local strings = {
     HR_MODULES_READYCHECK_TITLE = "Ready Check",
     HR_MODULES_READYCHECK_READY = "Ready",
     HR_MODULES_READYCHECK_NOT_READY = "Not Ready",
-    HR_MODULES_READYCHECK_MENU_UI_LOCKED = "lock ui",
-    HR_MODULES_READYCHECK_MENU_UI_LOCKED_TT = "Prevents the readycheck window from being moved or resized.",
+    HR_MODULES_READYCHECK_MENU_UI = "show ui",
+    HR_MODULES_READYCHECK_MENU_UI_TT = "Displays the readycheck window with the results.",
     HR_MODULES_READYCHECK_MENU_CHAT = "chat output",
     HR_MODULES_READYCHECK_MENU_CHAT_TT = "Outputs the readycheck results to chat.",
     -- SKILL LINES
