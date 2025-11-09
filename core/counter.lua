@@ -136,6 +136,8 @@ function counter:Initialize(counterDefinition)
     addon.RegisterCallback(HR_EVENT_LOCKUI, lockUI)
     addon.RegisterCallback(HR_EVENT_UNLOCKUI, unlockUI)
     addon.RegisterCallback(HR_EVENT_GROUP_CHANGED, onGroupChanged)
+
+    internal.registeredCounters[self.name] = self -- register the counter
 end
 
 --- NOT for manual use! this gets called once when the counter is initialized.

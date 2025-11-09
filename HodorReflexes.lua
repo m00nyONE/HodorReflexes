@@ -52,6 +52,7 @@ local addon = {
             }
         },
         registeredLists = {}, -- list of all registered lists
+        registeredCounters = {}, -- list of all registered counters
         extensionClass = {}, -- will be set later
         moduleClass = {}, -- will be set later
     },
