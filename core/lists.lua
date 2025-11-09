@@ -336,9 +336,9 @@ function list:IsEnabled()
         return not IsUnitInCombat(localPlayer)
     elseif enabled == 3 then -- show non bossfights
         return not IsUnitInCombat(localPlayer) or not DoesUnitExist(localBoss1) and not DoesUnitExist(localBoss2)
-    else -- off
-        return false
     end
+
+    return false
 end
 
 --- NOT for manual use! this gets called to refresh the visibility of the list.
