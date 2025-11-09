@@ -72,6 +72,8 @@ function counter:IsEnabled()
     elseif enabled == 2 then
         return IsUnitInCombat(localPlayer)
     end
+
+    return false
 end
 
 --- NOT for manual use! this gets called to refresh the visibility of the counter.
