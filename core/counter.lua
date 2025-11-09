@@ -32,17 +32,6 @@ local HR_EVENT_GROUP_CHANGED = addon.HR_EVENT_GROUP_CHANGED
 local counter = ZO_InitializingObject:Subclass()
 internal.counterClass = counter
 
-counter.name = ""
-counter.windowName = ""
-counter.window = {}
-counter.windowFragment = {}
-counter.animation = {}
-counter.distance = 0
-counter.texture = "esoui/art/icons/ability_ultimate_001.dds"
-counter.updateInterval = 200 -- milliseconds
-counter.updateFunc = nil -- function to call to update the counter -- should return count and ready state
-counter.active = false
-
 --- NOT for manual use! this is a helper function that runs a function only once and then removes it from the counter instance.
 --- If you use it on a still needed function, it will be gone after the first call and thus break your counter!
 --- @param funcName string name of the function to run once
@@ -112,21 +101,38 @@ function counter:Initialize(counterDefinition)
     assert(type(counterDefinition.updateInterval) == "number", "counter must have a valid updateInterval")
     assert(type(counterDefinition.updateFunc) == "function", "counter must have a valid updateFunc method")
 
-    for k, v in pairs(counterDefinition) do
-        self[k] = v
+    -- set defaults
+    self.svVersion = 1
+    self.distance = 0
+    self.texture = "esoui/art/icons/ability_ultimate_001.dds"
+    self.updateInterval = 200 -- milliseconds
+    self.svDefault = {
+        enabled = 0, -- 1=always, 2=only in combat, 0=off
+        windowPosLeft = 0,
+        windowPosTop = 0,
+        scale = 1.0,
+        accountWide = false,
+        hideOnCooldown = false,
+    }
+
+    -- copy over everything from listDefinition but keep existing tables and just overwrite their inner contents
+    for key, value in pairs(counterDefinition) do
+        if type(value) == "table" and type(self[key]) == "table" then
+            for tableKey, tableValue in pairs(value) do
+                self[key][tableKey] = tableValue
+            end
+        else
+            self[key] = value
+        end
     end
 
-    self.uiLocked = true
+    -- set essential defaults. Just to be sure they are not overridden to invalid values
     self.logger = core.GetLogger("counter/" .. self.name)
-    self.logger:Debug("Initializing")
-
+    self.active = false
+    self.uiLocked = true
     self.windowName = string.format("%s_Counter_%s", addon_name, self.name)
-
     self._Id = string.format("%s_%s", util.GetTableReference(self), self.name)
-    self.logger:Debug("assigned unique id '%s'", self._Id)
-
     self._updateEventName = string.format("%s_UpdateEvent", self._Id)
-
     self._cooldownEndTimeMS = 0
 
     self:RunOnce("CreateSavedVariables")
@@ -170,7 +176,6 @@ function counter:CreateFragment()
     end
 
     self.windowFragment = hud.AddFadeFragment(self.window, windowFragmentConditionWrapper)
-    self.logger:Debug("created window fragment")
 end
 
 --- NOT for manual use! this gets called once when the counter is initialized.
@@ -230,14 +235,6 @@ end
 --- sets default values if they are not provided during initialization.
 --- @return void
 function counter:CreateSavedVariables()
-    if not self.svVersion then self.svVersion = 1 end
-    self.svDefault.enabled = self.svDefault.enabled or 0 -- 1=always, 2=only in combat, 0=off
-    self.svDefault.windowPosLeft = self.svDefault.windowPosLeft or 0
-    self.svDefault.windowPosTop = self.svDefault.windowPosTop or 0
-    self.svDefault.scale = self.svDefault.scale or 1.0
-    self.svDefault.accountWide = self.svDefault.accountWide or false
-    self.svDefault.hideOnCooldown = self.svDefault.hideOnCooldown or false
-
     local svNamespace = string.format("counter_%s", self.name)
     local svVersion = core.svVersion + self.svVersion
     self.logger:Debug("using saved variables version %d", svVersion)

@@ -39,30 +39,6 @@ local globalUpdateDebounceDelayMS = 5 -- global debounce delay for all lists, ca
 --- @field updateDebounceDelayMS number debounce delay for the update
 --- @field Update function MUST IMPLEMENT! function to update the list
 local list = ZO_InitializingObject:Subclass()
-list.name = "" -- unique name of the list
-list.sv = {}
-list.sw = {}
-list.svVersion = 1
-list.svDefault = {
-    enabled = 1, -- 1=always, 2=out of combat, 3=non bossfights, 0=off
-    disableInPvP = true, -- disable the list in PvP zones
-    windowWith = 230, -- default window width
-    windowScale = 1.0, -- default window scale
-    windowPosLeft = 0, -- default window left position
-    windowPosTop = 0, -- default window top position
-    backgroundOpacity = 0.0, -- default background opacity
-    backgroundTexture = nil, -- default background texture
-    supportRangeOnly = false, -- default support range only setting
-    outOfSupportRangeOpacity = 0.2, -- default opacity for out of support range players
-}
-list.listHeaderHeight = 22 -- default header height
-list.listRowHeight = 22 -- default row height
-list.updateDebounceDelayMS = globalUpdateDebounceDelayMS -- debounce delay for the update
-list._redrawHeaders = false -- flag to indicate if headers need to be redrawn - used internally when updating header colors or opacity values
-list._nextTypeId = 1 -- initialize the next data type id counter
-list._updateCounter = 0 -- initialize the update counter
-list.uiLocked = true -- flag to indicate if the UI is locked
-
 addon.listClass = list
 
 -- must implement fields
@@ -233,15 +209,32 @@ function list:Initialize(listDefinition)
     assert(type(listDefinition.name) == "string" and listDefinition.name ~= "", "list must have a valid name")
     assert(type(listDefinition.Update) == "function", "list must have a valid update function")
 
-    -- overwrite svDefaults if provided
-    for k, v in pairs(listDefinition.svDefault or {}) do
-        self.svDefault[k] = v
-    end
+    -- set defaults
+    self.svVersion = 1
+    self.svDefault = {
+        enabled = 1, -- 1=always, 2=out of combat, 3=non bossfights, 0=off
+        disableInPvP = true, -- disable the list in PvP zones
+        windowWith = 230, -- default window width
+        windowScale = 1.0, -- default window scale
+        windowPosLeft = 0, -- default window left position
+        windowPosTop = 0, -- default window top position
+        backgroundOpacity = 0.0, -- default background opacity
+        backgroundTexture = nil, -- default background texture
+        supportRangeOnly = false, -- default support range only setting
+        outOfSupportRangeOpacity = 0.2, -- default opacity for out of support range players
+    }
+    self.listHeaderHeight = 22 -- default header height
+    self.listRowHeight = 22 -- default row height
+    self.updateDebounceDelayMS = globalUpdateDebounceDelayMS -- debounce delay for the update
 
-    -- copy over other definitions
-    for k, v in pairs(listDefinition) do
-        if k ~= "svDefault" then
-            self[k] = v
+    -- copy over everything from listDefinition but keep existing tables and just overwrite their inner contents
+    for key, value in pairs(listDefinition) do
+        if type(value) == "table" and type(self[key]) == "table" then
+            for tableKey, tableValue in pairs(value) do
+                self[key][tableKey] = tableValue
+            end
+        else
+            self[key] = value
         end
     end
 
@@ -251,6 +244,7 @@ function list:Initialize(listDefinition)
 
     -- set essential defaults. Just to be sure they are not overridden to invalid values
     self.logger = core.GetLogger("list/" .. self.name)
+    self.uiLocked = true
     self._redrawHeaders = false
     self._nextTypeId = 1
     self._updateCounter = 0
