@@ -279,7 +279,7 @@ function counter:Update()
     count = count or 0
     ready = ready or false
 
-    labelControl:SetText(tostring(count))
+    labelControl:SetText(string.format("%d", count))
     if ready then
         labelControl:SetColor(0, 1, 0)
         bgControl:SetColor(0, 1, 0)
