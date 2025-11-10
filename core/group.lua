@@ -99,9 +99,7 @@ function group.CreateOrUpdatePlayerData(data)
         playersData[characterName] = playerData
     end
 
-    for key, value in pairs(data) do
-        playerData[key] = value
-    end
+    ZO_DeepTableCopy(data, playerData)
 
     playerData.tag = tag
     playerData.lastUpdate = GetGameTimeMilliseconds()
