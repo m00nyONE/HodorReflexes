@@ -28,14 +28,18 @@ local extension = internal.extensionClass:New(extensionDefinition)
 --- @return string, number, number, number, number texturePath, textureCoordsLeft, textureCoordsRight, textureCoordsTop, textureCoordsBottom
 local function LCI_GetUserIcon(userId, classId)
     -- get static icon first because this is what is asked for
-    local static = LCI.GetStatic(userId)
-    if static then
-        return static, 0, 1, 0, 1
+    do
+        local texturePath, left, right, top, bottom = LCI.GetStatic(userId)
+        if texturePath then
+            return texturePath, left or 0, right or 1, top or 0, bottom or 1
+        end
     end
     -- then try animated icon and return the first frame
-    local animation, width, height, _ = LCI.GetAnimated(userId)
-    if animation then
-        return animation, 0, 1/width, 0, 1/height
+    do
+        local texturePath, left, right, top, bottom, width, height, _ = LCI.GetAnimated(userId)
+        if texturePath then
+            return texturePath, left, right/width, top, bottom/height
+        end
     end
     -- as a last resort, return class icon
     return util.GetClassIcon(classId) -- returns texturePath, left, right, top, bottom
