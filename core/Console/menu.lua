@@ -27,12 +27,24 @@ function core.GetPanelConfig(subName)
     })
 end
 
+function core.ColorOption(option)
+    if option.isAdvancedSetting and option.label then
+        option.label = string.format("|cff9900%s|r", option.label)
+    end
+    if option.requiresReload and option.label then
+        option.label = string.format("|cffff00%s|r", option.label)
+    end
+
+    return option
+end
+
 --- @param name string
 --- @return table
-function core.CreateSectionHeader(name)
+function core.CreateSectionHeader(name, isAdvancedSetting)
     return {
         type = LHAS.ST_SECTION,
         label = string.format("|cFFFACD%s|r", name),
+        isAdvancedSetting = isAdvancedSetting or false,
     }
 end
 
@@ -40,11 +52,12 @@ end
 --- @param options table[]
 function core.CreateNewMenu(subName, options)
     local panel = core.GetPanelConfig(subName)
-    panel:AddSetting({
+
+    panel:AddSetting(core.ColorOption({
         type = LHAS.ST_LABEL,
         label = GetString(HR_MENU_RELOAD_HIGHLIGHT),
-    })
-    panel:AddSetting({
+    }))
+    panel:AddSetting(core.ColorOption({
         type = LHAS.ST_BUTTON,
         label = GetString(HR_MENU_TESTMODE),
         buttonText = GetString(HR_MENU_TESTMODE),
@@ -52,8 +65,8 @@ function core.CreateNewMenu(subName, options)
         clickHandler = function(control)
             SLASH_COMMANDS[string.format("/%s", addon.slashCmd)]("test")
         end
-    })
-    panel:AddSetting({
+    }))
+    panel:AddSetting(core.ColorOption({
         type = LHAS.ST_BUTTON,
         label = GetString(HR_MENU_RELOAD),
         buttonText = GetString(HR_MENU_RELOAD),
@@ -61,7 +74,8 @@ function core.CreateNewMenu(subName, options)
         clickHandler = function(control)
             ReloadUI()
         end
-    })
+    }))
+
     for _, option in ipairs(options) do
         panel:AddSetting(option)
     end
@@ -69,17 +83,7 @@ end
 
 --- @return table
 function core.GetCoreMenuOptions()
-    local function mergeOptions(source, destination)
-        for _, option in ipairs(source) do
-            if option.requiresReload then
-                option.label = string.format("|cffff00%s|r", option.label)
-            end
-            table.insert(destination, option)
-        end
-    end
-
-    local options = {}
-    local generalOptions = {
+    local options = {
         core.CreateSectionHeader(GetString(HR_MENU_GENERAL)),
         {
             type = LHAS.ST_CHECKBOX,
@@ -91,14 +95,22 @@ function core.GetCoreMenuOptions()
             default = true,
             requiresReload = true,
         },
+        {
+            type = LHAS.ST_CHECKBOX,
+            label = GetString(HR_MENU_ADVANCED_SETTINGS),
+            tooltip = GetString(HR_MENU_ADVANCED_SETTINGS_TT),
+            default = false,
+            getFunction = function() return core.sw.advancedSettings end,
+            setFunction = function(value)
+                core.sw.advancedSettings = value
+            end,
+            requiresReload = true,
+        },
     }
-    mergeOptions(generalOptions, options)
 
-    local moduleOptions = {
-        core.CreateSectionHeader(GetString(HR_MENU_MODULES)),
-    }
+    table.insert(options, core.CreateSectionHeader(GetString(HR_MENU_MODULES), true))
     for moduleName, module in util.Spairs(addon.modules, util.SortByPriority) do
-        table.insert(moduleOptions, {
+        table.insert(options, {
             type = LHAS.ST_CHECKBOX,
             label = module.friendlyName or moduleName,
             tooltip = module.description or "",
@@ -110,13 +122,10 @@ function core.GetCoreMenuOptions()
             requiresReload = true,
         })
     end
-    mergeOptions(moduleOptions, options)
 
-    local extensionOptions = {
-        core.CreateSectionHeader(GetString(HR_MENU_EXTENSIONS)),
-    }
+    table.insert(options, core.CreateSectionHeader(GetString(HR_MENU_EXTENSIONS), true))
     for extensionName, extension in util.Spairs(addon.extensions, util.SortByPriority) do
-        table.insert(extensionOptions, {
+        table.insert(options, {
             type = LHAS.ST_CHECKBOX,
             label = extension.friendlyName or extensionName,
             tooltip = extension.description or "",
@@ -128,7 +137,6 @@ function core.GetCoreMenuOptions()
             requiresReload = true,
         })
     end
-    mergeOptions(extensionOptions, options)
 
     return options
 end

@@ -20,52 +20,6 @@ function module:GetSubMenuOptions()
     local SCREEN_WIDTH = GuiRoot:GetWidth()
     local SCREEN_HEIGHT = GuiRoot:GetHeight()
 
-    local function mergeOptions(source, destination)
-        for _, option in ipairs(source) do
-            if option.requiresReload then
-                option.label = string.format("|cffff00%s|r", option.label)
-                --local originalSetFunction = option.setFunction
-                --option.setFunction = function()
-                --    originalSetFunction()
-                --    ZO_ERROR_FRAME:OnUIError("You changed a setting that requires you to reload the UI", nil)
-                --end
-            end
-            if not option.isAdvancedSetting or self.sw.advancedSettings then
-                if option.isAdvancedSetting and option.label then
-                    option.label = string.format("|cff9900%s|r", option.label)
-                end
-                table.insert(destination, option)
-            end
-        end
-    end
-
-    local function getGeneralOptions()
-        return {
-            core.CreateSectionHeader(GetString(HR_MENU_GENERAL)),
-            {
-                type = LHAS.ST_CHECKBOX,
-                label = GetString(HR_MENU_ACCOUNTWIDE),
-                tooltip = GetString(HR_MENU_ACCOUNTWIDE_TT),
-                default = true,
-                getFunction = function() return self.sw.accountWide end,
-                setFunction = function(value)
-                    self.sw.accountWide = value
-                end,
-                requiresReload = true,
-            },
-            {
-                type = LHAS.ST_CHECKBOX,
-                label = GetString(HR_MENU_ADVANCED_SETTINGS),
-                tooltip = GetString(HR_MENU_ADVANCED_SETTINGS_TT),
-                default = false,
-                getFunction = function() return self.sw.advancedSettings end,
-                setFunction = function(value)
-                    self.sw.advancedSettings = value
-                end,
-                requiresReload = true,
-            },
-        }
-    end
     local function GetComonListOptions(listName, list)
         return {
             core.CreateSectionHeader(listName),
@@ -332,8 +286,6 @@ function module:GetSubMenuOptions()
     end
 
     local options = {}
-    local generalOptions = getGeneralOptions()
-    mergeOptions(generalOptions, options)
 
     local hornList = GetComonListOptions("Horn List", self.hornList)
     local hornListSpecificOptions = {
@@ -386,8 +338,8 @@ function module:GetSubMenuOptions()
             isAdvancedSetting = true,
         },
     }
-    mergeOptions(hornListSpecificOptions, hornList)
-    mergeOptions(hornList, options)
+    core.MergeOptions(hornListSpecificOptions, hornList)
+    core.MergeOptions(hornList, options)
 
     local colosList = GetComonListOptions("Colos List", self.colosList)
     local colosListSpecificOptions = {
@@ -404,8 +356,8 @@ function module:GetSubMenuOptions()
             isAdvancedSetting = true,
         },
     }
-    mergeOptions(colosListSpecificOptions, colosList)
-    mergeOptions(colosList, options)
+    core.MergeOptions(colosListSpecificOptions, colosList)
+    core.MergeOptions(colosList, options)
 
 
     local atroList = GetComonListOptions("Atro List", self.atroList)
@@ -435,8 +387,8 @@ function module:GetSubMenuOptions()
             isAdvancedSetting = true,
         },
     }
-    mergeOptions(atroListSpecificOptions, atroList)
-    mergeOptions(atroList, options)
+    core.MergeOptions(atroListSpecificOptions, atroList)
+    core.MergeOptions(atroList, options)
 
     local miscList = GetComonListOptions("Misc List", self.miscList)
     local miscListSpecificOptions = {
@@ -452,8 +404,8 @@ function module:GetSubMenuOptions()
             end,
         },
     }
-    mergeOptions(miscListSpecificOptions, miscList)
-    mergeOptions(miscList, options)
+    core.MergeOptions(miscListSpecificOptions, miscList)
+    core.MergeOptions(miscList, options)
 
     local compactList = GetComonListOptions("Compact List", self.compactList)
     local compactListSpecificOptions = {
@@ -740,12 +692,12 @@ function module:GetSubMenuOptions()
             isAdvancedSetting = true,
         },
     }
-    mergeOptions(compactListSpecificOptions, compactList)
-    mergeOptions(compactList, options)
+    core.MergeOptions(compactListSpecificOptions, compactList)
+    core.MergeOptions(compactList, options)
 
-    mergeOptions(getCommonCounterOptions("Horn", self.hornCounter), options)
-    mergeOptions(getCommonCounterOptions("Pillager", self.pillagerCounter), options)
-    --mergeOptions(getCommonCounterOptions("Slayer", self.slayerCounter), options) -- experimental, disabled for now
+    core.MergeOptions(getCommonCounterOptions("Horn", self.hornCounter), options)
+    core.MergeOptions(getCommonCounterOptions("Pillager", self.pillagerCounter), options)
+    --core.MergeOptions(getCommonCounterOptions("Slayer", self.slayerCounter), options) -- experimental, disabled for now
 
     return options
 end

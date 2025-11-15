@@ -17,44 +17,6 @@ local module = addon_modules[module_name]
 -- TODO: translations
 --- @return table the submenu options for the DPS module
 function module:GetSubMenuOptions()
-    local function mergeOptions(source, destination)
-        for _, option in ipairs(source) do
-            if not option.isAdvancedSetting or self.sw.advancedSettings then
-                if option.isAdvancedSetting and option.name then
-                    option.name = string.format("|cff9900%s|r", option.name)
-                end
-                table.insert(destination, option)
-            end
-        end
-    end
-
-    local function GetGeneralOptions()
-        return {
-            core.CreateSectionHeader(GetString(HR_MENU_GENERAL)),
-            {
-                type = "checkbox",
-                name = GetString(HR_MENU_ACCOUNTWIDE),
-                tooltip = GetString(HR_MENU_ACCOUNTWIDE_TT),
-                default = true,
-                getFunc = function() return self.sw.accountWide end,
-                setFunc = function(value)
-                    self.sw.accountWide = value
-                end,
-                requiresReload = true,
-            },
-            {
-                type = "checkbox",
-                name = string.format("|cff9900%s|r", GetString(HR_MENU_ADVANCED_SETTINGS)),
-                tooltip = GetString(HR_MENU_ADVANCED_SETTINGS_TT),
-                default = false,
-                getFunc = function() return self.sw.advancedSettings end,
-                setFunc = function(value)
-                    self.sw.advancedSettings = value
-                end,
-                requiresReload = true,
-            },
-        }
-    end
     local function GetComonListOptions(listName, list)
         return {
             core.CreateSectionHeader(listName),
@@ -133,7 +95,7 @@ function module:GetSubMenuOptions()
     end
 
 
-    local options = GetGeneralOptions()
+    local options = {}
     local damageList = GetComonListOptions(GetString(HR_MODULES_DPS_MENU_HEADER), self.damageList)
     local damageListSpecificOptions = {
         {
@@ -327,8 +289,8 @@ function module:GetSubMenuOptions()
         },
     }
 
-    mergeOptions(damageListSpecificOptions, damageList)
-    mergeOptions(damageList, options)
+    core.MergeOptions(damageListSpecificOptions, damageList)
+    core.MergeOptions(damageList, options)
 
     return options
 end
