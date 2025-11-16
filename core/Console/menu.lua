@@ -120,6 +120,7 @@ function core.GetCoreMenuOptions()
                 core.sw.modules[moduleName] = value
             end,
             requiresReload = true,
+            isAdvancedSetting = true,
         })
     end
 
@@ -135,6 +136,7 @@ function core.GetCoreMenuOptions()
                 core.sw.extensions[extensionName] = value
             end,
             requiresReload = true,
+            isAdvancedSetting = true,
         })
     end
 
