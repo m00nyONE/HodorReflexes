@@ -142,6 +142,17 @@ function extension:_createAnimationForUser(listName, userId)
         self.logger:Warn("no animated icon found for user '%s'", userId)
         return
     end
+    -- TODO: remove after migration to combined textures is complete
+    if type(texturePath) == "table" then
+        left = 0
+        right = 1
+        top = 0
+        bottom = 1
+        columns = texturePath[2]
+        rows = texturePath[3]
+        fps = texturePath[4]
+        texturePath = texturePath[1] -- in case GetAnimated returns the full table, we only need the texture path here
+    end
 
     animations[userId] = {
         timeline = AM:CreateTimeline(),

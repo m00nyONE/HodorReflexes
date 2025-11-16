@@ -37,7 +37,11 @@ local function LCI_GetUserIcon(userId, classId)
     -- then try animated icon and return the first frame
     do
         local texturePath, left, right, top, bottom, width, height, _ = LCI.GetAnimated(userId)
-        if texturePath then
+        -- TODO: remove after migration to combined textures is complete
+        if texturePath and type(texturePath) == "table" then
+            return texturePath[1], left or 0, (right or 1)/texturePath[2], top or 0, (bottom or 1)/texturePath[3]
+        end
+        if texturePath and type(texturePath) == "string" then
             return texturePath, left, right/width, top, bottom/height
         end
     end
