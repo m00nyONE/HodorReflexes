@@ -26,9 +26,7 @@ local moduleDefinition = {
     priority = 10,
     enabled = false,
     svVersion = 1,
-    svDefault = {
-        accountWide = true,
-    },
+    svDefault = {},
 }
 
 local module = internal.moduleClass:New(moduleDefinition)

@@ -33,12 +33,21 @@ function core.GetPanelConfig(subName)
     }
 end
 
+function core.ColorOption(option)
+    if option.isAdvancedSetting and option.name then
+        option.name = string.format("|cff9900%s|r", option.name)
+    end
+
+    return option
+end
+
 --- @param name string
 --- @return table
-function core.CreateSectionHeader(name)
+function core.CreateSectionHeader(name, isAdvancedSetting)
     return {
         type = "header",
-        name = string.format("|cFFFACD%s|r", name)
+        name = string.format("|cFFFACD%s|r", name),
+        isAdvancedSetting = isAdvancedSetting or false,
     }
 end
 
@@ -66,8 +75,17 @@ function core.GetCoreMenuOptions()
             tooltip = GetString(HR_MENU_ACCOUNTWIDE_TT),
             default = true,
             getFunc = function() return core.sw.accountWide end,
+            setFunc = function(value) core.sw.accountWide = value end,
+            requiresReload = true,
+        },
+        {
+            type = "checkbox",
+            name = string.format("|cff9900%s|r", GetString(HR_MENU_ADVANCED_SETTINGS)),
+            tooltip = GetString(HR_MENU_ADVANCED_SETTINGS_TT),
+            default = false,
+            getFunc = function() return core.sw.advancedSettings end,
             setFunc = function(value)
-                core.sw.accountWide = value
+                core.sw.advancedSettings = value
             end,
             requiresReload = true,
         },
@@ -86,8 +104,7 @@ function core.GetCoreMenuOptions()
             end,
         }
     }
-
-    table.insert(options, core.CreateSectionHeader(GetString(HR_MENU_MODULES)))
+    table.insert(options, core.CreateSectionHeader(GetString(HR_MENU_MODULES), true))
     for moduleName, module in util.Spairs(addon.modules, util.SortByPriority) do
         table.insert(options, {
             type = "checkbox",
@@ -99,9 +116,10 @@ function core.GetCoreMenuOptions()
                 core.sw.modules[moduleName] = value
             end,
             requiresReload = true,
+            isAdvancedSetting = true,
         })
     end
-    table.insert(options, core.CreateSectionHeader(GetString(HR_MENU_EXTENSIONS)))
+    table.insert(options, core.CreateSectionHeader(GetString(HR_MENU_EXTENSIONS), true))
     for extensionName, extension in util.Spairs(addon.extensions, util.SortByPriority) do
         table.insert(options, {
             type = "checkbox",
@@ -113,6 +131,7 @@ function core.GetCoreMenuOptions()
                 core.sw.extensions[extensionName] = value
             end,
             requiresReload = true,
+            isAdvancedSetting = true,
         })
     end
 

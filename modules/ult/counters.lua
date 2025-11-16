@@ -51,7 +51,6 @@ function module:CreateHornCounter()
         texture = self.hornIcon,
         updateInterval = 100,
         svDefault = {
-            accountWide = false,
             enabled = 0, -- 1=always, 2=only in combat, 0=off
             windowPosLeft = 400,
             windowPosTop = 200,
@@ -106,7 +105,6 @@ function module:CreatePillagerCounter()
         texture = self.pillagerIcon,
         updateInterval = 100,
         svDefault = {
-            accountWide = false,
             enabled = 0, -- 1=always, 2=only in combat, 0=off
             windowPosLeft = 500,
             windowPosTop = 200,
@@ -203,7 +201,6 @@ function module:CreateSlayerCounter()
         texture = self.slayerIcon,
         updateInterval = 100,
         svDefault = {
-            accountWide = false,
             enabled = 0, -- 1=always, 2=only in combat, 0=off
             windowPosLeft = 500,
             windowPosTop = 200,
