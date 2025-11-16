@@ -137,21 +137,35 @@ function extension:_createAnimationForUser(listName, userId)
         return -- animation already exists for this user in this list
     end
 
-    local userAnim = LCI.GetAnimated(userId)
-    if userAnim == nil then -- sanity check (should not happen because we check for HasAnimated in the _listUpdatePostHook function)
+    local texturePath, left, right, top, bottom, columns, rows, fps = LCI.GetAnimated(userId)
+    if texturePath == nil then -- sanity check (should not happen because we check for HasAnimated in the _listUpdatePostHook function)
         self.logger:Warn("no animated icon found for user '%s'", userId)
         return
+    end
+    -- TODO: remove after migration to combined textures is complete
+    if type(texturePath) == "table" then
+        left = 0
+        right = 1
+        top = 0
+        bottom = 1
+        columns = texturePath[2]
+        rows = texturePath[3]
+        fps = texturePath[4]
+        texturePath = texturePath[1] -- in case GetAnimated returns the full table, we only need the texture path here
     end
 
     animations[userId] = {
         timeline = AM:CreateTimeline(),
         animationObject = nil,
         attachedControl = nil,
-        texture = userAnim[1],
-        --textureCoords = {0, 1, 0, 1},
-        width = userAnim[2],
-        height = userAnim[3],
-        frameRate = userAnim[4],
+        texture = texturePath,
+        left = left,
+        right = right,
+        top = top,
+        bottom = bottom,
+        columns = columns,
+        rows = rows,
+        frameRate = fps,
     }
 
     self.logger:Debug("created animation for user '%s' on list '%s'", userId, listName)
@@ -177,13 +191,13 @@ function extension:_attachAnimationToControl(listName, userId, iconControl)
     end
 
     iconControl:SetTexture(a.texture)
-    --iconControl:SetTextureCoords(a.textureCoords)
+    iconControl:SetTextureCoords(a.left, a.right, a.top, a.bottom)
 
     if a.animationObject then
         a.animationObject:SetAnimatedControl(iconControl) -- attach to the new control
     else
         a.animationObject = a.timeline:InsertAnimation(ANIMATION_TEXTURE, iconControl)
-        a.animationObject:SetImageData(a.width, a.height)
+        a.animationObject:SetImageData(a.columns, a.rows)
         a.animationObject:SetFramerate(a.frameRate)
         self.logger:Debug("create animationObject user '%s'", userId)
     end
