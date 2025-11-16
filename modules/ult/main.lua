@@ -27,10 +27,7 @@ local moduleDefinition = {
     priority = 1,
     enabled = false,
     svVersion = 1,
-    svDefault = {
-        accountWide = true,
-        advancedSettings = false, -- displays more settings in the menu
-    },
+    svDefault = {},
 
     hornList = nil,
     colosList = nil,

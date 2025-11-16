@@ -38,7 +38,6 @@ local moduleDefinition = {
     enabled = false,
     svVersion = 1,
     svDefault = {
-        accountWide = true,
         enableUI = true,
         enableChatMessages = true,
         windowCenterX = GuiRoot:GetWidth() / 2,

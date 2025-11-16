@@ -28,6 +28,7 @@ local extension = internal.extensionClass:New(extensionDefinition)
 --- @return string, number, number, number, number texturePath, textureCoordsLeft, textureCoordsRight, textureCoordsTop, textureCoordsBottom
 local function LCI_GetUserIcon(userId, classId)
     -- get static icon first because this is what is asked for
+    -- get static icon first because this is what is asked for
     do
         local texturePath, left, right, top, bottom = LCI.GetStatic(userId)
         if texturePath then

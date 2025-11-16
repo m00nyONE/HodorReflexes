@@ -111,7 +111,6 @@ function counter:Initialize(counterDefinition)
         windowPosLeft = 0,
         windowPosTop = 0,
         scale = 1.0,
-        accountWide = false,
         hideOnCooldown = false,
     }
 

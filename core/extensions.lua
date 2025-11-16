@@ -145,9 +145,9 @@ function extension:CreateSavedVariables()
     local svVersion = core.svVersion + self.svVersion
     -- Use a combination of account-wide and per-character saved variables
     self.sw = ZO_SavedVars:NewAccountWide(core.svName, svVersion, svNamespace, self.svDefault)
-    if not self.sw.accountWide then
+    if not core.sw.accountWide then
         self.sv = ZO_SavedVars:NewCharacterIdSettings(core.svName, svVersion, svNamespace, self.svDefault)
-        self.sv.accountWide = false
+        core.sv.accountWide = false
     else
         self.sv = self.sw
     end
