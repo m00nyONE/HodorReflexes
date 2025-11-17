@@ -78,9 +78,9 @@ function module:GetSubMenuOptions()
                 label = GetString(HR_MENU_DISABLE_IN_PVP),
                 tooltip = GetString(HR_MENU_DISABLE_IN_PVP_TT),
                 default = list.svDefault.disableInPvP,
-                getFunction = function() return list.sw.disableInPvP end,
+                getFunction = function() return list.sv.disableInPvP end,
                 setFunction = function(value)
-                    list.sw.disableInPvP = value
+                    list.sv.disableInPvP = value
                     list:RefreshVisibility()
                 end,
             },
