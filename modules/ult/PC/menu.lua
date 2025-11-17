@@ -23,9 +23,9 @@ function module:GetSubMenuOptions()
                 name = GetString(HR_MENU_DISABLE_IN_PVP),
                 tooltip = GetString(HR_MENU_DISABLE_IN_PVP_TT),
                 default = list.svDefault.disableInPvP,
-                getFunc = function() return list.sw.disableInPvP end,
+                getFunc = function() return list.sv.disableInPvP end,
                 setFunc = function(value)
-                    list.sw.disableInPvP = value
+                    list.sv.disableInPvP = value
                     list:RefreshVisibility()
                 end,
             },
@@ -43,9 +43,9 @@ function module:GetSubMenuOptions()
                 choicesValues = {
                     0, 1, 2, 3
                 },
-                getFunc = function() return list.sw.enabled end,
+                getFunc = function() return list.sv.enabled end,
                 setFunc = function(value)
-                    list.sw.enabled = value
+                    list.sv.enabled = value
                     list:RefreshVisibility()
                     list:UpdateDebounced(true) -- force an update to clear potentially old data still being in the list because they where never redrawn when hidden
                 end,
@@ -193,9 +193,9 @@ function module:GetSubMenuOptions()
                 choicesValues = {
                     0, 1, 2,
                 },
-                getFunc = function() return counter.sw.enabled end,
+                getFunc = function() return counter.sv.enabled end,
                 setFunc = function(value)
-                    counter.sw.enabled = value
+                    counter.sv.enabled = value
                     counter:RefreshVisibility()
                 end,
                 width = "full",
@@ -205,9 +205,9 @@ function module:GetSubMenuOptions()
                 name = "hide on active buff/cooldown",
                 tooltip = "show/hide the counter depending on if a buff or cooldown is active.",
                 default = counter.svDefault.hideOnCooldown,
-                getFunc = function() return counter.sw.hideOnCooldown end,
+                getFunc = function() return counter.sv.hideOnCooldown end,
                 setFunc = function(value)
-                    counter.sw.hideOnCooldown = value
+                    counter.sv.hideOnCooldown = value
                     counter:RefreshVisibility()
                 end,
             },

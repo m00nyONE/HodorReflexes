@@ -1,5 +1,8 @@
 [SIZE="2"][B]IMPORTANT:[/B] You need LibCustomNames and LibCustomIcons now if you want to have names and icons displayed.[/SIZE]
 
+## 2025.11.17 - @m00nyONE
+- fixed names getting cut off on ult lists when size is altered - Thanks to @SirHoppel for reporting that :-)
+
 ## 2025.11.16 - @m00nyONE
 - fix accountWide & characterWide settings not being applied properly.
 - slightly restructure menu. AdvancedSettings and AccountWide settings toggles now only show up in the main menu. Submenus do not have these toggles anymore to reduce confusion. They now enable/disable it for everything.
