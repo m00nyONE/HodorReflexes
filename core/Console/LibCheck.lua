@@ -13,9 +13,6 @@ function core.OptionalLibrariesCheck()
     local sw = core.sw
     local dialogName = string.format("%s_MISSING_LIBS", addon_name)
 
-    -- TODO: activate again when confirmed that HR is not causing the issues on console inside the mod-manager window
-    if true then return end -- Disabled for now
-
     if (not LibCustomNames) and (not sw.libraryPopupDisabled) then
         logger:Warn("LibCustomNames is missing. Some features will be disabled.")
         ZO_Dialogs_RegisterCustomDialog(dialogName, {

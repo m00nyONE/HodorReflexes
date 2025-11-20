@@ -1,5 +1,8 @@
 [SIZE="2"][B]IMPORTANT:[/B] You need LibCustomNames and LibCustomIcons now if you want to have names and icons displayed.[/SIZE]
 
+## 2025.11.20 - @m00nyONE
+- HOTFIX: removing LibCheck dialog for ALL Platforms until a reliable solution for displaying Dialogs without crashing console & gamepad UI is found
+
 ## 2025.11.17 - @m00nyONE
 - fixed names getting cut off on ult lists when size is altered - Thanks to @SirHoppel for reporting that :-)
 

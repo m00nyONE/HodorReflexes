@@ -89,10 +89,12 @@ local function initialize()
     core.InitializeExtensions()
     core.BuildMenu()
 
+    --[[ TODO: activate again when having a reliable way of displaying a dialog without Console and Gamepad UI crashing
     EM:RegisterForEvent(addon_name .. "_LIB_CHECK", EVENT_PLAYER_ACTIVATED, function()
         EM:UnregisterForEvent(addon_name .. "_LIB_CHECK", EVENT_PLAYER_ACTIVATED)
         core.OptionalLibrariesCheck()
     end)
+    ]]--
 
     addon.internal = nil
 end
