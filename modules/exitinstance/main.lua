@@ -41,6 +41,7 @@ function module:Activate()
         self:registerExitInstanceRequestDialog()
         -- also need to reregister every time the user changes gamepad mode
         EVENT_MANAGER:RegisterForEvent(addon_name.."_Exit_Instance", EVENT_GAMEPAD_PREFERRED_MODE_CHANGED, function() self:registerExitInstanceRequestDialog() end)
+        firstRun = false
     end
     
 
