@@ -21,6 +21,11 @@ local localPlayer = "player"
 local HR_EVENT_PLAYERSDATA_UPDATED = addon.HR_EVENT_PLAYERSDATA_UPDATED
 local HR_EVENT_GROUP_CHANGED = addon.HR_EVENT_GROUP_CHANGED
 
+local HR_EVENT_MAJOR_FORCE_BUFF_GAINED = addon.HR_EVENT_MAJOR_FORCE_BUFF_GAINED
+local HR_EVENT_PILLAGER_BUFF_COOLDOWN = addon.HR_EVENT_PILLAGER_BUFF_COOLDOWN
+
+--- Creates the horn counter
+--- @return void
 function module:CreateHornCounter()
     local effectRange = 20
 
@@ -46,7 +51,6 @@ function module:CreateHornCounter()
         texture = self.hornIcon,
         updateInterval = 100,
         svDefault = {
-            accountWide = false,
             enabled = 0, -- 1=always, 2=only in combat, 0=off
             windowPosLeft = 400,
             windowPosTop = 200,
@@ -69,8 +73,13 @@ function module:CreateHornCounter()
             self.hornCounter:SetActive(false)
         end
     end)
+    addon.RegisterCallback(HR_EVENT_MAJOR_FORCE_BUFF_GAINED, function(_, durationMS)
+        self.hornCounter:SetCooldown(durationMS)
+    end)
 end
 
+--- Creates the pillager counter
+--- @return void
 function module:CreatePillagerCounter()
     local effectRange = 12
 
@@ -96,7 +105,6 @@ function module:CreatePillagerCounter()
         texture = self.pillagerIcon,
         updateInterval = 100,
         svDefault = {
-            accountWide = false,
             enabled = 0, -- 1=always, 2=only in combat, 0=off
             windowPosLeft = 500,
             windowPosTop = 200,
@@ -119,9 +127,13 @@ function module:CreatePillagerCounter()
             self.pillagerCounter:SetActive(false)
         end
     end)
+    addon.RegisterCallback(HR_EVENT_PILLAGER_BUFF_COOLDOWN, function(_, durationMS)
+        self.pillagerCounter:SetCooldown(durationMS)
+    end)
 end
 
--- experimental, disabled for now
+--- Creates the slayer counter
+--- @return void
 function module:CreateSlayerCounter()
     local effectRange = 28
 
@@ -189,7 +201,6 @@ function module:CreateSlayerCounter()
         texture = self.slayerIcon,
         updateInterval = 100,
         svDefault = {
-            accountWide = false,
             enabled = 0, -- 1=always, 2=only in combat, 0=off
             windowPosLeft = 500,
             windowPosTop = 200,

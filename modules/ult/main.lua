@@ -27,10 +27,7 @@ local moduleDefinition = {
     priority = 1,
     enabled = false,
     svVersion = 1,
-    svDefault = {
-        accountWide = true,
-        advancedSettings = false, -- displays more settings in the menu
-    },
+    svDefault = {},
 
     hornList = nil,
     colosList = nil,
@@ -163,6 +160,7 @@ function module:Activate()
 end
 
 --- create scrollLists for the module
+--- @return void
 function module:CreateLists()
     self:RunOnce("CreateHornList")
     self:RunOnce("CreateColosList")
@@ -171,6 +169,8 @@ function module:CreateLists()
     self:RunOnce("CreateCompactList")
 end
 
+--- create counters for the module
+--- @return void
 function module:CreateCounters()
     self:RunOnce("CreateHornCounter")
     self:RunOnce("CreatePillagerCounter")

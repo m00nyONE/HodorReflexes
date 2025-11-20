@@ -70,6 +70,8 @@ local svDefault = {
     markOnCooldownColor = {1, 0, 0}, -- red
 }
 
+--- Create the compact ult list.
+--- @return void
 function module:CreateCompactList()
     local listDefinition = {
         name = "compact",
@@ -165,6 +167,11 @@ function module:CreateCompactList()
     addon.RegisterCallback(HR_EVENT_PILLAGER_BUFF_COOLDOWN, setPillagerCooldownEndTime)
 end
 
+--- Header row creation function for compact ult list.
+--- @param rowControl Control
+--- @param data table
+--- @param scrollList ZO_ScrollList
+--- @return void
 function module:compactListHeaderRowCreationFunction(rowControl, data, scrollList)
     if rowControl._initialized and not self.compactList._redrawHeaders then -- we can skip everything if already initialized and no redraw is needed
         return
@@ -266,6 +273,14 @@ function module:compactListHeaderRowCreationFunction(rowControl, data, scrollLis
     rowControl._initialized = true
 end
 
+--- Apply ult percentage and gain values to compact list row.
+--- @param rowControl Control
+--- @param data table
+--- @param scrollList ZO_ScrollList
+--- @param percentage number
+--- @param gain number|nil
+--- @param gainUnit string|nil
+--- @return void
 function module:applyCompactListValues(rowControl, data, scrollList, percentage, gain, gainUnit)
     local percentageColor = self:getUltPercentageColor(percentage, 'FFFFFF')
     local sw = self.compactList.sw
@@ -277,6 +292,11 @@ function module:applyCompactListValues(rowControl, data, scrollList, percentage,
     rowControl:GetNamedChild("_RawValue"):SetScale(sw.showRawValue)
 end
 
+--- Horn row creation function for compact ult list.
+--- @param rowControl Control
+--- @param data table
+--- @param scrollList ZO_ScrollList
+--- @return void
 function module:compactListHornRowCreationFunction(rowControl, data, scrollList)
     local list = self.compactList
     local sw = list.sw
@@ -305,6 +325,11 @@ function module:compactListHornRowCreationFunction(rowControl, data, scrollList)
     self:applyCompactListValues(rowControl, data, scrollList, hornPercentage, gainSeconds, "s")
 end
 
+--- Horn row creation function for compact ult list.
+--- @param rowControl Control
+--- @param data table
+--- @param scrollList ZO_ScrollList
+--- @return void
 function module:compactListColosRowCreationFunction(rowControl, data, scrollList)
     local list = self.compactList
     local sw = list.sw
@@ -324,6 +349,11 @@ function module:compactListColosRowCreationFunction(rowControl, data, scrollList
     self:applyCompactListValues(rowControl, data, scrollList, colosPercentage, nil, nil)
 end
 
+--- Colos row creation function for compact ult list.
+--- @param rowControl Control
+--- @param data table
+--- @param scrollList ZO_ScrollList
+--- @return void
 function module:compactListAtroRowCreationFunction(rowControl, data, scrollList)
     local list = self.compactList
     local sw = list.sw
@@ -343,6 +373,11 @@ function module:compactListAtroRowCreationFunction(rowControl, data, scrollList)
     self:applyCompactListValues(rowControl, data, scrollList, atroPercentage, nil, nil)
 end
 
+--- Atro row creation function for compact ult list.
+--- @param rowControl Control
+--- @param data table
+--- @param scrollList ZO_ScrollList
+--- @return void
 function module:compactListSlayerRowCreationFunction(rowControl, data, scrollList)
     local list = self.compactList
     local sw = list.sw
@@ -361,6 +396,11 @@ function module:compactListSlayerRowCreationFunction(rowControl, data, scrollLis
     self:applyCompactListValues(rowControl, data, scrollList, slayerPercentage, gainSeconds, "s")
 end
 
+--- Slayer row creation function for compact ult list.
+--- @param rowControl Control
+--- @param data table
+--- @param scrollList ZO_ScrollList
+--- @return void
 function module:compactListPillagerRowCreationFunction(rowControl, data, scrollList)
     local list = self.compactList
     local sw = list.sw
@@ -382,6 +422,11 @@ function module:compactListPillagerRowCreationFunction(rowControl, data, scrollL
     end
 end
 
+--- Pillager row creation function for compact ult list.
+--- @param rowControl Control
+--- @param data table
+--- @param scrollList ZO_ScrollList
+--- @return void
 function module:compactListCryptCannonRowCreationFunction(rowControl, data, scrollList)
     local list = self.compactList
     local sw = list.sw
@@ -407,6 +452,8 @@ function module:compactListCryptCannonRowCreationFunction(rowControl, data, scro
     self:applyCompactListValues(rowControl, data, scrollList, cryptCannonPercentage, gainUltimate, nil)
 end
 
+--- Update the compact ult list.
+--- @return void
 function module:UpdateCompactList()
     local compactList = self.compactList
     local listControl = compactList.listControl

@@ -88,17 +88,18 @@ end
 function extension:_listUpdatePostHook(list, iconControlName)
     local listTypes = {}
     local usersWithAnimation = {}
-    local contents = list.listControl:GetNamedChild("Contents")
+    local listControl = list:GetListControl()
+    local contents = listControl:GetNamedChild("Contents")
     for childId = 1, contents:GetNumChildren() do
         local rowControl = contents:GetChild(childId)
         local data = ZO_ScrollList_GetData(rowControl)
         if data and data.userId then -- only process player rows
-            local listName = string.format("%s_%s", list.name, rowControl.dataEntry.typeId) -- we create a "sub list" for each data type in the list to avoid conflicts when the same user is present in multiple data types
+            local listName = string.format("%s_%s", list:GetName(), rowControl.dataEntry.typeId) -- we create a "sub list" for each data type in the list to avoid conflicts when the same user is present in multiple data types
             listTypes[listName] = true
             if LCI.HasAnimated(data.userId) then -- find users with animations
                 local iconControl = rowControl:GetNamedChild(iconControlName)
                 if iconControl == nil then -- icon control not found! This can only happen when someone creates a list with a custom template that does not have the expected icon control or when the template of a standard list got overwritten by a theme that did no follow the guidelines in the README.md of the theme extension.
-                    self.logger:Warn("icon control '%s' not found in list '%s' row template", iconControlName, list.name)
+                    self.logger:Warn("icon control '%s' not found in list '%s' row template", iconControlName, list:GetName())
                     return -- exit out of the update hook because there is nothing we can do here
                 end
 
@@ -136,21 +137,35 @@ function extension:_createAnimationForUser(listName, userId)
         return -- animation already exists for this user in this list
     end
 
-    local userAnim = LCI.GetAnimated(userId)
-    if userAnim == nil then -- sanity check (should not happen because we check for HasAnimated in the _listUpdatePostHook function)
+    local texturePath, left, right, top, bottom, columns, rows, fps = LCI.GetAnimated(userId)
+    if texturePath == nil then -- sanity check (should not happen because we check for HasAnimated in the _listUpdatePostHook function)
         self.logger:Warn("no animated icon found for user '%s'", userId)
         return
+    end
+    -- TODO: remove after migration to combined textures is complete
+    if type(texturePath) == "table" then
+        left = 0
+        right = 1
+        top = 0
+        bottom = 1
+        columns = texturePath[2]
+        rows = texturePath[3]
+        fps = texturePath[4]
+        texturePath = texturePath[1] -- in case GetAnimated returns the full table, we only need the texture path here
     end
 
     animations[userId] = {
         timeline = AM:CreateTimeline(),
         animationObject = nil,
         attachedControl = nil,
-        texture = userAnim[1],
-        --textureCoords = {0, 1, 0, 1},
-        width = userAnim[2],
-        height = userAnim[3],
-        frameRate = userAnim[4],
+        texture = texturePath,
+        left = left,
+        right = right,
+        top = top,
+        bottom = bottom,
+        columns = columns,
+        rows = rows,
+        frameRate = fps,
     }
 
     self.logger:Debug("created animation for user '%s' on list '%s'", userId, listName)
@@ -176,13 +191,13 @@ function extension:_attachAnimationToControl(listName, userId, iconControl)
     end
 
     iconControl:SetTexture(a.texture)
-    --iconControl:SetTextureCoords(a.textureCoords)
+    iconControl:SetTextureCoords(a.left, a.right, a.top, a.bottom)
 
     if a.animationObject then
         a.animationObject:SetAnimatedControl(iconControl) -- attach to the new control
     else
         a.animationObject = a.timeline:InsertAnimation(ANIMATION_TEXTURE, iconControl)
-        a.animationObject:SetImageData(a.width, a.height)
+        a.animationObject:SetImageData(a.columns, a.rows)
         a.animationObject:SetFramerate(a.frameRate)
         self.logger:Debug("create animationObject user '%s'", userId)
     end

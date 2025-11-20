@@ -18,6 +18,8 @@ local season = {
     dates = { "1402" },
 }
 
+--- Activates the valentines season extension
+--- @return void
 function season:Activate()
     local texturePath = "HodorReflexes/extensions/seasons/PC/assets/valentines/icons-4x4.dds"
     local textureCoordinates = {

@@ -30,38 +30,22 @@ local moduleDefinition = {
 
 local module = internal.moduleClass:New(moduleDefinition)
 
+--- Activate the Pull module
+--- @return void
 function module:Activate()
     self.logger:Debug("activated pull module")
 
     -- Bindings
     ZO_CreateStringId('SI_BINDING_NAME_HR_MODULES_PULL_BINDING_COUNTDOWN', GetString(HR_MODULES_PULL_BINDING_COUNTDOWN))
 
-    local countdownButton = {
-        name = GetString(HR_MODULES_PULL_BINDING_COUNTDOWN),
-        keybind = 'HR_MODULES_PULL_BINDING_COUNTDOWN',
-        callback = function() self:SendPullCountdown() end,
-        alignment = KEYBIND_STRIP_ALIGN_CENTER,
-    }
-
-    local function OnStateChanged(_, newState)
-        if newState == SCENE_FRAGMENT_SHOWING and IsUnitGroupLeader(localPlayer) then
-            KEYBIND_STRIP:AddKeybindButton(countdownButton)
-        elseif newState == SCENE_FRAGMENT_HIDING then
-            KEYBIND_STRIP:RemoveKeybindButton(countdownButton)
-        end
-    end
-
-    -- Add hotkey to group window
-    if KEYBOARD_GROUP_MENU_SCENE then
-        KEYBOARD_GROUP_MENU_SCENE:RegisterCallback("StateChange", OnStateChanged)
-    end
-    if GAMEPAD_GROUP_SCENE then
-        GAMEPAD_GROUP_SCENE:RegisterCallback("StateChange", OnStateChanged)
-    end
+    self:SetupKeybinds()
 
     core.RegisterSubCommand("pull", GetString(HR_MODULES_PULL_COMMAND_HELP), function(...) self:SendPullCountdown(...) end)
 end
 
+--- Renders a pull countdown on the center screen announce area
+--- @param durationMS number|nil Duration in seconds
+--- @return void
 function module:RenderPullCountdown(durationMS)
     local texturePath = "EsoUI/Art/HUD/HUD_Countdown_Badge_Dueling.dds"
     local messageParams = CENTER_SCREEN_ANNOUNCE:CreateMessageParams(CSA_CATEGORY_COUNTDOWN_TEXT, SOUNDS.DUEL_START)

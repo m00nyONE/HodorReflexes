@@ -29,10 +29,7 @@ local moduleDefinition = {
     priority = 2,
     enabled = false,
     svVersion = 1,
-    svDefault = {
-        accountWide = true,
-        advancedSettings = false,-- displays more settings in the menu
-    },
+    svDefault = {},
 
     isTestRunning = false,
 
@@ -90,6 +87,7 @@ function module:Activate()
 end
 
 --- create scrollLists for the module
+--- @return void
 function module:CreateLists()
     module:RunOnce("CreateDamageList")
 end

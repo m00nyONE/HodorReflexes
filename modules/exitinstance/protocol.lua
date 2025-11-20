@@ -19,6 +19,9 @@ local _sendExitInstanceRequest = {}
 local EVENT_EXIT_INSTANCE_REQUEST_NAME = "ExitInstanceRequest"
 local EVENT_ID_EXITINSTANCEREQUEST = 3
 
+--- Register LGB protocols for Exit Instance module
+--- @param handler table
+--- @return void
 function module:RegisterLGBProtocols(handler)
     _sendExitInstanceRequest = handler:DeclareCustomEvent(EVENT_ID_EXITINSTANCEREQUEST, EVENT_EXIT_INSTANCE_REQUEST_NAME)
     local success = LGB:RegisterForCustomEvent(EVENT_EXIT_INSTANCE_REQUEST_NAME, function(...) self:onExitInstanceRequestEventReceived(...) end)
@@ -27,6 +30,8 @@ function module:RegisterLGBProtocols(handler)
     end
 end
 
+--- Send exit instance request to group members
+--- @return void
 function module:_sendExitInstanceRequestEvent()
     if not IsUnitGroupLeader(localPlayer) then
         df('|cFF0000%s|r', GetString(HR_MODULES_EXITINSTANCE_NOT_LEADER))
@@ -35,6 +40,8 @@ function module:_sendExitInstanceRequestEvent()
     _sendExitInstanceRequest()
 end
 
+--- Send exit instance request to group members, showing a confirmation dialog if needed
+--- @return void
 function module:SendExitInstanceRequest()
     if not IsUnitGroupLeader(localPlayer) then
         df('|cFF0000%s|r', GetString(HR_MODULES_EXITINSTANCE_NOT_LEADER))
@@ -47,6 +54,10 @@ function module:SendExitInstanceRequest()
     end
 end
 
+--- Handle received exit instance request event
+--- @param unitTag string
+--- @param _ table
+--- @return void
 function module:onExitInstanceRequestEventReceived(unitTag, _)
     if not IsUnitGroupLeader(unitTag) then return end
     if self.sv.ignoreExitInstanceRequests then return end

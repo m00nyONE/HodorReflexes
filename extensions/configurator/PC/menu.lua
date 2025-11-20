@@ -10,6 +10,7 @@ local LAM = LibAddonMenu2
 local addon_extensions = addon.extensions
 local extension = addon_extensions.configurator
 
+--- @return table
 function extension:BuildMenuOptions()
     local menuReference = string.format("%s_extension_%s_menu", addon_name, self.name)
     local discordURL = "https://discord.gg/8YpvXJhAyz"

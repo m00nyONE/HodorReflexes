@@ -112,8 +112,8 @@ local strings = {
     HR_MODULES_READYCHECK_TITLE = "Bereitschaftscheck",
     HR_MODULES_READYCHECK_READY = "Bereit",
     HR_MODULES_READYCHECK_NOT_READY = "Nicht bereit",
-    HR_MODULES_READYCHECK_MENU_UI_LOCKED = "UI sperren",
-    HR_MODULES_READYCHECK_MENU_UI_LOCKED_TT = "Verhindert, dass das Bereitschaftscheck-Fenster verschoben oder in der Größe verändert werden kann.",
+    HR_MODULES_READYCHECK_MENU_UI = "Fenster anzeigen",
+    HR_MODULES_READYCHECK_MENU_UI_TT = "Zeigt das Bereitschaftscheck-Fenster an.",
     HR_MODULES_READYCHECK_MENU_CHAT = "Chat-Ausgabe",
     HR_MODULES_READYCHECK_MENU_CHAT_TT = "Gibt die Bereitschaftscheck-Ergebnisse im Chat aus.",
     -- SKILL LINES

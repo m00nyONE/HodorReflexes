@@ -14,33 +14,8 @@ local module = addon_modules[module_name]
 
 local LHAS = LibHarvensAddonSettings
 
+--- @return table
 function module:GetSubMenuOptions()
-    local function mergeOptions(source, destination)
-        for _, option in ipairs(source) do
-            if option.requiresReload then
-                option.label = string.format("|cffff00%s|r", option.label)
-            end
-            table.insert(destination, option)
-        end
-    end
-
-    local function GetGeneralOptions()
-        return {
-            core.CreateSectionHeader(GetString(HR_MENU_GENERAL)),
-            {
-                type = LHAS.ST_CHECKBOX,
-                label = GetString(HR_MENU_ACCOUNTWIDE),
-                tooltip = GetString(HR_MENU_ACCOUNTWIDE_TT),
-                default = true,
-                getFunction = function() return self.sw.accountWide end,
-                setFunction = function(value)
-                    self.sw.accountWide = value
-                end,
-                requiresReload = true,
-            },
-        }
-    end
-
     local function generateHideOption(id, label, description)
         return {
             type = LHAS.ST_CHECKBOX,
@@ -56,16 +31,10 @@ function module:GetSubMenuOptions()
     end
 
     local options = {}
-    local generalOptions = GetGeneralOptions()
-    mergeOptions(generalOptions, options)
-
-    local hideMeOptions = {
-        core.CreateSectionHeader(GetString(HR_MODULES_HIDEME_MENU_HEADER))
-    }
+    table.insert(options, core.CreateSectionHeader(GetString(HR_MODULES_HIDEME_MENU_HEADER)))
     for id, hideId in pairs(self.hideIds) do
-        table.insert(hideMeOptions, generateHideOption(id, hideId.label, hideId.description))
+        table.insert(options, generateHideOption(id, hideId.label, hideId.description))
     end
-    mergeOptions(hideMeOptions, options)
 
     return options
 end

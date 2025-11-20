@@ -1,5 +1,25 @@
 [SIZE="2"][B]IMPORTANT:[/B] You need LibCustomNames and LibCustomIcons now if you want to have names and icons displayed.[/SIZE]
 
+## 2025.11.17 - @m00nyONE
+- fixed names getting cut off on ult lists when size is altered - Thanks to @SirHoppel for reporting that :-)
+
+## 2025.11.16 - @m00nyONE
+- fix accountWide & characterWide settings not being applied properly.
+- slightly restructure menu. AdvancedSettings and AccountWide settings toggles now only show up in the main menu. Submenus do not have these toggles anymore to reduce confusion. They now enable/disable it for everything.
+- hide module & extension selection under "advanced settings" because of multiple reports from players toggling these settings on and off in the hopes of deactivating a single list and then complaining that something is broken.
+- fix a bug that could lead to a nil exception being thrown when the animation extension is disabled and the icon extension is enabled but user got an animated icon and no static one. ( first frame just did not load properly )
+
+## 2025.11.11 - @m00nyONE
+- hotfix for data not updating properly in some situations
+
+## 2025.11.07 - @m00nyONE
+- adding an option to hide the readycheck window and only display a chat message when a readycheck is started.
+- add LibRadialMenu by M0R for console. Now you can finally use Exit Instance and Pull Countdowns on console too! :-)
+- add an option to hide counters when the buff/cooldown is active
+- counters can now display active buffs/cooldowns
+- fix settings reset not working properly
+- creating/updating in-code emmyLUA documentation.
+
 ## 2025.11.06 - @m00nyONE
 - improve overall performance of the addon
 - fixed the damage list header title not updating and being stuck in it's first state

@@ -108,6 +108,10 @@ function module:CreateDamageList()
 end
 
 --- creation function for the header row. This can be overwritten if using a custom theme
+--- @param rowControl Control
+--- @param data table
+--- @param scrollList ZO_ScrollList
+--- @return void
 function module:headerRowCreationFunction(rowControl, data, scrollList)
     local sw = self.damageList.sw
     rowControl:GetNamedChild("_Title"):SetText(self.getDamageHeaderFormat(data.dmgType, sw.colorDamageBoss, sw.colorDamageTotal))
@@ -124,6 +128,10 @@ function module:headerRowCreationFunction(rowControl, data, scrollList)
 end
 
 --- creation function for the damage rows. This can be overwritten if using a custom theme
+--- @param rowControl Control
+--- @param data table
+--- @param scrollList ZO_ScrollList
+--- @return void
 function module:damageRowCreationFunction(rowControl, data, scrollList)
     local list = self.damageList
     local sw = list.sw
@@ -181,6 +189,7 @@ local dmgType = {
     dmgType = DAMAGE_UNKNOWN
 }
 --- update function to refresh the damage list. This should usually not be overwritten by a custom theme unless absolutely necessary.
+--- @return void
 function module:UpdateDamageList()
     local listControl = self.damageList.listControl
     local list = self.damageList

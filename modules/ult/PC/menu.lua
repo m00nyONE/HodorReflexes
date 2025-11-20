@@ -12,44 +12,9 @@ local internal_modules = internal.modules
 local module_name = "ult"
 local module = addon_modules[module_name]
 
+--- builds the submenu options for the ult module
+--- @return table[]
 function module:GetSubMenuOptions()
-    local function mergeOptions(source, destination)
-        for _, option in ipairs(source) do
-            if not option.isAdvancedSetting or self.sw.advancedSettings then
-                if option.isAdvancedSetting and option.name then
-                    option.name = string.format("|cff9900%s|r", option.name)
-                end
-                table.insert(destination, option)
-            end
-        end
-    end
-    local function getGeneralOptions()
-        return {
-            core.CreateSectionHeader(GetString(HR_MENU_GENERAL)),
-            {
-                type = "checkbox",
-                name = GetString(HR_MENU_ACCOUNTWIDE),
-                tooltip = GetString(HR_MENU_ACCOUNTWIDE_TT),
-                default = true,
-                getFunc = function() return self.sw.accountWide end,
-                setFunc = function(value)
-                    self.sw.accountWide = value
-                end,
-                requiresReload = true,
-            },
-            {
-                type = "checkbox",
-                name = string.format("|cff9900%s|r", GetString(HR_MENU_ADVANCED_SETTINGS)),
-                tooltip = GetString(HR_MENU_ADVANCED_SETTINGS_TT),
-                default = false,
-                getFunc = function() return self.sw.advancedSettings end,
-                setFunc = function(value)
-                    self.sw.advancedSettings = value
-                end,
-                requiresReload = true,
-            },
-        }
-    end
     local function GetComonListOptions(listName, list)
         return {
             core.CreateSectionHeader(listName),
@@ -58,9 +23,9 @@ function module:GetSubMenuOptions()
                 name = GetString(HR_MENU_DISABLE_IN_PVP),
                 tooltip = GetString(HR_MENU_DISABLE_IN_PVP_TT),
                 default = list.svDefault.disableInPvP,
-                getFunc = function() return list.sw.disableInPvP end,
+                getFunc = function() return list.sv.disableInPvP end,
                 setFunc = function(value)
-                    list.sw.disableInPvP = value
+                    list.sv.disableInPvP = value
                     list:RefreshVisibility()
                 end,
             },
@@ -78,9 +43,9 @@ function module:GetSubMenuOptions()
                 choicesValues = {
                     0, 1, 2, 3
                 },
-                getFunc = function() return list.sw.enabled end,
+                getFunc = function() return list.sv.enabled end,
                 setFunc = function(value)
-                    list.sw.enabled = value
+                    list.sv.enabled = value
                     list:RefreshVisibility()
                     list:UpdateDebounced(true) -- force an update to clear potentially old data still being in the list because they where never redrawn when hidden
                 end,
@@ -214,10 +179,11 @@ function module:GetSubMenuOptions()
     end
     local function getCommonCounterOptions(counterName, counter)
         return {
+            core.CreateSectionHeader(counterName .. " Counter"),
             {
                 type = "dropdown",
-                name = "enable "..counterName.." counter",
-                tooltip = "set the visibility of the counter.",
+                name = GetString(HR_MENU_VISIBILITY),
+                tooltip = GetString(HR_MENU_VISIBILITY_TT),
                 default = counter.svDefault.enabled,
                 choices = {
                     GetString(HR_VISIBILITY_SHOW_NEVER),
@@ -227,17 +193,28 @@ function module:GetSubMenuOptions()
                 choicesValues = {
                     0, 1, 2,
                 },
-                getFunc = function() return counter.sw.enabled end,
+                getFunc = function() return counter.sv.enabled end,
                 setFunc = function(value)
-                    counter.sw.enabled = value
+                    counter.sv.enabled = value
                     counter:RefreshVisibility()
                 end,
                 width = "full",
             },
+            {
+                type = "checkbox",
+                name = "hide on active buff/cooldown",
+                tooltip = "show/hide the counter depending on if a buff or cooldown is active.",
+                default = counter.svDefault.hideOnCooldown,
+                getFunc = function() return counter.sv.hideOnCooldown end,
+                setFunc = function(value)
+                    counter.sv.hideOnCooldown = value
+                    counter:RefreshVisibility()
+                end,
+            },
         }
     end
 
-    local options = getGeneralOptions()
+    local options = {}
 
     local hornList = GetComonListOptions("Horn List", self.hornList)
     local hornListSpecificOptions = {
@@ -260,7 +237,7 @@ function module:GetSubMenuOptions()
             name = "Saxhleel Highlight Color",
             tooltip = "set the highlight color for saxhleel players.",
             disabled = function() return not self.hornList.sw.highlightSaxhleel end,
-            default = unpack(self.hornList.svDefault.highlightSaxhleelColor),
+            default = ZO_ColorDef:New(unpack(self.hornList.svDefault.highlightSaxhleelColor)),
             getFunc = function() return unpack(self.hornList.sw.highlightSaxhleelColor) end,
             setFunc = function(r, g, b, a)
                 self.hornList.sw.highlightSaxhleelColor = {r, g, b, a}
@@ -276,7 +253,7 @@ function module:GetSubMenuOptions()
             type = "colorpicker",
             name = "Horn Countdown Color",
             tooltip = "set the color the horn buff countdown.",
-            default = unpack(self.hornList.svDefault.colorHorn),
+            default = ZO_ColorDef:New(unpack(self.hornList.svDefault.colorHorn)),
             getFunc = function() return unpack(self.hornList.sw.colorHorn) end,
             setFunc = function(r, g, b)
                 self.hornList.sw.colorHorn = {r, g, b}
@@ -288,7 +265,7 @@ function module:GetSubMenuOptions()
             type = "colorpicker",
             name = "Force Countdown Color",
             tooltip = "set the color the force buff countdown.",
-            default = unpack(self.hornList.svDefault.colorForce),
+            default = ZO_ColorDef:New(unpack(self.hornList.svDefault.colorForce)),
             getFunc = function() return unpack(self.hornList.sw.colorForce) end,
             setFunc = function(r, g, b)
                 self.hornList.sw.colorForce = {r, g, b}
@@ -297,8 +274,8 @@ function module:GetSubMenuOptions()
             isAdvancedSetting = true,
         },
     }
-    mergeOptions(hornListSpecificOptions, hornList)
-    mergeOptions(hornList, options)
+    core.MergeOptions(hornListSpecificOptions, hornList)
+    core.MergeOptions(hornList, options)
 
     local colosList = GetComonListOptions("Colos List", self.colosList)
     local colosListSpecificOptions = {
@@ -310,7 +287,7 @@ function module:GetSubMenuOptions()
             type = "colorpicker",
             name = "Vulnerability Countdown Color",
             tooltip = "set the color the vulnerability debuff countdown.",
-            default = unpack(self.colosList.svDefault.colorVuln),
+            default = ZO_ColorDef:New(unpack(self.colosList.svDefault.colorVuln)),
             getFunc = function() return unpack(self.colosList.sw.colorVuln) end,
             setFunc = function(r, g, b)
                 self.colosList.sw.colorVuln = {r, g, b}
@@ -319,8 +296,8 @@ function module:GetSubMenuOptions()
             isAdvancedSetting = true,
         },
     }
-    mergeOptions(colosListSpecificOptions, colosList)
-    mergeOptions(colosList, options)
+    core.MergeOptions(colosListSpecificOptions, colosList)
+    core.MergeOptions(colosList, options)
 
 
     local atroList = GetComonListOptions("Atro List", self.atroList)
@@ -333,7 +310,7 @@ function module:GetSubMenuOptions()
             type = "colorpicker",
             name = "Atronach Countdown Color",
             tooltip = "set the color of the Atronach ultimate countdown.",
-            default = unpack(self.atroList.svDefault.colorAtro),
+            default = ZO_ColorDef:New(unpack(self.atroList.svDefault.colorAtro)),
             getFunc = function() return unpack(self.atroList.sw.colorAtro) end,
             setFunc = function(r, g, b)
                 self.atroList.sw.colorAtro = {r, g, b}
@@ -345,7 +322,7 @@ function module:GetSubMenuOptions()
             type = "colorpicker",
             name = "Berserk Countdown Color",
             tooltip = "set the color of the Berserk countdown.",
-            default = unpack(self.atroList.svDefault.colorBerserk),
+            default = ZO_ColorDef:New(unpack(self.atroList.svDefault.colorBerserk)),
             getFunc = function() return unpack(self.atroList.sw.colorBerserk) end,
             setFunc = function(r, g, b)
                 self.atroList.sw.colorBerserk = {r, g, b}
@@ -354,8 +331,8 @@ function module:GetSubMenuOptions()
             isAdvancedSetting = true,
         },
     }
-    mergeOptions(atroListSpecificOptions, atroList)
-    mergeOptions(atroList, options)
+    core.MergeOptions(atroListSpecificOptions, atroList)
+    core.MergeOptions(atroList, options)
 
     local miscList = GetComonListOptions("Misc List", self.miscList)
     local miscListSpecificOptions = {
@@ -374,8 +351,8 @@ function module:GetSubMenuOptions()
             end,
         },
     }
-    mergeOptions(miscListSpecificOptions, miscList)
-    mergeOptions(miscList, options)
+    core.MergeOptions(miscListSpecificOptions, miscList)
+    core.MergeOptions(miscList, options)
 
     local compactList = GetComonListOptions("Compact List", self.compactList)
     local compactListSpecificOptions = {
@@ -473,7 +450,7 @@ function module:GetSubMenuOptions()
             type = "colorpicker",
             name = "horn background color",
             tooltip = "set the background color for horn ults.",
-            default = unpack(self.compactList.svDefault.colorHornBG),
+            default = ZO_ColorDef:New(unpack(self.compactList.svDefault.colorHornBG)),
             getFunc = function() return unpack(self.compactList.sw.colorHornBG) end,
             setFunc = function(r, g, b)
                 self.compactList.sw.colorHornBG = {r, g, b}
@@ -485,7 +462,7 @@ function module:GetSubMenuOptions()
             type = "colorpicker",
             name = "colos background color",
             tooltip = "set the background color for colos ults.",
-            default = unpack(self.compactList.svDefault.colorColosBG),
+            default = ZO_ColorDef:New(unpack(self.compactList.svDefault.colorColosBG)),
             getFunc = function() return unpack(self.compactList.sw.colorColosBG) end,
             setFunc = function(r, g, b)
                 self.compactList.sw.colorColosBG = {r, g, b}
@@ -497,7 +474,7 @@ function module:GetSubMenuOptions()
             type = "colorpicker",
             name = "atro background color",
             tooltip = "set the background color for atro ults.",
-            default = unpack(self.compactList.svDefault.colorAtroBG),
+            default = ZO_ColorDef:New(unpack(self.compactList.svDefault.colorAtroBG)),
             getFunc = function() return unpack(self.compactList.sw.colorAtroBG) end,
             setFunc = function(r, g, b)
                 self.compactList.sw.colorAtroBG = {r, g, b}
@@ -509,7 +486,7 @@ function module:GetSubMenuOptions()
             type = "colorpicker",
             name = "slayer background color",
             tooltip = "set the background color for slayer ults.",
-            default = unpack(self.compactList.svDefault.colorSlayerBG),
+            default = ZO_ColorDef:New(unpack(self.compactList.svDefault.colorSlayerBG)),
             getFunc = function() return unpack(self.compactList.sw.colorSlayerBG) end,
             setFunc = function(r, g, b)
                 self.compactList.sw.colorSlayerBG = {r, g, b}
@@ -521,7 +498,7 @@ function module:GetSubMenuOptions()
             type = "colorpicker",
             name = "pillager background color",
             tooltip = "set the background color for pillager ults.",
-            default = unpack(self.compactList.svDefault.colorPillagerBG),
+            default = ZO_ColorDef:New(unpack(self.compactList.svDefault.colorPillagerBG)),
             getFunc = function() return unpack(self.compactList.sw.colorPillagerBG) end,
             setFunc = function(r, g, b)
                 self.compactList.sw.colorPillagerBG = {r, g, b}
@@ -533,7 +510,7 @@ function module:GetSubMenuOptions()
             type = "colorpicker",
             name = "crypt cannon background color",
             tooltip = "set the background color for crypt cannon ults.",
-            default = unpack(self.compactList.svDefault.colorCryptCannonBG),
+            default = ZO_ColorDef:New(unpack(self.compactList.svDefault.colorCryptCannonBG)),
             getFunc = function() return unpack(self.compactList.sw.colorCryptCannonBG) end,
             setFunc = function(r, g, b)
                 self.compactList.sw.colorCryptCannonBG = {r, g, b}
@@ -559,7 +536,7 @@ function module:GetSubMenuOptions()
             type = "colorpicker",
             name = "ult percentage color",
             tooltip = "set the color for marking ults on cooldown.",
-            default = unpack(self.compactList.svDefault.markOnCooldownColor),
+            default = ZO_ColorDef:New(unpack(self.compactList.svDefault.markOnCooldownColor)),
             getFunc = function() return unpack(self.compactList.sw.markOnCooldownColor) end,
             setFunc = function(r, g, b)
                 self.compactList.sw.markOnCooldownColor = {r, g, b}
@@ -653,7 +630,7 @@ function module:GetSubMenuOptions()
             type = "colorpicker",
             name = "Duration Color",
             tooltip = "set the color of the ultimate durations.",
-            default = unpack(self.compactList.svDefault.colorDurations),
+            default = ZO_ColorDef:New(unpack(self.compactList.svDefault.colorDurations)),
             getFunc = function() return unpack(self.compactList.sw.colorDurations) end,
             setFunc = function(r, g, b)
                 self.compactList.sw.colorDurations = {r, g, b}
@@ -666,7 +643,7 @@ function module:GetSubMenuOptions()
             type = "colorpicker",
             name = "Cooldown Color",
             tooltip = "set the color of the ultimate cooldowns.",
-            default = unpack(self.compactList.svDefault.colorCooldowns),
+            default = ZO_ColorDef:New(unpack(self.compactList.svDefault.colorCooldowns)),
             getFunc = function() return unpack(self.compactList.sw.colorCooldowns) end,
             setFunc = function(r, g, b)
                 self.compactList.sw.colorCooldowns = {r, g, b}
@@ -676,16 +653,12 @@ function module:GetSubMenuOptions()
             isAdvancedSetting = true,
         },
     }
-    mergeOptions(compactListSpecificOptions, compactList)
-    mergeOptions(compactList, options)
+    core.MergeOptions(compactListSpecificOptions, compactList)
+    core.MergeOptions(compactList, options)
 
-    local counterOptions = {
-        core.CreateSectionHeader("Counters"),
-    }
-    mergeOptions(counterOptions, options)
-    mergeOptions(getCommonCounterOptions("Horn", self.hornCounter), options)
-    mergeOptions(getCommonCounterOptions("Pillager", self.pillagerCounter), options)
-    --mergeOptions(getCommonCounterOptions("Slayer", self.slayerCounter), options) -- experimental, disabled for now
+    core.MergeOptions(getCommonCounterOptions("Horn", self.hornCounter), options)
+    core.MergeOptions(getCommonCounterOptions("Pillager", self.pillagerCounter), options)
+    --core.MergeOptions(getCommonCounterOptions("Slayer", self.slayerCounter), options) -- experimental, disabled for now
 
 
     return options

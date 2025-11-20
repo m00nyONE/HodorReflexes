@@ -35,6 +35,8 @@ local svDefault = {
     excludeSpecialUlts = true,
 }
 
+--- initializes the misc ult list
+--- @return void
 function module:CreateMiscList()
     local listDefinition = {
         name = "misc",
@@ -79,6 +81,11 @@ function module:CreateMiscList()
 end
 
 local title = "Ultimates"
+--- Creation function for misc ult list header rows
+--- @param rowControl Control
+--- @param data table
+--- @param scrollList ZO_ScrollList
+--- @return void
 function module:miscListHeaderRowCreationFunction(rowControl, data, scrollList)
     if rowControl._initialized and not self.miscList._redrawHeaders then
         return
@@ -91,6 +98,11 @@ function module:miscListHeaderRowCreationFunction(rowControl, data, scrollList)
     rowControl._initialized = true
 end
 
+--- Creation function for misc ult list player rows
+--- @param rowControl Control
+--- @param data table
+--- @param scrollList ZO_ScrollList
+--- @return void
 function module:miscListRowCreationFunction(rowControl, data, scrollList)
     local list = self.miscList
     local sw = list.sw
@@ -110,6 +122,8 @@ function module:miscListRowCreationFunction(rowControl, data, scrollList)
     rowControl:GetNamedChild('_UltIconBackbar'):SetTexture(GetAbilityIcon(data.ult2ID))
 end
 
+--- Updates the misc ult list
+--- @return void
 function module:UpdateMiscList()
     local listControl = self.miscList.listControl
 

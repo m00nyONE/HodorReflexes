@@ -112,8 +112,8 @@ local strings = {
     HR_MODULES_READYCHECK_TITLE = "Vérification de statut",
     HR_MODULES_READYCHECK_READY = "Prêt",
     HR_MODULES_READYCHECK_NOT_READY = "Pas prêt",
-    HR_MODULES_READYCHECK_MENU_UI_LOCKED = "verrouille l'interface (UI)",
-    HR_MODULES_READYCHECK_MENU_UI_LOCKED_TT = "Empêche la fenêtre de vérification de statut d’être déplacée ou redimensionnée.",
+    --HR_MODULES_READYCHECK_MENU_UI = "show ui",
+    --HR_MODULES_READYCHECK_MENU_UI_TT = "Displays the readycheck window with the results.",
     HR_MODULES_READYCHECK_MENU_CHAT = "résultat dans le chat",
     HR_MODULES_READYCHECK_MENU_CHAT_TT = "Affiche les résultats de la vérification de statut dans le chat.",
     -- SKILL LINES

@@ -15,45 +15,8 @@ local module_name = "dps"
 local module = addon_modules[module_name]
 
 -- TODO: translations
+--- @return table the submenu options for the DPS module
 function module:GetSubMenuOptions()
-    local function mergeOptions(source, destination)
-        for _, option in ipairs(source) do
-            if not option.isAdvancedSetting or self.sw.advancedSettings then
-                if option.isAdvancedSetting and option.name then
-                    option.name = string.format("|cff9900%s|r", option.name)
-                end
-                table.insert(destination, option)
-            end
-        end
-    end
-
-    local function GetGeneralOptions()
-        return {
-            core.CreateSectionHeader(GetString(HR_MENU_GENERAL)),
-            {
-                type = "checkbox",
-                name = GetString(HR_MENU_ACCOUNTWIDE),
-                tooltip = GetString(HR_MENU_ACCOUNTWIDE_TT),
-                default = true,
-                getFunc = function() return self.sw.accountWide end,
-                setFunc = function(value)
-                    self.sw.accountWide = value
-                end,
-                requiresReload = true,
-            },
-            {
-                type = "checkbox",
-                name = string.format("|cff9900%s|r", GetString(HR_MENU_ADVANCED_SETTINGS)),
-                tooltip = GetString(HR_MENU_ADVANCED_SETTINGS_TT),
-                default = false,
-                getFunc = function() return self.sw.advancedSettings end,
-                setFunc = function(value)
-                    self.sw.advancedSettings = value
-                end,
-                requiresReload = true,
-            },
-        }
-    end
     local function GetComonListOptions(listName, list)
         return {
             core.CreateSectionHeader(listName),
@@ -132,7 +95,7 @@ function module:GetSubMenuOptions()
     end
 
 
-    local options = GetGeneralOptions()
+    local options = {}
     local damageList = GetComonListOptions(GetString(HR_MODULES_DPS_MENU_HEADER), self.damageList)
     local damageListSpecificOptions = {
         {
@@ -170,7 +133,7 @@ function module:GetSubMenuOptions()
             type = "colorpicker",
             name = "Group DPS Color",
             tooltip = "color used to display the group DPS value.",
-            default = util.Hex2RGB(self.damageList.svDefault.colorGroupDPS),
+            default = ZO_ColorDef:New(util.Hex2RGB(self.damageList.svDefault.colorGroupDPS)),
             getFunc = function() return util.Hex2RGB(self.damageList.sw.colorGroupDPS) end,
             setFunc = function(r, g, b)
                 self.damageList.sw.colorGroupDPS = util.RGB2Hex(r, g, b)
@@ -183,7 +146,7 @@ function module:GetSubMenuOptions()
             type = "colorpicker",
             name = "Group Burst DPS Color",
             tooltip = "color used to display the group burst DPS value.",
-            default = util.Hex2RGB(self.damageList.svDefault.colorBurstDPS),
+            default = ZO_ColorDef:New(util.Hex2RGB(self.damageList.svDefault.colorBurstDPS)),
             getFunc = function() return util.Hex2RGB(self.damageList.sw.colorBurstDPS) end,
             setFunc = function(r, g, b)
                 self.damageList.sw.colorBurstDPS = util.RGB2Hex(r, g, b)
@@ -200,7 +163,7 @@ function module:GetSubMenuOptions()
             type = "colorpicker",
             name = "Total Damage Color",
             tooltip = "",
-            default = util.Hex2RGB(self.damageList.svDefault.colorDamageTotal),
+            default = ZO_ColorDef:New(util.Hex2RGB(self.damageList.svDefault.colorDamageTotal)),
             getFunc = function() return util.Hex2RGB(self.damageList.sw.colorDamageTotal) end,
             setFunc = function(r, g, b)
                 self.damageList.sw.colorDamageTotal = util.RGB2Hex(r, g, b)
@@ -212,7 +175,7 @@ function module:GetSubMenuOptions()
             type = "colorpicker",
             name = "Boss Damage Color",
             tooltip = "",
-            default = util.Hex2RGB(self.damageList.svDefault.colorDamageBoss),
+            default = ZO_ColorDef:New(util.Hex2RGB(self.damageList.svDefault.colorDamageBoss)),
             getFunc = function() return util.Hex2RGB(self.damageList.sw.colorDamageBoss) end,
             setFunc = function(r, g, b)
                 self.damageList.sw.colorDamageBoss = util.RGB2Hex(r, g, b)
@@ -326,8 +289,8 @@ function module:GetSubMenuOptions()
         },
     }
 
-    mergeOptions(damageListSpecificOptions, damageList)
-    mergeOptions(damageList, options)
+    core.MergeOptions(damageListSpecificOptions, damageList)
+    core.MergeOptions(damageList, options)
 
     return options
 end

@@ -112,8 +112,8 @@ local strings = {
     HR_MODULES_READYCHECK_TITLE = "Проверка готовности",
     HR_MODULES_READYCHECK_READY = "Готов",
     HR_MODULES_READYCHECK_NOT_READY = "Не готов",
-    HR_MODULES_READYCHECK_MENU_UI_LOCKED = "Заблокировать интерфейс",
-    HR_MODULES_READYCHECK_MENU_UI_LOCKED_TT = "Запрещает перемещение или изменение размера окна проверки готовности.",
+    --HR_MODULES_READYCHECK_MENU_UI = "show ui",
+    --HR_MODULES_READYCHECK_MENU_UI_TT = "Displays the readycheck window with the results.",
     HR_MODULES_READYCHECK_MENU_CHAT = "Вывод в чат",
     HR_MODULES_READYCHECK_MENU_CHAT_TT = "Выводит результаты проверки готовности в чат.",
     -- SKILL LINES

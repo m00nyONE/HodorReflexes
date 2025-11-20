@@ -22,6 +22,9 @@ local EM = GetEventManager()
 local protocolHideMe = {}
 local MESSAGE_ID_HIDEME = 32
 
+--- Register LGB protocols for HideMe module
+--- @param handler LibGroupBroadcastHandler
+--- @return void
 function module:RegisterLGBProtocols(handler)
     local CreateFlagField = LGB.CreateFlagField
     local CreateNumericField = LGB.CreateNumericField
@@ -48,6 +51,10 @@ function module:RegisterLGBProtocols(handler)
 end
 
 local playerDataCache = {}
+--- Handle received HideMe messages
+--- @param unitTag string
+--- @param data table
+--- @return void
 function module:onHideMeMessageReceived(unitTag, data)
     if data.syncRequest and not AreUnitsEqual(unitTag, localPlayer) then
         self.logger:Debug("Received HideMe sync request from %s, sending current preferences.", GetUnitName(unitTag))
@@ -75,6 +82,9 @@ end
 
 local hideProtocolCache = {}
 local hideProtocolDataCache = {}
+--- Send HideMe message with current preferences
+--- @param syncRequest boolean|nil whether this is a sync request response
+--- @return void
 function module:SendHideMeMessage(syncRequest)
     ZO_ClearTable(hideProtocolDataCache)
     for id, enabled in pairs(self.sv.preferences) do -- intentionally use pairs instead of ipairs to avoid sending empty IDs
@@ -88,6 +98,9 @@ function module:SendHideMeMessage(syncRequest)
     protocolHideMe:Send(hideProtocolCache)
 end
 
+--- Send HideMe message with current preferences, debounced to avoid spamming
+--- @param syncRequest boolean|nil whether this is a sync request response
+--- @return void
 function module:SendHideMeMessageDebounced(syncRequest)
     EM:RegisterForUpdate(addon_name .. "_HidemeMessageDebounce", self.updateDebounceInterval, function()
         EM:UnregisterForUpdate(addon_name .. "_HidemeMessageDebounce")

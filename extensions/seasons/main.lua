@@ -11,6 +11,10 @@ local HR_EVENT_DEBUG_MODE_CHANGED = core.HR_EVENT_DEBUG_MODE_CHANGED
 --- @class seasonClass : ZO_Object
 local seasonClass = ZO_InitializingObject:Subclass()
 seasonClass:MUST_IMPLEMENT("Activate")
+
+--- Initialize a season.
+--- @param season table season definition
+--- @return seasonClass season object
 function seasonClass:Initialize(season)
     for k, v in pairs(season) do
         self[k] = v
@@ -18,9 +22,13 @@ function seasonClass:Initialize(season)
 
     self.enabled = false
 end
+--- Check if the season is enabled.
+--- @return boolean enabled
 function seasonClass:IsEnabled()
     return self.enabled
 end
+--- Activate and enable the season.
+--- @return void
 function seasonClass:ActivateAndEnable()
     if not self:IsEnabled() then
         self.enabled = true

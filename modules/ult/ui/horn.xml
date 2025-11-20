@@ -48,8 +48,8 @@
                     <Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$(parent)_RawValue" offsetX="10" offsetY="0" />
                 </Texture>
                 <Label name="$(parent)_Name" horizontalAlignment="LEFT" font="$(BOLD_FONT)|$(KB_19)|outline" text="@Player" wrapMode="TRUNCATE" maxLineCount="1">
-                    <Dimensions x="105" y="24" />
-                    <Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$(parent)_Icon" offsetX="5" offsetY="0" />
+                    <Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$(parent)_Icon" offsetX="5"/>
+                    <Anchor point="RIGHT" relativePoint="RIGHT" relativeTo="$(parent)"/>
                 </Label>
             </Controls>
         </Control>

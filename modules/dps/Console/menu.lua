@@ -16,56 +16,11 @@ local module_name = "dps"
 local module = addon_modules[module_name]
 
 -- TODO: translations
+--- @return table[]
 function module:GetSubMenuOptions()
     local SCREEN_WIDTH = GuiRoot:GetWidth()
     local SCREEN_HEIGHT = GuiRoot:GetHeight()
 
-    local function mergeOptions(source, destination)
-        for _, option in ipairs(source) do
-            if option.requiresReload then
-                option.label = string.format("|cffff00%s|r", option.label)
-                --local originalSetFunction = option.setFunction
-                --option.setFunction = function()
-                --    originalSetFunction()
-                --    ZO_ERROR_FRAME:OnUIError("You changed a setting that requires you to reload the UI", nil)
-                --end
-            end
-            if not option.isAdvancedSetting or self.sw.advancedSettings then
-                if option.isAdvancedSetting and option.label then
-                    option.label = string.format("|cff9900%s|r", option.label)
-                end
-                table.insert(destination, option)
-            end
-        end
-    end
-
-    local function GetGeneralOptions()
-        return {
-            core.CreateSectionHeader(GetString(HR_MENU_GENERAL)),
-            {
-                type = LHAS.ST_CHECKBOX,
-                label = GetString(HR_MENU_ACCOUNTWIDE),
-                tooltip = GetString(HR_MENU_ACCOUNTWIDE_TT),
-                default = true,
-                getFunction = function() return self.sw.accountWide end,
-                setFunction = function(value)
-                    self.sw.accountWide = value
-                end,
-                requiresReload = true,
-            },
-            {
-                type = LHAS.ST_CHECKBOX,
-                label = GetString(HR_MENU_ADVANCED_SETTINGS),
-                tooltip = GetString(HR_MENU_ADVANCED_SETTINGS_TT),
-                default = false,
-                getFunction = function() return self.sw.advancedSettings end,
-                setFunction = function(value)
-                    self.sw.advancedSettings = value
-                end,
-                requiresReload = true,
-            },
-        }
-    end
     local function GetComonListOptions(listName, list)
         return {
             core.CreateSectionHeader(listName),
@@ -175,7 +130,6 @@ function module:GetSubMenuOptions()
     end
 
     local options = {}
-    local generalOptions = GetGeneralOptions()
     local damageList = GetComonListOptions(GetString(HR_MODULES_DPS_MENU_HEADER), self.damageList)
     local damageListSpecificOptions = {
         {
@@ -346,9 +300,8 @@ function module:GetSubMenuOptions()
         },
     }
 
-    mergeOptions(generalOptions, options)
-    mergeOptions(damageListSpecificOptions, damageList)
-    mergeOptions(damageList, options)
+    core.MergeOptions(damageListSpecificOptions, damageList)
+    core.MergeOptions(damageList, options)
 
     return options
 end

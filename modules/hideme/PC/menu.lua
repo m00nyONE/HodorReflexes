@@ -12,24 +12,8 @@ local internal_modules = internal.modules
 local module_name = "hideme"
 local module = addon_modules[module_name]
 
+--- @return table
 function module:GetSubMenuOptions()
-    local function GetGeneralOptions()
-        return {
-            core.CreateSectionHeader(GetString(HR_MENU_GENERAL)),
-            {
-                type = "checkbox",
-                name = GetString(HR_MENU_ACCOUNTWIDE),
-                tooltip = GetString(HR_MENU_ACCOUNTWIDE_TT),
-                default = true,
-                getFunc = function() return self.sw.accountWide end,
-                setFunc = function(value)
-                    self.sw.accountWide = value
-                end,
-                requiresReload = true,
-            },
-        }
-    end
-
     local function generateHideOption(id, label, description)
         return {
             type = "checkbox",
@@ -44,7 +28,7 @@ function module:GetSubMenuOptions()
         }
     end
 
-    local options = GetGeneralOptions()
+    local options = {}
     table.insert(options, core.CreateSectionHeader(GetString(HR_MODULES_HIDEME_MENU_HEADER)))
     for id, hideId in pairs(self.hideIds) do
         table.insert(options, generateHideOption(id, hideId.label, hideId.description))

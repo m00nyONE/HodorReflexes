@@ -26,9 +26,7 @@ local moduleDefinition = {
     priority = 10,
     enabled = false,
     svVersion = 1,
-    svDefault = {
-        accountWide = true,
-    },
+    svDefault = {},
 }
 
 local module = internal.moduleClass:New(moduleDefinition)
@@ -42,6 +40,10 @@ local playerDataCache = {
         third = 0,
     }
 }
+--- Handles received skill lines data from LGCS
+--- @param tag string The unit tag of the player
+--- @param data table The skill lines data
+--- @return void
 local function onSkillLinesDataReceived(tag, data)
     if not IsUnitGrouped(tag) then return end
 
@@ -53,7 +55,8 @@ local function onSkillLinesDataReceived(tag, data)
 
     group.CreateOrUpdatePlayerData(playerDataCache)
 end
-
+--- Starts the skill lines test by populating player data with dummy values
+--- @return void
 local function startTest()
     isTestRunning = true
 
@@ -67,10 +70,13 @@ local function startTest()
         group.CreateOrUpdatePlayerData(playerDataCache)
     end
 end
+--- Stops the skill lines test
+--- @return void
 local function stopTest()
     isTestRunning = false
 end
-
+--- Activate the Skill Lines module
+--- @return void
 function module:Activate()
     self.logger:Debug("activated skilllines module")
 

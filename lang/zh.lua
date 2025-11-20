@@ -112,8 +112,8 @@ local strings = {
     HR_MODULES_READYCHECK_TITLE = "准备状态检查",
     HR_MODULES_READYCHECK_READY = "准备",
     HR_MODULES_READYCHECK_NOT_READY = "未准备",
-    HR_MODULES_READYCHECK_MENU_UI_LOCKED = "锁定界面",
-    HR_MODULES_READYCHECK_MENU_UI_LOCKED_TT = "防止准备状态检查窗口被移动或调整大小。",
+    --HR_MODULES_READYCHECK_MENU_UI = "show ui",
+    --HR_MODULES_READYCHECK_MENU_UI_TT = "Displays the readycheck window with the results.",
     HR_MODULES_READYCHECK_MENU_CHAT = "输出至聊天栏",
     HR_MODULES_READYCHECK_MENU_CHAT_TT = "打印准备状态检查结果到聊天栏。",
     -- SKILL LINES
