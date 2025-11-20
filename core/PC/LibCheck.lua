@@ -22,20 +22,26 @@ function core.OptionalLibrariesCheck()
             mainText = {
                 text = GetString(HR_MISSING_LIBS_TEXT),
             },
-            buttons = {
-                {
-                    text = SI_OK,
-                    keybind = "DIALOG_PRIMARY",
-                    callback = function() end,
-                },
-                {
-                    text = GetString(HR_MISSING_LIBS_DONTSHOWAGAIN),
-                    keybind = "DIALOG_RESET",
-                    callback = function()
-                        sw.libraryPopupDisabled = true
-                    end,
-                },
-            },
+            OnShownCallback = function(dialog) -- replace buttons with onshowcallback to avoid tainting the stack
+                local g_keybindState = KEYBIND_STRIP:GetTopKeybindStateIndex()
+                local g_keybindGroupDesc = {
+                    {
+                        alignment = KEYBIND_STRIP_ALIGN_LEFT,
+                        name = GetString(SI_OK),
+                        keybind = "DIALOG_PRIMARY",
+                        callback = function() end,
+                    },
+                    {
+                        alignment = KEYBIND_STRIP_ALIGN_LEFT,
+                        name = GetString(HR_MISSING_LIBS_DONTSHOWAGAIN),
+                        keybind = "DIALOG_RESET",
+                        callback = function()
+                            sw.libraryPopupDisabled = true
+                        end,
+                    }
+                }
+                KEYBIND_STRIP:AddKeybindButtonGroup(g_keybindGroupDesc, g_keybindState)
+            end,
             mustChoose = true,
             canQueue = true,
             allowShowOnDead = false,

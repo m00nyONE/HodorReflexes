@@ -70,16 +70,24 @@ function module:registerExitInstanceRequestDialog()
         mainText = {
             text = GetString(HR_MODULES_EXITINSTANCE_EXITINSTANCE_DIALOG_TEXT),
         },
-        buttons = {
-            {
-                text = SI_DIALOG_YES,
-                callback = function() ExitInstanceImmediately() end,
-            },
-            {
-                text = SI_DIALOG_NO,
-                callback = function() end, -- do nothing on escape or no button
-            },
-        },
+        OnShownCallback = function(dialog) -- replace buttons with onshowcallback to avoid tainting the stack
+            local g_keybindState = KEYBIND_STRIP:GetTopKeybindStateIndex()
+            local g_keybindGroupDesc = {
+                {
+                    alignment = KEYBIND_STRIP_ALIGN_LEFT,
+                    name = GetString(SI_DIALOG_YES),
+                    keybind = "DIALOG_PRIMARY",
+                    callback = function() ExitInstanceImmediately() end,
+                },
+                {
+                    alignment = KEYBIND_STRIP_ALIGN_LEFT,
+                    name = GetString(SI_DIALOG_NO),
+                    keybind = "DIALOG_NEGATIVE",
+                    callback = function() end,
+                }
+            }
+            KEYBIND_STRIP:AddKeybindButtonGroup(g_keybindGroupDesc, g_keybindState)
+        end,
         noChoiceCallback = function() end, -- do nothing on escape or no button
         canQueue = false,
         allowShowOnDead = true,
@@ -94,16 +102,24 @@ function module:registerExitInstanceRequestDialog()
         mainText = {
             text = GetString(HR_MODULES_EXITINSTANCE_SENDEXITINSTANCE_DIALOG_TEXT),
         },
-        buttons = {
-            {
-                text = SI_DIALOG_YES,
-                callback = function() self:_sendExitInstanceRequestEvent() end,
-            },
-            {
-                text = SI_DIALOG_NO,
-                callback = function() end, -- do nothing on escape or no button
-            },
-        },
+        OnShownCallback = function(dialog) -- replace buttons with onshowcallback to avoid tainting the stack
+            local g_keybindState = KEYBIND_STRIP:GetTopKeybindStateIndex()
+            local g_keybindGroupDesc = {
+                {
+                    alignment = KEYBIND_STRIP_ALIGN_LEFT,
+                    name = GetString(SI_DIALOG_YES),
+                    keybind = "DIALOG_PRIMARY",
+                    callback = function() self:_sendExitInstanceRequestEvent() end,
+                },
+                {
+                    alignment = KEYBIND_STRIP_ALIGN_LEFT,
+                    name = GetString(SI_DIALOG_NO),
+                    keybind = "DIALOG_NEGATIVE",
+                    callback = function() end,
+                }
+            }
+            KEYBIND_STRIP:AddKeybindButtonGroup(g_keybindGroupDesc, g_keybindState)
+        end,
         noChoiceCallback = function() end, -- do nothing on escape or no button
         canQueue = false,
         allowShowOnDead = true,
