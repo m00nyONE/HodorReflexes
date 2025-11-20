@@ -47,7 +47,7 @@ function module:CalculateUltNextUser()
 
     -- find out who has the highest ult for special ults ( horn, colos )
     for _, entry in pairs(addon.playersData) do
-        -- TODO: maybe a check is needed if the lowestUltPercentage >= 100 ? - cuz e.g. saxhleel percentage is not calculated when receiving ult but in the horn list instead
+        -- TODO: maybe a check is needed if the lowestUltPercentage >= 100 and then only check for highest ultValue ? - cuz e.g. saxhleel percentage is not calculated when receiving ult but in the horn list instead
         if entry.hasHorn or entry.hasSaxhleel then
             if (not nextHornUser) or (entry.lowestUltPercentage > nextHornUser.lowestUltPercentage) then
                 nextHornUser = entry
