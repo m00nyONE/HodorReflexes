@@ -157,6 +157,7 @@ function module:Activate()
     self:RunOnce("registerTrackers")
     self:RunOnce("CreateLists")
     self:RunOnce("CreateCounters")
+    self.RunOnce("RegisterUltNextTracker")
 end
 
 --- create scrollLists for the module

@@ -1,0 +1,12 @@
+<GuiXml>
+    <Controls>
+        <Control name="HodorReflexes_Ult_ultNext" resizeToFitDescendents="true" mouseEnabled="false" movable="false" clampedToScreen="true" hidden="true" virtual="true">
+            <Dimensions x="300" y="60" />
+            <Controls>
+                <Label name="$(parent)_Label" horizontalAlignment="CENTER" verticalAlignment="TOP" font="$(BOLD_FONT)|$(KB_54)|soft-shadow-thick" inheritAlpha="true" wrapMode="TRUNCATE" text="Your ULT next!" color="FF00FF">
+                    <Anchor point="TOP" relativeTo="$(parent)" relativePoint="TOP" />
+                </Label>
+            </Controls>
+        </Control>
+    </Controls>
+</GuiXml>
