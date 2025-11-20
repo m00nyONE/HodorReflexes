@@ -15,14 +15,39 @@ function core.OptionalLibrariesCheck()
 
     if (not LibCustomIcons or not LibCustomNames) and not sw.libraryPopupDisabled then
         logger:Warn("LibCustomNames and/or LibCustomIcons are missing. Some features will be disabled.")
-        ZO_Dialogs_RegisterCustomDialog(dialogName, {
+
+        local dialog = {
             title = {
                 text = GetString(HR_MISSING_LIBS_TITLE),
             },
             mainText = {
                 text = GetString(HR_MISSING_LIBS_TEXT),
             },
-            OnShownCallback = function(dialog) -- replace buttons with onshowcallback to avoid tainting the stack
+            buttons = {
+                {
+                    text = SI_OK,
+                    keybind = "DIALOG_PRIMARY",
+                    callback = function() end,
+                },
+                {
+                    text = GetString(HR_MISSING_LIBS_DONTSHOWAGAIN),
+                    keybind = "DIALOG_RESET",
+                    callback = function()
+                        sw.libraryPopupDisabled = true
+                    end
+                }
+            },
+            mustChoose = true,
+            canQueue = true,
+            allowShowOnDead = false,
+            gamepadInfo = {
+                dialogType = GAMEPAD_DIALOGS.BASIC,
+            },
+        }
+
+        if IsInGamepadPreferredMode() then -- if gamepad, replace buttons with onshowcallback to avoid tainting the stack
+            dialog.buttons = nil
+            dialog.OnShownCallback = function(dialog) 
                 local g_keybindState = KEYBIND_STRIP:GetTopKeybindStateIndex()
                 local g_keybindGroupDesc = {
                     {
@@ -35,20 +60,14 @@ function core.OptionalLibrariesCheck()
                         alignment = KEYBIND_STRIP_ALIGN_LEFT,
                         name = GetString(HR_MISSING_LIBS_DONTSHOWAGAIN),
                         keybind = "DIALOG_RESET",
-                        callback = function()
-                            sw.libraryPopupDisabled = true
-                        end,
+                        callback = function() sw.libraryPopupDisabled = true end,
                     }
                 }
                 KEYBIND_STRIP:AddKeybindButtonGroup(g_keybindGroupDesc, g_keybindState)
-            end,
-            mustChoose = true,
-            canQueue = true,
-            allowShowOnDead = false,
-            gamepadInfo = {
-                dialogType = GAMEPAD_DIALOGS.BASIC,
-            },
-        })
+            end
+        end
+
+        ZO_Dialogs_RegisterCustomDialog(dialogName, dialog)
 
         ZO_Dialogs_ShowPlatformDialog(dialogName)
     end
