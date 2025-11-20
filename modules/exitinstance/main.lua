@@ -32,12 +32,17 @@ local module = internal.moduleClass:New(moduleDefinition)
 
 --- Activate the Exit Instance module
 --- @return void
+local firstRun = true
 function module:Activate()
     self.logger:Debug("activated exitInstance module")
 
     -- register custom dialog
-    self:registerExitInstanceRequestDialog()
-    self.registerExitInstanceRequestDialog = nil -- only once
+    if firstRun then
+        self:registerExitInstanceRequestDialog()
+        -- also need to reregister every time the user changes gamepad mode
+        EVENT_MANAGER:RegisterForEvent(addon_name.."_Exit_Instance", EVENT_GAMEPAD_PREFERRED_MODE_CHANGED, function() self:registerExitInstanceRequestDialog() end)
+    end
+    
 
     self:SetupKeybinds()
 
