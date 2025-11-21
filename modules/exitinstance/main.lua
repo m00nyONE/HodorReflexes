@@ -9,6 +9,7 @@ local core = internal.core
 local addon_modules = addon.modules
 local internal_modules = internal.modules
 
+local EM = GetEventManager()
 local localPlayer = "player"
 
 local moduleDefinition = {
@@ -32,12 +33,18 @@ local module = internal.moduleClass:New(moduleDefinition)
 
 --- Activate the Exit Instance module
 --- @return void
+local firstRun = true
 function module:Activate()
     self.logger:Debug("activated exitInstance module")
 
     -- register custom dialog
-    self:registerExitInstanceRequestDialog()
-    self.registerExitInstanceRequestDialog = nil -- only once
+    if firstRun then
+        self:registerExitInstanceRequestDialog()
+        -- also need to reregister every time the user changes gamepad mode
+        EM:RegisterForEvent(addon_name.."_Exit_Instance", EVENT_GAMEPAD_PREFERRED_MODE_CHANGED, function() self:registerExitInstanceRequestDialog() end)
+        firstRun = false
+    end
+    
 
     self:SetupKeybinds()
 
@@ -63,7 +70,8 @@ end
 --- Registers the exit instance request dialog.
 --- @return void
 function module:registerExitInstanceRequestDialog()
-    ZO_Dialogs_RegisterCustomDialog(self.dialogExitInstance, {
+    -- register exit instance dialog
+    local dialogExitInstance = {
         title = {
             text = GetString(HR_MODULES_EXITINSTANCE_EXITINSTANCE_DIALOG_TITLE),
         },
@@ -80,14 +88,43 @@ function module:registerExitInstanceRequestDialog()
                 callback = function() end, -- do nothing on escape or no button
             },
         },
+
+
         noChoiceCallback = function() end, -- do nothing on escape or no button
         canQueue = false,
         allowShowOnDead = true,
         gamepadInfo = {
             dialogType = GAMEPAD_DIALOGS.BASIC,
         },
-    })
-    ZO_Dialogs_RegisterCustomDialog(self.dialogSendExitInstance, {
+    }
+
+    if IsInGamepadPreferredMode() then -- if gamepad, replace buttons with onshowcallback to avoid tainting the stack
+        dialogExitInstance.buttons = nil
+        dialogExitInstance.OnShownCallback = function(dialog)
+            local g_keybindState = KEYBIND_STRIP:GetTopKeybindStateIndex()
+            local g_keybindGroupDesc = {
+                {
+                    alignment = KEYBIND_STRIP_ALIGN_LEFT,
+                    name = GetString(SI_DIALOG_YES),
+                    keybind = "DIALOG_PRIMARY",
+                    callback = function() ExitInstanceImmediately() end,
+                },
+                {
+                    alignment = KEYBIND_STRIP_ALIGN_LEFT,
+                    name = GetString(SI_DIALOG_NO),
+                    keybind = "DIALOG_NEGATIVE",
+                    callback = function() end,
+                }
+            }
+            KEYBIND_STRIP:AddKeybindButtonGroup(g_keybindGroupDesc, g_keybindState)
+        end
+    end
+
+    ZO_Dialogs_RegisterCustomDialog(self.dialogExitInstance, dialogExitInstance)
+
+
+    -- register send exit instance request dialog
+    local dialogSendExitInstance = {
         title = {
             text = GetString(HR_MODULES_EXITINSTANCE_SENDEXITINSTANCE_DIALOG_TITLE),
         },
@@ -110,5 +147,29 @@ function module:registerExitInstanceRequestDialog()
         gamepadInfo = {
             dialogType = GAMEPAD_DIALOGS.BASIC,
         },
-    })
+    }
+
+    if IsInGamepadPreferredMode() then -- if gamepad, replace buttons with onshowcallback to avoid tainting the stack
+        dialogSendExitInstance.buttons = nil
+        dialogSendExitInstance.OnShownCallback = function(dialog)
+            local g_keybindState = KEYBIND_STRIP:GetTopKeybindStateIndex()
+            local g_keybindGroupDesc = {
+                {
+                    alignment = KEYBIND_STRIP_ALIGN_LEFT,
+                    name = GetString(SI_DIALOG_YES),
+                    keybind = "DIALOG_PRIMARY",
+                    callback = function() self:_sendExitInstanceRequestEvent() end,
+                },
+                {
+                    alignment = KEYBIND_STRIP_ALIGN_LEFT,
+                    name = GetString(SI_DIALOG_NO),
+                    keybind = "DIALOG_NEGATIVE",
+                    callback = function() end,
+                }
+            }
+            KEYBIND_STRIP:AddKeybindButtonGroup(g_keybindGroupDesc, g_keybindState)
+        end
+    end
+
+    ZO_Dialogs_RegisterCustomDialog(self.dialogSendExitInstance, dialogSendExitInstance)
 end
