@@ -15,7 +15,8 @@ function core.OptionalLibrariesCheck()
 
     if (not LibCustomIcons or not LibCustomNames) and not sw.libraryPopupDisabled then
         logger:Warn("LibCustomNames and/or LibCustomIcons are missing. Some features will be disabled.")
-        ZO_Dialogs_RegisterCustomDialog(dialogName, {
+
+        local dialog = {
             title = {
                 text = GetString(HR_MISSING_LIBS_TITLE),
             },
@@ -33,8 +34,8 @@ function core.OptionalLibrariesCheck()
                     keybind = "DIALOG_RESET",
                     callback = function()
                         sw.libraryPopupDisabled = true
-                    end,
-                },
+                    end
+                }
             },
             mustChoose = true,
             canQueue = true,
@@ -42,7 +43,31 @@ function core.OptionalLibrariesCheck()
             gamepadInfo = {
                 dialogType = GAMEPAD_DIALOGS.BASIC,
             },
-        })
+        }
+
+        if IsInGamepadPreferredMode() then -- if gamepad, replace buttons with onshowcallback to avoid tainting the stack
+            dialog.buttons = nil
+            dialog.OnShownCallback = function(dialog) 
+                local g_keybindState = KEYBIND_STRIP:GetTopKeybindStateIndex()
+                local g_keybindGroupDesc = {
+                    {
+                        alignment = KEYBIND_STRIP_ALIGN_LEFT,
+                        name = GetString(SI_OK),
+                        keybind = "DIALOG_PRIMARY",
+                        callback = function() end,
+                    },
+                    {
+                        alignment = KEYBIND_STRIP_ALIGN_LEFT,
+                        name = GetString(HR_MISSING_LIBS_DONTSHOWAGAIN),
+                        keybind = "DIALOG_RESET",
+                        callback = function() sw.libraryPopupDisabled = true end,
+                    }
+                }
+                KEYBIND_STRIP:AddKeybindButtonGroup(g_keybindGroupDesc, g_keybindState)
+            end
+        end
+
+        ZO_Dialogs_RegisterCustomDialog(dialogName, dialog)
 
         ZO_Dialogs_ShowPlatformDialog(dialogName)
     end
