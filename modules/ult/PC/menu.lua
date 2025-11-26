@@ -394,6 +394,17 @@ function module:GetSubMenuOptions()
         },
         {
             type = "checkbox",
+            name = "show Barrier",
+            tooltip = "shows Barrier in the list.",
+            default = self.compactList.svDefault.showBarrier,
+            getFunc = function() return self.compactList.sw.showBarrier end,
+            setFunc = function(value)
+                self.compactList.sw.showBarrier = value
+                self.compactList:Update()
+            end,
+        },
+        {
+            type = "checkbox",
             name = "show Slayer",
             tooltip = "shows Slayer in the list.",
             default = self.compactList.svDefault.showSlayer,

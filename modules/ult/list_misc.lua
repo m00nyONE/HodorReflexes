@@ -132,7 +132,7 @@ function module:UpdateMiscList()
 
     local playersDataList = {}
     for _, playerData in pairs(addon.playersData) do
-        if playerData.ultValue > 0 and (not self.miscList.sv.excludeSpecialUlts or (not playerData.hasHorn and not playerData.hasColos and not playerData.hasAtro and not playerData.hasCryptCannon)) then
+        if playerData.ultValue > 0 and (not self.miscList.sv.excludeSpecialUlts or (not playerData.hasHorn and not playerData.hasColos and not playerData.hasAtro and not playerData.hasCryptCannon and not playerData.hasBarrier)) then
             table.insert(playersDataList, playerData)
         end
     end

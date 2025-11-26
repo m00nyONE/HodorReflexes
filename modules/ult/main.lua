@@ -152,6 +152,7 @@ function module:Activate()
         hideColos = false,
         hideAtro = false,
         hideSaxhleel = false,
+        hideBarrier = false,
     })
 
     self:RunOnce("registerTrackers")
