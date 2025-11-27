@@ -97,6 +97,8 @@ local strings = {
     HR_MODULES_HIDEME_HIDEATRO_DESCRIPTION = "Verberge deinen Atronach von den Listen.",
     HR_MODULES_HIDEME_HIDESAXHLEEL_LABEL = "Verberge Saxhleel",
     HR_MODULES_HIDEME_HIDESAXHLEEL_DESCRIPTION = "Verberge dein Saxhleel von den Listen.",
+    HR_MODULES_HIDEME_HIDEBARRIER_LABEL = "Verberge Barriere",
+    HR_MODULES_HIDEME_HIDEBARRIER_DESCRIPTION = "Verberge deine Barriere von den Listen.",
     HR_MODULES_HIDEME_MENU_HEADER = "Hide Me Einstellungen",
     -- PULL
     HR_MODULES_PULL_FRIENDLYNAME = "Pull Countdown",

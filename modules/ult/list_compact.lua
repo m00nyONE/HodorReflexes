@@ -525,7 +525,7 @@ function module:UpdateCompactList()
         if sw.showCryptCannon and playerData.hasCryptCannon then
             table.insert(cryptCannonList, playerData)
         end
-        if sw.showBarrier and playerData.hasBarrier then
+        if sw.showBarrier and not playerData.hideBarrier and playerData.hasBarrier then
             table.insert(barrierList, playerData)
         end
     end

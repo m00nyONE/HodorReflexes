@@ -56,6 +56,11 @@ local moduleDefinition = {
             label = GetString(HR_MODULES_HIDEME_HIDESAXHLEEL_LABEL),
             description = GetString(HR_MODULES_HIDEME_HIDESAXHLEEL_DESCRIPTION),
         },
+        [6] = {
+            name = "hideBarrier",
+            label = GetString(HR_MODULES_HIDEME_HIDEBARRIER_LABEL),
+            description = GetString(HR_MODULES_HIDEME_HIDEBARRIER_DESCRIPTION),
+        },
     }
 }
 
