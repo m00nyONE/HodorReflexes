@@ -3,6 +3,9 @@
 ## 2025.11.21 - @m00nyONE
 - fix the dialogs crashing GamePadUI. Thanks to @m0r for fixing this :-)
 
+## 2025.11.27 - @m00nyONE
+- adding barrier to the compact List. Thanks to @LauritsS for the PullRequest :-)
+
 ## 2025.11.20 - @m00nyONE
 - HOTFIX: removing LibCheck dialog for ALL Platforms until a reliable solution for displaying Dialogs without crashing console & gamepad UI is found
 

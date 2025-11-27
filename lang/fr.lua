@@ -97,6 +97,8 @@ local strings = {
     --HR_MODULES_HIDEME_HIDEATRO_DESCRIPTION = "Hide your atronach from the lists.",
     --HR_MODULES_HIDEME_HIDESAXHLEEL_LABEL = "Hide Saxhleel",
     --HR_MODULES_HIDEME_HIDESAXHLEEL_DESCRIPTION = "Hide your saxhleel from the lists.",
+    --HR_MODULES_HIDEME_HIDEBARRIER_LABEL = "Hide Barrier",
+    --HR_MODULES_HIDEME_HIDEBARRIER_DESCRIPTION = "Hide your barrier from the lists.",
     --HR_MODULES_HIDEME_MENU_HEADER = "Hide Me Options",
     -- PULL
     HR_MODULES_PULL_FRIENDLYNAME = "Compte à rebours avant de commencer le combat",
