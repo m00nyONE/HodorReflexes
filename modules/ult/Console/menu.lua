@@ -444,6 +444,17 @@ function module:GetSubMenuOptions()
         },
         {
             type = LHAS.ST_CHECKBOX,
+            name = "show Barrier",
+            tooltip = "shows Barrier in the list.",
+            default = self.compactList.svDefault.showBarrier,
+            getFunction = function() return self.compactList.sw.showBarrier end,
+            setFunction = function(value)
+                self.compactList.sw.showBarrier = value
+                self.compactList:Update()
+            end,
+        },
+        {
+            type = LHAS.ST_CHECKBOX,
             label = "show Slayer",
             tooltip = "shows Slayer in the list.",
             default = self.compactList.svDefault.showSlayer,
