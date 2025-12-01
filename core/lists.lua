@@ -222,6 +222,7 @@ function list:Initialize(listDefinition)
         backgroundTexture = nil, -- default background texture
         supportRangeOnly = false, -- default support range only setting
         outOfSupportRangeOpacity = 0.2, -- default opacity for out of support range players
+        nameFont = "$(BOLD_FONT)|$(KB_19)|outline",
     }
     self.listHeaderHeight = 22 -- default header height
     self.listRowHeight = 22 -- default row height
@@ -538,6 +539,14 @@ function list:ApplyUserNameToControl(nameControl, userId)
         nameControl:SetText(userName)
         nameControl:SetColor(1, 1, 1)
     end
+end
+
+--- applies the name font to the control passed as argument.
+--- Can be used by custom themes as well.
+--- @param labelControl LabelControl the control to apply the font to
+--- @return void
+function list:ApplyNameFontToControl(labelControl)
+    labelControl:SetFont(self.sw.nameFont)
 end
 
 --- applies the user icon to the control passed as argument and sets the texture to be released at zero references.

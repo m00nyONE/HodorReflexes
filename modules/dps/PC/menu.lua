@@ -17,6 +17,13 @@ local module = addon_modules[module_name]
 -- TODO: translations
 --- @return table the submenu options for the DPS module
 function module:GetSubMenuOptions()
+    local fontChoices = {}
+    local fontValues = {}
+    for _, fontInfo in ipairs(util.GetFontOptions(18)) do
+        table.insert(fontChoices, fontInfo.name)
+        table.insert(fontValues, fontInfo.data)
+    end
+
     local function GetComonListOptions(listName, list)
         return {
             core.CreateSectionHeader(listName),
@@ -90,6 +97,22 @@ function module:GetSubMenuOptions()
                     list.window:SetScale(list.sw.windowScale)
                 end,
                 isAdvancedSetting = true,
+            },
+            {
+                type = "dropdown",
+                name = "Name Font",
+                tooltip = "set the font for the player names in the list.",
+                default = list.svDefault.nameFont,
+                choices = fontChoices,
+                choicesValues = fontValues,
+                getFunc = function() return list.sw.nameFont end,
+                setFunc = function(value)
+                    list.sw.nameFont = value
+                    list:RefreshVisibility()
+                    list:UpdateDebounced(true) -- force an update to clear potentially old data still being in the list because they where never redrawn when hidden
+                end,
+                isAdvancedSetting = true,
+                width = "full",
             },
         }
     end

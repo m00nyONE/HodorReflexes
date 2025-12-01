@@ -1,5 +1,8 @@
 [SIZE="2"][B]IMPORTANT:[/B] You need LibCustomNames and LibCustomIcons now if you want to have names and icons displayed.[/SIZE]
 
+## 2025.12.01 - @m00nyONE
+- add options to switch fonts for all lists individually. You can now choose between the new bold font and the oldschool font.
+
 ## 2025.11.27 - @m00nyONE
 - adding barrier to the compact List. Thanks to @LauritsS for the PullRequest :-)
 

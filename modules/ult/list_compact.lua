@@ -70,6 +70,8 @@ local svDefault = {
 
     markOnCooldown = true,
     markOnCooldownColor = {1, 0, 0}, -- red
+
+    nameFont = "$(BOLD_FONT)|$(KB_19)|outline",
 }
 
 --- Create the compact ult list.
@@ -315,6 +317,7 @@ function module:compactListHornRowCreationFunction(rowControl, data, scrollList)
     list:ApplySupportRangeStyle(rowControl, data.tag)
     list:ApplyUserNameToControl(rowControl:GetNamedChild('_Name'), data.userId)
     list:ApplyUserIconToControl(rowControl:GetNamedChild('_Icon'), data.userId, data.classId)
+    list:ApplyNameFontToControl(rowControl:GetNamedChild('_Name'))
 
     rowControl:GetNamedChild('_BG'):SetColor(unpack(sw.colorHornBG))
     rowControl:GetNamedChild('_BG'):SetAlpha(sw.backgroundAlpha)
@@ -348,6 +351,7 @@ function module:compactListColosRowCreationFunction(rowControl, data, scrollList
     list:ApplySupportRangeStyle(rowControl, data.tag)
     list:ApplyUserNameToControl(rowControl:GetNamedChild('_Name'), data.userId)
     list:ApplyUserIconToControl(rowControl:GetNamedChild('_Icon'), data.userId, data.classId)
+    list:ApplyNameFontToControl(rowControl:GetNamedChild('_Name'))
 
     rowControl:GetNamedChild('_BG'):SetColor(unpack(sw.colorColosBG))
     rowControl:GetNamedChild('_BG'):SetAlpha(sw.backgroundAlpha)
@@ -372,6 +376,7 @@ function module:compactListAtroRowCreationFunction(rowControl, data, scrollList)
     list:ApplySupportRangeStyle(rowControl, data.tag)
     list:ApplyUserNameToControl(rowControl:GetNamedChild('_Name'), data.userId)
     list:ApplyUserIconToControl(rowControl:GetNamedChild('_Icon'), data.userId, data.classId)
+    list:ApplyNameFontToControl(rowControl:GetNamedChild('_Name'))
 
     rowControl:GetNamedChild('_BG'):SetColor(unpack(sw.colorAtroBG))
     rowControl:GetNamedChild('_BG'):SetAlpha(sw.backgroundAlpha)
@@ -396,6 +401,7 @@ function module:compactListSlayerRowCreationFunction(rowControl, data, scrollLis
     list:ApplySupportRangeStyle(rowControl, data.tag)
     list:ApplyUserNameToControl(rowControl:GetNamedChild('_Name'), data.userId)
     list:ApplyUserIconToControl(rowControl:GetNamedChild('_Icon'), data.userId, data.classId)
+    list:ApplyNameFontToControl(rowControl:GetNamedChild('_Name'))
 
     rowControl:GetNamedChild('_BG'):SetColor(unpack(sw.colorSlayerBG))
     rowControl:GetNamedChild('_BG'):SetAlpha(sw.backgroundAlpha)
@@ -419,6 +425,7 @@ function module:compactListBarrierRowCreationFunction(rowControl, data, scrollLi
     list:ApplySupportRangeStyle(rowControl, data.tag)
     list:ApplyUserNameToControl(rowControl:GetNamedChild('_Name'), data.userId)
     list:ApplyUserIconToControl(rowControl:GetNamedChild('_Icon'), data.userId, data.classId)
+    list:ApplyNameFontToControl(rowControl:GetNamedChild('_Name'))
 
     rowControl:GetNamedChild('_BG'):SetColor(unpack(sw.colorBarrierBG))
     rowControl:GetNamedChild('_BG'):SetAlpha(sw.backgroundAlpha)
@@ -444,6 +451,7 @@ function module:compactListPillagerRowCreationFunction(rowControl, data, scrollL
     list:ApplySupportRangeStyle(rowControl, data.tag)
     list:ApplyUserNameToControl(rowControl:GetNamedChild('_Name'), data.userId)
     list:ApplyUserIconToControl(rowControl:GetNamedChild('_Icon'), data.userId, data.classId)
+    list:ApplyNameFontToControl(rowControl:GetNamedChild('_Name'))
 
     rowControl:GetNamedChild('_BG'):SetColor(unpack(sw.colorPillagerBG))
     rowControl:GetNamedChild('_BG'):SetAlpha(sw.backgroundAlpha)
@@ -470,6 +478,7 @@ function module:compactListCryptCannonRowCreationFunction(rowControl, data, scro
     list:ApplySupportRangeStyle(rowControl, data.tag)
     list:ApplyUserNameToControl(rowControl:GetNamedChild('_Name'), data.userId)
     list:ApplyUserIconToControl(rowControl:GetNamedChild('_Icon'), data.userId, data.classId)
+    list:ApplyNameFontToControl(rowControl:GetNamedChild('_Name'))
 
     rowControl:GetNamedChild('_BG'):SetColor(unpack(sw.colorCryptCannonBG))
     rowControl:GetNamedChild('_BG'):SetAlpha(sw.backgroundAlpha)

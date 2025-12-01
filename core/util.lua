@@ -207,4 +207,22 @@ function util.GetUserIcon(userId, classId)
     return util.GetClassIcon(classId) -- returns texturePath, left, right, top, bottom
 end
 
+--- get font string for use in UI controls. -- see https://wiki.esoui.com/Fonts
+--- @param fontStyle string|nil font style, e.g. "MEDIUM_FONT" or "BOLD_FONT"
+--- @param fontSize number|nil font size, e.g. 18
+--- @param fontWeight string|nil font weight, e.g. "outline" or "soft-shadow-thick"
+--- @return string font string
+function util.GetFontString(fontStyle, fontSize, fontWeight)
+    return ZO_CachedStrFormat("$(<<1>>)|$(KB_<<2>>)|<<3>>", fontStyle or "BOLD_FONT", fontSize or 18, fontWeight or "outline")
+end
+
+function util.GetFontOptions(size)
+    return {
+        { name = "Default", data = util.GetFontString("BOLD_FONT", size, "outline")},
+        { name = "Default Gamepad", data = util.GetFontString("GAMEPAD_BOLD_FONT", size, "outline")},
+        { name = "OldSchool", data = util.GetFontString("MEDIUM_FONT", size, "soft-shadow-thick")},
+        { name = "OldSchool Gamepad", data = util.GetFontString("GAMEPAD_MEDIUM_FONT", size, "soft-shadow-thick")},
+    }
+end
+
 --[[ doc.lua end ]]

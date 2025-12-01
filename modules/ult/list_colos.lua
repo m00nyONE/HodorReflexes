@@ -35,6 +35,8 @@ local svDefault = {
     supportRangeOnly = false,
 
     colorVuln = {1, 1, 0}, -- yellow
+
+    nameFont = "$(BOLD_FONT)|$(KB_19)|outline",
 }
 
 --- Create the colos ult list.
@@ -123,6 +125,7 @@ function module:colosListRowCreationFunction(rowControl, data, scrollList)
     list:ApplySupportRangeStyle(rowControl, data.tag)
     list:ApplyUserNameToControl(rowControl:GetNamedChild('_Name'), data.userId)
     list:ApplyUserIconToControl(rowControl:GetNamedChild('_Icon'), data.userId, data.classId)
+    list:ApplyNameFontToControl(rowControl:GetNamedChild('_Name'))
 
     local percentageColor = self:getUltPercentageColor(data.colosPercentage, 'FFFFFF')
     local percentageControl = rowControl:GetNamedChild("_PctValue")

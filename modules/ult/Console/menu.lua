@@ -6,6 +6,8 @@ local addon = _G[addon_name]
 local internal = addon.internal
 local core = internal.core
 
+local util = addon.util
+
 local addon_modules = addon.modules
 local internal_modules = internal.modules
 
@@ -19,6 +21,12 @@ local LHAS = LibHarvensAddonSettings
 function module:GetSubMenuOptions()
     local SCREEN_WIDTH = GuiRoot:GetWidth()
     local SCREEN_HEIGHT = GuiRoot:GetHeight()
+
+    local fontItems = util.GetFontOptions(19)
+    local fontValuesMap = {}
+    for _, fontInfo in ipairs(fontItems) do
+        fontValuesMap[fontInfo.data] = fontInfo.name
+    end
 
     local function GetComonListOptions(listName, list)
         return {
@@ -155,6 +163,22 @@ function module:GetSubMenuOptions()
                 setFunction = function(value)
                     list.sw.windowWidth = value
                     list.window:SetWidth(list.sw.windowWidth)
+                end,
+                isAdvancedSetting = true,
+            },
+            {
+                type = LHAS.ST_DROPDOWN,
+                label = "Name Font",
+                tooltip = "set the font for the player names in the list.",
+                default = "Default",
+                items = fontItems,
+                getFunction = function()
+                    return fontValuesMap[list.sw.nameFont] or "Default"
+                end,
+                setFunction = function(control, itemName, itemData)
+                    list.sw.nameFont = itemData.data
+                    list:RefreshVisibility()
+                    list:UpdateDebounced(true) -- force an update to clear potentially old data still being in the list because they where never redrawn when hidden
                 end,
                 isAdvancedSetting = true,
             },
