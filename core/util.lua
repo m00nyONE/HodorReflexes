@@ -219,9 +219,9 @@ end
 function util.GetFontOptions(size)
     return {
         { name = "Default", data = util.GetFontString("BOLD_FONT", size, "outline")},
-        { name = "Default Gamepad", data = util.GetFontString("GAMEPAD_BOLD_FONT", size, "outline")},
+        { name = "Default Small", data = util.GetFontString("GAMEPAD_BOLD_FONT", size, "outline")},
         { name = "OldSchool", data = util.GetFontString("MEDIUM_FONT", size, "soft-shadow-thick")},
-        { name = "OldSchool Gamepad", data = util.GetFontString("GAMEPAD_MEDIUM_FONT", size, "soft-shadow-thick")},
+        { name = "OldSchool Small", data = util.GetFontString("GAMEPAD_MEDIUM_FONT", size, "soft-shadow-thick")},
     }
 end
 
