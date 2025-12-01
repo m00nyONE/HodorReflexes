@@ -1,0 +1,2085 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../HodorReflexes/">
+      
+      
+        <link rel="next" href="../../globals/inCombat/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.17">
+    
+    
+      
+        <title>class listClass - Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.bcfcd587.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#class-listclass" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Docs" class="md-header__button md-logo" aria-label="Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              class listClass
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Docs" class="md-nav__button md-logo" aria-label="Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    Docs
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Types
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Types
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../HodorReflexes/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    class HodorReflexes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    class listClass
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    class listClass
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      methods
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#listclassupdate" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.Update
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclassrunonce" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.RunOnce
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclassgetid" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.GetId
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclassgetnextdatatypeid" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.GetNextDataTypeId
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclassgetwindow" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.GetWindow
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclassgetwindowpostop" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.GetWindowPosTop
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclassgetwindowposleft" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.GetWindowPosLeft
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclassgetlistcontrol" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.GetListControl
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclassisuilocked" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.IsUILocked
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclassgetupdatecounter" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.GetUpdateCounter
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclassgetname" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.GetName
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclassgetheaderheight" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.GetHeaderHeight
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclassgetrowheight" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.GetRowHeight
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclasssetredrawheaders" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.SetRedrawHeaders
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclassshouldredrawheaders" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.ShouldRedrawHeaders
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclassgetlogger" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.GetLogger
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclasssetscale" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.SetScale
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclassgetscale" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.GetScale
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclasssetbackgroundopacity" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.SetBackgroundOpacity
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclassgetbackgroundopacity" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.GetBackgroundOpacity
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclasssetbackgroundtexture" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.SetBackgroundTexture
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclassgetbackgroundtexture" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.GetBackgroundTexture
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclasssetoutofsupportrangeopacity" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.SetOutOfSupportRangeOpacity
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclassgetoutofsupportrangeopacity" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.GetOutOfSupportRangeOpacity
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclassinitialize" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.Initialize
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclass_updatedebouncedtrigger" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass._updateDebouncedTrigger
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclassresizelist" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.ResizeList
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclasscreateupdaterebouncedcallback" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.CreateUpdateRebouncedCallback
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclassupdatedebounced" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.UpdateDebounced
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclassisenabled" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.IsEnabled
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclassrefreshvisibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.RefreshVisibility
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclasswindowfragmentcondition" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.WindowFragmentCondition
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclasscreatesavedvariables" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.CreateSavedVariables
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclasscreatecontrols" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.CreateControls
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclasscreatefragment" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.CreateFragment
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclassrendercurrentfighttimetocontrol" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.RenderCurrentFightTimeToControl
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclasscreatefighttimeupdateroncontrol" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.CreateFightTimeUpdaterOnControl
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclassrendertimetocontrol" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.RenderTimeToControl
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclassapplysupportrangestyle" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.ApplySupportRangeStyle
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclassapplyusernametocontrol" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.ApplyUserNameToControl
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclassapplynamefonttocontrol" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.ApplyNameFontToControl
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclassapplyusericontocontrol" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.ApplyUserIconToControl
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclasscreatecountdownoncontrol" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.CreateCountdownOnControl
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      fields
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="fields">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#listclassname" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.name
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclasssv" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.sv
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclasssw" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.sw
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclasssvdefault" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.svDefault
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclasssvversion" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.svVersion
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclasslistheaderheight" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.listHeaderHeight
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclasslistrowheight" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.listRowHeight
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclassupdatedebouncedelayms" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.updateDebounceDelayMS
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclass_nexttypeid" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass._nextTypeId
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclass_redrawheaders" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass._redrawHeaders
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclasslogger" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.logger
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclassuilocked" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.uiLocked
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclass_updatecounter" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass._updateCounter
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclass_id" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass._Id
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclass_updatedebouncedeventname" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass._updateDebouncedEventName
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclasswindow" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.window
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclassbackgroundcontrol" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.backgroundControl
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclasslistcontrol" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.listControl
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclasswindowfragment" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.windowFragment
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Globals
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Globals
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../globals/inCombat/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    inCombat
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../globals/inCombat/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    inCombat
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      methods
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#listclassupdate" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.Update
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclassrunonce" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.RunOnce
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclassgetid" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.GetId
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclassgetnextdatatypeid" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.GetNextDataTypeId
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclassgetwindow" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.GetWindow
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclassgetwindowpostop" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.GetWindowPosTop
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclassgetwindowposleft" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.GetWindowPosLeft
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclassgetlistcontrol" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.GetListControl
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclassisuilocked" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.IsUILocked
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclassgetupdatecounter" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.GetUpdateCounter
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclassgetname" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.GetName
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclassgetheaderheight" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.GetHeaderHeight
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclassgetrowheight" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.GetRowHeight
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclasssetredrawheaders" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.SetRedrawHeaders
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclassshouldredrawheaders" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.ShouldRedrawHeaders
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclassgetlogger" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.GetLogger
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclasssetscale" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.SetScale
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclassgetscale" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.GetScale
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclasssetbackgroundopacity" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.SetBackgroundOpacity
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclassgetbackgroundopacity" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.GetBackgroundOpacity
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclasssetbackgroundtexture" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.SetBackgroundTexture
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclassgetbackgroundtexture" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.GetBackgroundTexture
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclasssetoutofsupportrangeopacity" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.SetOutOfSupportRangeOpacity
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclassgetoutofsupportrangeopacity" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.GetOutOfSupportRangeOpacity
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclassinitialize" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.Initialize
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclass_updatedebouncedtrigger" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass._updateDebouncedTrigger
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclassresizelist" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.ResizeList
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclasscreateupdaterebouncedcallback" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.CreateUpdateRebouncedCallback
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclassupdatedebounced" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.UpdateDebounced
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclassisenabled" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.IsEnabled
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclassrefreshvisibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.RefreshVisibility
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclasswindowfragmentcondition" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.WindowFragmentCondition
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclasscreatesavedvariables" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.CreateSavedVariables
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclasscreatecontrols" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.CreateControls
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclasscreatefragment" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.CreateFragment
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclassrendercurrentfighttimetocontrol" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.RenderCurrentFightTimeToControl
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclasscreatefighttimeupdateroncontrol" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.CreateFightTimeUpdaterOnControl
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclassrendertimetocontrol" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.RenderTimeToControl
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclassapplysupportrangestyle" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.ApplySupportRangeStyle
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclassapplyusernametocontrol" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.ApplyUserNameToControl
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclassapplynamefonttocontrol" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.ApplyNameFontToControl
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclassapplyusericontocontrol" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.ApplyUserIconToControl
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclasscreatecountdownoncontrol" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.CreateCountdownOnControl
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      fields
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="fields">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#listclassname" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.name
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclasssv" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.sv
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclasssw" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.sw
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclasssvdefault" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.svDefault
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclasssvversion" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.svVersion
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclasslistheaderheight" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.listHeaderHeight
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclasslistrowheight" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.listRowHeight
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclassupdatedebouncedelayms" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.updateDebounceDelayMS
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclass_nexttypeid" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass._nextTypeId
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclass_redrawheaders" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass._redrawHeaders
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclasslogger" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.logger
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclassuilocked" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.uiLocked
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclass_updatecounter" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass._updateCounter
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclass_id" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass._Id
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclass_updatedebouncedeventname" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass._updateDebouncedEventName
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclasswindow" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.window
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclassbackgroundcontrol" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.backgroundControl
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclasslistcontrol" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.listControl
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listclasswindowfragment" class="md-nav__link">
+    <span class="md-ellipsis">
+      listClass.windowFragment
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="class-listclass">class listClass</h1>
+<ul>
+<li>supers: ZO_InitializingObject</li>
+</ul>
+<p>base class for all lists</p>
+<hr />
+<h2 id="methods">methods</h2>
+<hr />
+<h3 id="listclassupdate">listClass.Update</h3>
+<hr />
+<pre><code class="language-lua">function listClass.Update()
+</code></pre>
+<p>MUST IMPLEMENT! function to update the list</p>
+<h3 id="listclassrunonce">listClass.RunOnce</h3>
+<hr />
+<pre><code class="language-lua">function listClass.RunOnce(
+  funcName: string,
+  ...: any
+) -&gt; result any
+</code></pre>
+<p>@param <code>funcName</code> - name of the function to run once</p>
+<p>@param <code>...</code> - arguments to pass to the function</p>
+<p>@return <code>result</code> - of the function, or nil if the function does not exist</p>
+<p>NOT for manual use! this is a helper function that runs a function only once and then removes it from the list instance.
+If you use it on a still needed function, it will be gone after the first call and thus break your list!</p>
+<h3 id="listclassgetid">listClass.GetId</h3>
+<hr />
+<pre><code class="language-lua">function listClass.GetId() -&gt; unique string
+</code></pre>
+<p>@return <code>unique</code> - ID of the list instance</p>
+<p>get the unique ID of the List instance</p>
+<h3 id="listclassgetnextdatatypeid">listClass.GetNextDataTypeId</h3>
+<hr />
+<pre><code class="language-lua">function listClass.GetNextDataTypeId() -&gt; unique number
+</code></pre>
+<p>@return <code>unique</code> - data type ID</p>
+<p>get the next unique data type ID for the list instance that can be used to register a new dataType with the scrollList.</p>
+<h3 id="listclassgetwindow">listClass.GetWindow</h3>
+<hr />
+<pre><code class="language-lua">function listClass.GetWindow() -&gt; main TopLevelWindow
+</code></pre>
+<p>@return <code>main</code> - window of the list instance</p>
+<p>get the main window of the list instance</p>
+<h3 id="listclassgetwindowpostop">listClass.GetWindowPosTop</h3>
+<hr />
+<pre><code class="language-lua">function listClass.GetWindowPosTop() -&gt; left number
+</code></pre>
+<p>@return <code>left</code> - position of the list window</p>
+<p>get the left position of the list window</p>
+<h3 id="listclassgetwindowposleft">listClass.GetWindowPosLeft</h3>
+<hr />
+<pre><code class="language-lua">function listClass.GetWindowPosLeft() -&gt; top number
+</code></pre>
+<p>@return <code>top</code> - position of the list window</p>
+<p>get the top position of the list window</p>
+<h3 id="listclassgetlistcontrol">listClass.GetListControl</h3>
+<hr />
+<pre><code class="language-lua">function listClass.GetListControl() -&gt; scrollList ZO_ScrollList
+</code></pre>
+<p>@return <code>scrollList</code> - control of the list instance</p>
+<p>get the scrollList control of the list instance</p>
+<h3 id="listclassisuilocked">listClass.IsUILocked</h3>
+<hr />
+<pre><code class="language-lua">function listClass.IsUILocked() -&gt;  boolean
+</code></pre>
+<p>@return  - true if the UI is locked, false otherwise</p>
+<p>check if the UI is currently locked</p>
+<h3 id="listclassgetupdatecounter">listClass.GetUpdateCounter</h3>
+<hr />
+<pre><code class="language-lua">function listClass.GetUpdateCounter() -&gt; current number
+</code></pre>
+<p>@return <code>current</code> - update counter</p>
+<p>get the current update counter of the list instance</p>
+<h3 id="listclassgetname">listClass.GetName</h3>
+<hr />
+<pre><code class="language-lua">function listClass.GetName() -&gt; name string
+</code></pre>
+<p>@return <code>name</code> - of the list instance</p>
+<p>get the name of the list instance</p>
+<h3 id="listclassgetheaderheight">listClass.GetHeaderHeight</h3>
+<hr />
+<pre><code class="language-lua">function listClass.GetHeaderHeight() -&gt; header number
+</code></pre>
+<p>@return <code>header</code> - height of the list instance</p>
+<p>get the header height of the list instance</p>
+<h3 id="listclassgetrowheight">listClass.GetRowHeight</h3>
+<hr />
+<pre><code class="language-lua">function listClass.GetRowHeight() -&gt; row number
+</code></pre>
+<p>@return <code>row</code> - height of the list instance</p>
+<p>get the row height of the list instance</p>
+<h3 id="listclasssetredrawheaders">listClass.SetRedrawHeaders</h3>
+<hr />
+<pre><code class="language-lua">function listClass.SetRedrawHeaders() -&gt;  nil
+</code></pre>
+<p>set the flag to redraw headers on the next update to true</p>
+<h3 id="listclassshouldredrawheaders">listClass.ShouldRedrawHeaders</h3>
+<hr />
+<pre><code class="language-lua">function listClass.ShouldRedrawHeaders() -&gt;  boolean
+</code></pre>
+<p>@return  - true if headers need to be redrawn, false otherwise</p>
+<p>get the flag to redraw headers</p>
+<h3 id="listclassgetlogger">listClass.GetLogger</h3>
+<hr />
+<pre><code class="language-lua">function listClass.GetLogger() -&gt; logger table
+</code></pre>
+<p>@return <code>logger</code> - of the list instance</p>
+<p>get the logger (LibDebugLogger) of the list instance</p>
+<h3 id="listclasssetscale">listClass.SetScale</h3>
+<hr />
+<pre><code class="language-lua">function listClass.SetScale(scale: number) -&gt;  nil
+</code></pre>
+<p>@param <code>scale</code> - scale to set</p>
+<p>set the scale of the list</p>
+<h3 id="listclassgetscale">listClass.GetScale</h3>
+<hr />
+<pre><code class="language-lua">function listClass.GetScale() -&gt; scale number
+</code></pre>
+<p>@return <code>scale</code> - of the list</p>
+<p>get the scale of the list</p>
+<h3 id="listclasssetbackgroundopacity">listClass.SetBackgroundOpacity</h3>
+<hr />
+<pre><code class="language-lua">function listClass.SetBackgroundOpacity(opacity: number) -&gt;  nil
+</code></pre>
+<p>@param <code>opacity</code> - opacity to set (0.0 - 1.0)</p>
+<p>set the background opacity of the list</p>
+<h3 id="listclassgetbackgroundopacity">listClass.GetBackgroundOpacity</h3>
+<hr />
+<pre><code class="language-lua">function listClass.GetBackgroundOpacity() -&gt; background number
+</code></pre>
+<p>@return <code>background</code> - opacity (0.0 - 1.0)</p>
+<p>get the background opacity of the list</p>
+<h3 id="listclasssetbackgroundtexture">listClass.SetBackgroundTexture</h3>
+<hr />
+<pre><code class="language-lua">function listClass.SetBackgroundTexture(texturePath: string) -&gt;  nil
+</code></pre>
+<p>@param <code>texturePath</code> - path to the texture to set</p>
+<p>set the background texture of the list</p>
+<h3 id="listclassgetbackgroundtexture">listClass.GetBackgroundTexture</h3>
+<hr />
+<pre><code class="language-lua">function listClass.GetBackgroundTexture() -&gt; background string?
+</code></pre>
+<p>@return <code>background</code> - texture path or <code>nil</code> if non is set</p>
+<p>get the background texture of the list</p>
+<h3 id="listclasssetoutofsupportrangeopacity">listClass.SetOutOfSupportRangeOpacity</h3>
+<hr />
+<pre><code class="language-lua">function listClass.SetOutOfSupportRangeOpacity(opacity: number) -&gt;  nil
+</code></pre>
+<p>@param <code>opacity</code> - opacity to set (0.0 - 1.0)</p>
+<p>set the out of support range opacity of the list</p>
+<h3 id="listclassgetoutofsupportrangeopacity">listClass.GetOutOfSupportRangeOpacity</h3>
+<hr />
+<pre><code class="language-lua">function listClass.GetOutOfSupportRangeOpacity() -&gt; out number
+</code></pre>
+<p>@return <code>out</code> - of support range opacity (0.0 - 1.0)</p>
+<p>get the out of support range opacity of the list</p>
+<h3 id="listclassinitialize">listClass.Initialize</h3>
+<hr />
+<pre><code class="language-lua">function listClass.Initialize(listDefinition: table) -&gt;  nil
+</code></pre>
+<p>@param <code>listDefinition</code> - definition of the list</p>
+<p>NOT for manual use! this gets automatically called by :New() when creating a new list instance.
+initializes the list with the given definition.
+calls CreateSavedVariables(), CreateControls() and CreateFragment() once and deletes them afterwards.
+sets up event listeners for group changes, ui lock/unlock and player data updates.</p>
+<h3 id="listclass_updatedebouncedtrigger">listClass._updateDebouncedTrigger</h3>
+<hr />
+<pre><code class="language-lua">function listClass._updateDebouncedTrigger() -&gt;  nil
+</code></pre>
+<h3 id="listclassresizelist">listClass.ResizeList</h3>
+<hr />
+<pre><code class="language-lua">function listClass.ResizeList() -&gt;  nil
+</code></pre>
+<p>NOT for manual use! this gets called to resize the list window based on the current data.
+calculates the total height of the list based on the data types and their heights.</p>
+<h3 id="listclasscreateupdaterebouncedcallback">listClass.CreateUpdateRebouncedCallback</h3>
+<hr />
+<pre><code class="language-lua">function listClass.CreateUpdateRebouncedCallback() -&gt; debounced function
+</code></pre>
+<p>@return <code>debounced</code> - update callback function</p>
+<p>NOT for manual use! this gets called to create the debounced update callback function.
+creates a function that can be used as a callback to update the list with debounce.</p>
+<h3 id="listclassupdatedebounced">listClass.UpdateDebounced</h3>
+<hr />
+<pre><code class="language-lua">function listClass.UpdateDebounced(forceUpdate) -&gt;  nil
+</code></pre>
+<p>NOT for manual use! this gets called to update the list with a debounce.
+debounce the update calls to prevent excessive updates</p>
+<h3 id="listclassisenabled">listClass.IsEnabled</h3>
+<hr />
+<pre><code class="language-lua">function listClass.IsEnabled() -&gt;  boolean
+</code></pre>
+<p>@return  - true if the list is enabled, false otherwise</p>
+<p>NOT for manual use! this gets called to check if the list is enabled.
+checks if the list is enabled based on the saved variables and current conditions</p>
+<h3 id="listclassrefreshvisibility">listClass.RefreshVisibility</h3>
+<hr />
+<pre><code class="language-lua">function listClass.RefreshVisibility() -&gt;  nil
+</code></pre>
+<p>NOT for manual use! this gets called to refresh the visibility of the list.
+refresh the visibility of the list based on the current conditions</p>
+<h3 id="listclasswindowfragmentcondition">listClass.WindowFragmentCondition</h3>
+<hr />
+<pre><code class="language-lua">function listClass.WindowFragmentCondition() -&gt;  boolean
+</code></pre>
+<p>@return  - true if the window fragment should be shown, false otherwise</p>
+<p>NOT for manual use! this gets called to check the visibility
+condition function for the window fragment of the list.
+checks if the list should be shown based on the current conditions.</p>
+<h3 id="listclasscreatesavedvariables">listClass.CreateSavedVariables</h3>
+<hr />
+<pre><code class="language-lua">function listClass.CreateSavedVariables() -&gt;  nil
+</code></pre>
+<p>NOT for manual use! this gets called once when the list is initialized.
+Create saved variables for the list.
+sets default values if they are not provided during initialization.</p>
+<h3 id="listclasscreatecontrols">listClass.CreateControls</h3>
+<hr />
+<pre><code class="language-lua">function listClass.CreateControls() -&gt;  nil
+</code></pre>
+<p>NOT for manual use! this gets called once when the list is initialized.
+creates the window and controls for the list.
+the window is saved under sel.window and the scrollList control under self.listControl</p>
+<h3 id="listclasscreatefragment">listClass.CreateFragment</h3>
+<hr />
+<pre><code class="language-lua">function listClass.CreateFragment() -&gt;  nil
+</code></pre>
+<p>NOT for manual use! this gets called once when the list is initialized.
+creates the window fragment for the list.</p>
+<h3 id="listclassrendercurrentfighttimetocontrol">listClass.RenderCurrentFightTimeToControl</h3>
+<hr />
+<pre><code class="language-lua">function listClass.RenderCurrentFightTimeToControl(control: LabelControl) -&gt;  nil
+</code></pre>
+<p>renders the current fight time to the control passed as argument.
+Can be used by custom themes as well.</p>
+<h3 id="listclasscreatefighttimeupdateroncontrol">listClass.CreateFightTimeUpdaterOnControl</h3>
+<hr />
+<pre><code class="language-lua">function listClass.CreateFightTimeUpdaterOnControl(control: LabelControl) -&gt;  nil
+</code></pre>
+<p>@param <code>control</code> - the control to render the fight time to</p>
+<p>creates and registers a fight time updater on the control passed as argument.
+Can be used by custom themes as well.
+WARNING: DO NOT use it on controls that get recycled (e.g. playerRows)! ONLY USE on headers or static labels! Otherwise the timers will pile up and cause performance issues. They do NOT get automatically cleaned up on control recycling!</p>
+<h3 id="listclassrendertimetocontrol">listClass.RenderTimeToControl</h3>
+<hr />
+<pre><code class="language-lua">function listClass.RenderTimeToControl(
+  control: LabelControl,
+  timeMS: number,
+  opacity: number?
+) -&gt;  nil
+</code></pre>
+<p>@param <code>timeMS</code> - time in milliseconds</p>
+<p>@param <code>opacity</code> - optional opacity to set on the control</p>
+<p>renders the given time (in milliseconds) to the control passed as argument.
+Can be used by custom themes as well.</p>
+<h3 id="listclassapplysupportrangestyle">listClass.ApplySupportRangeStyle</h3>
+<hr />
+<pre><code class="language-lua">function listClass.ApplySupportRangeStyle(
+  rowControl: any,
+  unitTag: string
+) -&gt;  nil
+</code></pre>
+<p>@param <code>rowControl</code> - the control to apply the style to</p>
+<p>@param <code>unitTag</code> - the unit tag of the player</p>
+<p>applies the support range style (transparent look) to the control passed as argument.
+Can be used by custom themes as well.</p>
+<h3 id="listclassapplyusernametocontrol">listClass.ApplyUserNameToControl</h3>
+<hr />
+<pre><code class="language-lua">function listClass.ApplyUserNameToControl(
+  nameControl: LabelControl,
+  userId: string
+) -&gt;  nil
+</code></pre>
+<p>@param <code>nameControl</code> - the control to render the name to</p>
+<p>@param <code>userId</code> - the user id of the player</p>
+<p>applies the user name to the control passed as argument.
+Can be used by custom themes as well.</p>
+<h3 id="listclassapplynamefonttocontrol">listClass.ApplyNameFontToControl</h3>
+<hr />
+<pre><code class="language-lua">function listClass.ApplyNameFontToControl(labelControl: LabelControl) -&gt;  nil
+</code></pre>
+<p>@param <code>labelControl</code> - the control to apply the font to</p>
+<p>applies the name font to the control passed as argument.
+Can be used by custom themes as well.</p>
+<h3 id="listclassapplyusericontocontrol">listClass.ApplyUserIconToControl</h3>
+<hr />
+<pre><code class="language-lua">function listClass.ApplyUserIconToControl(
+  iconControl: TextureControl,
+  userId: string,
+  classId: number
+) -&gt;  nil
+</code></pre>
+<p>@param <code>iconControl</code> - the control to render the icon to</p>
+<p>@param <code>userId</code> - the user id of the player</p>
+<p>@param <code>classId</code> - the class id of the player</p>
+<p>applies the user icon to the control passed as argument and sets the texture to be released at zero references.
+Can be used by custom themes as well.</p>
+<h3 id="listclasscreatecountdownoncontrol">listClass.CreateCountdownOnControl</h3>
+<hr />
+<pre><code class="language-lua">function listClass.CreateCountdownOnControl(
+  control: LabelControl,
+  eventName: string,
+  zeroTimerOpacity: number?
+) -&gt;  nil
+</code></pre>
+<p>@param <code>control</code> - the control to render the countdown to</p>
+<p>@param <code>eventName</code> - the event name to register the countdown start callback to (must provide the following arguments: (unitTag, duration) where duration is in milliseconds)</p>
+<p>@param <code>zeroTimerOpacity</code> - optional opacity to set on the control when the timer reaches zero (default: self.sw.zeroTimerOpacity or 0.7)</p>
+<p>creates and registers a buff/debuff countdown timer on the control passed as argument.
+Can be used by custom themes as well.
+WARNING: DO NOT use it on controls that get recycled (e.g. playerRows)! ONLY USE on headers or static labels! Otherwise the timers will pile up and cause performance issues. They do NOT get automatically cleaned up on control recycling!</p>
+<h2 id="fields">fields</h2>
+<hr />
+<h3 id="listclassname">listClass.name</h3>
+<hr />
+<pre><code class="language-lua">listClass.name : string
+</code></pre>
+<p>unique name of the list</p>
+<h3 id="listclasssv">listClass.sv</h3>
+<hr />
+<pre><code class="language-lua">listClass.sv : table
+</code></pre>
+<p>GENERATED! per character saved variables for the list</p>
+<h3 id="listclasssw">listClass.sw</h3>
+<hr />
+<pre><code class="language-lua">listClass.sw : table
+</code></pre>
+<p>GENERATED! account wide saved variables for the list</p>
+<h3 id="listclasssvdefault">listClass.svDefault</h3>
+<hr />
+<pre><code class="language-lua">listClass.svDefault : table
+</code></pre>
+<p>default saved variables for the list</p>
+<h3 id="listclasssvversion">listClass.svVersion</h3>
+<hr />
+<pre><code class="language-lua">listClass.svVersion : number
+</code></pre>
+<p>version of the saved variables</p>
+<h3 id="listclasslistheaderheight">listClass.listHeaderHeight</h3>
+<hr />
+<pre><code class="language-lua">listClass.listHeaderHeight : number
+</code></pre>
+<p>height of the list headers</p>
+<h3 id="listclasslistrowheight">listClass.listRowHeight</h3>
+<hr />
+<pre><code class="language-lua">listClass.listRowHeight : number
+</code></pre>
+<p>height of the list rows</p>
+<h3 id="listclassupdatedebouncedelayms">listClass.updateDebounceDelayMS</h3>
+<hr />
+<pre><code class="language-lua">listClass.updateDebounceDelayMS : number
+</code></pre>
+<p>debounce delay for the update</p>
+<h3 id="listclass_nexttypeid">listClass._nextTypeId</h3>
+<hr />
+<pre><code class="language-lua">listClass._nextTypeId : any
+</code></pre>
+<h3 id="listclass_redrawheaders">listClass._redrawHeaders</h3>
+<hr />
+<pre><code class="language-lua">listClass._redrawHeaders: true
+</code></pre>
+<h3 id="listclasslogger">listClass.logger</h3>
+<hr />
+<pre><code class="language-lua">listClass.logger : unknown
+</code></pre>
+<p>set essential defaults. Just to be sure they are not overridden to invalid values</p>
+<h3 id="listclassuilocked">listClass.uiLocked</h3>
+<hr />
+<pre><code class="language-lua">listClass.uiLocked: true
+</code></pre>
+<h3 id="listclass_updatecounter">listClass._updateCounter</h3>
+<hr />
+<pre><code class="language-lua">listClass._updateCounter: integer = 0
+</code></pre>
+<h3 id="listclass_id">listClass._Id</h3>
+<hr />
+<pre><code class="language-lua">listClass._Id : string
+</code></pre>
+<h3 id="listclass_updatedebouncedeventname">listClass._updateDebouncedEventName</h3>
+<hr />
+<pre><code class="language-lua">listClass._updateDebouncedEventName : string
+</code></pre>
+<h3 id="listclasswindow">listClass.window</h3>
+<hr />
+<pre><code class="language-lua">listClass.window : unknown
+</code></pre>
+<h3 id="listclassbackgroundcontrol">listClass.backgroundControl</h3>
+<hr />
+<pre><code class="language-lua">listClass.backgroundControl : unknown
+</code></pre>
+<h3 id="listclasslistcontrol">listClass.listControl</h3>
+<hr />
+<pre><code class="language-lua">listClass.listControl : unknown
+</code></pre>
+<h3 id="listclasswindowfragment">listClass.windowFragment</h3>
+<hr />
+<pre><code class="language-lua">listClass.windowFragment : unknown
+</code></pre>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["quick-links", "navigation", "search", "toc", "fullscreen", "bookmarks", "tabs", "code", "edit-on-github", "language-selector", "code", "cover", "footer", "social-share", "theme-switcher"], "search": "../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.1e8ae164.min.js"></script>
+      
+    
+  </body>
+</html>
