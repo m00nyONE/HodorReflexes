@@ -97,6 +97,8 @@ local strings = {
     HR_MODULES_HIDEME_HIDEATRO_DESCRIPTION = "Скрыть вашего атронаха из списков.",
     HR_MODULES_HIDEME_HIDESAXHLEEL_LABEL = "Скрыть саксхлил (Saxhleel)",
     HR_MODULES_HIDEME_HIDESAXHLEEL_DESCRIPTION = "Скрыть вашего саксхлил из списков.",
+    --HR_MODULES_HIDEME_HIDEBARRIER_LABEL = "Hide Barrier",
+    --HR_MODULES_HIDEME_HIDEBARRIER_DESCRIPTION = "Hide your barrier from the lists.",
     HR_MODULES_HIDEME_MENU_HEADER = "Параметры",
     -- PULL
     HR_MODULES_PULL_FRIENDLYNAME = "Pull Countdown",

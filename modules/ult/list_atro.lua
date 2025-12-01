@@ -37,6 +37,8 @@ local svDefault = {
 
     colorAtro = {0, 1, 1}, -- cyan
     colorBerserk = {1, 1, 0}, -- yellow
+
+    nameFont = "$(BOLD_FONT)|$(KB_19)|outline",
 }
 
 --- Create the Atro Ult List
@@ -129,6 +131,7 @@ function module:atroListRowCreationFunction(rowControl, data, scrollList)
     list:ApplySupportRangeStyle(rowControl, data.tag)
     list:ApplyUserNameToControl(rowControl:GetNamedChild('_Name'), data.userId)
     list:ApplyUserIconToControl(rowControl:GetNamedChild('_Icon'), data.userId, data.classId)
+    list:ApplyNameFontToControl(rowControl:GetNamedChild('_Name'))
 
     local percentageColor = self:getUltPercentageColor(data.atroPercentage, 'FFFFFF')
     local percentageControl = rowControl:GetNamedChild("_PctValue")

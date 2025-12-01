@@ -33,6 +33,8 @@ local svDefault = {
     supportRangeOnly = false,
 
     excludeSpecialUlts = true,
+
+    nameFont = "$(BOLD_FONT)|$(KB_19)|outline",
 }
 
 --- initializes the misc ult list
@@ -110,6 +112,7 @@ function module:miscListRowCreationFunction(rowControl, data, scrollList)
     list:ApplySupportRangeStyle(rowControl, data.tag)
     list:ApplyUserNameToControl(rowControl:GetNamedChild('_Name'), data.userId)
     list:ApplyUserIconToControl(rowControl:GetNamedChild('_Icon'), data.userId, data.classId)
+    list:ApplyNameFontToControl(rowControl:GetNamedChild('_Name'))
 
     local percentageColor = self:getUltPercentageColor(data.lowestUltPercentage, 'FFFFFF')
     local percentageControl = rowControl:GetNamedChild("_PctValue")
@@ -132,7 +135,7 @@ function module:UpdateMiscList()
 
     local playersDataList = {}
     for _, playerData in pairs(addon.playersData) do
-        if playerData.ultValue > 0 and (not self.miscList.sv.excludeSpecialUlts or (not playerData.hasHorn and not playerData.hasColos and not playerData.hasAtro and not playerData.hasCryptCannon)) then
+        if playerData.ultValue > 0 and (not self.miscList.sv.excludeSpecialUlts or (not playerData.hasHorn and not playerData.hasColos and not playerData.hasAtro and not playerData.hasCryptCannon and not playerData.hasBarrier)) then
             table.insert(playersDataList, playerData)
         end
     end

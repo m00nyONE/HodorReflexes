@@ -44,6 +44,7 @@ local svDefault = {
     showHorn = true,
     showColos = true,
     showAtro = true,
+    showBarrier = true,
     showSlayer = true,
     showPillager = true,
     showCryptCannon = true,
@@ -65,9 +66,12 @@ local svDefault = {
     colorSlayerBG = {1, 0, 0}, -- red
     colorPillagerBG = {0, 1, 0}, -- green
     colorCryptCannonBG = {1, 0, 1}, -- purple
+    colorBarrierBG = {1, 0.5, 0}, -- orange
 
     markOnCooldown = true,
     markOnCooldownColor = {1, 0, 0}, -- red
+
+    nameFont = "$(BOLD_FONT)|$(KB_19)|outline",
 }
 
 --- Create the compact ult list.
@@ -87,6 +91,7 @@ function module:CreateCompactList()
 
     list.HEADER_TYPE = list:GetNextDataTypeId() -- type id for header
     list.ROW_TYPE_HORN = list:GetNextDataTypeId() -- type id for horn rows
+    list.ROW_TYPE_BARRIER = list:GetNextDataTypeId() -- type id for barrier rows
     list.ROW_TYPE_COLOS = list:GetNextDataTypeId() -- type id for colos rows
     list.ROW_TYPE_ATRO = list:GetNextDataTypeId() -- type id for atro rows
     list.ROW_TYPE_SLAYER = list:GetNextDataTypeId() -- type id for slayer rows
@@ -159,6 +164,14 @@ function module:CreateCompactList()
             rowCreationWrapper(self.compactListCryptCannonRowCreationFunction)
     )
     list.logger:Debug("added cryptcannon player row type '%d' with template '%s'", list.ROW_TYPE_CRYPTCANNON, list.ROW_TEMPLATE)
+    ZO_ScrollList_AddDataType(
+        list.listControl,
+        list.ROW_TYPE_BARRIER,
+        list.ROW_TEMPLATE,
+        list.listRowHeight,
+        rowCreationWrapper(self.compactListBarrierRowCreationFunction)
+    )
+    list.logger:Debug("added barrier player row type '%d' with template '%s'", list.ROW_TYPE_BARRIER, list.ROW_TEMPLATE)
 
     -- register cooldown end time tracker for pillager cooldown
     local function setPillagerCooldownEndTime(_, duration)
@@ -304,6 +317,7 @@ function module:compactListHornRowCreationFunction(rowControl, data, scrollList)
     list:ApplySupportRangeStyle(rowControl, data.tag)
     list:ApplyUserNameToControl(rowControl:GetNamedChild('_Name'), data.userId)
     list:ApplyUserIconToControl(rowControl:GetNamedChild('_Icon'), data.userId, data.classId)
+    list:ApplyNameFontToControl(rowControl:GetNamedChild('_Name'))
 
     rowControl:GetNamedChild('_BG'):SetColor(unpack(sw.colorHornBG))
     rowControl:GetNamedChild('_BG'):SetAlpha(sw.backgroundAlpha)
@@ -337,6 +351,7 @@ function module:compactListColosRowCreationFunction(rowControl, data, scrollList
     list:ApplySupportRangeStyle(rowControl, data.tag)
     list:ApplyUserNameToControl(rowControl:GetNamedChild('_Name'), data.userId)
     list:ApplyUserIconToControl(rowControl:GetNamedChild('_Icon'), data.userId, data.classId)
+    list:ApplyNameFontToControl(rowControl:GetNamedChild('_Name'))
 
     rowControl:GetNamedChild('_BG'):SetColor(unpack(sw.colorColosBG))
     rowControl:GetNamedChild('_BG'):SetAlpha(sw.backgroundAlpha)
@@ -361,6 +376,7 @@ function module:compactListAtroRowCreationFunction(rowControl, data, scrollList)
     list:ApplySupportRangeStyle(rowControl, data.tag)
     list:ApplyUserNameToControl(rowControl:GetNamedChild('_Name'), data.userId)
     list:ApplyUserIconToControl(rowControl:GetNamedChild('_Icon'), data.userId, data.classId)
+    list:ApplyNameFontToControl(rowControl:GetNamedChild('_Name'))
 
     rowControl:GetNamedChild('_BG'):SetColor(unpack(sw.colorAtroBG))
     rowControl:GetNamedChild('_BG'):SetAlpha(sw.backgroundAlpha)
@@ -385,6 +401,7 @@ function module:compactListSlayerRowCreationFunction(rowControl, data, scrollLis
     list:ApplySupportRangeStyle(rowControl, data.tag)
     list:ApplyUserNameToControl(rowControl:GetNamedChild('_Name'), data.userId)
     list:ApplyUserIconToControl(rowControl:GetNamedChild('_Icon'), data.userId, data.classId)
+    list:ApplyNameFontToControl(rowControl:GetNamedChild('_Name'))
 
     rowControl:GetNamedChild('_BG'):SetColor(unpack(sw.colorSlayerBG))
     rowControl:GetNamedChild('_BG'):SetAlpha(sw.backgroundAlpha)
@@ -395,6 +412,32 @@ function module:compactListSlayerRowCreationFunction(rowControl, data, scrollLis
 
     self:applyCompactListValues(rowControl, data, scrollList, slayerPercentage, gainSeconds, "s")
 end
+
+--- Barrier row creation function for compact ult list.
+--- @param rowControl Control
+--- @param data table
+--- @param scrollList ZO_ScrollList
+--- @return void
+function module:compactListBarrierRowCreationFunction(rowControl, data, scrollList)
+    local list = self.compactList
+    local sw = list.sw
+
+    list:ApplySupportRangeStyle(rowControl, data.tag)
+    list:ApplyUserNameToControl(rowControl:GetNamedChild('_Name'), data.userId)
+    list:ApplyUserIconToControl(rowControl:GetNamedChild('_Icon'), data.userId, data.classId)
+    list:ApplyNameFontToControl(rowControl:GetNamedChild('_Name'))
+
+    rowControl:GetNamedChild('_BG'):SetColor(unpack(sw.colorBarrierBG))
+    rowControl:GetNamedChild('_BG'):SetAlpha(sw.backgroundAlpha)
+    rowControl:GetNamedChild("_UltIcon"):SetTexture(self.barrierIcon)
+
+    local barrierPercentage = 0
+    if self:isBarrier(data.ult1ID) then barrierPercentage = data.ult1Percentage end
+    if self:isBarrier(data.ult2ID) then barrierPercentage = data.ult2Percentage end
+
+    self:applyCompactListValues(rowControl, data, scrollList, barrierPercentage, nil, nil)
+end
+
 
 --- Slayer row creation function for compact ult list.
 --- @param rowControl Control
@@ -408,6 +451,7 @@ function module:compactListPillagerRowCreationFunction(rowControl, data, scrollL
     list:ApplySupportRangeStyle(rowControl, data.tag)
     list:ApplyUserNameToControl(rowControl:GetNamedChild('_Name'), data.userId)
     list:ApplyUserIconToControl(rowControl:GetNamedChild('_Icon'), data.userId, data.classId)
+    list:ApplyNameFontToControl(rowControl:GetNamedChild('_Name'))
 
     rowControl:GetNamedChild('_BG'):SetColor(unpack(sw.colorPillagerBG))
     rowControl:GetNamedChild('_BG'):SetAlpha(sw.backgroundAlpha)
@@ -434,6 +478,7 @@ function module:compactListCryptCannonRowCreationFunction(rowControl, data, scro
     list:ApplySupportRangeStyle(rowControl, data.tag)
     list:ApplyUserNameToControl(rowControl:GetNamedChild('_Name'), data.userId)
     list:ApplyUserIconToControl(rowControl:GetNamedChild('_Icon'), data.userId, data.classId)
+    list:ApplyNameFontToControl(rowControl:GetNamedChild('_Name'))
 
     rowControl:GetNamedChild('_BG'):SetColor(unpack(sw.colorCryptCannonBG))
     rowControl:GetNamedChild('_BG'):SetAlpha(sw.backgroundAlpha)
@@ -467,6 +512,7 @@ function module:UpdateCompactList()
     local slayerList = {}
     local pillagerList = {}
     local cryptCannonList = {}
+    local barrierList = {}
 
     local sw = compactList.sw
     for _, playerData in pairs(addon.playersData) do
@@ -488,6 +534,9 @@ function module:UpdateCompactList()
         if sw.showCryptCannon and playerData.hasCryptCannon then
             table.insert(cryptCannonList, playerData)
         end
+        if sw.showBarrier and not playerData.hideBarrier and playerData.hasBarrier then
+            table.insert(barrierList, playerData)
+        end
     end
     local sortByUltPercentage = self.sortByUltPercentage
     table.sort(hornList, sortByUltPercentage)
@@ -496,6 +545,7 @@ function module:UpdateCompactList()
     table.sort(slayerList, sortByUltPercentage)
     table.sort(pillagerList, sortByUltPercentage)
     table.sort(cryptCannonList, sortByUltPercentage)
+    table.sort(barrierList, sortByUltPercentage)
 
     --- fill dataList ---
     -- insert Header
@@ -518,6 +568,9 @@ function module:UpdateCompactList()
     end
     for _, playerData in ipairs(cryptCannonList) do
         table.insert(dataList, ZO_ScrollList_CreateDataEntry(compactList.ROW_TYPE_CRYPTCANNON, playerData))
+    end
+    for _, playerData in ipairs(barrierList) do
+        table.insert(dataList, ZO_ScrollList_CreateDataEntry(compactList.ROW_TYPE_BARRIER, playerData))
     end
 
     ZO_ScrollList_Commit(listControl)

@@ -39,6 +39,8 @@ local svDefault = {
     colorForce = {1, 1, 0}, -- yellow
     highlightSaxhleel = true,
     highlightSaxhleelColor = {0.7058823529411765, 0.7372549019607844, 0.6901960784313725, 0.2},
+
+    nameFont = "$(BOLD_FONT)|$(KB_19)|outline",
 }
 
 --- Create the horn ult list.
@@ -131,6 +133,7 @@ function module:hornListRowCreationFunction(rowControl, data, scrollList)
     list:ApplySupportRangeStyle(rowControl, data.tag)
     list:ApplyUserNameToControl(rowControl:GetNamedChild('_Name'), data.userId)
     list:ApplyUserIconToControl(rowControl:GetNamedChild('_Icon'), data.userId, data.classId)
+    list:ApplyNameFontToControl(rowControl:GetNamedChild('_Name'))
 
     local _BG = rowControl:GetNamedChild("_BG")
     if sw.highlightSaxhleel then

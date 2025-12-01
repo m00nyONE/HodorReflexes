@@ -110,7 +110,7 @@ function module:startTest()
             ult1ID = self.cryptCannonAbilityIds[zo_random(1, #self.cryptCannonAbilityIds)]
             ult2ID = self.cryptCannonAbilityIds[zo_random(1, #self.cryptCannonAbilityIds)]
             limits.cryptCannon = limits.cryptCannon - 1
-        elseif limits.pillager > 0 then
+        elseif limits.pillager > 0 then -- tests both pillager & barrier
             ult1ID = self.barrierAbilityIds[zo_random(1, #self.barrierAbilityIds)]
             ultActivatedSetID = 2 -- pillager
             limits.pillager = limits.pillager - 1

@@ -1,5 +1,9 @@
 [SIZE="2"][B]IMPORTANT:[/B] You need LibCustomNames and LibCustomIcons now if you want to have names and icons displayed.[/SIZE]
 
+## 2025.12.01 - @m00nyONE
+- add options to switch fonts for all lists individually. You can now choose between the new bold font and the oldschool font.
+- adding barrier to the compact List. Thanks to @LauritsS for the PullRequest :-)
+
 ## 2025.11.21 - @m00nyONE
 - fix the dialogs crashing GamePadUI. Thanks to @m0r for fixing this :-)
 

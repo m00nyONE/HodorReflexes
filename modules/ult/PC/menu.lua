@@ -6,6 +6,8 @@ local addon = _G[addon_name]
 local internal = addon.internal
 local core = internal.core
 
+local util = addon.util
+
 local addon_modules = addon.modules
 local internal_modules = internal.modules
 
@@ -15,6 +17,13 @@ local module = addon_modules[module_name]
 --- builds the submenu options for the ult module
 --- @return table[]
 function module:GetSubMenuOptions()
+    local fontChoices = {}
+    local fontValues = {}
+    for _, fontInfo in ipairs(util.GetFontOptions(19)) do
+        table.insert(fontChoices, fontInfo.name)
+        table.insert(fontValues, fontInfo.data)
+    end
+
     local function GetComonListOptions(listName, list)
         return {
             core.CreateSectionHeader(listName),
@@ -121,6 +130,22 @@ function module:GetSubMenuOptions()
                     list.window:SetWidth(list.sw.windowWidth)
                 end,
                 isAdvancedSetting = true,
+            },
+            {
+                type = "dropdown",
+                name = "Name Font",
+                tooltip = "set the font for the player names in the list.",
+                default = list.svDefault.nameFont,
+                choices = fontChoices,
+                choicesValues = fontValues,
+                getFunc = function() return list.sw.nameFont end,
+                setFunc = function(value)
+                    list.sw.nameFont = value
+                    list:RefreshVisibility()
+                    list:UpdateDebounced(true) -- force an update to clear potentially old data still being in the list because they where never redrawn when hidden
+                end,
+                isAdvancedSetting = true,
+                width = "full",
             },
             {
                 type = "slider",
@@ -389,6 +414,17 @@ function module:GetSubMenuOptions()
             getFunc = function() return self.compactList.sw.showAtro end,
             setFunc = function(value)
                 self.compactList.sw.showAtro = value
+                self.compactList:Update()
+            end,
+        },
+        {
+            type = "checkbox",
+            name = "show Barrier",
+            tooltip = "shows Barrier in the list.",
+            default = self.compactList.svDefault.showBarrier,
+            getFunc = function() return self.compactList.sw.showBarrier end,
+            setFunc = function(value)
+                self.compactList.sw.showBarrier = value
                 self.compactList:Update()
             end,
         },

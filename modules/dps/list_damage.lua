@@ -48,6 +48,8 @@ local svDefault = {
 
     colorGroupDPS = "F4D17B", -- light orange
     colorBurstDPS = "BDFF7B", -- light green
+
+    nameFont = "$(BOLD_FONT)|$(KB_18)|outline",
 }
 
 --- initializes the damage list
@@ -138,10 +140,10 @@ function module:damageRowCreationFunction(rowControl, data, scrollList)
 
     list:ApplyUserNameToControl(rowControl:GetNamedChild('_Name'), data.userId)
     list:ApplyUserIconToControl(rowControl:GetNamedChild('_Icon'), data.userId, data.classId)
+    list:ApplyNameFontToControl(rowControl:GetNamedChild('_Name'))
 
     local valueControl = rowControl:GetNamedChild("_Value")
     valueControl:SetText(self.getDamageRowFormat(data.dmgType, data.dmg, data.dps, sw.colorDamageBoss, sw.colorDamageTotal))
-    valueControl:SetFont("$(GAMEPAD_MEDIUM_FONT)|$(KB_19)|outline")
 
     local customColor = false
     if data.isPlayer and sw.listPlayerHighlight then
