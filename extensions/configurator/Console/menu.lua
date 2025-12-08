@@ -17,6 +17,14 @@ function extension:GetSubMenuOptions()
             type = LHAS.ST_LABEL,
             label = string.format("Discord: %s", self.discordUrl),
             tooltip = "Join the HodorReflexes Discord if you want to have a custom name.",
+        },
+        {
+            type = LHAS.ST_BUTTON,
+            label = "Donate",
+            tooltip = "opens a donation mail.",
+            func = function()
+                addon.Donate()
+            end,
         }
     }
 
