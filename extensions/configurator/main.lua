@@ -31,6 +31,7 @@ local extensionDefinition = {
 
     currentFolder = "", -- will be set with LCI.GetCurrentFolder() on activation
     displayName = GetUnitDisplayName("player"),
+    discordURL = "https://discord.gg/8YpvXJhAyz" -- official HodorReflexes Discord
 }
 
 --- @class generatorExtension : extensionClass
@@ -46,9 +47,6 @@ function extension:Activate()
     end
 
     self.currentFolder = (LCI and LCI.GetCurrentFolder and LCI.GetCurrentFolder()) or "misc"
-
-    local options = self:RunOnce("BuildMenuOptions")
-    core.RegisterSubMenuOptions(self.friendlyName, options)
 end
 
 --- Escapes the display name to a valid string that can be used as a filename.

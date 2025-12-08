@@ -35,12 +35,13 @@ core/lists.lua
 core/counter.lua
 core/menu.lua
 core/PC/menu.lua
-core/PC/donate.lua
 core/PC/LibCheck.lua
 core/Console/menu.lua
-core/Console/donate.lua
 core/Console/LibCheck.lua
 core/Console/LibRadialMenu.lua
+core/PC/donate.lua
+core/Console/XB1/donate.lua
+core/Console/Playstation/donate.lua
 
 core/modules.lua
 core/extensions.lua
@@ -107,5 +108,6 @@ extensions/seasons/PC/valentines.lua
 extensions/names/main.lua
 extensions/icons/PC/main.lua
 extensions/animations/PC/main.lua
-extensions/configurator/PC/main.lua
+extensions/configurator/main.lua
 extensions/configurator/PC/menu.lua
+extensions/configurator/Console/menu.lua

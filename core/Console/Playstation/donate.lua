@@ -7,7 +7,7 @@ local internal = addon.internal
 local core = internal.core
 local logger = core.GetLogger("core/donate")
 
-local receiver = "@m00nyONE"
+local receiver = "@PrxvokedLegend"
 --- opens the mail interface with prefilled data for donation
 --- @return void
 function addon.Donate()
