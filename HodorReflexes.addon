@@ -33,15 +33,15 @@ core/group.lua
 core/combat.lua
 core/lists.lua
 core/counter.lua
+core/donate.lua
 core/menu.lua
 core/PC/menu.lua
 core/PC/LibCheck.lua
+core/PC/donate.lua
 core/Console/menu.lua
 core/Console/LibCheck.lua
 core/Console/LibRadialMenu.lua
-core/PC/donate.lua
-core/Console/XB1/donate.lua
-core/Console/Playstation/donate.lua
+core/Console/donate.lua
 
 core/modules.lua
 core/extensions.lua
