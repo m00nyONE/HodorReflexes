@@ -2,6 +2,7 @@
 
 ## 2025.12.17 - @m00nyONE
 - add configurator for console
+- fix undefined global - Thanks Dack for reporting that :-)
 
 ## 2025.12.01 - @m00nyONE
 - add options to switch fonts for all lists individually. You can now choose between the new bold font and the oldschool font.
