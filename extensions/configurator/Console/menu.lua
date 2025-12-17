@@ -30,6 +30,12 @@ function extension:GetSubMenuOptions()
                       "They are just regular players like you and me, who want to help out the community. Please be respectful towards them and understand that they are doing this in their free time.\n\n",
         },
         {
+            type = LHAS.ST_LABEL,
+            label = "Your @name",
+            tooltip = "\"|cFFFF00" .. GetUnitDisplayName("player") .. "|r\"\n\n" ..
+                    "This is your ESO account name (also often referred to as @name).\n\n" .. "You will need this name when creating your ticket in Discord. THE CAPITALIZATION MUST MATCH EXACTLY! \n\nIf you get this wrong, no assignment to your account can be made!",
+        },
+        {
             type = LHAS.ST_SECTION,
             label = string.format("|cFFFACD%s|r", "Custom Names"),
         },
@@ -58,7 +64,7 @@ function extension:GetSubMenuOptions()
         {
             type = LHAS.ST_LABEL,
             label = "3. Create Ticket",
-            tooltip = "When you read the #info channel, go into the #ticket channel and create a \"NEW\" ticket. This ticket get's automatically assigned to a volunteer on your platform who will process it.",
+            tooltip = "When you read the #info channel, go into the #ticket channel and create a \"NEW\" ticket. You have to put in your ESO account name (|cFFFF00" .. GetUnitDisplayName("player") .. "|r) in there to create it. This ticket get's automatically assigned to a volunteer on your platform who will process it.",
         },
         {
             type = LHAS.ST_LABEL,
