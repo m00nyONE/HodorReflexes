@@ -11,9 +11,8 @@ local addon_extensions = addon.extensions
 local extension = addon_extensions.configurator
 
 --- @return table
-function extension:BuildMenuOptions()
+function extension:GetSubMenuOptions()
     local menuReference = string.format("%s_extension_%s_menu", addon_name, self.name)
-    local discordURL = "https://discord.gg/8YpvXJhAyz"
 
     local function _generatePreview(updateControl)
         local s = string.format("                    %s", self.sw.nameColored)
@@ -176,7 +175,7 @@ function extension:BuildMenuOptions()
             type = "button",
             name = GetString(HR_MENU_ICONS_CONFIGURATOR_DISCORD),
             tooltip = GetString(HR_MENU_ICONS_CONFIGURATOR_DISCORD_TT),
-            func = function() RequestOpenUnsafeURL(discordURL) end,
+            func = function() RequestOpenUnsafeURL(self.discordURL) end,
             width = "full"
         },
         {

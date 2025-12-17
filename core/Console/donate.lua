@@ -7,8 +7,16 @@ local internal = addon.internal
 local core = internal.core
 local logger = core.GetLogger("core/donate")
 
---- mock function that does nothing on Console
 --- @return void
 function addon.Donate()
-    logger:Warn("There is no donation function implemented for Console")
+    logger:Debug("Donation function called")
+    local receiver = core.donationReceiver[GetWorldName()]
+
+    d("Sadly creating a prefilled mail template on console does not work :-(")
+
+    --SCENE_MANAGER:Show('mailGamepad')
+    --SCENE_MANAGER:Push('mailGamepad')
+    --/script ZO_MailSend_Gamepad:ComposeMailTo("@m00nyONE", "test")
+    --sendTab:SwitchToSendTab()
+    --sendTab:InsertBodyText("ticket-XXXXX on Discord.")
 end
