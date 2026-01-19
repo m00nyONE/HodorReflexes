@@ -69,6 +69,15 @@ local strings = {
     HR_MODULES_DPS_MENU_SHOW_SUMMARY = "Show Summary",
     HR_MODULES_DPS_MENU_SHOW_SUMMARY_TT = "toggle the display of the summary row in the damage list.",
     HR_MODULES_DPS_SUMMARY_GROUP_TOTAL = "Group Total: ",
+    -- HPS
+    HR_MODULES_HPS_FRIENDLYNAME = "Healing",
+    HR_MODULES_HPS_DESCRIPTION = "Allows you to see healing statistics of your group.",
+    HR_MODULES_HPS_HEALING = "Healing",
+    HR_MODULES_HPS_HEALING_OVERHEAL = "Overheal",
+    HR_MODULES_HPS_HEALING_HPS = "HPS",
+    HR_MODULES_HPS_MENU_HEADER = "Healing List",
+    HR_MODULES_HPS_MENU_ONLY_SHOW_HEALERS = "Only Show Healers",
+    HR_MODULES_HPS_MENU_ONLY_SHOW_HEALERS_TT = "Only show players with the healer role in the healing list.",
     -- EXIT INSTANCE
     HR_MODULES_EXITINSTANCE_FRIENDLYNAME = "Exit Instance",
     HR_MODULES_EXITINSTANCE_DESCRIPTION = "Allows you to send exit instance requests to your group.",
@@ -99,6 +108,8 @@ local strings = {
     HR_MODULES_HIDEME_HIDESAXHLEEL_DESCRIPTION = "Hide your saxhleel from the lists.",
     HR_MODULES_HIDEME_HIDEBARRIER_LABEL = "Hide Barrier",
     HR_MODULES_HIDEME_HIDEBARRIER_DESCRIPTION = "Hide your barrier from the lists.",
+    HR_MODULES_HIDEME_HIDEHPS_LABEL = "Hide HPS",
+    HR_MODULES_HIDEME_HIDEHPS_DESCRIPTION = "Hide your healing numbers from other group members hps list.",
     HR_MODULES_HIDEME_MENU_HEADER = "Hide Me Options",
     -- PULL
     HR_MODULES_PULL_FRIENDLYNAME = "Pull Countdown",
