@@ -1,7 +1,11 @@
 [SIZE="2"][B]IMPORTANT:[/B] You need LibCustomNames and LibCustomIcons now if you want to have names and icons displayed.[/SIZE]
 
+## 2026.02.14 - @m00nyONE
+- Valentines icons are now sticky and no longer random on every update.
+
 ## 2025.12.17 - @m00nyONE
 - add configurator for console
+- fix undefined global - Thanks Dack for reporting that :-)
 
 ## 2025.12.01 - @m00nyONE
 - add options to switch fonts for all lists individually. You can now choose between the new bold font and the oldschool font.
