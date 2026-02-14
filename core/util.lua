@@ -186,7 +186,7 @@ end
 --- get class icon for classId.
 --- @param classId number
 --- @return string, number, number, number, number texturePath, textureCoordsLeft, textureCoordsRight, textureCoordsTop, textureCoordsBottom
-function util.GetClassIcon(classId)
+function util.GetClassIcon(userId, classId)
     local classIcon = classIcons[classId] or classIcons[0] -- fallback to to default icon if ID is not registered
     return classIcon.texturePath, classIcon.left, classIcon.right, classIcon.top, classIcon.bottom
 end
@@ -204,7 +204,7 @@ end
 --- @param classId number
 --- @return string, number, number, number, number texturePath, textureCoordsLeft, textureCoordsRight, textureCoordsTop, textureCoordsBottom
 function util.GetUserIcon(userId, classId)
-    return util.GetClassIcon(classId) -- returns texturePath, left, right, top, bottom
+    return util.GetClassIcon(userId, classId) -- returns texturePath, left, right, top, bottom
 end
 
 --- get font string for use in UI controls. -- see https://wiki.esoui.com/Fonts
