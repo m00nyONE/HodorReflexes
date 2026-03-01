@@ -14,6 +14,9 @@ local module = addon_modules[module_name]
 
 local localPlayer = "player"
 
+local LRM = LibRadialMenu
+local texture = "/esoui/art/menubar/gamepad/gp_playermenu_icon_logout.dds"
+
 --- Setup keybinds for Exit Instance module
 --- @return void
 function module:SetupKeybinds()
@@ -37,5 +40,12 @@ function module:SetupKeybinds()
     end
     if GAMEPAD_GROUP_SCENE then
         GAMEPAD_GROUP_SCENE:RegisterCallback("StateChange", OnStateChanged)
+    end
+
+    local function SendExitInstanceRequestWrapper()
+        module:SendExitInstanceRequest()
+    end
+    if LRM then
+        LRM:RegisterEntry(addon_name, "Send Exit Instance Request", "Send Exit Instance Request", texture, SendExitInstanceRequestWrapper, GetString(HR_MODULES_EXITINSTANCE_COMMAND_HELP))
     end
 end
