@@ -47,6 +47,7 @@ function module:Activate()
     
 
     self:SetupKeybinds()
+    self:SetupLibRadialMenu()
 
     -- register "eject" subcommand
     core.RegisterSubCommand("eject", GetString(HR_MODULES_EXITINSTANCE_COMMAND_HELP), function(...) self:SendExitInstanceRequest(...) end)

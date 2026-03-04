@@ -34,14 +34,13 @@ core/combat.lua
 core/lists.lua
 core/counter.lua
 core/donate.lua
+core/LibRadialMenu.lua
 core/menu.lua
 core/PC/menu.lua
 core/PC/LibCheck.lua
-core/PC/LibRadialMenu.lua
 core/PC/donate.lua
 core/Console/menu.lua
 core/Console/LibCheck.lua
-core/Console/LibRadialMenu.lua
 core/Console/donate.lua
 
 core/modules.lua
@@ -85,18 +84,18 @@ modules/readycheck/Console/menu.lua
 
 modules/pull/PC/Bindings.xml
 modules/pull/main.lua
+modules/pull/bindings.lua
 modules/pull/protocol.lua
 modules/pull/PC/bindings.lua
 modules/pull/PC/menu.lua
-modules/pull/Console/bindings.lua
 modules/pull/Console/menu.lua
 
 modules/exitinstance/PC/Bindings.xml
 modules/exitinstance/main.lua
+modules/exitinstance/bindings.lua
 modules/exitinstance/protocol.lua
 modules/exitinstance/PC/bindings.lua
 modules/exitinstance/PC/menu.lua
-modules/exitinstance/Console/bindings.lua
 modules/exitinstance/Console/menu.lua
 
 modules/skilllines/main.lua

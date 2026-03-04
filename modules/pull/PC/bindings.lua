@@ -14,9 +14,6 @@ local module = addon_modules[module_name]
 
 local localPlayer = "player"
 
-local LRM = LibRadialMenu
-local texture = "EsoUI/Art/HUD/HUD_Countdown_Badge_Dueling.dds"
-
 --- Keybind button for sending pull countdown
 --- @return void
 function module:SetupKeybinds()
@@ -45,12 +42,5 @@ function module:SetupKeybinds()
     end
     if GAMEPAD_GROUP_SCENE then
         GAMEPAD_GROUP_SCENE:RegisterCallback("StateChange", OnStateChanged)
-    end
-
-    local function sendPullCountdownWrapper()
-        module:SendPullCountdown()
-    end
-    if LRM then
-        LRM:RegisterEntry(addon_name, "Pull countdown", "pull countdown", texture, sendPullCountdownWrapper, GetString(HR_MODULES_PULL_COMMAND_HELP))
     end
 end
