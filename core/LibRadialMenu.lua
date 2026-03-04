@@ -3,5 +3,6 @@
 local addon_name = "HodorReflexes"
 
 local LRM = LibRadialMenu
-
-LRM:RegisterAddon(addon_name, addon_name)
+if LRM then
+	LRM:RegisterAddon(addon_name, addon_name)
+end
