@@ -156,6 +156,17 @@ function module:GetSubMenuOptions()
     local damageListSpecificOptions = {
         {
             type = LHAS.ST_CHECKBOX,
+            label = GetString(HR_MODULES_DPS_MENU_ONLY_SHOW_DAMAGEDEALERS),
+            tooltip = GetString(HR_MODULES_DPS_MENU_ONLY_SHOW_DAMAGEDEALERS_TT),
+            default = self.damageList.svDefault.onlyShowDamageDealers,
+            getFunction = function() return self.damageList.sw.onlyShowDamageDealers end,
+            setFunction = function(value)
+                self.damageList.sw.onlyShowDamageDealers = value
+                self.damageList:Update()
+            end,
+        },
+        {
+            type = LHAS.ST_CHECKBOX,
             label = GetString(HR_MODULES_DPS_MENU_SHOW_SUMMARY),
             tooltip = GetString(HR_MODULES_DPS_MENU_SHOW_SUMMARY_TT),
             default = self.damageList.svDefault.showSummary,
