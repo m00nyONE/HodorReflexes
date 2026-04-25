@@ -1,5 +1,15 @@
 [SIZE="2"][B]IMPORTANT:[/B] You need LibCustomNames and LibCustomIcons now if you want to have names and icons displayed.[/SIZE]
 
+## 2026.03.30 - @m00nyONE
+- bump api version to 101049 & 101050
+
+## 2026.03.04 - @m00nyONE
+- fixing UI not being in the previously saved position on Console. Thanks to @panth13 for reporting that :-)
+- adding support for LibRadialMenu for PC. Thanks to @M0RGaming for implementing that :-)
+
+## 2026.02.14 - @m00nyONE
+- Valentines icons are now sticky and no longer random on every update.
+
 ## 2025.12.17 - @m00nyONE
 - add configurator for console
 - fix undefined global - Thanks Dack for reporting that :-)

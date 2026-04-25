@@ -39,6 +39,7 @@ function module:Activate()
     ZO_CreateStringId('SI_BINDING_NAME_HR_MODULES_PULL_BINDING_COUNTDOWN', GetString(HR_MODULES_PULL_BINDING_COUNTDOWN))
 
     self:SetupKeybinds()
+    self:SetupLibRadialMenu()
 
     core.RegisterSubCommand("pull", GetString(HR_MODULES_PULL_COMMAND_HELP), function(...) self:SendPullCountdown(...) end)
 end

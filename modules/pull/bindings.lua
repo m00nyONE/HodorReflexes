@@ -12,15 +12,24 @@ local internal_modules = internal.modules
 local module_name = "pull"
 local module = addon_modules[module_name]
 
+local localPlayer = "player"
+
 local LRM = LibRadialMenu
 local texture = "EsoUI/Art/HUD/HUD_Countdown_Badge_Dueling.dds"
 
---- Setup keybinds for Pull module
+--- Keybind button for sending pull countdown
 --- @return void
 function module:SetupKeybinds()
+    -- needs to be implemented platform specific
+end
+
+--- Setup entry in LibRadialMenu for sending pull countdowns
+--- @return void
+function module:SetupLibRadialMenu()
     local function sendPullCountdownWrapper()
         module:SendPullCountdown()
     end
-
-    LRM:RegisterEntry(addon_name, "Pull countdown", "pull countdown", texture, sendPullCountdownWrapper, GetString(HR_MODULES_PULL_COMMAND_HELP))
+    if LRM then
+        LRM:RegisterEntry(addon_name, "Pull countdown", "pull countdown", texture, sendPullCountdownWrapper, GetString(HR_MODULES_PULL_COMMAND_HELP))
+    end
 end

@@ -46,7 +46,7 @@ local function LCI_GetUserIcon(userId, classId)
         end
     end
     -- as a last resort, return class icon
-    return util.GetClassIcon(classId) -- returns texturePath, left, right, top, bottom
+    return util.GetClassIcon(userId, classId) -- returns texturePath, left, right, top, bottom
 end
 
 --- Module activation function.

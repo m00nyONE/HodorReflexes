@@ -44,9 +44,10 @@ function season:Activate()
         { 0.5, 0.75, 0.75, 1 },   -- rose
         { 0.75, 1, 0.75, 1 },     -- date
     }
+    local iconCount = #textureCoordinates
 
-    local function getRandomValentinesIcon(classId)
-        local randomIconIndex = zo_random(1, #textureCoordinates)
+    local function getRandomValentinesIcon(userId, classId)
+        local randomIconIndex = (HashString(userId .. classId) % iconCount) + 1
         return texturePath, unpack(textureCoordinates[randomIconIndex])
     end
 
