@@ -69,6 +69,15 @@ local strings = {
     HR_MODULES_DPS_MENU_SHOW_SUMMARY = "显示汇总",
     HR_MODULES_DPS_MENU_SHOW_SUMMARY_TT = "开关伤害列表中的汇总行显示。",
     --HR_MODULES_DPS_SUMMARY_GROUP_TOTAL = "Group Total: ",
+    -- HPS
+    --HR_MODULES_HPS_FRIENDLYNAME = "Healing",
+    --HR_MODULES_HPS_DESCRIPTION = "Allows you to see healing statistics of your group.",
+    --HR_MODULES_HPS_HEALING = "Healing",
+    --HR_MODULES_HPS_HEALING_OVERHEAL = "Overheal",
+    --HR_MODULES_HPS_HEALING_HPS = "HPS",
+    --HR_MODULES_HPS_MENU_HEADER = "Healing List",
+    --HR_MODULES_HPS_MENU_ONLY_SHOW_HEALERS = "Only Show Healers",
+    --HR_MODULES_HPS_MENU_ONLY_SHOW_HEALERS_TT = "Only show players with the healer role in the healing list.",
     -- EXIT INSTANCE
     HR_MODULES_EXITINSTANCE_FRIENDLYNAME = "退出副本",
     HR_MODULES_EXITINSTANCE_DESCRIPTION = "允许你向你的队伍发送退出副本请求。",
@@ -99,6 +108,8 @@ local strings = {
     HR_MODULES_HIDEME_HIDESAXHLEEL_DESCRIPTION = "从列表中隐藏你的Sax。",
     --HR_MODULES_HIDEME_HIDEBARRIER_LABEL = "Hide Barrier",
     --HR_MODULES_HIDEME_HIDEBARRIER_DESCRIPTION = "Hide your barrier from the lists.",
+    --HR_MODULES_HIDEME_HIDEHPS_LABEL = "Hide HPS",
+    --HR_MODULES_HIDEME_HIDEHPS_DESCRIPTION = "Hide your healing numbers from other group members hps list.",
     HR_MODULES_HIDEME_MENU_HEADER = "将我隐藏选项",
     -- PULL
     HR_MODULES_PULL_FRIENDLYNAME = "开战倒计时",

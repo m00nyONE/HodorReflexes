@@ -69,6 +69,15 @@ local strings = {
     HR_MODULES_DPS_MENU_SHOW_SUMMARY = "Zusammenfassungszeile anzeigen",
     HR_MODULES_DPS_MENU_SHOW_SUMMARY_TT = "Wenn aktiviert, wird eine Zusammenfassungszeile mit den Gesamtschadenszahlen der Gruppe unten in der Liste angezeigt.",
     HR_MODULES_DPS_SUMMARY_GROUP_TOTAL = "Gruppe: ",
+    -- HPS
+    HR_MODULES_HPS_FRIENDLYNAME = "Heilung",
+    HR_MODULES_HPS_DESCRIPTION = "Ermöglicht es dir, die Heilungsstatistiken deiner Gruppe zu sehen.",
+    HR_MODULES_HPS_HEALING = "Heilung",
+    HR_MODULES_HPS_HEALING_OVERHEAL = "Überheilung",
+    HR_MODULES_HPS_HEALING_HPS = "HPS",
+    HR_MODULES_HPS_MENU_HEADER = "Heillungsliste",
+    HR_MODULES_HPS_MENU_ONLY_SHOW_HEALERS = "Nur Heiler anzeigen",
+    HR_MODULES_HPS_MENU_ONLY_SHOW_HEALERS_TT = "Zeigt nur Heiler in der Liste an. Wenn deaktiviert, werden auch DDs und Tanks angezeigt.",
     -- EXIT INSTANCE
     HR_MODULES_EXITINSTANCE_FRIENDLYNAME = "Instanz verlassen",
     HR_MODULES_EXITINSTANCE_DESCRIPTION = "Ermöglicht es dir, Anfragen zum Verlassen der Instanz an deine Gruppe zu senden.",
@@ -99,6 +108,8 @@ local strings = {
     HR_MODULES_HIDEME_HIDESAXHLEEL_DESCRIPTION = "Verberge dein Saxhleel von den Listen.",
     HR_MODULES_HIDEME_HIDEBARRIER_LABEL = "Verberge Barriere",
     HR_MODULES_HIDEME_HIDEBARRIER_DESCRIPTION = "Verberge deine Barriere von den Listen.",
+    HR_MODULES_HIDEME_HIDEHPS_LABEL = "Verberge Heilung",
+    HR_MODULES_HIDEME_HIDEHPS_DESCRIPTION = "Verberge deine Heilungszahlen von der HPS-Liste anderer Gruppenmitglieder.",
     HR_MODULES_HIDEME_MENU_HEADER = "Hide Me Einstellungen",
     -- PULL
     HR_MODULES_PULL_FRIENDLYNAME = "Pull Countdown",
