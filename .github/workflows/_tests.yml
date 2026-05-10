@@ -17,4 +17,4 @@ jobs:
         uses: actions/checkout@v4
       - name: Check for missing language keys
         run: |
-          python3 .github/scripts/tests/check-lang-keys.py ./lang
+          python3 .github/scripts/tests/check-lang-keys.py --lang-dir "./lang"
