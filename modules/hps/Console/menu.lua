@@ -40,11 +40,11 @@ function module:GetSubMenuOptions()
                 format = "%.0f",
                 unit = " px",
                 default = list.svDefault.windowPosLeft,
-                getFunction = function() return list.sw.windowPosLeft end,
+                getFunction = function() return list.sv.windowPosLeft end,
                 setFunction = function(value)
-                    list.sw.windowPosLeft = value
+                    list.sv.windowPosLeft = value
                     list.window:ClearAnchors()
-                    list.window:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, list.sw.windowPosLeft, list.sw.windowPosTop)
+                    list.window:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, list.sv.windowPosLeft, list.sv.windowPosTop)
                 end,
             },
             {
@@ -57,11 +57,11 @@ function module:GetSubMenuOptions()
                 format = "%.0f",
                 unit = " px",
                 default = list.svDefault.windowPosTop,
-                getFunction = function() return list.sw.windowPosTop end,
+                getFunction = function() return list.sv.windowPosTop end,
                 setFunction = function(value)
-                    list.sw.windowPosTop = value
+                    list.sv.windowPosTop = value
                     list.window:ClearAnchors()
-                    list.window:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, list.sw.windowPosLeft, list.sw.windowPosTop)
+                    list.window:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, list.sv.windowPosLeft, list.sv.windowPosTop)
                 end,
             },
             {
