@@ -114,6 +114,13 @@ function module:isCryptCannon(abilityId)
     return isAbilityInList(abilityId, self.cryptCannonAbilityIds)
 end
 
+--- checks if the abilityId is standard of might
+--- @param abilityId number
+--- @return boolean
+function module:isStandardOfMight(abilityId)
+    return isAbilityInList(abilityId, self.standardOfMightAbilityIds)
+end
+
 -- hasUnitX checks
 
 --- checks if the player has a horn ult ability
@@ -153,6 +160,14 @@ end
 --- @return boolean
 function module:hasUnitCryptCannon(playerData)
     if self:isCryptCannon(playerData.ult1ID) or self:isCryptCannon(playerData.ult2ID) then return true end
+    return false
+end
+
+--- checks if the player has standard of might ult ability
+--- @param playerData table
+--- @return boolean
+function module:hasUnitStandardOfMight(playerData)
+    if self:isStandardOfMight(playerData.ult1ID) or self:isStandardOfMight(playerData.ult2ID) then return true end
     return false
 end
 

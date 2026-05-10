@@ -50,6 +50,7 @@ local moduleDefinition = {
     atroAbilityIds = {23634, 23492, 23495},
     barrierAbilityIds = {40237,	40239, 38573},
     cryptCannonAbilityIds = {195031},
+    standardOfMightAbilityIds = {32947, 29230},
 
     hornIcon = GetAbilityIcon(38563),
     forceIcon = GetAbilityIcon(61747),
@@ -60,6 +61,7 @@ local moduleDefinition = {
     barrierIcon = GetAbilityIcon(40237),
     slayerIcon = GetAbilityIcon(93109),
     cryptCannonIcon = GetAbilityIcon(195031),
+    standardOfMightIcon = GetAbilityIcon(32947),
     pillagerIcon = "esoui/art/icons/ability_healer_030.dds", -- sadly no API to get the icon for pillager cuz it does not have an icon :-(
 
     pillagerCooldownEndTime = 0,
@@ -98,6 +100,7 @@ function module:onULTDataReceived(tag, data)
     playerDataCache.hasAtro = self:hasUnitAtro(data)
     playerDataCache.hasBarrier = self:hasUnitBarrier(data)
     playerDataCache.hasCryptCannon = self:hasUnitCryptCannon(data)
+    playerDataCache.hasStandardOfMight = self:hasUnitStandardOfMight(data)
     -- ult activated sets
     playerDataCache.hasSaxhleel = self:hasUnitSaxhleel(data)
     playerDataCache.hasSlayer = self:hasUnitSlayer(data)
@@ -146,6 +149,7 @@ function module:Activate()
         hasSaxhleel = false,
         hasSlayer = false,
         hasPillager = false,
+        hasStandardOfMight = false,
         ultActivatedSetID = 0, -- TODO: remove after reworking LGCS later
         -- hide from list preferences ( sent by HideMe module )
         hideHorn = false,
@@ -153,6 +157,7 @@ function module:Activate()
         hideAtro = false,
         hideSaxhleel = false,
         hideBarrier = false,
+        hideStandardOfMight = false,
     })
 
     self:RunOnce("registerTrackers")

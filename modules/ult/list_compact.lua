@@ -19,6 +19,7 @@ local HR_EVENT_MAJOR_VULNERABILITY_DEBUFF_GAINED = addon.HR_EVENT_MAJOR_VULNERAB
 local HR_EVENT_MAJOR_BERSERK_BUFF_GAINED = addon.HR_EVENT_MAJOR_BERSERK_BUFF_GAINED
 local HR_EVENT_MAJOR_SLAYER_BUFF_GAINED = addon.HR_EVENT_MAJOR_SLAYER_BUFF_GAINED
 local HR_EVENT_PILLAGER_BUFF_COOLDOWN = addon.HR_EVENT_PILLAGER_BUFF_COOLDOWN
+local HR_EVENT_STANDARD_OF_MIGHT_CAST_STARTED = addon.HR_EVENT_STANDARD_OF_MIGHT_CAST_STARTED
 
 local blankTable = {}
 
@@ -30,7 +31,7 @@ local svDefault = {
     windowScale = 1.0,
     windowPosLeft = 250,
     windowPosTop = 260,
-    windowWidth = 272,
+    windowWidth = 282,
     backgroundOpacity = 0.0,
 
     showPercentValue = 1.0,
@@ -48,6 +49,7 @@ local svDefault = {
     showSlayer = true,
     showPillager = true,
     showCryptCannon = true,
+    showStandardOfMight = true,
 
     showHornCountdown = true,
     showForceCountdown = true,
@@ -55,6 +57,7 @@ local svDefault = {
     showBerserkCountdown = true,
     showSlayerCountdown = true,
     showPillagerCooldown = true,
+    showStandardOfMightCountdown = true,
 
     colorCooldowns = {1, 0, 0}, -- red
     colorDurations = {1, 1, 0}, -- yellow
@@ -67,6 +70,7 @@ local svDefault = {
     colorPillagerBG = {0, 1, 0}, -- green
     colorCryptCannonBG = {1, 0, 1}, -- purple
     colorBarrierBG = {1, 0.5, 0}, -- orange
+    colorStandardOfMightBG = {0.78, 0.29, 0.14}, -- rgb(200, 74, 37)
 
     markOnCooldown = true,
     markOnCooldownColor = {1, 0, 0}, -- red
@@ -97,6 +101,7 @@ function module:CreateCompactList()
     list.ROW_TYPE_SLAYER = list:GetNextDataTypeId() -- type id for slayer rows
     list.ROW_TYPE_PILLAGER = list:GetNextDataTypeId() -- type id for pillager rows
     list.ROW_TYPE_CRYPTCANNON = list:GetNextDataTypeId() -- type id for cryptcannon rows
+    list.ROW_TYPE_STANDARDOFMIGHT = list:GetNextDataTypeId() -- type id for standardOfMight rows
     list.HEADER_TEMPLATE = "HodorReflexes_Ult_CompactList_Header"
     list.ROW_TEMPLATE = "HodorReflexes_Ult_CompactList_PlayerRow"
 
@@ -172,6 +177,14 @@ function module:CreateCompactList()
         rowCreationWrapper(self.compactListBarrierRowCreationFunction)
     )
     list.logger:Debug("added barrier player row type '%d' with template '%s'", list.ROW_TYPE_BARRIER, list.ROW_TEMPLATE)
+    ZO_ScrollList_AddDataType(
+        list.listControl,
+        list.ROW_TYPE_STANDARDOFMIGHT,
+        list.ROW_TEMPLATE,
+        list.listRowHeight,
+        rowCreationWrapper(self.compactListStandardOfMightRowCreationFunction)
+    )
+    list.logger:Debug("added standardOfMight player row type '%d' with template '%s'", list.ROW_TYPE_STANDARDOFMIGHT, list.ROW_TEMPLATE)
 
     -- register cooldown end time tracker for pillager cooldown
     local function setPillagerCooldownEndTime(_, duration)
@@ -267,6 +280,21 @@ function module:compactListHeaderRowCreationFunction(rowControl, data, scrollLis
         list:CreateCountdownOnControl(duration, HR_EVENT_MAJOR_SLAYER_BUFF_GAINED)
 
     end
+
+    container = rowControl:GetNamedChild("_StandardOfMight")
+    if not sw.showStandardOfMightCountdown then
+        container:SetScale(0)
+    else
+        icon = container:GetNamedChild("_Icon")
+        duration = container:GetNamedChild("_Duration")
+
+        container:SetScale(1)
+        icon:SetTexture(self.standardOfMightIcon)
+        duration:SetColor(unpack(sw.colorDurations))
+        duration:SetAlpha(sw.zeroTimerOpacity)
+        list:CreateCountdownOnControl(duration, HR_EVENT_STANDARD_OF_MIGHT_CAST_STARTED)
+    end
+    -- TODO: add standard of might cooldown timer to header when we have the tracker for it
 
     container = rowControl:GetNamedChild("_Pillager")
     if not sw.showPillagerCooldown then
@@ -497,6 +525,31 @@ function module:compactListCryptCannonRowCreationFunction(rowControl, data, scro
     self:applyCompactListValues(rowControl, data, scrollList, cryptCannonPercentage, gainUltimate, nil)
 end
 
+--- Standard of Might row creation function for compact ult list.
+--- @param rowControl Control
+--- @param data table
+--- @param scrollList ZO_ScrollList
+--- @return void
+function module:compactListStandardOfMightRowCreationFunction(rowControl, data, scrollList)
+    local list = self.compactList
+    local sw = list.sw
+
+    list:ApplySupportRangeStyle(rowControl, data.tag)
+    list:ApplyUserNameToControl(rowControl:GetNamedChild('_Name'), data.userId)
+    list:ApplyUserIconToControl(rowControl:GetNamedChild('_Icon'), data.userId, data.classId)
+    list:ApplyNameFontToControl(rowControl:GetNamedChild('_Name'))
+
+    rowControl:GetNamedChild('_BG'):SetColor(unpack(sw.colorStandardOfMightBG))
+    rowControl:GetNamedChild('_BG'):SetAlpha(sw.backgroundAlpha)
+    rowControl:GetNamedChild("_UltIcon"):SetTexture(self.standardOfMightIcon)
+
+    local standardOfMightPercentage = 0
+    if self:isStandardOfMight(data.ult1ID) then standardOfMightPercentage = data.ult1Percentage end
+    if self:isStandardOfMight(data.ult2ID) then standardOfMightPercentage = data.ult2Percentage end
+
+    self:applyCompactListValues(rowControl, data, scrollList, standardOfMightPercentage, nil, nil)
+end
+
 --- Update the compact ult list.
 --- @return void
 function module:UpdateCompactList()
@@ -513,6 +566,7 @@ function module:UpdateCompactList()
     local pillagerList = {}
     local cryptCannonList = {}
     local barrierList = {}
+    local standardOfMightList = {}
 
     local sw = compactList.sw
     for _, playerData in pairs(addon.playersData) do
@@ -537,6 +591,9 @@ function module:UpdateCompactList()
         if sw.showBarrier and not playerData.hideBarrier and playerData.hasBarrier then
             table.insert(barrierList, playerData)
         end
+        if sw.showStandardOfMight and not playerData.hideStandardOfMight and playerData.hasStandardOfMight then
+            table.insert(standardOfMightList, playerData)
+        end
     end
     local sortByUltPercentage = self.sortByUltPercentage
     table.sort(hornList, sortByUltPercentage)
@@ -546,6 +603,7 @@ function module:UpdateCompactList()
     table.sort(pillagerList, sortByUltPercentage)
     table.sort(cryptCannonList, sortByUltPercentage)
     table.sort(barrierList, sortByUltPercentage)
+    table.sort(standardOfMightList, sortByUltPercentage)
 
     --- fill dataList ---
     -- insert Header
@@ -571,6 +629,9 @@ function module:UpdateCompactList()
     end
     for _, playerData in ipairs(barrierList) do
         table.insert(dataList, ZO_ScrollList_CreateDataEntry(compactList.ROW_TYPE_BARRIER, playerData))
+    end
+    for _, playerData in ipairs(standardOfMightList) do
+        table.insert(dataList, ZO_ScrollList_CreateDataEntry(compactList.ROW_TYPE_STANDARDOFMIGHT, playerData))
     end
 
     ZO_ScrollList_Commit(listControl)

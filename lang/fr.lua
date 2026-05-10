@@ -112,6 +112,8 @@ local strings = {
     --HR_MODULES_HIDEME_HIDEBARRIER_DESCRIPTION = "Hide your barrier from the lists.",
     --HR_MODULES_HIDEME_HIDEHPS_LABEL = "Hide HPS",
     --HR_MODULES_HIDEME_HIDEHPS_DESCRIPTION = "Hide your healing numbers from other group members hps list.",
+    --HR_MODULES_HIDEME_HIDESTANDARDOFMIGHT_LABEL = "Hide Standard of Might",
+    --HR_MODULES_HIDEME_HIDESTANDARDOFMIGHT_DESCRIPTION = "Hide your standard of might from the lists.",
     --HR_MODULES_HIDEME_MENU_HEADER = "Hide Me Options",
     -- PULL
     HR_MODULES_PULL_FRIENDLYNAME = "Compte à rebours avant de commencer le combat",
