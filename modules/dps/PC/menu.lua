@@ -129,7 +129,7 @@ function module:GetSubMenuOptions()
             name = GetString(HR_MODULES_DPS_MENU_ONLY_SHOW_DAMAGEDEALERS),
             tooltip = GetString(HR_MODULES_DPS_MENU_ONLY_SHOW_DAMAGEDEALERS_TT),
             default = self.damageList.svDefault.onlyShowDamageDealers,
-            getFunc = function() return self.hpsList.sw.onlyShowDamageDealers end,
+            getFunc = function() return self.damageList.sw.onlyShowDamageDealers end,
             setFunc = function(value)
                 self.damageList.sw.onlyShowDamageDealers = value
                 self.damageList:Update()
