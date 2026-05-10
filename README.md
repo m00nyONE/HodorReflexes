@@ -35,6 +35,10 @@ Compatible with PC and Console versions of ESO.
 - Combat timer
 - Group overview including burst damage of the last 10 seconds
 
+### HPS
+- HPS list
+- Combat timer
+
 ### Hide Me
 - New module to hide certain ultimates or DPS from other players' lists
 - Simply choose what you want to hide in the settings. Everyone who also has that module enabled will then no longer see the hidden data.
