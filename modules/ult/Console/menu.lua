@@ -511,6 +511,17 @@ function module:GetSubMenuOptions()
             end,
         },
         {
+            type = LHAS.ST_CHECKBOX,
+            label = "show Standard of Might",
+            tooltip = "shows Standard of Might in the list.",
+            default = self.compactList.svDefault.showStandardOfMight,
+            getFunction = function() return self.compactList.sw.showStandardOfMight end,
+            setFunction = function(value)
+                self.compactList.sw.showStandardOfMight = value
+                self.compactList:Update()
+            end,
+        },
+        {
             type = LHAS.ST_SLIDER,
             label = "ult background opacity",
             tooltip = "set the background opacity for the ults.",
@@ -600,6 +611,18 @@ function module:GetSubMenuOptions()
             isAdvancedSetting = true,
         },
         {
+            type = LHAS.ST_COLOR,
+            label = "Standard of Might background color",
+            tooltip = "set the background color for Standard of Might ults.",
+            default = self.compactList.svDefault.colorStandardOfMightBG,
+            getFunction = function() return unpack(self.compactList.sw.colorStandardOfMightBG) end,
+            setFunction = function(r, g, b)
+                self.compactList.sw.colorStandardOfMightBG = {r, g, b}
+                self.compactList:Update()
+            end,
+            isAdvancedSetting = true,
+        },
+        {
             type = LHAS.ST_CHECKBOX,
             label = "color ult percentage on cooldown",
             tooltip = "mark ults that are on cooldown.",
@@ -682,6 +705,19 @@ function module:GetSubMenuOptions()
             getFunction = function() return self.compactList.sw.showSlayerCountdown end,
             setFunction = function(value)
                 self.compactList.sw.showSlayerCountdown = value
+                self.compactList._redrawHeaders = true
+                self.compactList:Update()
+            end,
+            isAdvancedSetting = true,
+        },
+        {
+            type = LHAS.ST_CHECKBOX,
+            label = "Show Standard of Might Countdown",
+            tooltip = "show/hide the Standard of Might countdown.",
+            default = self.compactList.svDefault.showStandardOfMightCountdown,
+            getFunction = function() return self.compactList.sw.showStandardOfMightCountdown end,
+            setFunction = function(value)
+                self.compactList.sw.showStandardOfMightCountdown = value
                 self.compactList._redrawHeaders = true
                 self.compactList:Update()
             end,

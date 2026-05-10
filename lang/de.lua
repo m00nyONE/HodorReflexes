@@ -112,6 +112,8 @@ local strings = {
     HR_MODULES_HIDEME_HIDEBARRIER_DESCRIPTION = "Verberge deine Barriere von den Listen.",
     HR_MODULES_HIDEME_HIDEHPS_LABEL = "Verberge Heilung",
     HR_MODULES_HIDEME_HIDEHPS_DESCRIPTION = "Verberge deine Heilungszahlen von der HPS-Liste anderer Gruppenmitglieder.",
+    HR_MODULES_HIDEME_HIDESTANDARDOFMIGHT_LABEL = "Verberge Standard der Macht",
+    HR_MODULES_HIDEME_HIDESTANDARDOFMIGHT_DESCRIPTION = "Verberge deinen Standard der Macht von den Listen.",
     HR_MODULES_HIDEME_MENU_HEADER = "Hide Me Einstellungen",
     -- PULL
     HR_MODULES_PULL_FRIENDLYNAME = "Pull Countdown",
