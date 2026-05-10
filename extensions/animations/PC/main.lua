@@ -18,7 +18,7 @@ local HR_EVENT_PLAYERSDATA_CHARACTER_REMOVED = addon.HR_EVENT_PLAYERSDATA_CHARAC
 
 local extensionDefinition = {
     name = "animations",
-    version = "0.1.0",
+    version = "1.0.0",
     friendlyName = GetString(HR_EXTENSIONS_ANIMATIONS_FRIENDLYNAME),
     description = GetString(HR_EXTENSIONS_ANIMATIONS_DESCRIPTION),
     priority = 3,
