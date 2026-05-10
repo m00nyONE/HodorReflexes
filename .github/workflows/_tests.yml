@@ -10,3 +10,6 @@ jobs:
       - name: Check for missing includes
         run: |
           python3 .github/scripts/tests/check-includes.py
+      - name: Check for missing language keys
+        run: |
+          python3 .github/scripts/tests/check-language-keys.py ./lang
