@@ -52,9 +52,9 @@ function module:GetSubMenuOptions()
                 choicesValues = {
                     0, 1, 2, 3
                 },
-                getFunc = function() return list.sw.enabled end,
+                getFunc = function() return list.sv.enabled end,
                 setFunc = function(value)
-                    list.sw.enabled = value
+                    list.sv.enabled = value
                     list:RefreshVisibility()
                     list:UpdateDebounced(true) -- force an update to clear potentially old data still being in the list because they where never redrawn when hidden
                 end,

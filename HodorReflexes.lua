@@ -38,6 +38,7 @@ local addon = {
                     ["names"] = true,
                     ["icons"] = true,
                     ["animations"] = true,
+                    ["configurator"] = true,
                 },
                 modules = {
                     ["readycheck"] = true,
