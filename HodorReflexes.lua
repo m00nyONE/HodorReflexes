@@ -46,6 +46,7 @@ local addon = {
                     ["pull"] = true,
                     ["skilllines"] = true,
                     ["dps"] = true,
+                    ["hps"] = true,
                     ["ult"] = true,
                     ["hideme"] = true,
                 },

@@ -11,11 +11,11 @@ local util = addon.util
 local addon_modules = addon.modules
 local internal_modules = internal.modules
 
-local module_name = "dps"
+local module_name = "hps"
 local module = addon_modules[module_name]
 
 -- TODO: translations
---- @return table the submenu options for the DPS module
+--- @return table the submenu options for the HPS module
 function module:GetSubMenuOptions()
     local fontChoices = {}
     local fontValues = {}
@@ -119,75 +119,21 @@ function module:GetSubMenuOptions()
 
 
     local options = {}
-    local damageList = GetComonListOptions(GetString(HR_MODULES_DPS_MENU_HEADER), self.damageList)
-    local damageListSpecificOptions = {
+    local hpsList = GetComonListOptions(GetString(HR_MODULES_HPS_MENU_HEADER), self.hpsList)
+    local hpsListSpecificOptions = {
         {
             type = "divider",
         },
         {
             type = "checkbox",
-            name = GetString(HR_MODULES_DPS_MENU_ONLY_SHOW_DAMAGEDEALERS),
-            tooltip = GetString(HR_MODULES_DPS_MENU_ONLY_SHOW_DAMAGEDEALERS_TT),
-            default = self.damageList.svDefault.onlyShowDamageDealers,
-            getFunc = function() return self.damageList.sw.onlyShowDamageDealers end,
+            name = GetString(HR_MODULES_HPS_MENU_ONLY_SHOW_HEALERS),
+            tooltip = GetString(HR_MODULES_HPS_MENU_ONLY_SHOW_HEALERS_TT),
+            default = self.hpsList.svDefault.onlyShowHealers,
+            getFunc = function() return self.hpsList.sw.onlyShowHealers end,
             setFunc = function(value)
-                self.damageList.sw.onlyShowDamageDealers = value
-                self.damageList:Update()
+                self.hpsList.sw.onlyShowHealers = value
+                self.hpsList:Update()
             end,
-        },
-        {
-            type = "checkbox",
-            name = GetString(HR_MODULES_DPS_MENU_SHOW_SUMMARY),
-            tooltip = GetString(HR_MODULES_DPS_MENU_SHOW_SUMMARY_TT),
-            default = self.damageList.svDefault.showSummary,
-            getFunc = function() return self.damageList.sw.showSummary end,
-            setFunc = function(value)
-                self.damageList.sw.showSummary = value
-                self.damageList:Update()
-            end,
-        },
-        {
-            type = "slider",
-            name = "Burst Window (s)",
-            tooltip = "set the time window (in seconds) for calculating burst damage.",
-            min = 5,
-            max = 60,
-            step = 1,
-            decimals = 0,
-            clampInput = true,
-            default = self.damageList.svDefault.burstWindowSeconds,
-            getFunc = function() return self.damageList.sw.burstWindowSeconds end,
-            setFunc = function(value)
-                self.damageList.sw.burstWindowSeconds = value
-                self.damageList:Update()
-            end,
-            disabled = function() return not self.damageList.sw.showSummary end,
-        },
-        {
-            type = "colorpicker",
-            name = "Group DPS Color",
-            tooltip = "color used to display the group DPS value.",
-            default = ZO_ColorDef:New(util.Hex2RGB(self.damageList.svDefault.colorGroupDPS)),
-            getFunc = function() return util.Hex2RGB(self.damageList.sw.colorGroupDPS) end,
-            setFunc = function(r, g, b)
-                self.damageList.sw.colorGroupDPS = util.RGB2Hex(r, g, b)
-                self.damageList:Update()
-            end,
-            disabled = function() return not self.damageList.sw.showSummary end,
-            isAdvancedSetting = true,
-        },
-        {
-            type = "colorpicker",
-            name = "Group Burst DPS Color",
-            tooltip = "color used to display the group burst DPS value.",
-            default = ZO_ColorDef:New(util.Hex2RGB(self.damageList.svDefault.colorBurstDPS)),
-            getFunc = function() return util.Hex2RGB(self.damageList.sw.colorBurstDPS) end,
-            setFunc = function(r, g, b)
-                self.damageList.sw.colorBurstDPS = util.RGB2Hex(r, g, b)
-                self.damageList:Update()
-            end,
-            disabled = function() return not self.damageList.sw.showSummary end,
-            isAdvancedSetting = true,
         },
         {
             type = "divider",
@@ -195,25 +141,25 @@ function module:GetSubMenuOptions()
         },
         {
             type = "colorpicker",
-            name = "Total Damage Color",
+            name = "HPS Color",
             tooltip = "",
-            default = ZO_ColorDef:New(util.Hex2RGB(self.damageList.svDefault.colorDamageTotal)),
-            getFunc = function() return util.Hex2RGB(self.damageList.sw.colorDamageTotal) end,
+            default = ZO_ColorDef:New(util.Hex2RGB(self.hpsList.svDefault.colorHPS)),
+            getFunc = function() return util.Hex2RGB(self.hpsList.sw.colorHPS) end,
             setFunc = function(r, g, b)
-                self.damageList.sw.colorDamageTotal = util.RGB2Hex(r, g, b)
-                self.damageList:Update()
+                self.hpsList.sw.colorHPS = util.RGB2Hex(r, g, b)
+                self.hpsList:Update()
             end,
             isAdvancedSetting = true,
         },
         {
             type = "colorpicker",
-            name = "Boss Damage Color",
+            name = "Overheal Color",
             tooltip = "",
-            default = ZO_ColorDef:New(util.Hex2RGB(self.damageList.svDefault.colorDamageBoss)),
-            getFunc = function() return util.Hex2RGB(self.damageList.sw.colorDamageBoss) end,
+            default = ZO_ColorDef:New(util.Hex2RGB(self.hpsList.svDefault.colorOverheal)),
+            getFunc = function() return util.Hex2RGB(self.hpsList.sw.colorOverheal) end,
             setFunc = function(r, g, b)
-                self.damageList.sw.colorDamageBoss = util.RGB2Hex(r, g, b)
-                self.damageList:Update()
+                self.hpsList.sw.colorOverheal = util.RGB2Hex(r, g, b)
+                self.hpsList:Update()
             end,
             isAdvancedSetting = true,
         },
@@ -225,23 +171,23 @@ function module:GetSubMenuOptions()
             type = "checkbox",
             name = "Highlight Player Row",
             tooltip = "enable or disable highlighting of the player's row in the damage list.",
-            default = self.damageList.svDefault.listPlayerHighlight,
-            getFunc = function() return self.damageList.sw.listPlayerHighlight end,
+            default = self.hpsList.svDefault.listPlayerHighlight,
+            getFunc = function() return self.hpsList.sw.listPlayerHighlight end,
             setFunc = function(value)
-                self.damageList.sw.listPlayerHighlight = value
-                self.damageList:Update()
+                self.hpsList.sw.listPlayerHighlight = value
+                self.hpsList:Update()
             end,
             isAdvancedSetting = true,
         },
         {
             type = "colorpicker",
             name = "player row highlight color",
-            tooltip = "highlight color for the player's row in the damage list.",
-            default = ZO_ColorDef:New(unpack(self.damageList.svDefault.listPlayerHighlightColor)),
-            getFunc = function() return unpack(self.damageList.sw.listPlayerHighlightColor) end,
+            tooltip = "highlight color for the player's row in the hps list.",
+            default = ZO_ColorDef:New(unpack(self.hpsList.svDefault.listPlayerHighlightColor)),
+            getFunc = function() return unpack(self.hpsList.sw.listPlayerHighlightColor) end,
             setFunc = function(r, g, b, o)
-                self.damageList.sw.listPlayerHighlightColor = {r, g, b, o}
-                self.damageList:Update()
+                self.hpsList.sw.listPlayerHighlightColor = {r, g, b, o}
+                self.hpsList:Update()
             end,
             isAdvancedSetting = true,
         },
@@ -258,11 +204,11 @@ function module:GetSubMenuOptions()
             step = 0.05,
             decimals = 2,
             clampInput = true,
-            default = self.damageList.svDefault.listHeaderOpacity,
-            getFunc = function() return self.damageList.sw.listHeaderOpacity end,
+            default = self.hpsList.svDefault.listHeaderOpacity,
+            getFunc = function() return self.hpsList.sw.listHeaderOpacity end,
             setFunc = function(value)
-                self.damageList.sw.listHeaderOpacity = value
-                self.damageList:Update()
+                self.hpsList.sw.listHeaderOpacity = value
+                self.hpsList:Update()
             end,
             isAdvancedSetting = true,
         },
@@ -275,11 +221,11 @@ function module:GetSubMenuOptions()
             step = 0.05,
             decimals = 2,
             clampInput = true,
-            default = self.damageList.svDefault.listRowEvenOpacity,
-            getFunc = function() return self.damageList.sw.listRowEvenOpacity end,
+            default = self.hpsList.svDefault.listRowEvenOpacity,
+            getFunc = function() return self.hpsList.sw.listRowEvenOpacity end,
             setFunc = function(value)
-                self.damageList.sw.listRowEvenOpacity = value
-                self.damageList:Update()
+                self.hpsList.sw.listRowEvenOpacity = value
+                self.hpsList:Update()
             end,
             isAdvancedSetting = true,
         },
@@ -292,11 +238,11 @@ function module:GetSubMenuOptions()
             step = 0.05,
             decimals = 2,
             clampInput = true,
-            default = self.damageList.svDefault.listRowOddOpacity,
-            getFunc = function() return self.damageList.sw.listRowOddOpacity end,
+            default = self.hpsList.svDefault.listRowOddOpacity,
+            getFunc = function() return self.hpsList.sw.listRowOddOpacity end,
             setFunc = function(value)
-                self.damageList.sw.listRowOddOpacity = value
-                self.damageList:Update()
+                self.hpsList.sw.listRowOddOpacity = value
+                self.hpsList:Update()
             end,
             isAdvancedSetting = true,
         },
@@ -313,18 +259,18 @@ function module:GetSubMenuOptions()
             step = 25,
             decimals = 0,
             clampInput = true,
-            default = self.damageList.svDefault.timerUpdateInterval,
-            getFunc = function() return self.damageList.sw.timerUpdateInterval end,
+            default = self.hpsList.svDefault.timerUpdateInterval,
+            getFunc = function() return self.hpsList.sw.timerUpdateInterval end,
             setFunc = function(value)
-                self.damageList.sw.timerUpdateInterval = value
+                self.hpsList.sw.timerUpdateInterval = value
             end,
             requiresReload = true,
             isAdvancedSetting = true,
         },
     }
 
-    core.MergeOptions(damageListSpecificOptions, damageList)
-    core.MergeOptions(damageList, options)
+    core.MergeOptions(hpsListSpecificOptions, hpsList)
+    core.MergeOptions(hpsList, options)
 
     return options
 end

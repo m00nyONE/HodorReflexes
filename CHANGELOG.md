@@ -1,5 +1,8 @@
 [SIZE="2"][B]IMPORTANT:[/B] You need LibCustomNames and LibCustomIcons now if you want to have names and icons displayed.[/SIZE]
 
+## 2026.05.10 - @m00nyONE
+- add HPS module and list. This is still in BETA since i can not test it properly.
+
 ## 2026.03.30 - @m00nyONE
 - bump api version to 101049 & 101050
 

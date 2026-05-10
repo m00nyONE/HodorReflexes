@@ -49,6 +49,8 @@ local svDefault = {
     colorGroupDPS = "F4D17B", -- light orange
     colorBurstDPS = "BDFF7B", -- light green
 
+    onlyShowDamageDealers = false,
+
     nameFont = "$(BOLD_FONT)|$(KB_18)|outline",
 }
 
@@ -205,8 +207,12 @@ function module:UpdateDamageList()
     local playersDataList = {}
     for _, playerData in pairs(addon.playersData) do
         if not playerData.hideDamage and playerData.dmg > 0 then
-            dmgType.dmgType = playerData.dmgType
-            table.insert(playersDataList, playerData)
+            local lfgRole = GetGroupMemberSelectedRole(playerData.tag)
+            local isDamageDealer = lfgRole == LFG_ROLE_DPS or lfgRole == 0 -- treat unknown role as damage dealer
+            if not sw.onlyShowDamageDealers or isDamageDealer then
+                dmgType.dmgType = playerData.dmgType
+                table.insert(playersDataList, playerData)
+            end
         end
     end
     table.sort(playersDataList, self.sortByDamageType)
