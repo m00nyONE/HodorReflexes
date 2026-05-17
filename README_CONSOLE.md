@@ -23,6 +23,10 @@ Compatible with PC and Console versions of ESO.
 - Individual counters & icons for Horn & Pillager to see if everyone is in range
 - Cooldown timer for important raid buffs
 
+### HPS
+- HPS list
+- Combat timer
+
 ### DPS
 - DPS list
 - Combat timer

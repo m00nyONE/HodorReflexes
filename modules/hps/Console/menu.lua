@@ -12,7 +12,7 @@ local LHAS = LibHarvensAddonSettings
 local addon_modules = addon.modules
 local internal_modules = internal.modules
 
-local module_name = "dps"
+local module_name = "hps"
 local module = addon_modules[module_name]
 
 -- TODO: translations
@@ -151,94 +151,42 @@ function module:GetSubMenuOptions()
         }
     end
 
+
     local options = {}
-    local damageList = GetComonListOptions(GetString(HR_MODULES_DPS_MENU_HEADER), self.damageList)
-    local damageListSpecificOptions = {
+    local hpsList = GetComonListOptions(GetString(HR_MODULES_HPS_MENU_HEADER), self.hpsList)
+    local hpsListSpecificOptions = {
         {
             type = LHAS.ST_CHECKBOX,
-            label = GetString(HR_MODULES_DPS_MENU_ONLY_SHOW_DAMAGEDEALERS),
-            tooltip = GetString(HR_MODULES_DPS_MENU_ONLY_SHOW_DAMAGEDEALERS_TT),
-            default = self.damageList.svDefault.onlyShowDamageDealers,
-            getFunction = function() return self.damageList.sw.onlyShowDamageDealers end,
+            label = GetString(HR_MODULES_HPS_MENU_ONLY_SHOW_HEALERS),
+            tooltip = GetString(HR_MODULES_HPS_MENU_ONLY_SHOW_HEALERS_TT),
+            default = self.hpsList.svDefault.onlyShowHealers,
+            getFunction = function() return self.hpsList.sw.onlyShowHealers end,
             setFunction = function(value)
-                self.damageList.sw.onlyShowDamageDealers = value
-                self.damageList:Update()
+                self.hpsList.sw.onlyShowHealers = value
+                self.hpsList:Update()
             end,
-        },
-        {
-            type = LHAS.ST_CHECKBOX,
-            label = GetString(HR_MODULES_DPS_MENU_SHOW_SUMMARY),
-            tooltip = GetString(HR_MODULES_DPS_MENU_SHOW_SUMMARY_TT),
-            default = self.damageList.svDefault.showSummary,
-            getFunction = function() return self.damageList.sw.showSummary end,
-            setFunction = function(value)
-                self.damageList.sw.showSummary = value
-                self.damageList:Update()
-            end,
-        },
-        {
-            type = LHAS.ST_SLIDER,
-            label = "Burst Window (s)",
-            tooltip = "set the time window (in seconds) for calculating burst damage.",
-            min = 5,
-            max = 60,
-            step = 1,
-            format = "%.0f",
-            default = self.damageList.svDefault.burstWindowSeconds,
-            getFunction = function() return self.damageList.sw.burstWindowSeconds end,
-            setFunction = function(value)
-                self.damageList.sw.burstWindowSeconds = value
-                self.damageList:Update()
-            end,
-            disable = function() return not self.damageList.sw.showSummary end,
         },
         {
             type = LHAS.ST_COLOR,
-            label = "Group DPS Color",
-            tooltip = "color used to display the group DPS value.",
-            default = { util.Hex2RGB(self.damageList.svDefault.colorGroupDPS) },
-            getFunction = function() return util.Hex2RGB(self.damageList.sw.colorGroupDPS) end,
-            setFunction = function(r, g, b)
-                self.damageList.sw.colorGroupDPS = util.RGB2Hex(r, g, b)
-                self.damageList:Update()
-            end,
-            disable = function() return not self.damageList.sw.showSummary end,
-            isAdvancedSetting = true,
-        },
-        {
-            type = LHAS.ST_COLOR,
-            label = "Group Burst DPS Color",
-            tooltip = "color used to display the group burst DPS value.",
-            default = { util.Hex2RGB(self.damageList.svDefault.colorBurstDPS) },
-            getFunction = function() return util.Hex2RGB(self.damageList.sw.colorBurstDPS) end,
-            setFunction = function(r, g, b)
-                self.damageList.sw.colorBurstDPS = util.RGB2Hex(r, g, b)
-                self.damageList:Update()
-            end,
-            disable = function() return not self.damageList.sw.showSummary end,
-            isAdvancedSetting = true,
-        },
-        {
-            type = LHAS.ST_COLOR,
-            label = "Total Damage Color",
+            label = "HPS Color",
             tooltip = "",
-            default = { util.Hex2RGB(self.damageList.svDefault.colorDamageTotal) },
-            getFunction = function() return util.Hex2RGB(self.damageList.sw.colorDamageTotal) end,
+            default = { util.Hex2RGB(self.hpsList.svDefault.colorHPS) },
+            getFunction = function() return util.Hex2RGB(self.hpsList.sw.colorHPS) end,
             setFunction = function(r, g, b)
-                self.damageList.sw.colorDamageTotal = util.RGB2Hex(r, g, b)
-                self.damageList:Update()
+                self.hpsList.sw.colorHPS = util.RGB2Hex(r, g, b)
+                self.hpsList:Update()
             end,
             isAdvancedSetting = true,
         },
         {
             type = LHAS.ST_COLOR,
-            label = "Boss Damage Color",
+            label = "Overheal Color",
             tooltip = "",
-            default = { util.Hex2RGB(self.damageList.svDefault.colorDamageBoss) },
-            getFunction = function() return util.Hex2RGB(self.damageList.sw.colorDamageBoss) end,
+            default = { util.Hex2RGB(self.hpsList.svDefault.colorOverheal) },
+            getFunction = function() return util.Hex2RGB(self.hpsList.sw.colorOverheal) end,
             setFunction = function(r, g, b)
-                self.damageList.sw.colorDamageBoss = util.RGB2Hex(r, g, b)
-                self.damageList:Update()
+                self.hpsList.sw.colorOverheal = util.RGB2Hex(r, g, b)
+                self.hpsList:Update()
             end,
             isAdvancedSetting = true,
         },
@@ -246,23 +194,23 @@ function module:GetSubMenuOptions()
             type = LHAS.ST_CHECKBOX,
             label = "Highlight Player Row",
             tooltip = "enable or disable highlighting of the player's row in the damage list.",
-            default = self.damageList.svDefault.listPlayerHighlight,
-            getFunction = function() return self.damageList.sw.listPlayerHighlight end,
+            default = self.hpsList.svDefault.listPlayerHighlight,
+            getFunction = function() return self.hpsList.sw.listPlayerHighlight end,
             setFunction = function(value)
-                self.damageList.sw.listPlayerHighlight = value
-                self.damageList:Update()
+                self.hpsList.sw.listPlayerHighlight = value
+                self.hpsList:Update()
             end,
             isAdvancedSetting = true,
         },
         {
             type = LHAS.ST_COLOR,
             label = "player row highlight color",
-            tooltip = "highlight color for the player's row in the damage list.",
-            default = self.damageList.svDefault.listPlayerHighlightColor,
-            getFunction = function() return unpack(self.damageList.sw.listPlayerHighlightColor) end,
+            tooltip = "highlight color for the player's row in the hps list.",
+            default = self.hpsList.svDefault.listPlayerHighlightColor,
+            getFunction = function() return unpack(self.hpsList.sw.listPlayerHighlightColor) end,
             setFunction = function(r, g, b, o)
-                self.damageList.sw.listPlayerHighlightColor = {r, g, b, o}
-                self.damageList:Update()
+                self.hpsList.sw.listPlayerHighlightColor = {r, g, b, o}
+                self.hpsList:Update()
             end,
             isAdvancedSetting = true,
         },
@@ -274,11 +222,11 @@ function module:GetSubMenuOptions()
             max = 1,
             step = 0.05,
             format = "%.2f",
-            default = self.damageList.svDefault.listHeaderOpacity,
-            getFunction = function() return self.damageList.sw.listHeaderOpacity end,
+            default = self.hpsList.svDefault.listHeaderOpacity,
+            getFunction = function() return self.hpsList.sw.listHeaderOpacity end,
             setFunction = function(value)
-                self.damageList.sw.listHeaderOpacity = value
-                self.damageList:Update()
+                self.hpsList.sw.listHeaderOpacity = value
+                self.hpsList:Update()
             end,
             isAdvancedSetting = true,
         },
@@ -290,11 +238,11 @@ function module:GetSubMenuOptions()
             max = 1,
             step = 0.05,
             format = "%.2f",
-            default = self.damageList.svDefault.listRowEvenOpacity,
-            getFunction = function() return self.damageList.sw.listRowEvenOpacity end,
+            default = self.hpsList.svDefault.listRowEvenOpacity,
+            getFunction = function() return self.hpsList.sw.listRowEvenOpacity end,
             setFunction = function(value)
-                self.damageList.sw.listRowEvenOpacity = value
-                self.damageList:Update()
+                self.hpsList.sw.listRowEvenOpacity = value
+                self.hpsList:Update()
             end,
             isAdvancedSetting = true,
         },
@@ -306,11 +254,11 @@ function module:GetSubMenuOptions()
             max = 1,
             step = 0.05,
             format = "%.2f",
-            default = self.damageList.svDefault.listRowOddOpacity,
-            getFunction = function() return self.damageList.sw.listRowOddOpacity end,
+            default = self.hpsList.svDefault.listRowOddOpacity,
+            getFunction = function() return self.hpsList.sw.listRowOddOpacity end,
             setFunction = function(value)
-                self.damageList.sw.listRowOddOpacity = value
-                self.damageList:Update()
+                self.hpsList.sw.listRowOddOpacity = value
+                self.hpsList:Update()
             end,
             isAdvancedSetting = true,
         },
@@ -323,18 +271,18 @@ function module:GetSubMenuOptions()
             step = 25,
             format = "%.0f",
             unit = " ms",
-            default = self.damageList.svDefault.timerUpdateInterval,
-            getFunction = function() return self.damageList.sw.timerUpdateInterval end,
+            default = self.hpsList.svDefault.timerUpdateInterval,
+            getFunction = function() return self.hpsList.sw.timerUpdateInterval end,
             setFunction = function(value)
-                self.damageList.sw.timerUpdateInterval = value
+                self.hpsList.sw.timerUpdateInterval = value
             end,
             requiresReload = true,
             isAdvancedSetting = true,
         },
     }
 
-    core.MergeOptions(damageListSpecificOptions, damageList)
-    core.MergeOptions(damageList, options)
+    core.MergeOptions(hpsListSpecificOptions, hpsList)
+    core.MergeOptions(hpsList, options)
 
     return options
 end

@@ -23,6 +23,7 @@ local HR_EVENT_PILLAGER_BUFF_COOLDOWN = addon.HR_EVENT_PILLAGER_BUFF_COOLDOWN
 local HR_EVENT_MAJOR_VULNERABILITY_DEBUFF_GAINED = addon.HR_EVENT_MAJOR_VULNERABILITY_DEBUFF_GAINED
 local HR_EVENT_HORN_BUFF_GAINED = addon.HR_EVENT_HORN_BUFF_GAINED
 local HR_EVENT_ATRO_CAST_STARTED = addon.HR_EVENT_ATRO_CAST_STARTED
+local HR_EVENT_STANDARD_OF_MIGHT_CAST_STARTED = addon.HR_EVENT_STANDARD_OF_MIGHT_CAST_STARTED
 
 local localPlayer = "player"
 
@@ -37,6 +38,7 @@ function module:genUltPoolForTest()
     for _, id in ipairs(self.colosAbilityIds) do table.insert(ignoredSpecialUlts, id) end
     for _, id in ipairs(self.atroAbilityIds) do table.insert(ignoredSpecialUlts, id) end
     for _, id in ipairs(self.barrierAbilityIds) do table.insert(ignoredSpecialUlts, id) end
+    for _, id in ipairs(self.standardOfMightAbilityIds) do table.insert(ignoredSpecialUlts, id) end
     local function isIgnoredSpecialUlt(abilityId)
         for _, id in ipairs(ignoredSpecialUlts) do
             if abilityId == id then return true end
@@ -85,6 +87,7 @@ function module:startTest()
         slayer = 2,
         pillager = 1,
         cryptCannon = 1,
+        standardOfMight = 1,
     }
 
 
@@ -117,6 +120,9 @@ function module:startTest()
         elseif limits.slayer > 0 then
             ultActivatedSetID = zo_random(4, 5) -- MA or WM
             limits.slayer = limits.slayer - 1
+        elseif limits.standardOfMight > 0 then
+            ult1ID = self.standardOfMightAbilityIds[zo_random(1, #self.standardOfMightAbilityIds)]
+            limits.standardOfMight = limits.standardOfMight - 1
         end
 
         local ult1Cost = GetAbilityCost(ult2ID)
@@ -146,6 +152,7 @@ function module:startTest()
         playerDataCache.hasAtro = self:hasUnitAtro(mockData)
         playerDataCache.hasBarrier = self:hasUnitBarrier(mockData)
         playerDataCache.hasCryptCannon = self:hasUnitCryptCannon(mockData)
+        playerDataCache.hasStandardOfMight = self:hasUnitStandardOfMight(mockData)
         -- ult activated sets
         playerDataCache.hasSaxhleel = self:hasUnitSaxhleel(mockData)
         playerDataCache.hasSlayer = self:hasUnitSlayer(mockData)
@@ -182,6 +189,7 @@ function module:startTest()
     CM:FireCallbacks(HR_EVENT_MAJOR_SLAYER_BUFF_GAINED, localPlayer, 50 * 1000)
     CM:FireCallbacks(HR_EVENT_PILLAGER_BUFF_GAINED, localPlayer, 10 * 1000)
     CM:FireCallbacks(HR_EVENT_PILLAGER_BUFF_COOLDOWN, localPlayer, 45 * 1000)
+    CM:FireCallbacks(HR_EVENT_STANDARD_OF_MIGHT_CAST_STARTED, localPlayer, 15 * 1000)
 end
 --- callback function that gets called on test stop
 --- @return void

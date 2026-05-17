@@ -1,7 +1,7 @@
 # HodorReflexes
 
 [![Create ESOUI Release](https://github.com/m00nyONE/HodorReflexes/actions/workflows/release.yml/badge.svg?branch=release)](https://github.com/m00nyONE/HodorReflexes/actions/workflows/release.yml)
-[![Create Dev Release on Push](https://github.com/m00nyONE/HodorReflexes/actions/workflows/dev-release.yml/badge.svg?branch=main)](https://github.com/m00nyONE/HodorReflexes/actions/workflows/dev-release.yml)
+[![Create Dev Release on Push](https://github.com/m00nyONE/HodorReflexes/actions/workflows/release-dev.yml/badge.svg?branch=main)](https://github.com/m00nyONE/HodorReflexes/actions/workflows/release-dev.yml)
 
 Github: https://github.com/m00nyONE/HodorReflexes/
 Discord: https://discord.gg/8YpvXJhAyz
@@ -34,6 +34,10 @@ Compatible with PC and Console versions of ESO.
 - DPS list
 - Combat timer
 - Group overview including burst damage of the last 10 seconds
+
+### HPS
+- HPS list
+- Combat timer
 
 ### Hide Me
 - New module to hide certain ultimates or DPS from other players' lists

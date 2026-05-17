@@ -23,6 +23,7 @@ local HR_EVENT_PILLAGER_BUFF_COOLDOWN = "HR_EVENT_PILLAGER_BUFF_COOLDOWN"
 local HR_EVENT_MAJOR_VULNERABILITY_DEBUFF_GAINED = "HR_EVENT_MAJOR_VULNERABILITY_DEBUFF_GAINED"
 local HR_EVENT_HORN_BUFF_GAINED = "HR_EVENT_HORN_BUFF_GAINED"
 local HR_EVENT_ATRO_CAST_STARTED = "HR_EVENT_ATRO_CAST_STARTED"
+local HR_EVENT_STANDARD_OF_MIGHT_CAST_STARTED = "HR_EVENT_STANDARD_OF_MIGHT_CAST_STARTED"
 addon.HR_EVENT_MAJOR_FORCE_BUFF_GAINED = HR_EVENT_MAJOR_FORCE_BUFF_GAINED
 addon.HR_EVENT_MAJOR_BERSERK_BUFF_GAINED = HR_EVENT_MAJOR_BERSERK_BUFF_GAINED
 addon.HR_EVENT_MAJOR_SLAYER_BUFF_GAINED = HR_EVENT_MAJOR_SLAYER_BUFF_GAINED
@@ -31,6 +32,7 @@ addon.HR_EVENT_PILLAGER_BUFF_COOLDOWN = HR_EVENT_PILLAGER_BUFF_COOLDOWN
 addon.HR_EVENT_MAJOR_VULNERABILITY_DEBUFF_GAINED = HR_EVENT_MAJOR_VULNERABILITY_DEBUFF_GAINED
 addon.HR_EVENT_HORN_BUFF_GAINED = HR_EVENT_HORN_BUFF_GAINED
 addon.HR_EVENT_ATRO_CAST_STARTED = HR_EVENT_ATRO_CAST_STARTED
+addon.HR_EVENT_STANDARD_OF_MIGHT_CAST_STARTED = HR_EVENT_STANDARD_OF_MIGHT_CAST_STARTED
 
 
 --- when registering for effect changes, we only use the UPDATED result, as this is also fired when an effect is applied.
@@ -124,6 +126,15 @@ function module:registerTrackers()
             EM:UnregisterForEvent(eventName .. i, EVENT_COMBAT_EVENT)
             EM:RegisterForEvent(eventName .. i, EVENT_COMBAT_EVENT, getCombatEventHandler(HR_EVENT_ATRO_CAST_STARTED))
             EM:AddFilterForEvent(eventName .. i, EVENT_COMBAT_EVENT, REGISTER_FILTER_ABILITY_ID, atroId)
+        end
+    end
+
+    do -- standardOfMight cast tracker
+        local eventName = addon_name .. module_name .. "StandardOfMightCast"
+        for i, standardOfMightId in ipairs(self.standardOfMightAbilityIds) do
+            EM:UnregisterForEvent(eventName .. i, EVENT_COMBAT_EVENT)
+            EM:RegisterForEvent(eventName .. i, EVENT_COMBAT_EVENT, getCombatEventHandler(HR_EVENT_STANDARD_OF_MIGHT_CAST_STARTED))
+            EM:AddFilterForEvent(eventName .. i, EVENT_COMBAT_EVENT, REGISTER_FILTER_ABILITY_ID, standardOfMightId)
         end
     end
 end

@@ -38,6 +38,7 @@ local addon = {
                     ["names"] = true,
                     ["icons"] = true,
                     ["animations"] = true,
+                    ["configurator"] = true,
                 },
                 modules = {
                     ["readycheck"] = true,
@@ -45,6 +46,7 @@ local addon = {
                     ["pull"] = true,
                     ["skilllines"] = true,
                     ["dps"] = true,
+                    ["hps"] = true,
                     ["ult"] = true,
                     ["hideme"] = true,
                 },

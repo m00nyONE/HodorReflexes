@@ -61,6 +61,16 @@ local moduleDefinition = {
             label = GetString(HR_MODULES_HIDEME_HIDEBARRIER_LABEL),
             description = GetString(HR_MODULES_HIDEME_HIDEBARRIER_DESCRIPTION),
         },
+        [7] = {
+            name = "hideHPS",
+            label = GetString(HR_MODULES_HIDEME_HIDEHPS_LABEL),
+            description = GetString(HR_MODULES_HIDEME_HIDEHPS_DESCRIPTION),
+        },
+        [8] = {
+            name = "hideStandardOfMight",
+            label = GetString(HR_MODULES_HIDEME_HIDESTANDARDOFMIGHT_LABEL),
+            description = GetString(HR_MODULES_HIDEME_HIDESTANDARDOFMIGHT_DESCRIPTION),
+        }
     }
 }
 

@@ -462,6 +462,17 @@ function module:GetSubMenuOptions()
             end,
         },
         {
+            type = "checkbox",
+            name = "show Standard of Might",
+            tooltip = "shows Standard of Might in the list.",
+            default = self.compactList.svDefault.showStandardOfMight,
+            getFunc = function() return self.compactList.sw.showStandardOfMight end,
+            setFunc = function(value)
+                self.compactList.sw.showStandardOfMight = value
+                self.compactList:Update()
+            end,
+        },
+        {
             type = "divider",
             isAdvancedSetting = true,
         },
@@ -550,6 +561,18 @@ function module:GetSubMenuOptions()
             getFunc = function() return unpack(self.compactList.sw.colorCryptCannonBG) end,
             setFunc = function(r, g, b)
                 self.compactList.sw.colorCryptCannonBG = {r, g, b}
+                self.compactList:Update()
+            end,
+            isAdvancedSetting = true,
+        },
+        {
+            type = "colorpicker",
+            name = "Standard of Might background color",
+            tooltip = "set the background color for Standard of Might ults.",
+            default = ZO_ColorDef:New(unpack(self.compactList.svDefault.colorStandardOfMightBG)),
+            getFunc = function() return unpack(self.compactList.sw.colorStandardOfMightBG) end,
+            setFunc = function(r, g, b)
+                self.compactList.sw.colorStandardOfMightBG = {r, g, b}
                 self.compactList:Update()
             end,
             isAdvancedSetting = true,
@@ -644,6 +667,19 @@ function module:GetSubMenuOptions()
             getFunc = function() return self.compactList.sw.showSlayerCountdown end,
             setFunc = function(value)
                 self.compactList.sw.showSlayerCountdown = value
+                self.compactList._redrawHeaders = true
+                self.compactList:Update()
+            end,
+            isAdvancedSetting = true,
+        },
+        {
+            type = "checkbox",
+            name = "Show Standard of Might Countdown",
+            tooltip = "show/hide the Standard of Might countdown.",
+            default = self.compactList.svDefault.showStandardOfMightCountdown,
+            getFunc = function() return self.compactList.sw.showStandardOfMightCountdown end,
+            setFunc = function(value)
+                self.compactList.sw.showStandardOfMightCountdown = value
                 self.compactList._redrawHeaders = true
                 self.compactList:Update()
             end,

@@ -87,6 +87,21 @@
                     </Controls>
                 </Control>
 
+                <Control name="$(parent)_StandardOfMight">
+                    <Dimensions x="40" y="60"/>
+                    <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="$(parent)_Slayer" offsetX="0" offsetY="0"/>
+                    <Controls>
+                        <Texture name="$(parent)_Icon" textureFile="/esoui/art/icons/ability_dragonknight_006_b.dds">
+                            <Dimensions x="28" y="28"/>
+                            <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)" offsetX="6"/>
+                        </Texture>
+                        <Label name="$(parent)_Duration" horizontalAlignment="center" font="$(MEDIUM_FONT)|$(KB_22)|outline" text="0.0" wrapMode="TRUNCATE">
+                            <Dimensions x="50" y="24"/>
+                            <Anchor point="TOP" relativePoint="BOTTOM" relativeTo="$(parent)_Icon" offsetX="0" offsetY="2" />
+                        </Label>
+                    </Controls>
+                </Control>
+
 
                 <Control name="$(parent)_Pillager">
                     <Dimensions x="40" y="60"/>
