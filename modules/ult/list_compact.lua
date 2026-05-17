@@ -294,7 +294,6 @@ function module:compactListHeaderRowCreationFunction(rowControl, data, scrollLis
         duration:SetAlpha(sw.zeroTimerOpacity)
         list:CreateCountdownOnControl(duration, HR_EVENT_STANDARD_OF_MIGHT_CAST_STARTED)
     end
-    -- TODO: add standard of might cooldown timer to header when we have the tracker for it
 
     container = rowControl:GetNamedChild("_Pillager")
     if not sw.showPillagerCooldown then
