@@ -1,5 +1,8 @@
 [SIZE="2"][B]IMPORTANT:[/B] You need LibCustomNames and LibCustomIcons now if you want to have names and icons displayed.[/SIZE]
 
+## 2026.05.17 - @m00nyONE
+- test mode now simulates ult rotation.
+
 ## 2026.05.10 - @m00nyONE
 - add HPS module and list. This is still in BETA since I can not test it properly.
 - add Standard of Might to compact ultimate list.
