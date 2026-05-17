@@ -50,7 +50,7 @@ local moduleDefinition = {
     atroAbilityIds = {23634, 23492, 23495},
     barrierAbilityIds = {40237,	40239, 38573},
     cryptCannonAbilityIds = {195031},
-    standardOfMightAbilityIds = {32947, 29230},
+    standardOfMightAbilityIds = {32947, 29230}, -- should be this: 32950 but it's not ...
 
     hornIcon = GetAbilityIcon(38563),
     forceIcon = GetAbilityIcon(61747),
