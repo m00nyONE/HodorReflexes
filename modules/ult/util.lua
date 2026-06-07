@@ -175,22 +175,19 @@ end
 --- @param playerData table
 --- @return boolean
 function module:hasUnitSaxhleel(playerData)
-    if playerData.ultActivatedSetID == 1 then return true end
-    return false
+    return playerData.hasSaxhleel
 end
 
 --- checks if the player has the MasterArchitect or WarMachine ult activated set
 --- @param playerData table
 --- @return boolean
 function module:hasUnitSlayer(playerData)
-    if playerData.ultActivatedSetID == 4 or playerData.ultActivatedSetID == 5 then return true end
-    return false
+    return playerData.hasSlayer
 end
 
 --- checks if the player has the Pillager ult activated set
 --- @param playerData table
 --- @return boolean
 function module:hasUnitPillager(playerData)
-    if playerData.ultActivatedSetID == 2 then return true end
-    return false
+    return playerData.hasPillager
 end

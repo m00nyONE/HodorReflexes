@@ -11,13 +11,21 @@ local internal_modules = internal.modules
 
 local group = core.group
 local LGCS = LibGroupCombatStats
+local LSD = LibSetDetection
 
 local EVENT_GROUP_ULT_UPDATE = LGCS.EVENT_GROUP_ULT_UPDATE
 local EVENT_PLAYER_ULT_UPDATE = LGCS.EVENT_PLAYER_ULT_UPDATE
 
+local LSD_EVENT_SET_CHANGE = LSD.LSD_EVENT_SET_CHANGE or LSD_EVENT_SET_CHANGE
+local LSD_CHANGE_TYPE_ACTIVATED = LSD.LSD_CHANGE_TYPE_ACTIVATED or LSD_CHANGE_TYPE_ACTIVATED
+local LSD_CHANGE_TYPE_DEACTIVATED = LSD.LSD_CHANGE_TYPE_DEACTIVATED or LSD_CHANGE_TYPE_DEACTIVATED
+local LSD_UNIT_TYPE_GROUP = LSD.LSD_UNIT_TYPE_GROUP or LSD_UNIT_TYPE_GROUP
+local EVENT_ULT_ACTIVATED_SET_CHANGED = "HODORREFLEXES_EVENT_ULT_ACTIVATED_SET_CHANGED"
+
 local HR_EVENT_TEST_STARTED = addon.HR_EVENT_TEST_STARTED
 local HR_EVENT_TEST_STOPPED = addon.HR_EVENT_TEST_STOPPED
 local HR_EVENT_TEST_TICK = addon.HR_EVENT_TEST_TICK
+
 
 local moduleDefinition = {
     name = "ult",
@@ -64,6 +72,13 @@ local moduleDefinition = {
     standardOfMightIcon = GetAbilityIcon(32947),
     pillagerIcon = "esoui/art/icons/ability_healer_030.dds", -- sadly no API to get the icon for pillager cuz it does not have an icon :-(
 
+    setIdPillager = 649,
+    setIdPillagerPerfected = 650,
+    setIdSaxhleel = 585,
+    setIdSaxhleelPerfected = 589,
+    setIdMasterArchitect = 332,
+    setIdWarMachine = 331,
+
     pillagerCooldownEndTime = 0,
 }
 
@@ -101,13 +116,40 @@ function module:onULTDataReceived(tag, data)
     playerDataCache.hasBarrier = self:hasUnitBarrier(data)
     playerDataCache.hasCryptCannon = self:hasUnitCryptCannon(data)
     playerDataCache.hasStandardOfMight = self:hasUnitStandardOfMight(data)
-    -- ult activated sets
-    playerDataCache.hasSaxhleel = self:hasUnitSaxhleel(data)
-    playerDataCache.hasSlayer = self:hasUnitSlayer(data)
-    playerDataCache.hasPillager = self:hasUnitPillager(data)
-    playerDataCache.ultActivatedSetID = data.ultActivatedSetID -- TODO: remove after reworking LGCS later
 
     group.CreateOrUpdatePlayerData(playerDataCache)
+end
+
+local playerDataCacheSets = {}
+function module:onSetDataChanged(setId, changeType, unitTag, localPlayer, activeType)
+    if not IsUnitGrouped(unitTag) then return end
+    if localPlayer then unitTag = "player" end
+
+    playerDataCacheSets.name = GetUnitName(unitTag)
+    playerDataCacheSets.tag = unitTag
+    if setId == self.setIdSaxhleel or setId == self.setIdSaxhleelPerfected then
+        if changeType == LSD_CHANGE_TYPE_ACTIVATED then
+            playerDataCacheSets.hasSaxhleel = true
+        elseif changeType == LSD_CHANGE_TYPE_DEACTIVATED then
+            playerDataCacheSets.hasSaxhleel = false
+        end
+    end
+    if setId == self.setIdPillager or setId == self.setIdPillagerPerfected then
+        if changeType == LSD_CHANGE_TYPE_ACTIVATED then
+            playerDataCacheSets.hasPillager = true
+        elseif changeType == LSD_CHANGE_TYPE_DEACTIVATED then
+            playerDataCacheSets.hasPillager = false
+        end
+    end
+    if setId == self.setIdMasterArchitect or setId == self.setIdWarMachine then
+        if changeType == LSD_CHANGE_TYPE_ACTIVATED then
+            playerDataCacheSets.hasSlayer = true
+        elseif changeType == LSD_CHANGE_TYPE_DEACTIVATED then
+            playerDataCacheSets.hasSlayer = false
+        end
+    end
+
+    group.CreateOrUpdatePlayerData(playerDataCacheSets)
 end
 
 --- module activation function
@@ -125,6 +167,15 @@ function module:Activate()
 
     lgcs:RegisterForEvent(EVENT_PLAYER_ULT_UPDATE, function(...) self:onULTDataReceived(...) end)
     lgcs:RegisterForEvent(EVENT_GROUP_ULT_UPDATE, function(...) self:onULTDataReceived(...) end)
+
+    LSD:RegisterEvent(LSD_EVENT_SET_CHANGE, EVENT_ULT_ACTIVATED_SET_CHANGED, function (...) self:onSetDataChanged(...) end, LSD_UNIT_TYPE_GROUP,
+            {
+                self.setIdSaxhleel, self.setIdSaxhleelPerfected,
+                self.setIdPillager, self.setIdPillagerPerfected,
+                self.setIdMasterArchitect,
+                self.setIdWarMachine
+            }
+    )
 
     addon.RegisterCallback(HR_EVENT_TEST_STARTED, function(...) self:startTest(...) end)
     addon.RegisterCallback(HR_EVENT_TEST_STOPPED, function(...) self:stopTest(...) end)
@@ -145,12 +196,11 @@ function module:Activate()
         hasAtro = false,
         hasBarrier = false,
         hasCryptCannon = false,
+        hasStandardOfMight = false,
         -- ult activated sets
         hasSaxhleel = false,
         hasSlayer = false,
         hasPillager = false,
-        hasStandardOfMight = false,
-        ultActivatedSetID = 0, -- TODO: remove after reworking LGCS later
         -- hide from list preferences ( sent by HideMe module )
         hideHorn = false,
         hideColos = false,

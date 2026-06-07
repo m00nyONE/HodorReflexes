@@ -95,13 +95,15 @@ function module:startTest()
         local ultValue = zo_random(1, 500)
         local ult1ID = ultPool[zo_random(1, #ultPool)]
         local ult2ID = ultPool[zo_random(1, #ultPool)]
-        local ultActivatedSetID = 0
+        local hasSaxhleel = false
+        local hasPillager = false
+        local hasSlayer = false
 
         if limits.horn > 0 then
             ult1ID = self.hornAbilityIds[zo_random(1, #self.hornAbilityIds)]
             limits.horn = limits.horn - 1
         elseif limits.saxhleel > 0 then
-            ultActivatedSetID = 1 -- saxhleel
+            hasSaxhleel = true
             limits.saxhleel = limits.saxhleel - 1
         elseif limits.colos > 0 then
             ult1ID = self.colosAbilityIds[zo_random(1, #self.colosAbilityIds)]
@@ -115,10 +117,10 @@ function module:startTest()
             limits.cryptCannon = limits.cryptCannon - 1
         elseif limits.pillager > 0 then -- tests both pillager & barrier
             ult1ID = self.barrierAbilityIds[zo_random(1, #self.barrierAbilityIds)]
-            ultActivatedSetID = 2 -- pillager
+            hasPillager = true
             limits.pillager = limits.pillager - 1
         elseif limits.slayer > 0 then
-            ultActivatedSetID = zo_random(4, 5) -- MA or WM
+            hasSlayer = true
             limits.slayer = limits.slayer - 1
         elseif limits.standardOfMight > 0 then
             ult1ID = self.standardOfMightAbilityIds[zo_random(1, #self.standardOfMightAbilityIds)]
@@ -133,7 +135,6 @@ function module:startTest()
         local mockData = {
             ult1ID = ult1ID,
             ult2ID = ult2ID,
-            ultActivatedSetID = ultActivatedSetID,
         }
 
         playerDataCache.name = name -- required
@@ -154,10 +155,9 @@ function module:startTest()
         playerDataCache.hasCryptCannon = self:hasUnitCryptCannon(mockData)
         playerDataCache.hasStandardOfMight = self:hasUnitStandardOfMight(mockData)
         -- ult activated sets
-        playerDataCache.hasSaxhleel = self:hasUnitSaxhleel(mockData)
-        playerDataCache.hasSlayer = self:hasUnitSlayer(mockData)
-        playerDataCache.hasPillager = self:hasUnitPillager(mockData)
-        playerDataCache.ultActivatedSetID = ultActivatedSetID
+        playerDataCache.hasSaxhleel = hasSaxhleel
+        playerDataCache.hasSlayer = hasSlayer
+        playerDataCache.hasPillager = hasPillager
 
         group.CreateOrUpdatePlayerData(playerDataCache)
 
