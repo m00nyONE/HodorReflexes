@@ -1,7 +1,7 @@
 [SIZE="2"][B]IMPORTANT:[/B] You need LibCustomNames and LibCustomIcons now if you want to have names and icons displayed.[/SIZE]
 
 ## 2026.06.21
-- add CLAUDE.md which states that AI is not allowed here
+- add AGENTS.md which states that AI is not allowed here
 
 ## 2026.05.17 - @m00nyONE
 - test mode now simulates ult rotation.
