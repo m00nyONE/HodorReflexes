@@ -1,6 +1,9 @@
 [SIZE="2"][B]IMPORTANT:[/B] You need LibCustomNames and LibCustomIcons now if you want to have names and icons displayed.[/SIZE]
 
-## 2026.06.21
+## 2026.10.18 - @m00nyONE
+- fixed a font issue on chinese clients that partially clipped the values in the DPS & HPS lists.
+
+## 2026.06.21 - @m00nyONE
 - add AGENTS.md which states that AI is not allowed here
 
 ## 2026.05.17 - @m00nyONE
