@@ -83,7 +83,7 @@ function module:startTest()
         horn = 1,
         saxhleel = 1,
         colos = 2,
-        atro = 2,
+        atro = 1,
         slayer = 2,
         pillager = 1,
         cryptCannon = 1,
@@ -205,7 +205,35 @@ function module:updateTest()
 
     for name, data in pairs(addon.playersData) do
         local ultValue = data.ultValue + zo_random(2, 5)
-        if ultValue > 500 then ultValue = 0 end
+        if ultValue > 500 then
+            -- emulate ultimates
+            if data.hasHorn then
+                CM:FireCallbacks(HR_EVENT_HORN_BUFF_GAINED, localPlayer, 30 * 1000)
+                CM:FireCallbacks(HR_EVENT_MAJOR_FORCE_BUFF_GAINED, localPlayer, 15 * 1000)
+            end
+            if data.hasSaxhleel then
+                CM:FireCallbacks(HR_EVENT_MAJOR_FORCE_BUFF_GAINED, localPlayer, 33 * 1000)
+            end
+            if data.hasColos then
+                CM:FireCallbacks(HR_EVENT_MAJOR_VULNERABILITY_DEBUFF_GAINED, localPlayer, 17 * 1000)
+            end
+            if data.hasAtro then
+                CM:FireCallbacks(HR_EVENT_ATRO_CAST_STARTED, localPlayer, 15 * 1000)
+                CM:FireCallbacks(HR_EVENT_MAJOR_BERSERK_BUFF_GAINED, localPlayer, 10 * 1000)
+            end
+            if data.hasStandardOfMight then
+                CM:FireCallbacks(HR_EVENT_STANDARD_OF_MIGHT_CAST_STARTED, localPlayer, 15 * 1000)
+            end
+            if data.hasSlayer then
+                CM:FireCallbacks(HR_EVENT_MAJOR_SLAYER_BUFF_GAINED, localPlayer, 50 * 1000)
+            end
+            if data.hasPillager then
+                CM:FireCallbacks(HR_EVENT_PILLAGER_BUFF_GAINED, localPlayer, 10 * 1000)
+                CM:FireCallbacks(HR_EVENT_PILLAGER_BUFF_COOLDOWN, localPlayer, 45 * 1000)
+            end
+
+            ultValue = 0
+        end
         local ult1Percentage = self:getUltPercentage(ultValue, data.ult1Cost)
         local ult2Percentage = self:getUltPercentage(ultValue, data.ult2Cost)
 

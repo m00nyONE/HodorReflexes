@@ -16,13 +16,13 @@ jobs:
     uses: ./.github/workflows/_create-release-notes.yml
     needs:
       - test
-  generate-docs:
-    if: github.repository_owner == 'm00nyONE'
-    uses: ./.github/workflows/_generate-docs.yml
-    needs:
-      - test
-    permissions:
-      contents: write
+#  generate-docs:
+#    if: github.repository_owner == 'm00nyONE'
+#    uses: ./.github/workflows/_generate-docs.yml
+#    needs:
+#      - test
+#    permissions:
+#      contents: write
 
   create-github-release:
     name: "Create Github Release"
