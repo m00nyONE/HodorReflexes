@@ -1,5 +1,8 @@
 [SIZE="2"][B]IMPORTANT:[/B] You need LibCustomNames and LibCustomIcons now if you want to have names and icons displayed.[/SIZE]
 
+## 2026.10.25 - @m00nyONE
+- fix name clipping issues - now the width of the value labels get calculated and name labels are adjusted based on that on the fly - this should finally solve issues with different fonts and localizations
+
 ## 2026.10.18 - @m00nyONE
 - fixed a font issue on chinese clients that partially clipped the values in the DPS & HPS lists.
 
