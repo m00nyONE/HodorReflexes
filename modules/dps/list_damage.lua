@@ -140,12 +140,17 @@ function module:damageRowCreationFunction(rowControl, data, scrollList)
     local list = self.damageList
     local sw = list.sw
 
-    list:ApplyUserNameToControl(rowControl:GetNamedChild('_Name'), data.userId)
-    list:ApplyUserIconToControl(rowControl:GetNamedChild('_Icon'), data.userId, data.classId)
-    list:ApplyNameFontToControl(rowControl:GetNamedChild('_Name'))
-
+    local iconControl = rowControl:GetNamedChild("_Icon")
+    local nameControl = rowControl:GetNamedChild("_Name")
     local valueControl = rowControl:GetNamedChild("_Value")
+
+    list:ApplyUserNameToControl(nameControl, data.userId)
+    list:ApplyUserIconToControl(iconControl, data.userId, data.classId)
+    list:ApplyNameFontToControl(nameControl)
+
     valueControl:SetText(self.getDamageRowFormat(data.dmgType, data.dmg, data.dps, sw.colorDamageBoss, sw.colorDamageTotal))
+    local combinedOffset = 15
+    nameControl:SetWidth(rowControl:GetWidth() - iconControl:GetWidth() - valueControl:GetTextWidth() - combinedOffset)
 
     local customColor = false
     if data.isPlayer and sw.listPlayerHighlight then
